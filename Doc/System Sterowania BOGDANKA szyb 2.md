@@ -65,10 +65,10 @@
 | N8 przepustnice wylot i wlot | OFF | OFF | OFF | OFF | OFF | OFF | OFF | OFF | ON |
 | **PARAMETRY REGULACJI** |
 | Temperatura docelowa (°C) | | 50 | 50 | 50 | 50 | 50 | 50 | 50 | 50 |
-| Temp. włączenia dodatkowej nagrzewnicy (°C) | 2 | -1 | -4 | -8 | -11 | -15 | -18 | -21 |
-| Zawór regulacyjny przy włączeniu (%) | 100 | 100 | 100 | 100 | 100 | 100 | 100 | 100 |
-| Temp. wyłączenia dodatkowej nagrzewnicy (°C) | 3 | 0 | -3 | -6 | -10 | -13 | -15 | -20 |
-| Zawór regulacyjny przy wyłączeniu (%) | 20 | 20 | 20 | 20 | 20 | 20 | 20 | 20 |
+| Temp. włączenia dodatkowej nagrzewnicy (°C) | | 2 | -1 | -4 | -8 | -11 | -15 | -18 | -21 |
+| Zawór regulacyjny przy włączeniu (%) | | 100 | 100 | 100 | 100 | 100 | 100 | 100 | 100 |
+| Temp. wyłączenia dodatkowej nagrzewnicy (°C) | | 3 | 0 | -3 | -6 | -10 | -13 | -15 | -20 |
+| Zawór regulacyjny przy wyłączeniu (%) | | 20 | 20 | 20 | 20 | 20 | 20 | 20 | 20 |
 
 ## 4. Sekwencja Operacji
 
