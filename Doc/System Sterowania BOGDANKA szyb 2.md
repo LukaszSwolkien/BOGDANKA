@@ -3,6 +3,17 @@
 ## 1. Diagram
 ![Algorytm sterowania - BOGDANKA - Szyb 2](Algortym%20sterowania%20-%20BOGDANKA%20-%20Szyb%202%20v2.jpg)
 
+
+## 2. Stany nagrzewnicy
+
+```
+- STARTING (uruchamianie - otwieranie przepustnic i zaworu do 100%)
+- ON (praca - regulacja zaworu wody)
+- STOPPING (zatrzymywanie - zamykanie zaworu do 20%)
+- COOLDOWN (zamykanie przepustnic)
+- OFF (wyłączona)
+```
+
 ## 2. Tabela Stanów
 
 | ID | Zakres Temperatury Zewnętrznej | Nagrzewnice Aktywne | Wentylatory Aktywne | Temp. Docelowa | Temp. Wyłączenia Dodatkowej Nagrzewnicy | Histereza |
@@ -22,36 +33,36 @@
 | Warunek / Akcja | R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 | R9 |
 |----------------|----|----|----|----|----|----|----|----|----|
 | **WARUNKI WEJŚCIOWE** |
-| t > 3°C | TAK | NIE | NIE | NIE | NIE | NIE | NIE | NIE | NIE |
-| -1°C < t ≤ 2°C | NIE | TAK | NIE | NIE | NIE | NIE | NIE | NIE |NIE |
-| -4°C < t ≤ -1°C | NIE | NIE | TAK | NIE | NIE | NIE | NIE | NIE |NIE |
-| -8°C < t ≤ -4°C | NIE | NIE | NIE | TAK | NIE | NIE | NIE | NIE |NIE |
-| -11°C < t ≤ -8°C | NIE | NIE | NIE | NIE | TAK | NIE | NIE | NIE |NIE |
-| -15°C < t ≤ -11°C | NIE | NIE | NIE | NIE | NIE | TAK | NIE | NIE |NIE |
-| -18°C < t ≤ -15°C | NIE | NIE | NIE | NIE | NIE | NIE | TAK | NIE |NIE |
-| -21°C < t ≤ -18°C | NIE | NIE | NIE | NIE | NIE | NIE | NIE | TAK |NIE |
-| t ≤ -21°C | NIE | NIE | NIE | NIE | NIE | NIE | NIE | NIE | TAK |
+| t > 3°C | ON | OFF | OFF | OFF | OFF | OFF | OFF | OFF | OFF |
+| -1°C < t ≤ 2°C | OFF | ON | OFF | OFF | OFF | OFF | OFF | OFF |OFF |
+| -4°C < t ≤ -1°C | OFF | OFF | ON | OFF | OFF | OFF | OFF | OFF |OFF |
+| -8°C < t ≤ -4°C | OFF | OFF | OFF | ON | OFF | OFF | OFF | OFF |OFF |
+| -11°C < t ≤ -8°C | OFF | OFF | OFF | OFF | ON | OFF | OFF | OFF |OFF |
+| -15°C < t ≤ -11°C | OFF | OFF | OFF | OFF | OFF | ON | OFF | OFF |OFF |
+| -18°C < t ≤ -15°C | OFF | OFF | OFF | OFF | OFF | OFF | ON | OFF |OFF |
+| -21°C < t ≤ -18°C | OFF | OFF | OFF | OFF | OFF | OFF | OFF | ON |OFF |
+| t ≤ -21°C | OFF | OFF | OFF | OFF | OFF | OFF | OFF | OFF | ON |
 | **AKCJE - NAGRZEWNICE** |
-| Włącz N1 | NIE | TAK | TAK | TAK | TAK | TAK | TAK | TAK | TAK |
-| Włącz N2 | NIE | NIE | TAK | TAK | TAK | TAK | TAK | TAK | TAK |
-| Włącz N3 | NIE | NIE | NIE | TAK | TAK | TAK | TAK | TAK | TAK |
-| Włącz N4 | NIE | NIE | NIE | NIE | TAK | TAK | TAK | TAK | TAK |
-| Włącz N5 | NIE | NIE | NIE | NIE | NIE | TAK | TAK | TAK | TAK |
-| Włącz N6 | NIE | NIE | NIE | NIE | NIE | NIE | TAK | TAK | TAK |
-| Włącz N7 | NIE | NIE | NIE | NIE | NIE | NIE | NIE | TAK | TAK |
-| Włącz N8 | NIE | NIE | NIE | NIE | NIE | NIE | NIE | NIE | TAK |
+| N1 | OFF | ON | ON | ON | ON | ON | ON | ON | ON |
+| N2 | OFF | OFF | ON | ON | ON | ON | ON | ON | ON |
+| N3 | OFF | OFF | OFF | ON | ON | ON | ON | ON | ON |
+| N4 | OFF | OFF | OFF | OFF | ON | ON | ON | ON | ON |
+| N5 | OFF | OFF | OFF | OFF | OFF | ON | ON | ON | ON |
+| N6 | OFF | OFF | OFF | OFF | OFF | OFF | ON | ON | ON |
+| N7 | OFF | OFF | OFF | OFF | OFF | OFF | OFF | ON | ON |
+| N8 | OFF | OFF | OFF | OFF | OFF | OFF | OFF | OFF | ON |
 | **AKCJE - WENTYLATORY** |
-| Włącz W1 | TAK | TAK | TAK | TAK | TAK | TAK | TAK | TAK | TAK |
-| Włącz W2 | NIE | NIE | NIE | NIE | TAK | TAK | TAK | TAK | TAK |
+| W1 | OFF | ON | ON | ON | ON | ON | ON | ON | ON |
+| W2 | OFF | OFF | OFF | OFF | ON | ON | ON | ON | ON |
 | **AKCJE - PRZEPUSTNICE** |
-| Otworz przepustnice wylot i wlot N1 | NIE | TAK | TAK | TAK | TAK | TAK | TAK | TAK | TAK |
-| Otworz przepustnice wylot i wlot N2 | NIE | NIE | TAK | TAK | TAK | TAK | TAK | TAK | TAK |
-| Otworz przepustnice wylot i wlot N3 | NIE | NIE | NIE | TAK | TAK | TAK | TAK | TAK | TAK |
-| Otworz przepustnice wylot i wlot N4 | NIE | NIE | NIE | NIE | TAK | TAK | TAK | TAK | TAK |
-| Otworz przepustnice wylot i wlot N5 | NIE | NIE | NIE | NIE | NIE | TAK | TAK | TAK | TAK |
-| Otworz przepustnice wylot i wlot N6 | NIE | NIE | NIE | NIE | NIE | NIE | TAK | TAK | TAK |
-| Otworz przepustnice wylot i wlot N7 | NIE | NIE | NIE | NIE | NIE | NIE | NIE | TAK | TAK |
-| Otworz przepustnice wylot i wlot N8 | NIE | NIE | NIE | NIE | NIE | NIE | NIE | NIE | TAK |
+| N1 przepustnice wylot i wlot | OFF | ON | ON | ON | ON | ON | ON | ON | ON |
+| N2 przepustnice wylot i wlot | OFF | OFF | ON | ON | ON | ON | ON | ON | ON |
+| N3 przepustnice wylot i wlot | OFF | OFF | OFF | ON | ON | ON | ON | ON | ON |
+| N4 przepustnice wylot i wlot | OFF | OFF | OFF | OFF | ON | ON | ON | ON | ON |
+| N5 przepustnice wylot i wlot | OFF | OFF | OFF | OFF | OFF | ON | ON | ON | ON |
+| N6 przepustnice wylot i wlot | OFF | OFF | OFF | OFF | OFF | OFF | ON | ON | ON |
+| N7 przepustnice wylot i wlot | OFF | OFF | OFF | OFF | OFF | OFF | OFF | ON | ON |
+| N8 przepustnice wylot i wlot | OFF | OFF | OFF | OFF | OFF | OFF | OFF | OFF | ON |
 | **PARAMETRY REGULACJI** |
 | Temperatura docelowa (°C) | 50 | 50 | 50 | 50 | 50 | 50 | 50 | 50 | 50 |
 | Temp. włączenia dodatkowej nagrzewnicy (°C) | 2 | -1 | -4 | -8 | -11 | -15 | -18 | -21 |
@@ -69,8 +80,8 @@
 
 ### 4.2 Wyłączanie Nagrzewnicy
 1. Ustaw zawór regulacyjny wody na poziomie 20%
-2. Monitoruj temperaturę na włocie i wylocie
-3. Zamknij przepustnicę na włocie (0%)
+2. Monitoruj temperaturę na wlocie i wylocie
+3. Zamknij przepustnicę na wlocie (0%)
 4. Zamknij przepustnicę na wylocie (0%)
 5. Wyłącz nagrzewnicę
 6. Pozostaw wentylator włączony jeśli potrzebny dla innych nagrzewnic lub wyłacz (wg. tabeli decyzyjnej)
@@ -86,18 +97,18 @@
 | Okres próbkowania | 1 | s | Częstotliwość odczytu temperatury |
 | Max pozycja zaworu | 100 | % | Maksymalne otwarcie zaworu |
 | Min pozycja zaworu | 0 | % | Minimalne otwarcie zaworu |
-| PID - Kp | 2.0 | - | Człon proporcjonalny |
-| PID - Ki | 1 | - | Człon całkujący |
-| PID - Kd | 0.1 | - | Człon różniczkujący |
+| PID - Kp | 2.0 | - | Człon proporcjonalny (zawor wody) |
+| PID - Ki | 1 | - | Człon całkujący (zawor wody) |
+| PID - Kd | 0.1 | - | Człon różniczkujący (zawor wody) |
 
 ## 6. Obsługa Awarii
 
 | Warunek Awarii | Akcja |
 |----------------|-------|
 | Brak odczytu temperatury zewnętrznej | Zachowaj ostatni stan, alarm |
-| Brak odczytu temperatury wylotowej | Ustaw zawór na 30%, alarm |
+| Brak odczytu temperatury wylotowej | Ustaw zawór na 50%, alarm |
 | Temperatura wylotowa > 60°C | Zamknij zawór do 20%, alarm |
-| Temperatura wylotowa < 30°C przy pracy | Zwiększ otwarcie zaworu  |
+| Temperatura wylotowa < 40°C przy pracy | Zwiększ otwarcie zaworu do 100%, alarm  |
 | Wentylator nie pracuje | Wyłącz odpowiednie nagrzewnice, alarm |
-| Przepustnica nie reaguje | Alarm, kontynuuj pracę |
+| Przepustnica nie reaguje | Kontynuuj pracę, alarm |
 
