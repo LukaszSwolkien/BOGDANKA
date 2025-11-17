@@ -10,8 +10,7 @@
 - STARTING (uruchamianie - otwieranie przepustnic i zaworu do 100%)
 - ON (praca - regulacja zaworu wody)
 - STOPPING (zatrzymywanie - zamykanie zaworu do 20%)
-- COOLDOWN (zamykanie przepustnic)
-- OFF (wyłączona)
+- OFF (wyłączona - zamykanie przepustnic)
 ```
 
 ## 2. Tabela Stanów
