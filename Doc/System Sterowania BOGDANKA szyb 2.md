@@ -94,7 +94,7 @@
 | Brak odczytu temperatury zewnętrznej | Zachowaj ostatni stan, alarm |
 | Brak odczytu temperatury wylotowej | Ustaw zawór na 30%, alarm |
 | Temperatura wylotowa > 60°C | Zamknij zawór do 20%, alarm |
-| Temperatura wylotowa < 30°C przy pracy | Zwiększ otwarcie zaworu, sprawdź zasilanie |
+| Temperatura wylotowa < 30°C przy pracy | Zwiększ otwarcie zaworu  |
 | Wentylator nie pracuje | Wyłącz odpowiednie nagrzewnice, alarm |
 | Przepustnica nie reaguje | Alarm, kontynuuj pracę |
 
