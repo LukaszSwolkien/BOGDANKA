@@ -8,9 +8,9 @@
 
 ```
 - STARTING (uruchamianie - otwieranie przepustnic i zaworu do 100%)
-- ON (praca - regulacja zaworu wody)
+- ON 🟢 (praca - regulacja zaworu wody)
 - STOPPING (zatrzymywanie - zamykanie zaworu do 20%)
-- OFF (wyłączona - zamykanie przepustnic)
+- OFF 🔴 (wyłączona - zamykanie przepustnic)
 ```
 
 ## 2. Tabela Stanów
@@ -32,26 +32,26 @@
 | Sterowany element | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S8 | S9 |
 |----------------|----|----|----|----|----|----|----|----|----|
 | **NAGRZEWNICE** |
-| N1 | OFF | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ |
-| N2 | OFF | OFF | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ |
-| N3 | OFF | OFF | OFF | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ |
-| N4 | OFF | OFF | OFF | OFF | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ |
-| N5 | OFF | OFF | OFF | OFF | OFF | __ON__ | __ON__ | __ON__ | __ON__ |
-| N6 | OFF | OFF | OFF | OFF | OFF | OFF | __ON__ | __ON__ | __ON__ |
-| N7 | OFF | OFF | OFF | OFF | OFF | OFF | OFF | __ON__ | __ON__ |
-| N8 | OFF | OFF | OFF | OFF | OFF | OFF | OFF | OFF | __ON__ |
+| N1 | 🔴 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
+| N2 | 🔴 | 🔴 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
+| N3 | 🔴 | 🔴 | 🔴 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
+| N4 | 🔴 | 🔴 | 🔴 | 🔴 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
+| N5 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🟢 | 🟢 | 🟢 | 🟢 |
+| N6 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🟢 | 🟢 | 🟢 |
+| N7 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🟢 | 🟢 |
+| N8 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🟢 |
 | **WENTYLATORY** |
-| W1 | OFF | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ |
-| W2 | OFF | OFF | OFF | OFF | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ |
+| W1 | 🔴 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
+| W2 | 🔴 | 🔴 | 🔴 | 🔴 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
 | **PRZEPUSTNICE** |
-| N1 przepustnice wylot i wlot | OFF | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ |
-| N2 przepustnice wylot i wlot | OFF | OFF | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ |
-| N3 przepustnice wylot i wlot | OFF | OFF | OFF | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ |
-| N4 przepustnice wylot i wlot | OFF | OFF | OFF | OFF | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ |
-| N5 przepustnice wylot i wlot | OFF | OFF | OFF | OFF | OFF | __ON__ | __ON__ | __ON__ | __ON__ |
-| N6 przepustnice wylot i wlot | OFF | OFF | OFF | OFF | OFF | OFF | __ON__ | __ON__ | __ON__ |
-| N7 przepustnice wylot i wlot | OFF | OFF | OFF | OFF | OFF | OFF | OFF | __ON__ | __ON__ |
-| N8 przepustnice wylot i wlot | OFF | OFF | OFF | OFF | OFF | OFF | OFF | OFF | __ON__ |
+| N1 przepustnice wylot i wlot | 🔴 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
+| N2 przepustnice wylot i wlot | 🔴 | 🔴 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
+| N3 przepustnice wylot i wlot | 🔴 | 🔴 | 🔴 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
+| N4 przepustnice wylot i wlot | 🔴 | 🔴 | 🔴 | 🔴 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
+| N5 przepustnice wylot i wlot | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🟢 | 🟢 | 🟢 | 🟢 |
+| N6 przepustnice wylot i wlot | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🟢 | 🟢 | 🟢 |
+| N7 przepustnice wylot i wlot | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🟢 | 🟢 |
+| N8 przepustnice wylot i wlot | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🟢 |
 | **PARAMETRY REGULACJI** |
 | Temperatura docelowa (°C) | | 50 | 50 | 50 | 50 | 50 | 50 | 50 | 50 |
 | Temp. włączenia dodatkowej nagrzewnicy (°C) | | 2 | -1 | -4 | -8 | -11 | -15 | -18 | -21 |
