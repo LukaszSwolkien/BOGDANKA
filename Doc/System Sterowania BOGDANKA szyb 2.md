@@ -18,51 +18,41 @@
 
 | ID | Zakres Temperatury Zewnętrznej | Nagrzewnice Aktywne | Wentylatory Aktywne | Temp. Docelowa | Temp. Wyłączenia Dodatkowej Nagrzewnicy | Histereza |
 |----|-------------------------------|---------------------|---------------------|----------------|----------------------------------------|-----------|
-| R1 | t ≥ 3°C |  |  |  |  |  |
-| R2 | -1°C < t ≤ 2°C | N1 | W1 | 50°C | t ≥ 3°C | 1°C |
-| R3 | -4°C < t ≤ -1°C | N1, N2 | W1 | 50°C | t ≥ 0°C | 1°C |
-| R4 | -8°C < t ≤ -4°C | N1, N2, N3 | W1 | 50°C | t ≥ -3°C | 1°C |
-| R5 | -11°C < t ≤ -8°C | N1, N2, N3, N4 | W1 | 50°C | t ≥ -6°C | 2°C |
-| R6 | -15°C < t ≤ -11°C | N1, N2, N3, N4, N5 | W1, W2 | 50°C | t ≥ -10°C | 1°C |
-| R7 | -18°C < t ≤ -15°C | N1, N2, N3, N4, N5, N6, | W1, W2 | 50°C | t ≥ -13°C | 2°C |
-| R8 | -21°C < t ≤ -18°C | N1, N2, N3, N4, N5, N6, N7 | W1, W2 | 50°C | t ≥ -15°C | 3°C |
-| R9 | t ≤ -21°C | N1, N2, N3, N4, N5, N6, N7, N8 | W1, W2 | 50°C | t ≥ -20°C | 1°C |
+| S1 | t ≥ 3°C |  |  |  |  |  |
+| S2 | -1°C < t ≤ 2°C | N1 | W1 | 50°C | t ≥ 3°C | 1°C |
+| S3 | -4°C < t ≤ -1°C | N1, N2 | W1 | 50°C | t ≥ 0°C | 1°C |
+| S4 | -8°C < t ≤ -4°C | N1, N2, N3 | W1 | 50°C | t ≥ -3°C | 1°C |
+| S5 | -11°C < t ≤ -8°C | N1, N2, N3, N4 | W1 | 50°C | t ≥ -6°C | 2°C |
+| S6 | -15°C < t ≤ -11°C | N1, N2, N3, N4, N5 | W1, W2 | 50°C | t ≥ -10°C | 1°C |
+| S7 | -18°C < t ≤ -15°C | N1, N2, N3, N4, N5, N6, | W1, W2 | 50°C | t ≥ -13°C | 2°C |
+| S8 | -21°C < t ≤ -18°C | N1, N2, N3, N4, N5, N6, N7 | W1, W2 | 50°C | t ≥ -15°C | 3°C |
+| S9 | t ≤ -21°C | N1, N2, N3, N4, N5, N6, N7, N8 | W1, W2 | 50°C | t ≥ -20°C | 1°C |
 
 ## 3. Tabela Decyzyjna
 
-| Warunek / Akcja | R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 | R9 |
+| Sterowany element | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S8 | S9 |
 |----------------|----|----|----|----|----|----|----|----|----|
-| **WARUNKI WEJŚCIOWE** |
-| t > 3°C | ON | OFF | OFF | OFF | OFF | OFF | OFF | OFF | OFF |
-| -1°C < t ≤ 2°C | OFF | ON | OFF | OFF | OFF | OFF | OFF | OFF |OFF |
-| -4°C < t ≤ -1°C | OFF | OFF | ON | OFF | OFF | OFF | OFF | OFF |OFF |
-| -8°C < t ≤ -4°C | OFF | OFF | OFF | ON | OFF | OFF | OFF | OFF |OFF |
-| -11°C < t ≤ -8°C | OFF | OFF | OFF | OFF | ON | OFF | OFF | OFF |OFF |
-| -15°C < t ≤ -11°C | OFF | OFF | OFF | OFF | OFF | ON | OFF | OFF |OFF |
-| -18°C < t ≤ -15°C | OFF | OFF | OFF | OFF | OFF | OFF | ON | OFF |OFF |
-| -21°C < t ≤ -18°C | OFF | OFF | OFF | OFF | OFF | OFF | OFF | ON |OFF |
-| t ≤ -21°C | OFF | OFF | OFF | OFF | OFF | OFF | OFF | OFF | ON |
-| **AKCJE - NAGRZEWNICE** |
-| N1 | OFF | ON | ON | ON | ON | ON | ON | ON | ON |
-| N2 | OFF | OFF | ON | ON | ON | ON | ON | ON | ON |
-| N3 | OFF | OFF | OFF | ON | ON | ON | ON | ON | ON |
-| N4 | OFF | OFF | OFF | OFF | ON | ON | ON | ON | ON |
-| N5 | OFF | OFF | OFF | OFF | OFF | ON | ON | ON | ON |
-| N6 | OFF | OFF | OFF | OFF | OFF | OFF | ON | ON | ON |
-| N7 | OFF | OFF | OFF | OFF | OFF | OFF | OFF | ON | ON |
-| N8 | OFF | OFF | OFF | OFF | OFF | OFF | OFF | OFF | ON |
-| **AKCJE - WENTYLATORY** |
-| W1 | OFF | ON | ON | ON | ON | ON | ON | ON | ON |
-| W2 | OFF | OFF | OFF | OFF | ON | ON | ON | ON | ON |
-| **AKCJE - PRZEPUSTNICE** |
-| N1 przepustnice wylot i wlot | OFF | ON | ON | ON | ON | ON | ON | ON | ON |
-| N2 przepustnice wylot i wlot | OFF | OFF | ON | ON | ON | ON | ON | ON | ON |
-| N3 przepustnice wylot i wlot | OFF | OFF | OFF | ON | ON | ON | ON | ON | ON |
-| N4 przepustnice wylot i wlot | OFF | OFF | OFF | OFF | ON | ON | ON | ON | ON |
-| N5 przepustnice wylot i wlot | OFF | OFF | OFF | OFF | OFF | ON | ON | ON | ON |
-| N6 przepustnice wylot i wlot | OFF | OFF | OFF | OFF | OFF | OFF | ON | ON | ON |
-| N7 przepustnice wylot i wlot | OFF | OFF | OFF | OFF | OFF | OFF | OFF | ON | ON |
-| N8 przepustnice wylot i wlot | OFF | OFF | OFF | OFF | OFF | OFF | OFF | OFF | ON |
+| **NAGRZEWNICE** |
+| N1 | OFF | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ |
+| N2 | OFF | OFF | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ |
+| N3 | OFF | OFF | OFF | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ |
+| N4 | OFF | OFF | OFF | OFF | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ |
+| N5 | OFF | OFF | OFF | OFF | OFF | __ON__ | __ON__ | __ON__ | __ON__ |
+| N6 | OFF | OFF | OFF | OFF | OFF | OFF | __ON__ | __ON__ | __ON__ |
+| N7 | OFF | OFF | OFF | OFF | OFF | OFF | OFF | __ON__ | __ON__ |
+| N8 | OFF | OFF | OFF | OFF | OFF | OFF | OFF | OFF | __ON__ |
+| **WENTYLATORY** |
+| W1 | OFF | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ |
+| W2 | OFF | OFF | OFF | OFF | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ |
+| **PRZEPUSTNICE** |
+| N1 przepustnice wylot i wlot | OFF | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ |
+| N2 przepustnice wylot i wlot | OFF | OFF | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ |
+| N3 przepustnice wylot i wlot | OFF | OFF | OFF | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ |
+| N4 przepustnice wylot i wlot | OFF | OFF | OFF | OFF | __ON__ | __ON__ | __ON__ | __ON__ | __ON__ |
+| N5 przepustnice wylot i wlot | OFF | OFF | OFF | OFF | OFF | __ON__ | __ON__ | __ON__ | __ON__ |
+| N6 przepustnice wylot i wlot | OFF | OFF | OFF | OFF | OFF | OFF | __ON__ | __ON__ | __ON__ |
+| N7 przepustnice wylot i wlot | OFF | OFF | OFF | OFF | OFF | OFF | OFF | __ON__ | __ON__ |
+| N8 przepustnice wylot i wlot | OFF | OFF | OFF | OFF | OFF | OFF | OFF | OFF | __ON__ |
 | **PARAMETRY REGULACJI** |
 | Temperatura docelowa (°C) | | 50 | 50 | 50 | 50 | 50 | 50 | 50 | 50 |
 | Temp. włączenia dodatkowej nagrzewnicy (°C) | | 2 | -1 | -4 | -8 | -11 | -15 | -18 | -21 |
