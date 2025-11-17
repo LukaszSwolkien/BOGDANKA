@@ -4,7 +4,7 @@
 
 | ID | Zakres Temperatury Zewnętrznej | Nagrzewnice Aktywne | Wentylatory Aktywne | Temp. Docelowa | Temp. Wyłączenia Dodatkowej Nagrzewnicy | Histereza |
 |----|-------------------------------|---------------------|---------------------|----------------|----------------------------------------|-----------|
-| R1 | t ≥ 3°C |  |  | 50°C |  |  |
+| R1 | t ≥ 3°C |  |  |  |  |  |
 | R2 | -1°C < t ≤ 2°C | N1 | W1 | 50°C | t ≥ 3°C | 1°C |
 | R3 | -4°C < t ≤ -1°C | N1, N2 | W1 | 50°C | t ≥ 0°C | 1°C |
 | R4 | -8°C < t ≤ -4°C | N1, N2, N3 | W1 | 50°C | t ≥ -3°C | 1°C |
