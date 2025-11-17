@@ -98,4 +98,5 @@
 | Wentylator nie pracuje | Wyłącz odpowiednie nagrzewnice, alarm |
 | Przepustnica nie reaguje | Alarm, kontynuuj pracę |
 
-
+## 6. Diagram
+![Algorytm sterowania - BOGDANKA - Szyb 2](Algortym%20sterowania%20-%20BOGDANKA%20-%20Szyb%202%20v2.jpg)
