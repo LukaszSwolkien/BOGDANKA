@@ -15,6 +15,8 @@
 
 ## 2. Tabela Stanów
 
+Tabela definiująca stan systemu sterowania uzalezniony od temperatury zewnetrznej (tz)
+
 | ID | Zakres Temperatury Zewnętrznej | Nagrzewnice Aktywne | Wentylatory Aktywne | Temp. Docelowa | Temp. Wyłączenia Dodatkowej Nagrzewnicy | Histereza |
 |----|-------------------------------|---------------------|---------------------|----------------|----------------------------------------|-----------|
 | S0 | t ≥ 3°C | brak  | brak | brak | brak | brak |
@@ -28,8 +30,16 @@
 | S8 | t ≤ -21°C | N1, N2, N3, N4, N5, N6, N7, N8 | W1, W2 | 50°C | t ≥ -20°C | 1°C |
 
 ## 3. Tabela Decyzyjna
+Tabela definiujaca akcje na sterowanym elemencie w zaleznosci od warunku (zadanego stanu systemu sterowania). 
 
-| Sterowany element | S0 | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S8 |
+Elementy sterowane (Otwarte/Włączone lub Zamkniete/Wyłączone) to:
+- Nagrzewnice, 
+- Wentylatory, 
+- Przepustnice wlot i wylot. 
+
+Zawór regulacyjny wody sterowany jest sterownikiem PID w celu uzyskania zadanej temperatury na wyjsciu z Nagrzewnicy.
+
+| Sterowany element \ Warunek | S0 | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S8 |
 |----------------|----|----|----|----|----|----|----|----|----|
 | **NAGRZEWNICE** |
 | N1 | 🔴 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
@@ -67,7 +77,10 @@
 3. Włącz wentylator(y)
 4. Otwórz zawór regulacyjny wody (regulacja PID dla utrzymania 50°C)
 
-### 4.2 Wyłączanie Nagrzewnicy
+### 4.2 Praca Nagrzewnicy
+1. Regulacja PID zaworem wody dla utrzymania 50°C
+
+### 4.3 Wyłączanie Nagrzewnicy
 1. Ustaw zawór regulacyjny wody na poziomie 20%
 2. Monitoruj temperaturę na wlocie i wylocie
 3. Zamknij przepustnicę na wlocie (0%)
