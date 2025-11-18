@@ -46,7 +46,7 @@
   <!-- Title and Status -->
   <text class="text-title" x="800" y="35" text-anchor="middle">System Sterowania Nagrzewnicami - BOGDANKA Szyb 2</text>
   <text class="text-title" x="800" y="60" text-anchor="middle">Stan S3 - Temperatura zewnętrzna: -8°C &lt; t ≤ -4°C</text>
-  <text class="text-status status-on" x="800" y="85" text-anchor="middle">CIĄG 1 AKTYWNY: N1, N2, N3 🟢 | CIĄG 2 WYŁĄCZONY 🔴</text>
+  <text class="text-status status-on" x="800" y="85" text-anchor="middle">CIĄG 1 AKTYWNY: N1-N3 🟢 | CIĄG 2 WYŁĄCZONY 🔴</text>
   
   <!-- Legend -->
   <rect x="1250" y="900" width="300" height="190" fill="white" stroke="#495057" stroke-width="2" rx="5"/>
