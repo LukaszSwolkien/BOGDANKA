@@ -32,7 +32,7 @@ Tabela definiująca stan systemu sterowania uzalezniony od temperatury zewnetrzn
 ## 4. Tabela Decyzyjna
 Tabela definiujaca akcje na sterowanym elemencie w zaleznosci od warunku (zadanego stanu systemu sterowania). 
 
-Elementy sterowane (Otwarte/Włączone lub Zamkniete/Wyłączone) to:
+Elementy sterowane (Otwarte/Włączone 🟢 lub Zamkniete/Wyłączone 🔴) to:
 - Nagrzewnice, 
 - Wentylatory, 
 - Przepustnice wlot i wylot. 
@@ -68,6 +68,7 @@ Zawór regulacyjny wody sterowany jest sterownikiem PID w celu uzyskania zadanej
 | Zawór regulacyjny przy włączeniu (%) | | 100 | 100 | 100 | 100 | 100 | 100 | 100 | 100 |
 | Temp. wyłączenia dodatkowej nagrzewnicy (°C) | | 3 | 0 | -3 | -6 | -10 | -13 | -15 | -20 |
 | Zawór regulacyjny przy wyłączeniu (%) | | 20 | 20 | 20 | 20 | 20 | 20 | 20 | 20 |
+| Zawór regulacyjny przy pracy nagrzewnicy (%) | | PID | PID | PID | PID | PID | PID | PID | PID |
 
 ## 5. Sekwencja Operacji
 
