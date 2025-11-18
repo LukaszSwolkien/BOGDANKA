@@ -115,3 +115,9 @@ Zawór regulacyjny wody sterowany jest sterownikiem PID w celu uzyskania zadanej
 | Wentylator nie pracuje | Wyłącz odpowiednie nagrzewnice, alarm |
 | Przepustnica nie reaguje | Kontynuuj pracę, alarm |
 
+## 8. Przykladowa wizualizacja systemu sterowania w SCADA
+![Stan S0](diagram_S0.svg)
+
+![Stan S4](diagram_S4.svg)
+
+![Stan S8](diagram_S8.svg)
