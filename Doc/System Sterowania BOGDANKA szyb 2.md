@@ -13,7 +13,7 @@
 - OFF 🔴 (wyłączona - zamykanie przepustnic)
 ```
 
-## 2. Tabela Stanów
+## 3. Tabela Stanów
 
 Tabela definiująca stan systemu sterowania uzalezniony od temperatury zewnetrznej (tz)
 
@@ -29,7 +29,7 @@ Tabela definiująca stan systemu sterowania uzalezniony od temperatury zewnetrzn
 | S7 | -21°C < t ≤ -18°C | N1, N2, N3, N4, N5, N6, N7 | W1, W2 | 50°C | t ≥ -15°C | 3°C |
 | S8 | t ≤ -21°C | N1, N2, N3, N4, N5, N6, N7, N8 | W1, W2 | 50°C | t ≥ -20°C | 1°C |
 
-## 3. Tabela Decyzyjna
+## 4. Tabela Decyzyjna
 Tabela definiujaca akcje na sterowanym elemencie w zaleznosci od warunku (zadanego stanu systemu sterowania). 
 
 Elementy sterowane (Otwarte/Włączone lub Zamkniete/Wyłączone) to:
@@ -69,18 +69,18 @@ Zawór regulacyjny wody sterowany jest sterownikiem PID w celu uzyskania zadanej
 | Temp. wyłączenia dodatkowej nagrzewnicy (°C) | | 3 | 0 | -3 | -6 | -10 | -13 | -15 | -20 |
 | Zawór regulacyjny przy wyłączeniu (%) | | 20 | 20 | 20 | 20 | 20 | 20 | 20 | 20 |
 
-## 4. Sekwencja Operacji
+## 5. Sekwencja Operacji
 
-### 4.1 Włączanie Nagrzewnicy
+### 5.1 Włączanie Nagrzewnicy
 1. Otwórz przepustnicę na wlocie (100%)
 2. Otwórz przepustnicę na wylocie (100%)
 3. Włącz wentylator(y)
 4. Otwórz zawór regulacyjny wody (regulacja PID dla utrzymania 50°C)
 
-### 4.2 Praca Nagrzewnicy
+### 5.2 Praca Nagrzewnicy
 1. Regulacja PID zaworem wody dla utrzymania 50°C
 
-### 4.3 Wyłączanie Nagrzewnicy
+### 5.3 Wyłączanie Nagrzewnicy
 1. Ustaw zawór regulacyjny wody na poziomie 20%
 2. Monitoruj temperaturę na wlocie i wylocie
 3. Zamknij przepustnicę na wlocie (0%)
@@ -89,7 +89,7 @@ Zawór regulacyjny wody sterowany jest sterownikiem PID w celu uzyskania zadanej
 6. Pozostaw wentylator włączony jeśli potrzebny dla innych nagrzewnic lub wyłacz (wg. tabeli decyzyjnej)
 
 
-## 5. Parametry Systemowe
+## 6. Parametry Systemowe
 
 | Parameter | Wartość | Jednostka | Opis |
 |-----------|---------|-----------|------|
@@ -103,7 +103,7 @@ Zawór regulacyjny wody sterowany jest sterownikiem PID w celu uzyskania zadanej
 | PID - Ki | 1 | - | Człon całkujący (zawor wody) |
 | PID - Kd | 0.1 | - | Człon różniczkujący (zawor wody) |
 
-## 6. Obsługa Awarii
+## 7. Obsługa Awarii
 
 | Warunek Awarii | Akcja |
 |----------------|-------|
