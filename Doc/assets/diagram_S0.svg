@@ -39,28 +39,22 @@
   <text class="text-status status-off" x="800" y="85" text-anchor="middle">WSZYSTKIE URZĄDZENIA WYŁĄCZONE 🔴</text>
   
   <!-- Legend -->
-  <rect x="1250" y="920" width="300" height="130" fill="white" stroke="#495057" stroke-width="2" rx="5"/>
-  <text class="text-label" x="1260" y="940" font-weight="bold">Legenda:</text>
-  <rect class="heater-off" x="1260" y="950" width="30" height="20" rx="3"/>
-  <text class="text-label-small" x="1295" y="965">Nagrzewnica wyłączona</text>
-  <rect class="damper-closed" x="1260" y="975" width="30" height="20" rx="3"/>
-  <text class="text-label-small" x="1295" y="990">Przepustnica zamknięta</text>
-  <circle class="fan-off" cx="1275" cy="1018" r="15"/>
-  <text class="text-label-small" x="1295" y="1025">Wentylator wyłączony</text>
+  <rect x="1250" y="960" width="300" height="130" fill="white" stroke="#495057" stroke-width="2" rx="5"/>
+  <text class="text-label" x="1260" y="980" font-weight="bold">Legenda:</text>
+  <rect class="heater-off" x="1260" y="990" width="30" height="20" rx="3"/>
+  <text class="text-label-small" x="1295" y="1005">Nagrzewnica wyłączona</text>
+  <rect class="damper-closed" x="1260" y="1015" width="30" height="20" rx="3"/>
+  <text class="text-label-small" x="1295" y="1030">Przepustnica zamknięta</text>
+  <circle class="fan-off" cx="1275" cy="1058" r="15"/>
+  <text class="text-label-small" x="1295" y="1065">Wentylator wyłączony</text>
   
-  <!-- Temperature Info -->
-  <rect x="1250" y="100" width="300" height="100" fill="white" stroke="#495057" stroke-width="2" rx="5"/>
-  <text class="text-label" x="1260" y="120" font-weight="bold">Parametry:</text>
-  <text class="text-label-small" x="1260" y="140">Temperatura zewnętrzna: ≥ 3°C</text>
-  <text class="text-label-small" x="1260" y="160">Nagrzewnice aktywne: BRAK</text>
-  <text class="text-label-small" x="1260" y="180">Wentylatory aktywne: BRAK</text>
   
   <!-- CIĄG 1: W1 → N1 → N2 → N3 → N4 -->
-  <text class="text-label" x="100" y="270" font-weight="bold" font-size="16">CIĄG 1 (wyłączony)</text>
+  <text class="text-label status-off" x="100" y="270" font-weight="bold" font-size="16">CIĄG 1 - WYŁĄCZONY 🔴</text>
   
   <!-- Air Flow Line - Ciąg 1 (inactive) -->
   <line class="pipe" x1="100" y1="400" x2="1450" y2="400" stroke-dasharray="10,5" opacity="0.3"/>
-  <text class="text-label-small" x="100" y="390" fill="#999999">Kanał powietrza - Ciąg 1 (brak przepływu)</text>
+  <text class="text-label-small" x="1300" y="390" fill="#999999" text-anchor="end">Kanał powietrza</text>
   
   <!-- W1 Fan (left side) -->
   <g id="fan-w1">
@@ -72,62 +66,62 @@
   
   <!-- N1 -->
   <g id="heater-n1">
-    <text class="text-label" x="400" y="300" text-anchor="middle" font-weight="bold">N1</text>
+    <text class="text-label" x="430" y="365" text-anchor="middle" font-weight="bold">N1</text>
     <rect class="damper-closed" x="370" y="370" width="20" height="60" rx="3"/>
     <text class="text-label-small" x="365" y="455" transform="rotate(-90 365 455)">Wlot</text>
     <rect class="heater-off" x="400" y="370" width="60" height="60" rx="5"/>
     <text class="text-label-small" x="430" y="405" text-anchor="middle" fill="#666">OFF</text>
     <rect class="damper-closed" x="470" y="370" width="20" height="60" rx="3"/>
     <text class="text-label-small" x="465" y="455" transform="rotate(-90 465 455)">Wylot</text>
-    <circle class="valve" cx="430" cy="330" r="12"/>
-    <text class="text-label-small" x="445" y="335">0%</text>
+    <circle class="valve" cx="430" cy="310" r="12"/>
+    <text class="text-label-small" x="445" y="315">0%</text>
   </g>
   
   <!-- N2 -->
   <g id="heater-n2">
-    <text class="text-label" x="600" y="300" text-anchor="middle" font-weight="bold">N2</text>
+    <text class="text-label" x="630" y="365" text-anchor="middle" font-weight="bold">N2</text>
     <rect class="damper-closed" x="570" y="370" width="20" height="60" rx="3"/>
     <text class="text-label-small" x="565" y="455" transform="rotate(-90 565 455)">Wlot</text>
     <rect class="heater-off" x="600" y="370" width="60" height="60" rx="5"/>
     <text class="text-label-small" x="630" y="405" text-anchor="middle" fill="#666">OFF</text>
     <rect class="damper-closed" x="670" y="370" width="20" height="60" rx="3"/>
     <text class="text-label-small" x="665" y="455" transform="rotate(-90 665 455)">Wylot</text>
-    <circle class="valve" cx="630" cy="330" r="12"/>
-    <text class="text-label-small" x="645" y="335">0%</text>
+    <circle class="valve" cx="630" cy="310" r="12"/>
+    <text class="text-label-small" x="645" y="315">0%</text>
   </g>
   
   <!-- N3 -->
   <g id="heater-n3">
-    <text class="text-label" x="800" y="300" text-anchor="middle" font-weight="bold">N3</text>
+    <text class="text-label" x="830" y="365" text-anchor="middle" font-weight="bold">N3</text>
     <rect class="damper-closed" x="770" y="370" width="20" height="60" rx="3"/>
     <text class="text-label-small" x="765" y="455" transform="rotate(-90 765 455)">Wlot</text>
     <rect class="heater-off" x="800" y="370" width="60" height="60" rx="5"/>
     <text class="text-label-small" x="830" y="405" text-anchor="middle" fill="#666">OFF</text>
     <rect class="damper-closed" x="870" y="370" width="20" height="60" rx="3"/>
     <text class="text-label-small" x="865" y="455" transform="rotate(-90 865 455)">Wylot</text>
-    <circle class="valve" cx="830" cy="330" r="12"/>
-    <text class="text-label-small" x="845" y="335">0%</text>
+    <circle class="valve" cx="830" cy="310" r="12"/>
+    <text class="text-label-small" x="845" y="315">0%</text>
   </g>
   
   <!-- N4 -->
   <g id="heater-n4">
-    <text class="text-label" x="1000" y="300" text-anchor="middle" font-weight="bold">N4</text>
+    <text class="text-label" x="1030" y="365" text-anchor="middle" font-weight="bold">N4</text>
     <rect class="damper-closed" x="970" y="370" width="20" height="60" rx="3"/>
     <text class="text-label-small" x="965" y="455" transform="rotate(-90 965 455)">Wlot</text>
     <rect class="heater-off" x="1000" y="370" width="60" height="60" rx="5"/>
     <text class="text-label-small" x="1030" y="405" text-anchor="middle" fill="#666">OFF</text>
     <rect class="damper-closed" x="1070" y="370" width="20" height="60" rx="3"/>
     <text class="text-label-small" x="1065" y="455" transform="rotate(-90 1065 455)">Wylot</text>
-    <circle class="valve" cx="1030" cy="330" r="12"/>
-    <text class="text-label-small" x="1045" y="335">0%</text>
+    <circle class="valve" cx="1030" cy="310" r="12"/>
+    <text class="text-label-small" x="1045" y="315">0%</text>
   </g>
   
   <!-- CIĄG 2: W2 → N5 → N6 → N7 → N8 -->
-  <text class="text-label" x="100" y="570" font-weight="bold" font-size="16">CIĄG 2 (wyłączony)</text>
+  <text class="text-label status-off" x="100" y="570" font-weight="bold" font-size="16">CIĄG 2 - WYŁĄCZONY 🔴</text>
   
   <!-- Air Flow Line - Ciąg 2 (inactive) -->
   <line class="pipe" x1="100" y1="700" x2="1450" y2="700" stroke-dasharray="10,5" opacity="0.3"/>
-  <text class="text-label-small" x="100" y="690" fill="#999999">Kanał powietrza - Ciąg 2 (brak przepływu)</text>
+  <text class="text-label-small" x="1300" y="690" fill="#999999" text-anchor="end">Kanał powietrza</text>
   
   <!-- W2 Fan (left side) -->
   <g id="fan-w2">
@@ -139,59 +133,63 @@
   
   <!-- N5 -->
   <g id="heater-n5">
-    <text class="text-label" x="400" y="600" text-anchor="middle" font-weight="bold">N5</text>
+    <text class="text-label" x="430" y="665" text-anchor="middle" font-weight="bold">N5</text>
     <rect class="damper-closed" x="370" y="670" width="20" height="60" rx="3"/>
     <text class="text-label-small" x="365" y="755" transform="rotate(-90 365 755)">Wlot</text>
     <rect class="heater-off" x="400" y="670" width="60" height="60" rx="5"/>
     <text class="text-label-small" x="430" y="705" text-anchor="middle" fill="#666">OFF</text>
     <rect class="damper-closed" x="470" y="670" width="20" height="60" rx="3"/>
     <text class="text-label-small" x="465" y="755" transform="rotate(-90 465 755)">Wylot</text>
-    <circle class="valve" cx="430" cy="630" r="12"/>
-    <text class="text-label-small" x="445" y="635">0%</text>
+    <circle class="valve" cx="430" cy="610" r="12"/>
+    <text class="text-label-small" x="445" y="615">0%</text>
   </g>
   
   <!-- N6 -->
   <g id="heater-n6">
-    <text class="text-label" x="600" y="600" text-anchor="middle" font-weight="bold">N6</text>
+    <text class="text-label" x="630" y="665" text-anchor="middle" font-weight="bold">N6</text>
     <rect class="damper-closed" x="570" y="670" width="20" height="60" rx="3"/>
     <text class="text-label-small" x="565" y="755" transform="rotate(-90 565 755)">Wlot</text>
     <rect class="heater-off" x="600" y="670" width="60" height="60" rx="5"/>
     <text class="text-label-small" x="630" y="705" text-anchor="middle" fill="#666">OFF</text>
     <rect class="damper-closed" x="670" y="670" width="20" height="60" rx="3"/>
     <text class="text-label-small" x="665" y="755" transform="rotate(-90 665 755)">Wylot</text>
-    <circle class="valve" cx="630" cy="630" r="12"/>
-    <text class="text-label-small" x="645" y="635">0%</text>
+    <circle class="valve" cx="630" cy="610" r="12"/>
+    <text class="text-label-small" x="645" y="615">0%</text>
   </g>
   
   <!-- N7 -->
   <g id="heater-n7">
-    <text class="text-label" x="800" y="600" text-anchor="middle" font-weight="bold">N7</text>
+    <text class="text-label" x="830" y="665" text-anchor="middle" font-weight="bold">N7</text>
     <rect class="damper-closed" x="770" y="670" width="20" height="60" rx="3"/>
     <text class="text-label-small" x="765" y="755" transform="rotate(-90 765 755)">Wlot</text>
     <rect class="heater-off" x="800" y="670" width="60" height="60" rx="5"/>
     <text class="text-label-small" x="830" y="705" text-anchor="middle" fill="#666">OFF</text>
     <rect class="damper-closed" x="870" y="670" width="20" height="60" rx="3"/>
     <text class="text-label-small" x="865" y="755" transform="rotate(-90 865 755)">Wylot</text>
-    <circle class="valve" cx="830" cy="630" r="12"/>
-    <text class="text-label-small" x="845" y="635">0%</text>
+    <circle class="valve" cx="830" cy="610" r="12"/>
+    <text class="text-label-small" x="845" y="615">0%</text>
   </g>
   
   <!-- N8 -->
   <g id="heater-n8">
-    <text class="text-label" x="1000" y="600" text-anchor="middle" font-weight="bold">N8</text>
+    <text class="text-label" x="1030" y="665" text-anchor="middle" font-weight="bold">N8</text>
     <rect class="damper-closed" x="970" y="670" width="20" height="60" rx="3"/>
     <text class="text-label-small" x="965" y="755" transform="rotate(-90 965 755)">Wlot</text>
     <rect class="heater-off" x="1000" y="670" width="60" height="60" rx="5"/>
     <text class="text-label-small" x="1030" y="705" text-anchor="middle" fill="#666">OFF</text>
     <rect class="damper-closed" x="1070" y="670" width="20" height="60" rx="3"/>
     <text class="text-label-small" x="1065" y="755" transform="rotate(-90 1065 755)">Wylot</text>
-    <circle class="valve" cx="1030" cy="630" r="12"/>
-    <text class="text-label-small" x="1045" y="635">0%</text>
+    <circle class="valve" cx="1030" cy="610" r="12"/>
+    <text class="text-label-small" x="1045" y="615">0%</text>
   </g>
   
-  <!-- Water Supply Lines (inactive) -->
-  <line class="water-pipe" x1="730" y1="900" x2="730" y2="330" stroke-dasharray="5,5" opacity="0.3"/>
-  <text class="text-label-small" x="740" y="900" fill="#999999">Zasilanie wodą (zamknięte)</text>
+  <!-- Water Supply Lines (inactive) - Ciąg 1 -->
+  <line class="water-pipe" x1="250" y1="310" x2="1100" y2="310" stroke-dasharray="5,5" opacity="0.3"/>
+  <text class="text-label-small" x="260" y="300" fill="#999999">Zasilanie wodą</text>
+  
+  <!-- Water Supply Lines (inactive) - Ciąg 2 -->
+  <line class="water-pipe" x1="250" y1="610" x2="1100" y2="610" stroke-dasharray="5,5" opacity="0.3"/>
+  <text class="text-label-small" x="260" y="600" fill="#999999">Zasilanie wodą</text>
   
   <!-- System Status Box -->
   <rect x="50" y="950" width="550" height="140" fill="white" stroke="#495057" stroke-width="2" rx="5"/>
