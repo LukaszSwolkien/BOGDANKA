@@ -1,7 +1,7 @@
 # System Sterowania Nagrzewnicami BOGDANKA Szyb 2
 
 ## 1. Diagram
-![Algorytm sterowania - BOGDANKA - Szyb 2](Algortym%20sterowania%20-%20BOGDANKA%20-%20Szyb%202%20v2.jpg)
+![Algorytm sterowania - BOGDANKA - Szyb 2](assets/Algortym%20sterowania%20-%20BOGDANKA%20-%20Szyb%202%20v2.jpg)
 
 
 ## 2. Stany nagrzewnicy
@@ -116,8 +116,75 @@ Zawór regulacyjny wody sterowany jest sterownikiem PID w celu uzyskania zadanej
 | Przepustnica nie reaguje | Kontynuuj pracę, alarm |
 
 ## 8. Przykladowa wizualizacja systemu sterowania w SCADA
-![Stan S0](diagram_S0.svg)
+![Stan S0](assets/diagram_S0.svg)
 
-![Stan S4](diagram_S4.svg)
+![Stan S4](assets/diagram_S4.svg)
 
-![Stan S8](diagram_S8.svg)
+![Stan S8](assets/diagram_S8.svg)
+
+## 9. Pytania wyjasniające
+
+[Szczegółowe pytania wyjaśniające dotyczące wymagań systemu](Pytania_wyjasnien_wymagan.md)
+
+Wybrane pytania potrzebne do zaimplementowania algorytmu i symulacji:
+
+### 9.1 Układ nagrzewnic
+- **Pytanie**: Czy nagrzewnice N1-N8 są podłączone równolegle do głównego kanału powietrza czy szeregowo (powietrze przechodzi przez kolejne nagrzewnice)?
+- **Znaczenie**: Ma wpływ na sposób regulacji temperatury oraz wizualizacje SCADA.
+
+### 9.2 Przypisanie wentylatorów
+- **Pytanie**: Które nagrzewnice są obsługiwane przez wentylator W1, a które przez W2?
+  - Czy W1 obsługuje N1-N4, a W2 obsługuje N5-N8?
+  - Czy oba wentylatory wspólnie obsługują wszystkie nagrzewnice?
+- **Znaczenie**: Krytyczne dla określenia zależności sterowania i sekwencji uruchamiania.
+
+### 9.3 Lokalizacja czujników temperatury
+- **Pytanie**: Gdzie dokładnie są zamontowane czujniki temperatury?
+  - Temperatura zewnętrzna (t_zewn) - lokalizacja poboru powietrza?
+  - Temperatura wylotowa - czy osobny czujnik dla każdej nagrzewnicy, czy wspólny na wylocie z grupy nagrzewnic?
+  - Czy są czujniki temperatury na wlocie do każdej nagrzewnicy?
+- **Znaczenie**: Wpływa na logikę sterowania i algorytmy regulacji.
+
+### 9.4 Zawory regulacyjne wody
+- **Pytanie**: Jaki typ zaworów jest zastosowany?
+  - Czas przejazdu zaworu z pozycji 0% do 100% [s]?
+  - Charakterystyka zaworu (liniowa, równoprocentowa)?
+- **Znaczenie**: Dobór odpowiedniego algorytmu PID i nastaw regulatora.
+
+### 9.5 Wyłączanie nagrzewnicy
+- **Pytanie**: W dokumencie jest informacja "Ustaw zawór regulacyjny wody na poziomie 20%" przy wyłączaniu. Czy to oznacza:
+  - Czy zawór ma być stopniowo zamykany z 100% do 20% przed wyłączeniem nagrzewnicy?
+  - Jak długo zawór ma pozostać na 20% przed pełnym zamknięciem?
+
+### 9.6 Indywidualna czy wspólna regulacja
+- **Pytanie**: Czy każda nagrzewnica ma osobny regulator PID z własnymi nastawami, czy wszystkie aktywne nagrzewnice są sterowane jednym regulatorem?
+- **Znaczenie**: Liczba wymaganych bloków PID w programie sterującym.
+
+### 9.7 Mechanizm histerezy
+- **Pytanie**: Jak działa histereza w tabeli stanów?
+  - Przykład S4: "Temp. włączenia: -8°C, Temp. wyłączenia: -6°C, Histereza: 2°C"
+  - Czy to oznacza, że przy spadku z -7°C do -8,1°C włączamy N4, a wyłączamy dopiero przy wzroście do -5,9°C?
+  - Czy histereza działa tylko przy wyłączaniu, czy również przy włączaniu?
+- **Znaczenie**: Uniknięcie częstego przełączania (chattering) nagrzewnic.
+
+### 9.8 Zakres wizualizacji
+- **Pytanie**: Jakie są wymagania dla systemu SCADA?
+  - Czy SCADA ma być na PC (Windows, Linux) czy panelu HMI?
+  - Czy wymagany jest zdalny dostęp (VPN, web-interface)?
+- **Znaczenie**: Dobór platformy SCADA i architektury oprogramowania.
+
+### 9.9 Funkcjonalność
+- **Pytanie**: Jakie funkcje ma posiadać SCADA?
+  - Prezentacja synoptyczna (podobna do dostarczonego diagramu)?
+  - Trendy historyczne (czas archiwizacji)?
+  - Możliwość zmiany nastaw (zadana temperatura, nastawy PID)?
+  - Ręczne sterowanie elementami (bypass automatyki)?
+  - Raporty i logi zdarzeń?
+- **Znaczenie**: Zakres projektu wizualizacji.
+
+### 9.10 Komunikacja
+- **Pytanie**: Jaki protokół komunikacyjny między PLC a SCADA?
+  - Modbus TCP/RTU?
+  - OPC UA?
+  - Proprietary (np. S7, EtherNet/IP)?
+- **Znaczenie**: Wazne dla przygotowania algorypmu pod wpiecie w rzeczywisty system

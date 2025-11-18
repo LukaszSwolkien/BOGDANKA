@@ -4,7 +4,7 @@
 
 ### 1.1 Układ nagrzewnic
 - **Pytanie**: Czy nagrzewnice N1-N8 są podłączone równolegle do głównego kanału powietrza czy szeregowo (powietrze przechodzi przez kolejne nagrzewnice)?
-- **Znaczenie**: Ma wpływ na projekt hydrauliczny, dobór wentylatorów i sposób regulacji temperatury.
+- **Znaczenie**: Ma wpływ na projekt hydrauliczny, dobór wentylatorów i sposób regulacji temperatury oraz wizualizacje SCADA.
 
 ### 1.2 Przypisanie wentylatorów
 - **Pytanie**: Które nagrzewnice są obsługiwane przez wentylator W1, a które przez W2?
