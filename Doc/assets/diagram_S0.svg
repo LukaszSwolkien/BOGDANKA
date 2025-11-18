@@ -39,14 +39,20 @@
   <text class="text-status status-off" x="800" y="85" text-anchor="middle">WSZYSTKIE URZĄDZENIA WYŁĄCZONE 🔴</text>
   
   <!-- Legend -->
-  <rect x="1250" y="960" width="300" height="130" fill="white" stroke="#495057" stroke-width="2" rx="5"/>
-  <text class="text-label" x="1260" y="980" font-weight="bold">Legenda:</text>
-  <rect class="heater-off" x="1260" y="990" width="30" height="20" rx="3"/>
-  <text class="text-label-small" x="1295" y="1005">Nagrzewnica wyłączona</text>
-  <rect class="damper-closed" x="1260" y="1015" width="30" height="20" rx="3"/>
-  <text class="text-label-small" x="1295" y="1030">Przepustnica zamknięta</text>
-  <circle class="fan-off" cx="1275" cy="1058" r="15"/>
-  <text class="text-label-small" x="1295" y="1065">Wentylator wyłączony</text>
+  <rect x="1250" y="900" width="300" height="190" fill="white" stroke="#495057" stroke-width="2" rx="5"/>
+  <text class="text-label" x="1260" y="920" font-weight="bold">Legenda:</text>
+  <rect class="heater-on" x="1260" y="930" width="30" height="20" rx="3"/>
+  <text class="text-label-small" x="1295" y="945">Nagrzewnica włączona</text>
+  <rect class="heater-off" x="1260" y="955" width="30" height="20" rx="3"/>
+  <text class="text-label-small" x="1295" y="970">Nagrzewnica wyłączona</text>
+  <rect class="damper-open" x="1260" y="980" width="30" height="20" rx="3"/>
+  <text class="text-label-small" x="1295" y="995">Przepustnica otwarta</text>
+  <rect class="damper-closed" x="1260" y="1005" width="30" height="20" rx="3"/>
+  <text class="text-label-small" x="1295" y="1020">Przepustnica zamknięta</text>
+  <circle class="fan-on" cx="1275" cy="1043" r="15"/>
+  <text class="text-label-small" x="1295" y="1050">Wentylator włączony</text>
+  <circle class="fan-off" cx="1275" cy="1073" r="15"/>
+  <text class="text-label-small" x="1295" y="1080">Wentylator wyłączony</text>
   
   
   <!-- CIĄG 1: W1 → N1 → N2 → N3 → N4 -->
