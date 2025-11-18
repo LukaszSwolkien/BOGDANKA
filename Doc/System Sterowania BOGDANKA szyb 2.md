@@ -118,7 +118,19 @@ Zawór regulacyjny wody sterowany jest sterownikiem PID w celu uzyskania zadanej
 ## 8. Przykladowa wizualizacja systemu sterowania w SCADA
 ![Stan S0](assets/diagram_S0.svg)
 
+![Stan S1](assets/diagram_S1.svg)
+
+![Stan S2](assets/diagram_S2.svg)
+
+![Stan S3](assets/diagram_S3.svg)
+
 ![Stan S4](assets/diagram_S4.svg)
+
+![Stan S5](assets/diagram_S5.svg)
+
+![Stan S6](assets/diagram_S6.svg)
+
+![Stan S7](assets/diagram_S7.svg)
 
 ![Stan S8](assets/diagram_S8.svg)
 
