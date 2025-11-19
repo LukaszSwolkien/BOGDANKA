@@ -88,6 +88,7 @@ Tabela definiujaca akcje na sterowanym elemencie w zaleznosci od warunku (zadane
 
 ## 6. Obsługa Awarii
 
+Przykladowe awarie do potwierdzenia i uzupelnienia !
 | Warunek Awarii | Akcja |
 |----------------|-------|
 | Brak odczytu temperatury zewnętrznej | Zachowaj ostatni stan, alarm |
