@@ -118,7 +118,7 @@
     <rect x="253.119" y="77.614" width="456.559" height="187.379" fill="#fffef0" stroke="#111" stroke-width="1.5" rx="5" style="stroke-width: 1.5;"/>
     <text class="label" font-weight="bold" x="263.119" y="97.614" style="white-space: pre; stroke-width: 1; font-size: 18px;">Zasada działania UAR prędkości wentylatora:</text>
     <text class="annotation" x="263.119" y="122.614" style="white-space: pre; stroke-width: 1; font-size: 14px;">• Regulator PID porównuje temperaturę zadaną w szybie (Ts=2°C)</text>
-    <text class="annotation" x="268.119" y="142.614" style="white-space: pre; stroke-width: 1; font-size: 14px;">z temperaturą mierzoną na poziomie -30m (PV)</text>
+    <text class="annotation" x="268.119" y="142.614" style="white-space: pre; stroke-width: 1; font-size: 14px;">z temperaturą mierzoną na poziomie -4,30m (PV)</text>
     <text class="annotation" x="263.119" y="167.614" style="white-space: pre; stroke-width: 1; font-size: 14px;">• Spadek temperatury w szybie → zwiększenie prędkości wentylatora</text>
     <text class="annotation" x="268.119" y="187.614" style="white-space: pre; stroke-width: 1; font-size: 14px;">(przetwornica zwiększa częstotliwość 25→50 Hz)</text>
     <text class="annotation" x="263.119" y="212.614" style="white-space: pre; stroke-width: 1; font-size: 14px;">• Wzrost temperatury w szybie → zmniejszenie prędkości wentylatora</text>

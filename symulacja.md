@@ -157,7 +157,7 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
 
 ### 1. UAR Temperatury Powietrza - Schemat Ogólny
 
-![Schemat UAR temperatury](Symulacja/schemat_uar_temperatury_powietrza.svg)
+![Schemat UAR temperatury](Symulacja/schemat_uar_nagrzewnica.svg)
 
 **Opis działania:**
 - **Regulator PID** porównuje temperaturę zadaną (Tz=50°C) z temperaturą mierzoną
@@ -177,18 +177,12 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
 
 **Stan ON - Nagrzewnica w pracy:**
 - 🟢 **Regulator PID w trybie REGULACJA**
-  - Aktywnie kontroluje temperaturę powietrza
   - SP (setpoint) = 50°C
   - PV (process variable) = temperatura mierzona
   - CV (control variable) = 20-100% (zmienne)
 
 - ✅ **Zawór regulacyjny**
   - Regulowany w zakresie 20-100%
-  - Dynamiczne sterowanie przepływem wody
-
-- ✅ **Przepływ wody grzewczej**
-  - Pełna regulacja według zapotrzebowania
-  - 🔴 Czerwone linie = aktywny przepływ
 
 - ✅ **Przepustnice otwarte**
   - Pełny przepływ powietrza przez nagrzewnicę
@@ -205,18 +199,13 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
 
 **Stan OFF - Nagrzewnica wyłączona:**
 - 🟡 **Regulator PID w trybie UTRZYMANIE**
-  - PID pozostaje aktywny
   - Utrzymuje zawór na stałej pozycji 20%
   - SP = CV = 20% (stałe)
   - PV = ignorowane (temperatura nie jest używana)
 
 - ⚠️ **Zawór regulacyjny**
   - Utrzymywany na stałej pozycji 20%
-  - Ochrona przed zamrożeniem wężownicy
-
-- 💧 **Minimalny przepływ wody**
-  - 20% przepływu zapobiega zamrożeniu
-  - 🔴 Czerwone przerywane linie = minimalny przepływ
+  - Ochrona przed zamrożeniem
 
 - ❌ **Przepustnice zamknięte**
   - Brak przepływu powietrza
@@ -226,7 +215,6 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
   1. PID zamyka zawór z aktualnej pozycji do 20%
   2. Zawór ustabilizowany na 20%
   3. Zamykanie przepustnic
-  4. PID przełącza się w tryb UTRZYMANIA
 
 ---
 
@@ -235,7 +223,7 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
 ![UAR Prędkość Wentylatora](Symulacja/schemat_uar_predkosc_wentylatora.svg)
 
 **Opis działania:**
-- **Regulator PID** utrzymuje temperaturę w szybie (Ts=2°C na poziomie -30m)
+- **Regulator PID** utrzymuje temperaturę w szybie (Ts=2°C na poziomie -4,30m)
 - **Sygnał sterujący (CV)** kontroluje częstotliwość (25-50 Hz)
 - **Przetwornica częstotliwości (Falownik)**
   - Konwertuje sygnał PID na zmienną częstotliwość
@@ -247,13 +235,13 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
   - Wał mechanicznie połączony z wentylatorem
 
 - **Wentylator (W1/W2)**
-  - W1 obsługuje nagrzewnice N1-N4
+  - W1 obsługuje nagrzewnice N1-N4 (poziom 4,30m)
   - W2 obsługuje nagrzewnice N5-N8
   - Wydajność zależy od prędkości obrotowej
 
 - **Czujnik temperatury w szybie**
-  - Poziom -30m
-  - Sprzężenie zwrotne do regulatora
+  - Poziom -4,30m (Ciąg I) oraz Poziom -7,90m (Ciąg II)
+  - Sprzężenie zwrotne do regulatora w kazdym ciągu
 
 **Logika regulacji:**
 - 🔻 T_szyb ↓ (za zimno) → PID ↑ częstotliwość → silnik szybciej → więcej ciepłego powietrza
@@ -261,7 +249,7 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
 
 ---
 
-## 📊 Panel HMI - Elementy Wizualizacji
+## Panel HMI - Elementy Wizualizacji
 
 ### Kolory i Konwencje Wizualne
 
@@ -286,7 +274,7 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
 
 ---
 
-## 🎯 Główne Wskaźniki na Panelu HMI
+## Główne Wskaźniki na Panelu HMI
 
 ### Temperatury:
 - **t_zewn** - Temperatura zewnętrzna [°C]
@@ -314,16 +302,16 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
 ## ⚙️ Tryby Pracy Systemu
 
 ### Tryb AUTO (Automatyczny)
-- ✅ System automatycznie wybiera scenariusz na podstawie t_zewn
-- ✅ Regulatory PID aktywnie kontrolują:
+- System automatycznie wybiera scenariusz na podstawie t_zewn
+- Regulatory PID aktywnie kontrolują:
   - Temperaturę powietrza (zawory N1-N8)
   - Temperaturę w szybie (wentylatory W1-W2)
-- ✅ Automatyczne włączanie/wyłączanie nagrzewnic
-- ✅ Automatyczna regulacja prędkości wentylatorów
+- Automatyczne włączanie/wyłączanie nagrzewnic
+- Automatyczna regulacja prędkości wentylatorów
 
 ### Tryb MANUAL (Ręczny)
-- 🎛️ Operator ma pełną kontrolę nad systemem
-- 🎛️ Możliwość ręcznego ustawienia:
+- Operator ma pełną kontrolę nad systemem
+- Możliwość ręcznego ustawienia:
   - Pozycji zaworów (20-100%)
   - Częstotliwości wentylatorów (25-50 Hz)
   - Włączenia/wyłączenia poszczególnych nagrzewnic
