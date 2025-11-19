@@ -1,11 +1,10 @@
-<?xml version="1.0"?>
-<svg width="1400" height="900" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
- <defs>
-  <marker id="arrow-head" markerHeight="8" markerWidth="8" orient="auto-start-reverse" refX="9" refY="5" viewBox="0 0 10 10">
-   <path d="m0,0l10,5l-10,5l0,-10z" fill="#111" id="arrow1"/>
-  </marker>
- </defs>
-<style>
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="56.3982 1.0541 1297.219 900" width="1297.22px" height="900px">
+  <defs>
+    <marker id="arrow-head" markerHeight="8" markerWidth="8" orient="auto-start-reverse" refX="9" refY="5" viewBox="0 0 10 10">
+      <path d="m0,0l10,5l-10,5l0,-10z" fill="#111" id="arrow1"/>
+    </marker>
+    <style>
     .title { font-family: "Arial", sans-serif; font-weight: 600; font-size: 26px; fill: #111; }
     .label { font-family: "Arial", sans-serif; font-size: 18px; fill: #111; }
     .small-label { font-family: "Arial", sans-serif; font-size: 14px; fill: #111; }
@@ -25,159 +24,105 @@
     .annotation { font-family: "Arial", sans-serif; font-size: 14px; fill: #111; }
     .param-label { font-family: "Arial", sans-serif; font-size: 13px; fill: #111; }
 </style>
-<rect width="1400" height="900" fill="#fff"/>
-
-<g class="layer">
-  <title>Layer 1</title>
-  
-  <!-- Tytuł -->
-  <text class="title" text-anchor="middle" x="700" y="40">Rys. 2. Schemat ideowy UAR prędkości wentylatora</text>
-  
-  <!-- Regulator PID -->
-  <rect class="regulator" x="150" y="300" width="200" height="150" rx="5"/>
-  <text class="label" text-anchor="middle" x="250" y="330" font-weight="bold">Regulator PID</text>
-  <text class="small-label" x="170" y="355">Parametry:</text>
-  <text class="param-label" x="180" y="375">Kp - wzmocnienie</text>
-  <text class="param-label" x="180" y="395">Ti - człon całkujący</text>
-  <text class="param-label" x="180" y="415">Td - człon różniczkujący</text>
-  
-  <!-- Wejścia regulatora - SP (setpoint) -->
-  <line class="signal-line" marker-end="url(#arrow-head)" x1="50" y1="330" x2="150" y2="330"/>
-  <text class="annotation" x="60" y="320">SP (wartość zadana)</text>
-  <text class="param-label" x="60" y="340" font-weight="bold">Ts = 2°C</text>
-  <text class="param-label" x="60" y="355">(temp. w szybie)</text>
-  
-  <!-- Wejście regulatora - PV (process variable) -->
-  <line class="signal-line" marker-end="url(#arrow-head)" x1="250" y1="520" x2="250" y2="450"/>
-  <text class="annotation" x="260" y="490">PV (temperatura mierzona)</text>
-  <text class="param-label" x="260" y="505">T_szyb (-30m)</text>
-  
-  <!-- Wyjście regulatora - CV (control variable) -->
-  <line class="signal-line" marker-end="url(#arrow-head)" x1="350" y1="375" x2="470" y2="375"/>
-  <text class="annotation" x="360" y="365">CV (sygnał sterujący)</text>
-  <text class="param-label" x="360" y="385">częstotliwość:</text>
-  <text class="param-label" x="360" y="400">25-50 Hz</text>
-  
-  <!-- Przetwornica częstotliwości (falownik) -->
-  <g transform="translate(520, 320)">
+  </defs>
+  <g style="" transform="matrix(0.926585018634796, 0, 0, 1, 56.39824081654072, 1.0541080550583644)">
+    <rect width="1400" height="900" fill="#fff"/>
+  </g>
+  <text class="title" text-anchor="middle" x="700" y="40" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 2.842170943040401e-14, 7.105427357601002e-15)">Rys. 2. Schemat ideowy UAR prędkości wentylatora</text>
+  <g transform="matrix(1, 0, 0, 1, 65.0000171959405, 7.105427357601002e-15)">
+    <rect class="regulator" x="154" y="300" width="200" height="150" rx="5"/>
+    <text class="label" text-anchor="middle" x="250" y="330" font-weight="bold" style="white-space: pre;">Regulator PID</text>
+    <text class="small-label" x="170" y="355" style="white-space: pre;">Parametry:</text>
+    <text class="param-label" x="180" y="375" style="white-space: pre;">Kp - wzmocnienie</text>
+    <text class="param-label" x="180" y="395" style="white-space: pre;">Ti - człon całkujący</text>
+    <text class="param-label" x="180" y="415" style="white-space: pre;">Td - człon różniczkujący</text>
+  </g>
+  <g transform="matrix(1, 0, 0, 1, 69.00001731514979, 7.105427357601002e-15)">
+    <line class="signal-line" marker-end="url(#arrow-head)" x1="50" y1="330" x2="150" y2="330"/>
+    <g>
+      <text class="annotation" x="15.725" y="286.793" style="white-space: pre; font-size: 14px;">SP (wartość zadana)</text>
+      <text class="param-label" x="50.512" y="303.104" font-weight="bold" style="white-space: pre; font-size: 13px;">Ts = 2°C</text>
+      <text class="param-label" x="29.956" y="318.631" style="white-space: pre; font-size: 13px;">(temp. w szybie)</text>
+    </g>
+  </g>
+  <line class="signal-line" marker-end="url(#arrow-head)" x1="319" y1="618.037" x2="319" y2="450" style="stroke-width: 2.5;" transform="matrix(1, 0, 0, 1, 2.842170943040401e-14, 7.105427357601002e-15)"/>
+  <text class="annotation" x="329" y="490" style="white-space: pre; stroke-width: 1; font-size: 14px;" transform="matrix(1, 0, 0, 1, 2.842170943040401e-14, 7.105427357601002e-15)">PV (temperatura mierzona)</text>
+  <text class="param-label" x="329" y="505" style="white-space: pre; font-size: 13px; stroke-width: 1;" transform="matrix(1, 0, 0, 1, 2.842170943040401e-14, 7.105427357601002e-15)">T_szyb (-4,30m)</text>
+  <line class="signal-line" x1="1015.55" y1="619.81" x2="317.946" y2="619.81" style="stroke-width: 2.5;" transform="matrix(1, 0, 0, 1, 2.842170943040401e-14, 7.105427357601002e-15)"/>
+  <g transform="matrix(1, 0, 0, 1, 69.00001731514979, 7.105427357601002e-15)">
+    <line class="signal-line" marker-end="url(#arrow-head)" x1="350" y1="375" x2="500.571" y2="375" style=""/>
+    <text class="annotation" x="363.162" y="327.577" style="white-space: pre; font-size: 14px;">CV (sygnał sterujący)</text>
+    <text class="param-label" x="363.163" y="343.887" style="white-space: pre; font-size: 13px;">częstotliwość:</text>
+    <text class="param-label" x="363.69" y="360.469" style="white-space: pre; font-size: 13px;">25-50 Hz</text>
+  </g>
+  <g transform="matrix(1, 0, 0, 1, 570.024980366974, 318.94587132173365)">
     <rect class="inverter" x="0" y="0" width="140" height="110" rx="3"/>
-    <text class="label" text-anchor="middle" x="70" y="30" font-weight="bold">Przetwornica</text>
-    <text class="label" text-anchor="middle" x="70" y="50">częstotliwości</text>
-    <text class="small-label" text-anchor="middle" x="70" y="70">(Falownik)</text>
-    <text class="param-label" text-anchor="middle" x="70" y="90">25-50 Hz</text>
-    <text class="param-label" text-anchor="middle" x="70" y="105">400V 3~</text>
+    <text class="label" text-anchor="middle" x="70" y="30" font-weight="bold" style="white-space: pre;">Przetwornica</text>
+    <text class="label" text-anchor="middle" x="70" y="50" style="white-space: pre;">częstotliwości</text>
+    <text class="small-label" text-anchor="middle" x="70" y="70" style="white-space: pre;">(Falownik)</text>
+    <text class="param-label" text-anchor="middle" x="70" y="90" style="white-space: pre;">25-50 Hz</text>
+    <text class="param-label" text-anchor="middle" x="70" y="105" style="white-space: pre;">400V 3~</text>
   </g>
-  
-  <!-- Silnik -->
-  <circle class="motor" cx="780" cy="375" r="60"/>
-  <text class="label" text-anchor="middle" x="780" y="370" font-size="32" font-weight="bold">M</text>
-  <text class="small-label" text-anchor="middle" x="780" y="390" font-size="12">Silnik</text>
-  <text class="small-label" text-anchor="middle" x="780" y="405" font-size="12">elektryczny</text>
-  <text class="param-label" text-anchor="middle" x="780" y="450">3-fazowy</text>
-  
-  <!-- Połączenie falownika z silnikiem -->
-  <line class="signal-line" marker-end="url(#arrow-head)" x1="660" y1="375" x2="720" y2="375"/>
-  <text class="param-label" text-anchor="middle" x="690" y="365">400V</text>
-  <text class="param-label" text-anchor="middle" x="690" y="390">zmienna f</text>
-  
-  <!-- Wał napędowy -->
-  <line class="shaft" x1="840" y1="375" x2="920" y2="375"/>
-  <text class="param-label" text-anchor="middle" x="880" y="365">wał</text>
-  
-  <!-- Wentylator -->
-  <circle class="fan" cx="1000" cy="375" r="80"/>
-  <text class="label" text-anchor="middle" x="1000" y="365" font-size="28" font-weight="bold">W1/W2</text>
-  <text class="small-label" text-anchor="middle" x="1000" y="390">Wentylator</text>
-  
-  <!-- Łopatki wentylatora (symbol) -->
-  <g transform="translate(1000, 375)">
-    <line stroke="#666" stroke-width="2" x1="-30" y1="0" x2="30" y2="0"/>
-    <line stroke="#666" stroke-width="2" x1="0" y1="-30" x2="0" y2="30"/>
-    <line stroke="#666" stroke-width="2" x1="-22" y1="-22" x2="22" y2="22"/>
-    <line stroke="#666" stroke-width="2" x1="-22" y1="22" x2="22" y2="-22"/>
+  <g transform="matrix(1, 0, 0, 1, 67.00001725554517, 7.105427357601002e-15)">
+    <circle class="motor" cx="782" cy="375" r="60"/>
+    <text class="label" text-anchor="middle" x="780" y="370" font-size="32" font-weight="bold" style="white-space: pre;">M</text>
+    <text class="small-label" text-anchor="middle" x="780" y="390" font-size="12" style="white-space: pre;">Silnik</text>
+    <text class="small-label" text-anchor="middle" x="780" y="405" font-size="12" style="white-space: pre;">elektryczny</text>
+    <text class="param-label" text-anchor="middle" x="780" y="450" style="white-space: pre;">3-fazowy</text>
+    <line class="signal-line" marker-end="url(#arrow-head)" x1="643.025" y1="375" x2="722" y2="375" style=""/>
+    <line class="shaft" x1="842" y1="375" x2="922" y2="375"/>
+    <text class="param-label" text-anchor="middle" x="882" y="365" style="white-space: pre; font-size: 13px;">wał</text>
   </g>
-  
-  <!-- Powietrze przepływające przez wentylator -->
-  <line class="air-line" marker-end="url(#arrow-head)" x1="850" y1="300" x2="920" y2="300"/>
-  <text class="annotation" x="860" y="290" fill="#7f8c8d">Powietrze</text>
-  <text class="param-label" x="865" y="315" fill="#7f8c8d">(wlot)</text>
-  
-  <!-- Powietrze wylotowe -->
-  <line class="air-line-thick" marker-end="url(#arrow-head)" x1="1080" y1="375" x2="1250" y2="375"/>
-  <text class="annotation" x="1120" y="365" fill="#7f8c8d" font-weight="bold">Powietrze</text>
-  <text class="param-label" x="1120" y="395" fill="#7f8c8d">(do szybu)</text>
-  
-  <!-- Kanał powietrzny od wentylatora do szybu -->
-  <g transform="translate(1100, 475)">
-    <rect class="duct" x="0" y="0" width="150" height="80" rx="5" fill="none" stroke="#333" stroke-width="2"/>
-    <text class="annotation" text-anchor="middle" x="75" y="25">Kanał</text>
-    <text class="annotation" text-anchor="middle" x="75" y="45">wentylacyjny</text>
-    <text class="annotation" text-anchor="middle" x="75" y="65">do szybu</text>
+  <g transform="matrix(1, 0, 0, 1, 69.00001731514979, 7.105427357601002e-15)">
+    <g>
+      <circle class="fan" cx="1000" cy="375" r="80"/>
+      <text class="small-label" text-anchor="middle" x="1001.58" y="380.512" style="white-space: pre; font-size: 14px;">Wentylator<tspan x="1001.5800170898438" dy="1em">​</tspan><tspan x="1001.5800170898438" dy="1em">​</tspan>W1</text>
+    </g>
+    <g>
+      <line class="air-line" marker-end="url(#arrow-head)" x1="929.589" y1="221.462" x2="1070.21" y2="221.463" style="transform-box: fill-box; transform-origin: 50% 50%;" transform="matrix(0, 1, -1, 0, 0.00001, 0.000026)"/>
+      <text class="annotation" x="1009.16" y="189.326" fill="#7f8c8d" style="white-space: pre; font-size: 14px;">Powietrze</text>
+      <text class="param-label" x="1019.44" y="208.001" fill="#7f8c8d" style="white-space: pre; font-size: 13px;">(wlot)</text>
+    </g>
+    <g>
+      <text class="annotation" text-anchor="middle" x="1041.13" y="479.444" style="white-space: pre; stroke-width: 1; font-size: 14px;">Kanał</text>
+      <text class="annotation" text-anchor="middle" x="1044.29" y="495.227" style="white-space: pre; stroke-width: 1; font-size: 14px;">wentylacyjny</text>
+      <line class="air-line" marker-end="url(#arrow-head)" x1="997.903" y1="455.908" x2="997.903" y2="540.966" style=""/>
+    </g>
+    <g transform="matrix(1, 0, 0, 1, 997.672149, 545.71016)">
+      <rect x="-50" y="0" width="100" height="150" fill="#e0e0e0" stroke="#333" stroke-width="2" rx="3"/>
+      <text class="label" text-anchor="middle" x="0" y="30" font-weight="bold" style="white-space: pre;">SZYB</text>
+      <text class="param-label" text-anchor="middle" x="0" y="50" style="white-space: pre;">poziom -4,30m</text>
+      <circle class="sensor" cx="0" cy="85" r="25"/>
+      <text class="label" text-anchor="middle" x="0" y="90" font-size="16" style="white-space: pre;">T</text>
+      <text class="small-label" text-anchor="middle" x="0" y="125" style="white-space: pre;">Czujnik temp.</text>
+    </g>
   </g>
-  
-  <!-- Połączenie wentylatora z kanałem -->
-  <line class="air-line" x1="1000" y1="455" x2="1000" y2="475"/>
-  <line class="air-line" marker-end="url(#arrow-head)" x1="1000" y1="475" x2="1175" y2="475"/>
-  
-  <!-- Szyb z czujnikiem -->
-  <g transform="translate(1150, 600)">
-    <rect x="-50" y="0" width="100" height="150" fill="#e0e0e0" stroke="#333" stroke-width="2" rx="3"/>
-    <text class="label" text-anchor="middle" x="0" y="30" font-weight="bold">SZYB</text>
-    <text class="param-label" text-anchor="middle" x="0" y="50">poziom -30m</text>
-    
-    <!-- Czujnik temperatury w szybie -->
-    <circle class="sensor" cx="0" cy="85" r="25"/>
-    <text class="label" text-anchor="middle" x="0" y="90" font-size="16">T</text>
-    <text class="small-label" text-anchor="middle" x="0" y="125">Czujnik temp.</text>
+  <g transform="matrix(1, 0, 0, 1, -52.181554442094324, 6.852187360888337)">
+    <rect x="139.842" y="631.845" width="493.455" height="222.694" fill="#fffef0" stroke="#111" stroke-width="1.5" rx="5" style="stroke-width: 1.5;"/>
+    <g transform="matrix(1, 0, 0, 1, 147.00002, 652.000019)">
+      <text class="label" font-weight="bold" x="0" y="0" style="white-space: pre;">Legenda:</text>
+      <line class="signal-line" x1="0" y1="30" x2="60" y2="30"/>
+      <text class="annotation" x="70" y="35" style="white-space: pre;">Sygnał sterujący/pomiarowy</text>
+      <line class="air-line" x1="0" y1="55" x2="60" y2="55"/>
+      <text class="annotation" x="70" y="60" style="white-space: pre;">Przepływ powietrza</text>
+      <line class="shaft" x1="0" y1="80" x2="60" y2="80"/>
+      <text class="annotation" x="70" y="85" style="white-space: pre;">Połączenie mechaniczne (wał)</text>
+    </g>
+    <text class="annotation" x="149" y="762" style="white-space: pre; stroke-width: 1; font-size: 14px;">SP (Set Point) - wartość zadana regulacji (Ts = 2°C)</text>
+    <text class="annotation" x="147" y="782" style="white-space: pre; stroke-width: 1; font-size: 14px;">PV (Process Variable) - wartość mierzona (temperatura w szybie na -4,30m)</text>
+    <text class="annotation" x="147" y="802" style="white-space: pre; stroke-width: 1; font-size: 14px;">CV (Control Variable) - sygnał wyjściowy regulatora (częstotliwość 25-50 Hz)</text>
+    <text class="annotation" x="147" y="822" style="white-space: pre; stroke-width: 1; font-size: 14px;">M - silnik elektryczny 3-fazowy napędzający wentylator</text>
+    <text class="annotation" x="147" y="842" style="white-space: pre; stroke-width: 1; font-size: 14px;">W1 - wentylator obsługujący nagrzewnice N1-N4</text>
   </g>
-  
-  <!-- Połączenie kanału z szybem -->
-  <line class="air-line" marker-end="url(#arrow-head)" x1="1175" y1="555" x2="1175" y2="600"/>
-  
-  <!-- Linia sprzężenia zwrotnego od czujnika do regulatora -->
-  <line class="signal-line" x1="1150" y1="710" x2="1150" y2="750"/>
-  <line class="signal-line" x1="1150" y1="750" x2="250" y2="750"/>
-  <line class="signal-line" marker-end="url(#arrow-head)" x1="250" y1="750" x2="250" y2="520"/>
-  
-  <!-- Legenda -->
-  <g transform="translate(100, 650)">
-    <text class="label" font-weight="bold" x="0" y="0">Legenda:</text>
-    
-    <!-- Linia sygnałowa -->
-    <line class="signal-line" x1="0" y1="30" x2="60" y2="30"/>
-    <text class="annotation" x="70" y="35">Sygnał sterujący/pomiarowy</text>
-    
-    <!-- Linia powietrza -->
-    <line class="air-line" x1="0" y1="55" x2="60" y2="55"/>
-    <text class="annotation" x="70" y="60">Przepływ powietrza</text>
-    
-    <!-- Wał mechaniczny -->
-    <line class="shaft" x1="0" y1="80" x2="60" y2="80"/>
-    <text class="annotation" x="70" y="85">Połączenie mechaniczne (wał)</text>
+  <g transform="matrix(1, 0, 0, 1, 216.0571811216228, 3.162518118694969)">
+    <rect x="253.119" y="77.614" width="456.559" height="187.379" fill="#fffef0" stroke="#111" stroke-width="1.5" rx="5" style="stroke-width: 1.5;"/>
+    <text class="label" font-weight="bold" x="263.119" y="97.614" style="white-space: pre; stroke-width: 1; font-size: 18px;">Zasada działania UAR prędkości wentylatora:</text>
+    <text class="annotation" x="263.119" y="122.614" style="white-space: pre; stroke-width: 1; font-size: 14px;">• Regulator PID porównuje temperaturę zadaną w szybie (Ts=2°C)</text>
+    <text class="annotation" x="268.119" y="142.614" style="white-space: pre; stroke-width: 1; font-size: 14px;">z temperaturą mierzoną na poziomie -30m (PV)</text>
+    <text class="annotation" x="263.119" y="167.614" style="white-space: pre; stroke-width: 1; font-size: 14px;">• Spadek temperatury w szybie → zwiększenie prędkości wentylatora</text>
+    <text class="annotation" x="268.119" y="187.614" style="white-space: pre; stroke-width: 1; font-size: 14px;">(przetwornica zwiększa częstotliwość 25→50 Hz)</text>
+    <text class="annotation" x="263.119" y="212.614" style="white-space: pre; stroke-width: 1; font-size: 14px;">• Wzrost temperatury w szybie → zmniejszenie prędkości wentylatora</text>
+    <text class="annotation" x="268.119" y="232.614" style="white-space: pre; stroke-width: 1; font-size: 14px;">(przetwornica zmniejsza częstotliwość 50→25 Hz)</text>
+    <text class="annotation" x="263.119" y="257.614" style="white-space: pre; stroke-width: 1; font-size: 14px;">• Zakres częstotliwości: 25-50 Hz (min-max prędkości obrotowej)</text>
   </g>
-  
-  <!-- Dodatkowe opisy -->
-  <g transform="translate(100, 770)">
-    <text class="label" font-weight="bold" x="0" y="0">Oznaczenia:</text>
-    <text class="annotation" x="0" y="20">SP (Set Point) - wartość zadana regulacji (Ts = 2°C)</text>
-    <text class="annotation" x="0" y="40">PV (Process Variable) - wartość mierzona (temperatura w szybie na -30m)</text>
-    <text class="annotation" x="0" y="60">CV (Control Variable) - sygnał wyjściowy regulatora (częstotliwość 25-50 Hz)</text>
-    <text class="annotation" x="0" y="80">M - silnik elektryczny 3-fazowy napędzający wentylator</text>
-    <text class="annotation" x="0" y="100">W1/W2 - wentylatory obsługujące odpowiednio nagrzewnice N1-N4 i N5-N8</text>
-  </g>
-  
-  <!-- Notatka o działaniu -->
-  <g transform="translate(650, 650)">
-    <rect x="-10" y="-20" width="650" height="180" fill="#fffef0" stroke="#111" stroke-width="1.5" rx="5"/>
-    <text class="label" font-weight="bold" x="0" y="0">Zasada działania UAR prędkości wentylatora:</text>
-    <text class="annotation" x="0" y="25">• Regulator PID porównuje temperaturę zadaną w szybie (Ts=2°C)</text>
-    <text class="annotation" x="5" y="45">z temperaturą mierzoną na poziomie -30m (PV)</text>
-    <text class="annotation" x="0" y="70">• Spadek temperatury w szybie → zwiększenie prędkości wentylatora</text>
-    <text class="annotation" x="5" y="90">(przetwornica zwiększa częstotliwość 25→50 Hz)</text>
-    <text class="annotation" x="0" y="115">• Wzrost temperatury w szybie → zmniejszenie prędkości wentylatora</text>
-    <text class="annotation" x="5" y="135">(przetwornica zmniejsza częstotliwość 50→25 Hz)</text>
-    <text class="annotation" x="0" y="160">• Zakres częstotliwości: 25-50 Hz (min-max prędkości obrotowej)</text>
-  </g>
-  
-</g>
 </svg>
