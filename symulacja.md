@@ -388,13 +388,13 @@ f_max = 50 Hz (maksymalna prędkość)
 7. **Diagnostyka** - Stan urządzeń i statystyki
 
 ### Możliwości Operatora:
-- ✅ Monitoring wszystkich parametrów w czasie rzeczywistym
-- ✅ Przełączanie trybu AUTO/MANUAL
-- ✅ Ręczne sterowanie w trybie MANUAL
-- ✅ Zmiana parametrów PID (z odpowiednimi uprawnieniami)
-- ✅ Przeglądanie trendów historycznych
-- ✅ Kwituowanie alarmów
-- ✅ Export danych do raportów
+- Monitoring wszystkich parametrów w czasie rzeczywistym
+- Przełączanie trybu AUTO/MANUAL
+- Ręczne sterowanie w trybie MANUAL
+- Zmiana parametrów PID (z odpowiednimi uprawnieniami)
+- Przeglądanie trendów historycznych
+- Kwituowanie alarmów
+- Export danych do raportów
 
 ---
 
