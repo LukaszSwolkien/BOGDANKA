@@ -28,7 +28,7 @@
   <g style="" transform="matrix(0.926585018634796, 0, 0, 1, 56.39824081654072, 1.0541080550583644)">
     <rect width="1400" height="900" fill="#fff"/>
   </g>
-  <text class="title" text-anchor="middle" x="700" y="40" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 2.842170943040401e-14, 7.105427357601002e-15)">Rys. 2. Schemat ideowy UAR prędkości wentylatora</text>
+  <text class="title" text-anchor="middle" x="700" y="40" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 2.842170943040401e-14, 7.105427357601002e-15)">Schemat ideowy UAR prędkości wentylatora</text>
   <g transform="matrix(1, 0, 0, 1, 65.0000171959405, 7.105427357601002e-15)">
     <rect class="regulator" x="154" y="300" width="200" height="150" rx="5"/>
     <text class="label" text-anchor="middle" x="250" y="330" font-weight="bold" style="white-space: pre;">Regulator PID</text>
