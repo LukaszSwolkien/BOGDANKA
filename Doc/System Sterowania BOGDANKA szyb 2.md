@@ -87,27 +87,8 @@ Zawór regulacyjny wody sterowany jest sterownikiem PID w celu uzyskania zadanej
 | Zawór regulacyjny przy wyłączeniu (%) | | 20 | 20 | 20 | 20 | 20 | 20 | 20 | 20 |
 | Zawór regulacyjny przy pracy nagrzewnicy (%) | | PID | PID | PID | PID | PID | PID | PID | PID |
 
-## 5. Sekwencja Operacji
 
-### 5.1 Włączanie Nagrzewnicy
-1. Otwórz przepustnicę na wlocie (100%)
-2. Otwórz przepustnicę na wylocie (100%)
-3. Włącz wentylator(y)
-4. Otwórz zawór regulacyjny wody (regulacja PID dla utrzymania 50°C)
-
-### 5.2 Praca Nagrzewnicy
-1. Regulacja PID zaworem wody dla utrzymania 50°C
-
-### 5.3 Wyłączanie Nagrzewnicy
-1. Ustaw zawór regulacyjny wody na poziomie 20%
-2. Monitoruj temperaturę na wlocie i wylocie
-3. Zamknij przepustnicę na wlocie (0%)
-4. Zamknij przepustnicę na wylocie (0%)
-5. Wyłącz nagrzewnicę
-6. Pozostaw wentylator włączony jeśli potrzebny dla innych nagrzewnic lub wyłacz (wg. tabeli decyzyjnej)
-
-
-## 6. Parametry Systemowe
+## 5. Parametry Systemowe
 
 | Parameter | Wartość | Jednostka | Opis |
 |-----------|---------|-----------|------|
@@ -117,11 +98,8 @@ Zawór regulacyjny wody sterowany jest sterownikiem PID w celu uzyskania zadanej
 | Okres próbkowania | 1 | s | Częstotliwość odczytu temperatury |
 | Max pozycja zaworu | 100 | % | Maksymalne otwarcie zaworu |
 | Min pozycja zaworu | 0 | % | Minimalne otwarcie zaworu |
-| PID - Kp | 2.0 | - | Człon proporcjonalny (zawor wody) |
-| PID - Ki | 1 | - | Człon całkujący (zawor wody) |
-| PID - Kd | 0.1 | - | Człon różniczkujący (zawor wody) |
 
-## 7. Obsługa Awarii
+## 6. Obsługa Awarii
 
 | Warunek Awarii | Akcja |
 |----------------|-------|
@@ -132,82 +110,153 @@ Zawór regulacyjny wody sterowany jest sterownikiem PID w celu uzyskania zadanej
 | Wentylator nie pracuje | Wyłącz odpowiednie nagrzewnice, alarm |
 | Przepustnica nie reaguje | Kontynuuj pracę, alarm |
 
-## 8. Przykladowa wizualizacja systemu sterowania w SCADA
+## 7. Parametry Techniczne - Podsumowanie
 
-**Ponizsze schematy trzeba dostosowac do otrzymanej dokumentacji (zmodyfikowac)** 
-[Projekt instalacji ogrzewania szybu - skan dokumentacji](Projekt%20instalacji%20ogrzewania%20szybu.pdf)
+| Parameter | Wartość | Uwagi |
+|-----------|---------|-------|
+| Liczba nagrzewnic | 8 (N1-N8) | Po 4 na ciąg |
+| Liczba wentylatorów | 2 (W1, W2) | Sterowanie częstotliwościowe |
+| Temperatura zadana Tz | 50°C | Powietrze na wylocie z nagrzewnicy |
+| Temperatura zadana Ts | 2°C | Temperatura w szybie na -30m |
+| Zakres częstotliwości wentylatorów | 25-50 Hz | NWmin - NWmax |
+| Zakres otwarcia zaworu | 20-100% | Pzmin - Pzmax |
+| Liczba poziomów wyrzutni | 2 | +4,30m i +7,90m |
+| Sterowanie | PLC | Z regulatorami PID |
+
+## 9. System SCADA/HMI - Wymagania Projektowe (na podstawie [Projekt instalacji ogrzewania szybu - skan dokumentacji](Projekt%20instalacji%20ogrzewania%20szybu.pdf) - do potwierdzenia!)
+
+### 9.1 Architektura systemu monitoringu
+
+System SCADA/HMI powinien zapewnić:
+
+#### Poziom sterowania (PLC):
+- Realizacja algorytmów regulacji PARTPG i PARTS
+- Sterowanie regulatorami PID
+- Sterowanie zaworami regulacyjnymi i przepustnicami
+- Monitoring czujników temperatury
+- Generowanie sygnałów alarmowych
+
+#### Poziom wizualizacji (HMI/SCADA):
+- Ekrany synoptyczne układu ogrzewania
+- Trendy temperatury (czasu rzeczywistego i historyczne)
+- Alarmy i zdarzenia
+- Możliwość przełączania trybu pracy (AUTO/MANUAL)
+- Ustawianie parametrów regulacji (Tz, Ts, Kp, Ti, Td)
+
+### 9.2 Sygnały wejściowe (do PLC):
+- Temperatury na wylocie z nagrzewnic N1-N8
+- Temperatura w szybie na poziomie -30m
+- Temperatura zewnętrzna
+- Parametry wody grzewczej (temperatura, przepływ)
+- Pozycje zaworów regulacyjnych
+- Pozycje przepustnic
+- Prędkości obrotowe wentylatorów W1, W2
+- Stany gotowości urządzeń
+
+### 9.3 Sygnały wyjściowe (z PLC):
+- Sterowanie zaworami regulacyjnymi (8 nagrzewnic)
+- Sterowanie przepustnicami
+- Sterowanie prędkością obrotową wentylatorów W1, W2 (25-50 Hz)
+- Sygnały załączania/wyłączania nagrzewnic
+- Sygnały alarmowe
+
+### 9.4 Funkcje systemu:
+
+#### Regulacja automatyczna:
+- UAR temperatury powietrza z nagrzewnic (8 pętli PID)
+- UAR temperatury w szybie (2 pętle PID dla wentylatorów)
+- Automatyczne załączanie/wyłączanie nagrzewnic wg Tabel 1 i 2
+- Cykliczna rotacja nagrzewnic
+- Cykliczna zmiana układów pracy ciągów
+
+#### Sterowanie ręczne:
+- Zdalne sterowanie zaworami regulacyjnymi
+- Zdalne sterowanie przepustnicami
+- Zdalne ustawianie prędkości wentylatorów
+- Ręczne załączanie/wyłączanie nagrzewnic
+
+#### Zabezpieczenia:
+- Ochrona przed zamrożeniem nagrzewnic
+- Monitorowanie parametrów wody grzewczej
+- Sygnalizacja stanów awaryjnych
+- Procedura skwitowania alarmów
+- Automatyczne przełączenie AUTO→MANUAL w przypadku zakłóceń
+
+#### Monitoring i diagnostyka:
+- Archiwizacja danych procesowych
+- Trendy temperatur
+- Raporty pracy nagrzewnic (czasy pracy, liczba załączeń)
+- Dziennik zdarzeń i alarmów
+- Statystyki eksploatacyjne
+
+---
+
+## 10. Parametry Techniczne - Podsumowanie
+
+| Parameter | Wartość | Uwagi |
+|-----------|---------|-------|
+| Liczba nagrzewnic | 8 (N1-N8) | Po 4 na ciąg |
+| Liczba wentylatorów | 2 (W1, W2) | Sterowanie częstotliwościowe |
+| Temperatura zadana Tz | 50°C | Powietrze na wylocie z nagrzewnicy |
+| Temperatura zadana Ts | 2°C | Temperatura w szybie na -30m |
+| Zakres częstotliwości wentylatorów | 25-50 Hz | NWmin - NWmax |
+| Zakres otwarcia zaworu | 20-100% | Pzmin - Pzmax |
+| Liczba poziomów wyrzutni | 2 | +4,30m i +7,90m |
+| Sterowanie | PLC | Z regulatorami PID |
 
 
-![Stan S0](assets/diagram_S0.svg)
-
-![Stan S1](assets/diagram_S1.svg)
-
-![Stan S2](assets/diagram_S2.svg)
-
-![Stan S3](assets/diagram_S3.svg)
-
-![Stan S4](assets/diagram_S4.svg)
-
-![Stan S5](assets/diagram_S5.svg)
-
-![Stan S6](assets/diagram_S6.svg)
-
-![Stan S7](assets/diagram_S7.svg)
-
-![Stan S8](assets/diagram_S8.svg)
-
-## 9. Pytania wyjasniające
+## Pytania wyjasniające
 
 [Szczegółowe pytania wyjaśniające dotyczące wymagań systemu](Pytania_wyjasnien_wymagan.md)
 
 Wybrane pytania potrzebne do zaimplementowania algorytmu i symulacji:
 
-### 9.1 Układ nagrzewnic
+### 1 Układ nagrzewnic
 - **Pytanie**: Czy nagrzewnice N1-N8 są podłączone równolegle do głównego kanału powietrza czy szeregowo (powietrze przechodzi przez kolejne nagrzewnice)?
-- **Znaczenie**: Ma wpływ na sposób regulacji temperatury oraz wizualizacje SCADA.
+- **Odpowiedz**: Szeregowo, po 4 w kazdym ciagu
 
-### 9.2 Przypisanie wentylatorów
+### 2 Przypisanie wentylatorów
 - **Pytanie**: Które nagrzewnice są obsługiwane przez wentylator W1, a które przez W2?
   - Czy W1 obsługuje N1-N4, a W2 obsługuje N5-N8?
   - Czy oba wentylatory wspólnie obsługują wszystkie nagrzewnice?
-- **Znaczenie**: Krytyczne dla określenia zależności sterowania i sekwencji uruchamiania.
+- **Odpowiedz**: W1 obsługuje N1-N4, a W2 obsługuje N5-N8 
 
-### 9.3 Lokalizacja czujników temperatury
+### 3 Lokalizacja czujników temperatury
 - **Pytanie**: Gdzie dokładnie są zamontowane czujniki temperatury?
   - Temperatura zewnętrzna (t_zewn) - lokalizacja poboru powietrza?
   - Temperatura wylotowa - czy osobny czujnik dla każdej nagrzewnicy, czy wspólny na wylocie z grupy nagrzewnic?
   - Czy są czujniki temperatury na wlocie do każdej nagrzewnicy?
 - **Znaczenie**: Wpływa na logikę sterowania i algorytmy regulacji.
 
-### 9.4 Zawory regulacyjne wody
+### 4 Zawory regulacyjne wody
 - **Pytanie**: Jaki typ zaworów jest zastosowany?
   - Czas przejazdu zaworu z pozycji 0% do 100% [s]?
   - Charakterystyka zaworu (liniowa, równoprocentowa)?
 - **Znaczenie**: Dobór odpowiedniego algorytmu PID i nastaw regulatora.
 
-### 9.5 Wyłączanie nagrzewnicy
+### 5 Wyłączanie nagrzewnicy
 - **Pytanie**: W dokumencie jest informacja "Ustaw zawór regulacyjny wody na poziomie 20%" przy wyłączaniu. Czy to oznacza:
   - Czy zawór ma być stopniowo zamykany z 100% do 20% przed wyłączeniem nagrzewnicy?
   - Jak długo zawór ma pozostać na 20% przed pełnym zamknięciem?
 
-### 9.6 Indywidualna czy wspólna regulacja
+### 6 Indywidualna czy wspólna regulacja
 - **Pytanie**: Czy każda nagrzewnica ma osobny regulator PID z własnymi nastawami, czy wszystkie aktywne nagrzewnice są sterowane jednym regulatorem?
 - **Znaczenie**: Liczba wymaganych bloków PID w programie sterującym.
 
-### 9.7 Mechanizm histerezy
+### 7 Mechanizm histerezy
 - **Pytanie**: Jak działa histereza w tabeli stanów?
   - Przykład S4: "Temp. włączenia: -8°C, Temp. wyłączenia: -6°C, Histereza: 2°C"
   - Czy to oznacza, że przy spadku z -7°C do -8,1°C włączamy N4, a wyłączamy dopiero przy wzroście do -5,9°C?
   - Czy histereza działa tylko przy wyłączaniu, czy również przy włączaniu?
 - **Znaczenie**: Uniknięcie częstego przełączania (chattering) nagrzewnic.
 
-### 9.8 Zakres wizualizacji
+### 8 Zakres wizualizacji
 - **Pytanie**: Jakie są wymagania dla systemu SCADA?
   - Czy SCADA ma być na PC (Windows, Linux) czy panelu HMI?
   - Czy wymagany jest zdalny dostęp (VPN, web-interface)?
 - **Znaczenie**: Dobór platformy SCADA i architektury oprogramowania.
 
-### 9.9 Funkcjonalność
+### 9 Funkcjonalność
 - **Pytanie**: Jakie funkcje ma posiadać SCADA?
   - Prezentacja synoptyczna (podobna do dostarczonego diagramu)?
   - Trendy historyczne (czas archiwizacji)?
@@ -216,7 +265,7 @@ Wybrane pytania potrzebne do zaimplementowania algorytmu i symulacji:
   - Raporty i logi zdarzeń?
 - **Znaczenie**: Zakres projektu wizualizacji.
 
-### 9.10 Komunikacja
+### 10 Komunikacja
 - **Pytanie**: Jaki protokół komunikacyjny między PLC a SCADA?
   - Modbus TCP/RTU?
   - OPC UA?
