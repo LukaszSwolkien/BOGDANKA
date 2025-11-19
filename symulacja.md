@@ -10,7 +10,7 @@ Ten dokument przedstawia symulację interfejsu operatorskiego (HMI) dla systemu 
 
 ### Schemat Bazowy Instalacji
 
-![Schemat instalacji nawiewu](Symulacja/nawiew_z_dolnego_ciagu_wentylacyjnego.svg)
+![Schemat instalacji nawiewu](Doc/assets/nawiew_z_dolnego_ciagu_wentylacyjnego.svg)
 
 **Opis:**
 - Schemat przedstawia kompletny układ nawiewu powietrza ogrzanego
