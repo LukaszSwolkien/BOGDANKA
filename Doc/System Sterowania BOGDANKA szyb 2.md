@@ -49,13 +49,6 @@ Tabela definiująca stan systemu sterowania uzalezniony od temperatury zewnetrzn
 ## 4. Tabela Decyzyjna
 Tabela definiujaca akcje na sterowanym elemencie w zaleznosci od warunku (zadanego stanu systemu sterowania). 
 
-Elementy sterowane (Otwarte/Włączone 🟢 lub Zamkniete/Wyłączone 🔴) to:
-- Nagrzewnice, 
-- Wentylatory, 
-- Przepustnice wlot i wylot. 
-
-Zawór regulacyjny wody sterowany jest sterownikiem PID w celu uzyskania zadanej temperatury na wyjsciu z Nagrzewnicy.
-
 | Sterowany element \ Warunek | S0 | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S8 |
 |----------------|----|----|----|----|----|----|----|----|----|
 | **NAGRZEWNICE** |
@@ -70,23 +63,17 @@ Zawór regulacyjny wody sterowany jest sterownikiem PID w celu uzyskania zadanej
 | **WENTYLATORY** |
 | W1 | 🔴 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
 | W2 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🟢 | 🟢 | 🟢 | 🟢 |
-| **PRZEPUSTNICE** |
-| N1 przepustnice wylot i wlot | 🔴 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
-| N2 przepustnice wylot i wlot | 🔴 | 🔴 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
-| N3 przepustnice wylot i wlot | 🔴 | 🔴 | 🔴 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
-| N4 przepustnice wylot i wlot | 🔴 | 🔴 | 🔴 | 🔴 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 |
-| N5 przepustnice wylot i wlot | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🟢 | 🟢 | 🟢 | 🟢 |
-| N6 przepustnice wylot i wlot | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🟢 | 🟢 | 🟢 |
-| N7 przepustnice wylot i wlot | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🟢 | 🟢 |
-| N8 przepustnice wylot i wlot | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🟢 |
 | **PARAMETRY REGULACJI** |
 | Temperatura docelowa (°C) | | 50 | 50 | 50 | 50 | 50 | 50 | 50 | 50 |
 | Temp. włączenia dodatkowej nagrzewnicy (°C) | | 2 | -1 | -4 | -8 | -11 | -15 | -18 | -21 |
-| Zawór regulacyjny przy włączeniu (%) | | 100 | 100 | 100 | 100 | 100 | 100 | 100 | 100 |
 | Temp. wyłączenia dodatkowej nagrzewnicy (°C) | | 3 | 0 | -3 | -6 | -10 | -13 | -15 | -20 |
 | Zawór regulacyjny przy wyłączeniu (%) | | 20 | 20 | 20 | 20 | 20 | 20 | 20 | 20 |
-| Zawór regulacyjny przy pracy nagrzewnicy (%) | | PID | PID | PID | PID | PID | PID | PID | PID |
 
+
+- Sterowanie (załączania/wyłączania) nagrzewnic
+- Sterowanie zaworami regulacyjnymi ciepla woda (8 nagrzewnic)
+- Sterowanie przepustnicami
+- Sterowanie prędkością obrotową wentylatorów W1, W2 (25-50 Hz)
 
 ## 5. Parametry Systemowe
 
@@ -97,7 +84,7 @@ Zawór regulacyjny wody sterowany jest sterownikiem PID w celu uzyskania zadanej
 | Czas stabilizacji | 5 | s | Czas na stabilizację przed odczytem |
 | Okres próbkowania | 1 | s | Częstotliwość odczytu temperatury |
 | Max pozycja zaworu | 100 | % | Maksymalne otwarcie zaworu |
-| Min pozycja zaworu | 0 | % | Minimalne otwarcie zaworu |
+| Min pozycja zaworu | 20 | % | Minimalne otwarcie zaworu, ochrona przed zamarzaniem |
 
 ## 6. Obsługa Awarii
 
