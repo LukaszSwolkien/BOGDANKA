@@ -1,4 +1,4 @@
-# Symulacja HMI - System Sterowania Nagrzewnicami BOGDANKA Szyb 2
+# Symulacja Sterowania Nagrzewnicami BOGDANKA Szyb 2
 
 ## Prezentacja Wizualizacji Systemu SCADA/HMI
 
