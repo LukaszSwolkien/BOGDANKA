@@ -263,3 +263,8 @@ Wybrane pytania potrzebne do zaimplementowania algorytmu i symulacji:
   - OPC UA?
   - Proprietary (np. S7, EtherNet/IP)?
 - **Znaczenie**: Wazne dla przygotowania algorypmu pod wpiecie w rzeczywisty system
+
+
+## Symulacja
+
+[Symulacja HMI](../symulacja.md)
