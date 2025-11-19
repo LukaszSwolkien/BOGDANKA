@@ -1,8 +1,25 @@
 # System Sterowania Nagrzewnicami BOGDANKA Szyb 2
 
-## 1. Diagram
+## 1. Dokumentacja od zleceniodawcy
+
+### 1.1 Projekt instalacji ogrzewania szybu
+
+Dokument otrzymany 19 listopad 2025:
+
+[Projekt instalacji ogrzewania szybu - skan dokumentacji](Projekt%20instalacji%20ogrzewania%20szybu.pdf)
+
+### 1.2 Diagram
+
+Dokument otrzymany 17 listopada 2025:
 ![Algorytm sterowania - BOGDANKA - Szyb 2](assets/Algortym%20sterowania%20-%20BOGDANKA%20-%20Szyb%202%20v2.jpg)
 
+
+# Opracowanie specyfikacji
+
+**UWAGA** 
+```Dokumentacja robocza - aktualizowana na podstawie otrzymywanych wymagan od zleceniodawcy```
+
+Ostatnia aktualizacja: 18 Listopad 2025
 
 ## 2. Stany nagrzewnicy
 
@@ -116,6 +133,11 @@ Zawór regulacyjny wody sterowany jest sterownikiem PID w celu uzyskania zadanej
 | Przepustnica nie reaguje | Kontynuuj pracę, alarm |
 
 ## 8. Przykladowa wizualizacja systemu sterowania w SCADA
+
+**Ponizsze schematy trzeba dostosowac do otrzymanej dokumentacji (zmodyfikowac)** 
+[Projekt instalacji ogrzewania szybu - skan dokumentacji](Projekt%20instalacji%20ogrzewania%20szybu.pdf)
+
+
 ![Stan S0](assets/diagram_S0.svg)
 
 ![Stan S1](assets/diagram_S1.svg)
