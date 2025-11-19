@@ -31,11 +31,11 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
 ![Scenariusz S0](Symulacja/nawiew_scenariusz_S0.svg)
 
 **Stan systemu:**
-- ❌ Wszystkie nagrzewnice wyłączone
-- ❌ Wszystkie wentylatory wyłączone
-- 🔒 Wszystkie zawory zamknięte (Z)
-- ⚪ Brak przepływu powietrza (przepustnice zamknięte)
-- 💡 System w trybie czuwania - oszczędzanie energii
+- Wszystkie nagrzewnice wyłączone
+- Wszystkie wentylatory wyłączone
+- Wszystkie zawory zamknięte (Z)
+- Brak przepływu powietrza (przepustnice zamknięte)
+- System w trybie czuwania - oszczędzanie energii
 
 ---
 
@@ -45,10 +45,10 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
 ![Scenariusz S1](Symulacja/nawiew_scenariusz_S1.svg)
 
 **Stan systemu:**
-- ✅ Nagrzewnica N1 aktywna (zielona)
-- ✅ Wentylator W1 pracuje
-- ✅ Nawiew do wyrzutni poziom 4,30m
-- 📈 Temp. docelowa: 50°C na wylocie z N1
+- Nagrzewnica N1 aktywna (zielona)
+- Wentylator W1 pracuje
+- Nawiew do wyrzutni poziom 4,30m
+- Temp. docelowa: 50°C na wylocie z N1
 
 ---
 
@@ -58,10 +58,10 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
 ![Scenariusz S2](Symulacja/nawiew_scenariusz_S2.svg)
 
 **Stan systemu:**
-- ✅ Nagrzewnice N1, N2 aktywne
-- ✅ Wentylator W1 pracuje
-- ✅ Nawiew do wyrzutni poziom 4,30m
-- 📈 Zwiększona moc grzewcza przy spadku temperatury
+- Nagrzewnice N1, N2 aktywne
+- Wentylator W1 pracuje
+- Nawiew do wyrzutni poziom 4,30m
+- Zwiększona moc grzewcza przy spadku temperatury
 
 ---
 
@@ -71,10 +71,10 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
 ![Scenariusz S3](Symulacja/nawiew_scenariusz_S3.svg)
 
 **Stan systemu:**
-- ✅ Nagrzewnice N1, N2, N3 aktywne
-- ✅ Wentylator W1 pracuje na wyższej mocy
-- ✅ Nawiew do wyrzutni poziom +4,30m
-- 📈 Stopniowe zwiększanie mocy grzewczej
+- Nagrzewnice N1, N2, N3 aktywne
+- Wentylator W1 pracuje na wyższej mocy
+- Nawiew do wyrzutni poziom +4,30m
+- Stopniowe zwiększanie mocy grzewczej
 
 ---
 
@@ -84,10 +84,10 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
 ![Scenariusz S4](Symulacja/nawiew_scenariusz_S4.svg)
 
 **Stan systemu:**
-- ✅ Wszystkie nagrzewnice górnego ciągu (N1-N4) aktywne
-- ✅ Wentylator W1 w pełnej mocy
-- ✅ Nawiew do wyrzutni poziom +4,30m
-- ⚡ Maksymalna moc górnego ciągu
+- Wszystkie nagrzewnice górnego ciągu (N1-N4) aktywne
+- Wentylator W1 w pełnej mocy
+- Nawiew do wyrzutni poziom +4,30m
+- Maksymalna moc górnego ciągu
 
 ---
 
@@ -97,13 +97,13 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
 ![Scenariusz S5](Symulacja/nawiew_scenariusz_S5.svg)
 
 **Stan systemu:**
-- ✅ Nagrzewnice N1-N5 aktywne
-- ✅ Oba wentylatory W1, W2 pracują
-- 🔓 Górne zawory otwarte
-- 🔒 Dolny zawór zamknięty (poziom 7,90m)
-- ✅ Nawiew TYLKO do wyrzutni 4,30m
-- 🔄 Uruchomienie drugiego ciągu wentylacyjnego
-- ⚡⚡ Znaczące zwiększenie mocy grzewczej
+- Nagrzewnice N1-N5 aktywne
+- Oba wentylatory W1, W2 pracują
+- Górne zawory otwarte
+- Dolny zawór zamknięty (poziom 7,90m)
+- Nawiew TYLKO do wyrzutni 4,30m
+- Uruchomienie drugiego ciągu wentylacyjnego
+- Znaczące zwiększenie mocy grzewczej
 
 ---
 
@@ -113,12 +113,12 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
 ![Scenariusz S6](Symulacja/nawiew_scenariusz_S6.svg)
 
 **Stan systemu:**
-- ✅ Nagrzewnice N1-N6 aktywne
-- ✅ Oba wentylatory W1, W2 pracują
-- 🔓 Górne zawory otwarte
-- 🔒 Dolny zawór zamknięty (poziom 7,90m)
-- ✅ Nawiew TYLKO do wyrzutni 4,30m
-- 📈 Zwiększona moc dolnego ciągu (N5-N6)
+- Nagrzewnice N1-N6 aktywne
+- Oba wentylatory W1, W2 pracują
+- Górne zawory otwarte
+- Dolny zawór zamknięty (poziom 7,90m)
+- Nawiew TYLKO do wyrzutni 4,30m
+- Zwiększona moc dolnego ciągu (N5-N6)
 
 ---
 
@@ -128,12 +128,12 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
 ![Scenariusz S7](Symulacja/nawiew_scenariusz_S7.svg)
 
 **Stan systemu:**
-- ✅ Nagrzewnice N1-N7 aktywne
-- ✅ Oba wentylatory W1, W2 w wysokiej mocy
-- 🔓 Górne zawory otwarte
-- 🔒 Dolny zawór zamknięty (poziom 7,90m)
-- ✅ Nawiew TYLKO do wyrzutni 4,30m
-- ⚡⚡⚡ Bardzo niskie temperatury zewnętrzne
+- Nagrzewnice N1-N7 aktywne
+- Oba wentylatory W1, W2 w wysokiej mocy
+- Górne zawory otwarte
+- Dolny zawór zamknięty (poziom 7,90m)
+- Nawiew TYLKO do wyrzutni 4,30m
+- Bardzo niskie temperatury zewnętrzne
 
 ---
 
@@ -143,17 +143,16 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
 ![Scenariusz S8](Symulacja/nawiew_scenariusz_S8.svg)
 
 **Stan systemu:**
-- ✅ WSZYSTKIE nagrzewnice N1-N8 aktywne (zielone)
-- ✅ Oba wentylatory W1, W2 w maksymalnej mocy
-- 🔓 Górne zawory otwarte
-- 🔒 Dolny zawór zamknięty (poziom 7,90m)
-- ✅ Nawiew TYLKO do wyrzutni 4,30m
-- 🔥 System działa na maksymalnym obciążeniu - cała moc skoncentrowana na jednej wyrzutni
-- ⚠️ Skrajnie niskie temperatury zewnętrzne
+- WSZYSTKIE nagrzewnice N1-N8 aktywne (zielone)
+- Oba wentylatory W1, W2 w maksymalnej mocy
+- Górne zawory otwarte
+- Dolny zawór zamknięty (poziom 7,90m)
+- Nawiew TYLKO do wyrzutni 4,30m
+- System działa na maksymalnym obciążeniu - cała moc skoncentrowana na jednej wyrzutni
 
 ---
 
-## 🎛️ Układy Automatycznej Regulacji (UAR)
+## Układy Automatycznej Regulacji (UAR)
 
 ### 1. UAR Temperatury Powietrza - Schemat Ogólny
 
@@ -176,18 +175,18 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
 ![UAR Nagrzewnica Aktywna](Symulacja/schemat_uar_nagrzewnica_aktywna.svg)
 
 **Stan ON - Nagrzewnica w pracy:**
-- 🟢 **Regulator PID w trybie REGULACJA**
+- **Regulator PID w trybie REGULACJA**
   - SP (setpoint) = 50°C
   - PV (process variable) = temperatura mierzona
   - CV (control variable) = 20-100% (zmienne)
 
-- ✅ **Zawór regulacyjny**
+- **Zawór regulacyjny**
   - Regulowany w zakresie 20-100%
 
-- ✅ **Przepustnice otwarte**
+- **Przepustnice otwarte**
   - Pełny przepływ powietrza przez nagrzewnicę
 
-- ✅ **Pętla sprzężenia zwrotnego**
+- **Pętla sprzężenia zwrotnego**
   - Ciągła korekta temperatury
   - Automatyczna kompensacja zaburzeń
 
@@ -198,20 +197,20 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
 ![UAR Nagrzewnica Nieaktywna](Symulacja/schemat_uar_nagrzewnica_nieaktywna.svg)
 
 **Stan OFF - Nagrzewnica wyłączona:**
-- 🟡 **Regulator PID w trybie UTRZYMANIE**
+- **Regulator PID w trybie UTRZYMANIE**
   - Utrzymuje zawór na stałej pozycji 20%
   - SP = CV = 20% (stałe)
   - PV = ignorowane (temperatura nie jest używana)
 
-- ⚠️ **Zawór regulacyjny**
+- **Zawór regulacyjny**
   - Utrzymywany na stałej pozycji 20%
   - Ochrona przed zamrożeniem
 
-- ❌ **Przepustnice zamknięte**
+- **Przepustnice zamknięte**
   - Brak przepływu powietrza
   - Nagrzewnica nie oddaje ciepła
 
-- 🔒 **Sekwencja wyłączania (STOPPING → OFF):**
+- **Sekwencja wyłączania (STOPPING → OFF):**
   1. PID zamyka zawór z aktualnej pozycji do 20%
   2. Zawór ustabilizowany na 20%
   3. Zamykanie przepustnic
@@ -299,7 +298,7 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
 
 ---
 
-## ⚙️ Tryby Pracy Systemu
+## Tryby Pracy Systemu
 
 ### Tryb AUTO (Automatyczny)
 - System automatycznie wybiera scenariusz na podstawie t_zewn
@@ -315,11 +314,11 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
   - Pozycji zaworów (20-100%)
   - Częstotliwości wentylatorów (25-50 Hz)
   - Włączenia/wyłączenia poszczególnych nagrzewnic
-- ⚠️ Zabezpieczenia nadal aktywne (min. 20% zaworu, limity temperatur)
+- Zabezpieczenia nadal aktywne (min. 20% zaworu, limity temperatur)
 
 ---
 
-## 🚨 System Alarmów
+## System Alarmów
 
 ### Alarmy Krytyczne (Czerwone):
 - 🔴 **Brak odczytu t_zewn** - Utrzymanie ostatniego stanu
@@ -339,7 +338,7 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
 
 ---
 
-## 📈 Trendy Historyczne
+## Trendy Historyczne
 
 Panel HMI umożliwia wyświetlanie trendów:
 - Temperatura zewnętrzna (24h)
@@ -351,7 +350,7 @@ Panel HMI umożliwia wyświetlanie trendów:
 
 ---
 
-## 🔧 Parametry Nastaw PID
+## Parametry Nastaw PID
 
 ### UAR Temperatury Nagrzewnic (N1-N8):
 ```
@@ -375,7 +374,7 @@ f_max = 50 Hz (maksymalna prędkość)
 
 ---
 
-## 📋 Podsumowanie Funkcjonalności HMI
+## Podsumowanie Funkcjonalności HMI
 
 ### Ekrany Dostępne w Systemie:
 1. **Ekran Główny** - Synoptyka z aktualnym scenariuszem
@@ -397,7 +396,7 @@ f_max = 50 Hz (maksymalna prędkość)
 
 ---
 
-## 📝 Notatki Implementacyjne
+## Notatki Implementacyjne
 
 ### Wymagania Techniczne:
 - **Platforma SCADA**: iFix, WinCC, Wonderware, Ignition lub podobna
