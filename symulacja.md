@@ -1,12 +1,12 @@
 # Symulacja HMI - System Sterowania Nagrzewnicami BOGDANKA Szyb 2
 
-## 📊 Prezentacja Wizualizacji Systemu SCADA/HMI
+## Prezentacja Wizualizacji Systemu SCADA/HMI
 
 Ten dokument przedstawia symulację interfejsu operatorskiego (HMI) dla systemu sterowania nagrzewnicami i wentylatorami w szybie kopalnianym. System wizualizuje działanie układów automatycznej regulacji (UAR) w zależności od temperatury zewnętrznej.
 
 ---
 
-## 🎛️ Panel Główny - Ekran Synoptyczny
+## Panel Główny - Ekran Synoptyczny
 
 ### Schemat Bazowy Instalacji
 
@@ -21,7 +21,7 @@ Ten dokument przedstawia symulację interfejsu operatorskiego (HMI) dla systemu 
 
 ---
 
-## 🌡️ Scenariusze Pracy Systemu
+## Scenariusze Pracy Systemu
 
 System automatycznie przełącza się między 9 scenariuszami pracy w zależności od temperatury zewnętrznej (t_zewn).
 
