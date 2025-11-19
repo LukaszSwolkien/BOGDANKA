@@ -6,7 +6,7 @@
 
 Dokument otrzymany 19 listopad 2025:
 
-[Projekt instalacji ogrzewania szybu - skan dokumentacji](Projekt%20instalacji%20ogrzewania%20szybu.pdf)
+[Projekt instalacji ogrzewania szybu - skan dokumentacji](assets/Projekt%20instalacji%20ogrzewania%20szybu.pdf)
 
 ### 1.2 Diagram
 
@@ -110,7 +110,11 @@ Tabela definiujaca akcje na sterowanym elemencie w zaleznosci od warunku (zadane
 | Liczba poziomów wyrzutni | 2 | +4,30m i +7,90m |
 | Sterowanie | PLC | Z regulatorami PID |
 
-## 9. System SCADA/HMI - Wymagania Projektowe (na podstawie [Projekt instalacji ogrzewania szybu - skan dokumentacji](Projekt%20instalacji%20ogrzewania%20szybu.pdf) - do potwierdzenia!)
+## 8. Schematy
+
+![nawiew powietrza](assets/nawiew_z_dolnego_ciagu_wentylacyjnego.svg)
+
+## 9. System SCADA/HMI - Wymagania Projektowe (na podstawie [Projekt instalacji ogrzewania szybu - skan dokumentacji](assets/Projekt%20instalacji%20ogrzewania%20szybu.pdf) - do potwierdzenia!)
 
 ### 9.1 Architektura systemu monitoringu
 
