@@ -410,7 +410,7 @@ f_max = 50 Hz (maksymalna prędkość)
 
 ---
 
-**Ostatnia aktualizacja:** 2025-11-19
-**Wersja dokumentu:** 1.0
+**Ostatnia aktualizacja:** 2025-11-20
+**Wersja dokumentu:** 1.1
 **Status:** Symulacja/Propozycja HMI
 
