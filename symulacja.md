@@ -222,7 +222,7 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
 ![UAR Prędkość Wentylatora](Symulacja/schemat_uar_predkosc_wentylatora.svg)
 
 **Opis działania:**
-- **Regulator PID** utrzymuje temperaturę w szybie (Ts=2°C na poziomie -4,30m)
+- **Regulator PID** utrzymuje temperaturę w szybie (Ts=2°C na poziomie -30m)
 - **Sygnał sterujący (CV)** kontroluje częstotliwość (25-50 Hz)
 - **Przetwornica częstotliwości (Falownik)**
   - Konwertuje sygnał PID na zmienną częstotliwość
