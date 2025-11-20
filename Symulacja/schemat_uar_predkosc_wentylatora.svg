@@ -44,9 +44,9 @@
     </g>
   </g>
   <line class="signal-line" marker-end="url(#arrow-head)" x1="319" y1="565.918" x2="319" y2="450" style="stroke-width: 2.5;"/>
-  <text class="annotation" x="604.207" y="542.408" style="white-space: pre; stroke-width: 1; font-size: 14px;">PV (temperatura mierzona)</text>
-  <text class="param-label" x="604.207" y="557.408" style="white-space: pre; font-size: 13px; stroke-width: 1;">T_szyb (-4,30m)</text>
-  <line class="signal-line" x1="1037.07" y1="565.133" x2="319.962" y2="565.133" style="stroke-width: 2.5;"/>
+  <text class="annotation" x="780.057" y="718.1" style="white-space: pre; stroke-width: 1; font-size: 14px;">PV (temperatura mierzona)</text>
+  <text class="param-label" x="809.94" y="735.913" style="white-space: pre; font-size: 13px; stroke-width: 1;">T_szyb (-4,30m)</text>
+  <line class="signal-line" x1="1052.09" y1="745.483" x2="663.333" y2="745.483" style="stroke-width: 2.5;"/>
   <g transform="matrix(1, 0, 0, 1, 69.00001525878906, 0)">
     <line class="signal-line" marker-end="url(#arrow-head)" x1="350" y1="375" x2="500.571" y2="375" style=""/>
     <text class="annotation" x="363.162" y="327.577" style="white-space: pre; font-size: 14px;">CV (sygnał sterujący)</text>
@@ -78,15 +78,15 @@
     <text class="annotation" x="1009.16" y="189.326" fill="#7f8c8d" style="white-space: pre; font-size: 14px;">Powietrze</text>
     <text class="param-label" x="1019.44" y="208.001" fill="#7f8c8d" style="white-space: pre; font-size: 13px;">(wlot)</text>
   </g>
-  <text class="annotation" text-anchor="middle" x="1165.95" y="479.758" style="white-space: pre; stroke-width: 1; font-size: 14px;">Kanał</text>
-  <text class="annotation" text-anchor="middle" x="1169.11" y="495.541" style="white-space: pre; stroke-width: 1; font-size: 14px;">wentylacyjny</text>
-  <line class="air-line" marker-end="url(#arrow-head)" x1="1067.9" y1="455.908" x2="1067.9" y2="718.636" style="stroke-width: 3.5;"/>
-  <rect x="1028.27" y="717.776" width="75.708" height="107.473" fill="#e0e0e0" stroke="#333" stroke-width="2" rx="3" style="stroke-width: 2;"/>
-  <text class="label" text-anchor="middle" x="1065.22" y="746.899" font-weight="bold" style="white-space: pre; stroke-width: 1; font-size: 18px;">SZYB</text>
-  <text class="param-label" text-anchor="middle" x="1067.19" y="759.391" style="white-space: pre; stroke-width: 1; font-size: 13px;" transform="matrix(1, 0, 0, 1, -1.930675983428955, 15.37932014465332)">Poziom<tspan x="1067.18994140625" dy="1em">​</tspan>-4,30m</text>
-  <circle class="sensor" cx="1066.48" cy="563.334" r="25" style="stroke-width: 2;"/>
-  <text class="label" text-anchor="middle" x="1066.43" y="569.601" font-size="16" style="white-space: pre; stroke-width: 1; font-size: 18px;">T</text>
-  <text class="small-label" text-anchor="middle" x="1167.01" y="570.936" style="white-space: pre; stroke-width: 1; font-size: 14px;">Czujnik temp.</text>
+  <text class="annotation" text-anchor="middle" x="1164.35" y="473.363" style="white-space: pre; stroke-width: 1; font-size: 14px;">Kanał</text>
+  <text class="annotation" text-anchor="middle" x="1167.51" y="489.146" style="white-space: pre; stroke-width: 1; font-size: 14px;">wentylacyjny</text>
+  <line class="air-line" marker-end="url(#arrow-head)" x1="1067.9" y1="455.908" x2="1067.9" y2="631.631" style="stroke-width: 3.5;"/>
+  <rect x="1029.47" y="635.951" width="75.708" height="149.278" fill="#e0e0e0" stroke="#333" stroke-width="2" rx="3" style="stroke-width: 2;"/>
+  <text class="label" text-anchor="middle" x="1066.42" y="665.074" font-weight="bold" style="white-space: pre; stroke-width: 1; font-size: 18px;">SZYB</text>
+  <text class="param-label" text-anchor="middle" x="1067.19" y="759.391" style="white-space: pre; stroke-width: 1; font-size: 13px;" transform="matrix(1, 0, 0, 1, -0.7308550477027893, -66.44606018066406)">Poziom<tspan x="1067.18994140625" dy="1em">​</tspan>-4,30m</text>
+  <circle class="sensor" cx="1067.18" cy="743.783" r="25" style="stroke-width: 2;"/>
+  <text class="label" text-anchor="middle" x="1066.8" y="750.377" font-size="16" style="white-space: pre; stroke-width: 1; font-size: 18px;">T</text>
+  <text class="small-label" text-anchor="middle" x="1166.77" y="748.498" style="white-space: pre; stroke-width: 1; font-size: 14px;">Czujnik temp.</text>
   <rect x="87.66" y="638.697" width="493.455" height="222.694" fill="#fffef0" stroke="#111" stroke-width="1.5" rx="5" style="stroke-width: 1.5;"/>
   <text class="label" font-weight="bold" x="94.818" y="658.852" style="white-space: pre; stroke-width: 1; font-size: 18px;">Legenda:</text>
   <line class="signal-line" x1="94.818" y1="688.852" x2="154.818" y2="688.852" style="stroke-width: 2.5;"/>
@@ -111,23 +111,26 @@
     <text class="annotation" x="268.119" y="232.614" style="white-space: pre; stroke-width: 1; font-size: 14px;">(przetwornica zmniejsza częstotliwość 50→25 Hz)</text>
     <text class="annotation" x="263.119" y="257.614" style="white-space: pre; stroke-width: 1; font-size: 14px;">• Zakres częstotliwości: 25-50 Hz (min-max prędkości obrotowej)</text>
   </g>
-  <rect x="1223.59" y="718.517" width="75.708" height="107.473" fill="#e0e0e0" stroke="#333" stroke-width="2" rx="3" style="stroke-width: 2;"/>
-  <text class="label" text-anchor="middle" x="1261.24" y="750.298" font-weight="bold" style="white-space: pre; stroke-width: 1; font-size: 18px;">SZYB</text>
-  <text class="param-label" text-anchor="middle" x="1067.19" y="759.391" style="white-space: pre; stroke-width: 1; font-size: 13px;" transform="matrix(1, 0, 0, 1, 193.1398162841797, 16.22108268737793)">Poziom<tspan x="1067.18994140625" dy="1em">​</tspan>-7,90m</text>
-  <line class="air-line" marker-end="url(#arrow-head)" x1="1262.73" y1="428.554" x2="1262.73" y2="717.746" style="stroke-width: 3.5;"/>
-  <line class="air-line" x1="1066.63" y1="634.526" x2="1262.24" y2="634.526" style="stroke-width: 3.5; transform-origin: 1164.44px 634.526px;" transform="matrix(-0.99998363, -6.2e-7, -0.00001041, -0.99999777, 0.00152355, -0.00152355)"/>
-  <rect x="1160.14" y="616.687" width="11.959" height="41.793" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0);"/>
-  <rect x="1030.05" y="627.981" width="11.959" height="41.793" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); stroke-width: 1; transform-origin: 1036.03px 648.878px;" transform="matrix(0, 1, -1, 0, 31.98095703, 7.84753418)"/>
-  <rect x="1030.05" y="627.981" width="11.959" height="41.793" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); stroke-width: 1; transform-origin: 1036.03px 648.878px;" transform="matrix(0, 1, -1, 0, 31.74316406, -36.76461792)"/>
-  <rect x="1030.05" y="627.981" width="11.959" height="41.793" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); stroke-width: 1; transform-origin: 1036.03px 648.878px;" transform="matrix(0, 1, -1, 0, 227.42657471, 9.68112183)"/>
-  <rect x="1030.05" y="627.981" width="11.959" height="41.793" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); stroke-width: 1; transform-origin: 1036.03px 648.878px;" transform="matrix(0, 1, -1, 0, 226.61047363, -35.95477295)"/>
-  <text class="param-label" x="978.655" y="614.969" style="white-space: pre; font-size: 13px; stroke-width: 1;">Zawór Z/O</text>
-  <text class="param-label" x="979.658" y="662.033" style="white-space: pre; font-size: 13px; stroke-width: 1;">Zawór Z/O</text>
-  <text class="param-label" x="1133.62" y="681.93" style="white-space: pre; font-size: 13px; stroke-width: 1;">Zawór Z/O</text>
-  <text class="param-label" x="1290.28" y="617.457" style="white-space: pre; font-size: 13px; stroke-width: 1;">Zawór Z/O</text>
-  <text class="param-label" x="1288.79" y="665.079" style="white-space: pre; font-size: 13px; stroke-width: 1;">Zawór Z/O</text>
+  <rect x="1224.75" y="634.551" width="75.708" height="149.595" fill="#e0e0e0" stroke="#333" stroke-width="2" rx="3" style="stroke-width: 2;"/>
+  <text class="label" text-anchor="middle" x="1262.4" y="666.332" font-weight="bold" style="white-space: pre; stroke-width: 1; font-size: 18px;">SZYB</text>
+  <text class="param-label" text-anchor="middle" x="1067.19" y="759.391" style="white-space: pre; stroke-width: 1; font-size: 13px;" transform="matrix(1, 0, 0, 1, 194.29888916015625, -67.74482727050781)">Poziom<tspan x="1067.18994140625" dy="1em">​</tspan>-7,90m</text>
+  <line class="air-line" marker-end="url(#arrow-head)" x1="1262.73" y1="428.554" x2="1262.73" y2="632.729" style="stroke-width: 3.5;"/>
+  <line class="air-line" x1="1262.25" y1="535.524" x2="1066.64" y2="535.525" style="stroke-width: 3.5; transform-origin: 1164.44px 536.526px;"/>
+  <rect x="1160.14" y="517.687" width="11.959" height="41.793" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0);"/>
+  <rect x="1030.05" y="627.981" width="11.959" height="41.793" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); stroke-width: 1; transform-origin: 1036.03px 648.878px;" transform="matrix(0, 1, -1, 0, 31.98095703, -91.1463623)"/>
+  <rect x="1030.05" y="627.981" width="11.959" height="41.793" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); stroke-width: 1; transform-origin: 1036.03px 648.878px;" transform="matrix(0, 1, -1, 0, 31.74316406, -135.75848389)"/>
+  <rect x="1030.05" y="627.981" width="11.959" height="41.793" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); stroke-width: 1; transform-origin: 1036.03px 648.878px;" transform="matrix(0, 1, -1, 0, 227.42657471, -89.31887817)"/>
+  <rect x="1030.05" y="627.981" width="11.959" height="41.793" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); stroke-width: 1; transform-origin: 1036.03px 648.878px;" transform="matrix(0, 1, -1, 0, 225.61468506, -141.48974609)"/>
+  <text class="param-label" x="978.655" y="515.969" style="white-space: pre; font-size: 13px; stroke-width: 1;">Zawór Z/O</text>
+  <text class="param-label" x="979.658" y="563.033" style="white-space: pre; font-size: 13px; stroke-width: 1;">Zawór Z/O</text>
+  <text class="param-label" x="1135.19" y="583.522" style="white-space: pre; font-size: 13px; stroke-width: 1;">Zawór Z/O</text>
+  <text class="param-label" x="1290.28" y="518.457" style="white-space: pre; font-size: 13px; stroke-width: 1;">Zawór Z/O</text>
+  <text class="param-label" x="1288.79" y="566.079" style="white-space: pre; font-size: 13px; stroke-width: 1;">Zawór Z/O</text>
   <rect x="1205.86" y="320.181" width="112.339" height="107.473" fill="#e0e0e0" stroke="#333" stroke-width="2" rx="3" style="stroke-width: 2;"/>
   <text class="param-label" text-anchor="middle" x="1067.19" y="759.391" style="white-space: pre; stroke-width: 1; font-size: 13px;" transform="matrix(1, 0, 0, 1, 194.07449340820312, -393.4618835449219)">UAR <tspan x="1067.18994140625" dy="1em">​</tspan>Wentylatora <tspan x="1067.18994140625" dy="1em">​</tspan>W2</text>
-  <circle class="sensor" cx="1261.95" cy="562.605" r="25" style="stroke-width: 2;"/>
-  <text class="label" text-anchor="middle" x="1261.9" y="568.872" font-size="16" style="white-space: pre; stroke-width: 1; font-size: 18px;">T</text>
+  <circle class="sensor" cx="1262.55" cy="745.722" r="25" style="stroke-width: 2;"/>
+  <text class="label" text-anchor="middle" x="1262.37" y="752.252" font-size="16" style="white-space: pre; stroke-width: 1; font-size: 18px;">T</text>
+  <line class="signal-line" x1="94.818" y1="688.852" x2="154.818" y2="688.852" style="stroke-width: 2.5;"/>
+  <line class="signal-line" x1="665.501" y1="566.351" x2="316.712" y2="566.351" style="stroke-width: 2.5;"/>
+  <line class="signal-line" x1="753.516" y1="656.049" x2="577.559" y2="656.049" style="stroke-width: 2.5; transform-origin: 665.538px 656.049px;" transform="matrix(3.5e-7, 1, -1, 0, 0, -0.00042343)"/>
 </svg>
