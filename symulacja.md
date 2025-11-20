@@ -230,18 +230,13 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
   - Konwertuje sygnał PID na zmienną częstotliwość
   - Wyjście: 400V 3~ o częstotliwości 25-50 Hz
   
-- **Silnik elektryczny (M)**
-  - 3-fazowy
-  - Prędkość obrotowa proporcjonalna do częstotliwości
-  - Wał mechanicznie połączony z wentylatorem
-
 - **Wentylator (W1/W2)**
   - W1 obsługuje nagrzewnice N1-N4 (poziom 4,30m)
   - W2 obsługuje nagrzewnice N5-N8 (poziom 7,90m)
   - Wydajność zależy od prędkości obrotowej
 
 - **Czujnik temperatury w szybie**
-  - Poziom -4,30m (Ciąg I) oraz Poziom -7,90m (Ciąg II)
+  - Poziom -30m
   - Sprzężenie zwrotne do regulatora w kazdym ciągu
 
 **Logika regulacji:**
