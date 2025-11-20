@@ -219,7 +219,7 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
 
 ### 4. UAR Prędkości Wentylatora
 
-![UAR Prędkość Wentylatora](Symulacja/schemat_uar_predkosc_wentylatora.svg)
+![UAR Prędkość Wentylatora](Symulacja/schemat_uar_predkosc_wentylatora_w1_w2.svg)
 
 **Opis działania:**
 - **Regulator PID** utrzymuje temperaturę w szybie (Ts=2°C na poziomie -4,30m)
