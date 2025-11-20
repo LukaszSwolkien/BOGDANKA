@@ -237,7 +237,7 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
 
 - **Wentylator (W1/W2)**
   - W1 obsługuje nagrzewnice N1-N4 (poziom 4,30m)
-  - W2 obsługuje nagrzewnice N5-N8
+  - W2 obsługuje nagrzewnice N5-N8 (poziom 7,90m)
   - Wydajność zależy od prędkości obrotowej
 
 - **Czujnik temperatury w szybie**
