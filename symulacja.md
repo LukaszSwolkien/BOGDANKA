@@ -172,7 +172,7 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
 
 ---
 
-### 2. UAR Nagrzewnicy - Stan Aktywny (ON)
+### 2. UAR Nagrzewnicy - Stan Aktywny
 
 ![UAR Nagrzewnica Aktywna](Symulacja/schemat_uar_nagrzewnica_aktywna.svg)
 
@@ -194,7 +194,7 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
 
 ---
 
-### 3. UAR Nagrzewnicy - Stan Nieaktywny (OFF)
+### 3. UAR Nagrzewnicy - Stan Nieaktywny
 
 ![UAR Nagrzewnica Nieaktywna](Symulacja/schemat_uar_nagrzewnica_nieaktywna.svg)
 
