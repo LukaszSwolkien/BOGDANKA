@@ -174,9 +174,8 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
 
 ### 2. UAR Nagrzewnicy - Stan Aktywny
 
-![UAR Nagrzewnica Aktywna](Symulacja/schemat_uar_nagrzewnica_aktywna.svg)
 
-**Stan ON - Nagrzewnica w pracy:**
+**Stan - Nagrzewnica w pracy:**
 - **Regulator PID w trybie REGULACJA**
   - SP (setpoint) = 50°C
   - PV (process variable) = temperatura mierzona
@@ -196,9 +195,8 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
 
 ### 3. UAR Nagrzewnicy - Stan Nieaktywny
 
-![UAR Nagrzewnica Nieaktywna](Symulacja/schemat_uar_nagrzewnica_nieaktywna.svg)
 
-**Stan OFF - Nagrzewnica wyłączona:**
+**Stan - Nagrzewnica wyłączona:**
 - **Regulator PID w trybie UTRZYMANIE**
   - Utrzymuje zawór na stałej pozycji 20%
   - SP = CV = 20% (stałe)
