@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="56.398 1.054 1297.22 900" width="1297.22px" height="900px">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="56.76 1.054 1297.22 900" width="1297.22px" height="900px">
   <defs>
     <marker id="arrow-head" markerHeight="8" markerWidth="8" orient="auto-start-reverse" refX="9" refY="5" viewBox="0 0 10 10">
       <path d="m0,0l10,5l-10,5l0,-10z" fill="#111" id="arrow1"/>
@@ -25,17 +25,15 @@
     .param-label { font-family: "Arial", sans-serif; font-size: 13px; fill: #111; }
 </style>
   </defs>
-  <rect width="1297.22" height="900" fill="#fff" x="56.398" y="1.054" style="stroke-width: 0.963;"/>
-  <text class="title" text-anchor="middle" x="700" y="40" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 2.7700064464397656e-14, 0)">Schemat ideowy UAR prędkości wentylatora</text>
-  <g transform="matrix(1, 0, 0, 1, 65.00001525878906, 0)">
-    <rect class="regulator" x="154" y="300" width="200" height="150" rx="5"/>
-    <text class="label" text-anchor="middle" x="250" y="330" font-weight="bold" style="white-space: pre;">Regulator PID</text>
-    <text class="small-label" x="170" y="355" style="white-space: pre;">Parametry:</text>
-    <text class="param-label" x="180" y="375" style="white-space: pre;">Kp - wzmocnienie</text>
-    <text class="param-label" x="180" y="395" style="white-space: pre;">Ti - człon całkujący</text>
-    <text class="param-label" x="180" y="415" style="white-space: pre;">Td - człon różniczkujący</text>
-  </g>
-  <g transform="matrix(1, 0, 0, 1, 69.00001525878906, 0)">
+  <rect width="1297.22" height="900" fill="#fff" x="56.76" y="1.054" style="stroke-width: 0.963;"/>
+  <text class="title" text-anchor="middle" x="700" y="40" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 2.842170943040401e-14, 0)">Schemat ideowy UAR prędkości wentylatora</text>
+  <rect class="regulator" x="316.791" y="195.344" width="200" height="150" rx="5" style="stroke-width: 2.5;"/>
+  <text class="label" text-anchor="middle" x="429.324" y="227.763" font-weight="bold" style="white-space: pre; stroke-width: 1; font-size: 18px;">Regulator PID</text>
+  <text class="small-label" x="340.019" y="333.02" style="white-space: pre; stroke-width: 1; font-size: 14px;">PV</text>
+  <text class="param-label" x="339.324" y="249.763" style="white-space: pre; stroke-width: 1; font-size: 13px;">CV max</text>
+  <text class="param-label" x="339.324" y="269.763" style="white-space: pre; stroke-width: 1; font-size: 13px;">CV min</text>
+  <text class="param-label" x="339.324" y="289.763" style="white-space: pre; stroke-width: 1; font-size: 13px;">CV man</text>
+  <g transform="matrix(1, 0, 0, 1, 165.66490173339844, -57.20015716552734)">
     <line class="signal-line" marker-end="url(#arrow-head)" x1="50" y1="330" x2="150" y2="330"/>
     <g>
       <text class="annotation" x="15.725" y="286.793" style="white-space: pre; font-size: 14px;">SP (wartość zadana)</text>
@@ -44,14 +42,14 @@
     </g>
   </g>
   <line class="signal-line" marker-end="url(#arrow-head)" x1="319" y1="565.918" x2="319" y2="450" style="stroke-width: 2.5;"/>
-  <text class="annotation" x="780.057" y="718.1" style="white-space: pre; stroke-width: 1; font-size: 14px;">PV (temperatura mierzona)</text>
-  <text class="param-label" x="809.94" y="735.913" style="white-space: pre; font-size: 13px; stroke-width: 1;">T_szyb (-4,30m)</text>
-  <line class="signal-line" x1="1052.09" y1="745.483" x2="663.333" y2="745.483" style="stroke-width: 2.5;"/>
-  <line class="signal-line" marker-end="url(#arrow-head)" x1="419" y1="375" x2="569.571" y2="375" style="stroke-width: 2.5;"/>
-  <text class="annotation" x="432.162" y="327.577" style="white-space: pre; font-size: 14px; stroke-width: 1;">CV (sygnał sterujący)</text>
-  <text class="param-label" x="432.163" y="343.887" style="white-space: pre; font-size: 13px; stroke-width: 1;">częstotliwość:</text>
-  <text class="param-label" x="432.69" y="360.469" style="white-space: pre; font-size: 13px; stroke-width: 1;">25-50 Hz</text>
-  <g transform="matrix(1, 0, 0, 1, 570.0249633789062, 318.94586181640625)">
+  <text class="annotation" x="836.215" y="815.803" style="white-space: pre; stroke-width: 1; font-size: 14px;">PV (temperatura mierzona)</text>
+  <text class="param-label" x="866.098" y="833.616" style="white-space: pre; font-size: 13px; stroke-width: 1;">T_szyb (-30m)</text>
+  <line class="signal-line" x1="1112.61" y1="841.169" x2="658.359" y2="841.169" style="stroke-width: 2.5;"/>
+  <line class="signal-line" marker-end="url(#arrow-head)" x1="516.791" y1="270.344" x2="667.362" y2="270.344" style="stroke-width: 2.5;"/>
+  <text class="annotation" x="529.953" y="222.921" style="white-space: pre; font-size: 14px; stroke-width: 1;">CV (sygnał sterujący)</text>
+  <text class="param-label" x="529.954" y="239.231" style="white-space: pre; font-size: 13px; stroke-width: 1;">częstotliwość:</text>
+  <text class="param-label" x="530.481" y="255.813" style="white-space: pre; font-size: 13px; stroke-width: 1;">25-50 Hz</text>
+  <g transform="matrix(1, 0, 0, 1, 667.8155517578125, 214.2897491455078)">
     <rect class="inverter" x="0" y="0" width="140" height="110" rx="3"/>
     <text class="label" text-anchor="middle" x="70" y="30" font-weight="bold" style="white-space: pre;">Przetwornica</text>
     <text class="label" text-anchor="middle" x="70" y="50" style="white-space: pre;">częstotliwości</text>
@@ -59,32 +57,23 @@
     <text class="param-label" text-anchor="middle" x="70" y="90" style="white-space: pre;">25-50 Hz</text>
     <text class="param-label" text-anchor="middle" x="70" y="105" style="white-space: pre;">400V 3~</text>
   </g>
-  <g transform="matrix(1, 0, 0, 1, 67.00001525878906, 0)">
-    <circle class="motor" cx="782" cy="375" r="60"/>
-    <text class="label" text-anchor="middle" x="780" y="370" font-size="32" font-weight="bold" style="white-space: pre;">M</text>
-    <text class="small-label" text-anchor="middle" x="780" y="390" font-size="12" style="white-space: pre;">Silnik</text>
-    <text class="small-label" text-anchor="middle" x="780" y="405" font-size="12" style="white-space: pre;">elektryczny</text>
-    <text class="param-label" text-anchor="middle" x="780" y="450" style="white-space: pre;">3-fazowy</text>
-    <line class="signal-line" marker-end="url(#arrow-head)" x1="643.025" y1="375" x2="722" y2="375" style=""/>
-    <line class="shaft" x1="842" y1="375" x2="922" y2="375"/>
-    <text class="param-label" text-anchor="middle" x="882" y="365" style="white-space: pre; font-size: 13px;">wał</text>
-  </g>
-  <circle class="fan" cx="1069" cy="375" r="80" style="stroke-width: 3;"/>
-  <text class="small-label" text-anchor="middle" x="1001.58" y="380.512" style="white-space: pre; font-size: 14px;" transform="matrix(1, 0, 0, 1, 67.0815200805664, -13.109712600708008)">Wentylator<tspan x="1001.5800170898438" dy="1em">​</tspan><tspan x="1001.5800170898438" dy="1em">​</tspan>W1</text>
-  <g transform="matrix(1, 0, 0, 1, 69.00001525878906, 0)">
-    <line class="air-line" marker-end="url(#arrow-head)" x1="929.589" y1="221.462" x2="1070.21" y2="221.463" style="transform-box: fill-box; transform-origin: 50% 50%;" transform="matrix(0, 1, -1, 0, 0.00001, 0.000026)"/>
-    <text class="annotation" x="1009.16" y="189.326" fill="#7f8c8d" style="white-space: pre; font-size: 14px;">Powietrze</text>
-    <text class="param-label" x="1019.44" y="208.001" fill="#7f8c8d" style="white-space: pre; font-size: 13px;">(wlot)</text>
-  </g>
-  <text class="annotation" text-anchor="middle" x="1171.63" y="446.44" style="white-space: pre; stroke-width: 1; font-size: 14px;">Kanał</text>
-  <rect x="921.016" y="477.033" width="383.349" height="118.999" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0);" transform="matrix(1, 0.0006210000137798488, 0, 1, 47.41447830200196, -0.6863240003585815)"/>
-  <text class="annotation" text-anchor="middle" x="1172.26" y="465.162" style="white-space: pre; stroke-width: 1; font-size: 14px;">wentylacyjny</text>
-  <line class="air-line" marker-end="url(#arrow-head)" x1="1067.9" y1="455.908" x2="1067.9" y2="631.631" style="stroke-width: 3.5;"/>
-  <rect x="1029.47" y="635.951" width="75.708" height="149.278" fill="#e0e0e0" stroke="#333" stroke-width="2" rx="3" style="stroke-width: 2;"/>
-  <text class="param-label" text-anchor="middle" x="1067.19" y="759.391" style="white-space: pre; stroke-width: 1; font-size: 13px;" transform="matrix(1, 0, 0, 1, -0.7308552265167236, -66.44606018066406)">Poziom<tspan x="1067.18994140625" dy="1em">​</tspan>-4,30m</text>
-  <circle class="sensor" cx="1067.18" cy="743.783" r="25" style="stroke-width: 2;"/>
-  <text class="label" text-anchor="middle" x="1066.8" y="750.377" font-size="16" style="white-space: pre; stroke-width: 1; font-size: 18px;">T</text>
-  <text class="small-label" text-anchor="middle" x="1166.77" y="748.498" style="white-space: pre; stroke-width: 1; font-size: 14px;">Czujnik temp.</text>
+  <circle class="motor" cx="849" cy="375" r="29.264" style="stroke-width: 2.5;" transform="matrix(1, 0, 0, 1.000059962272644, 67.9846420288086, -106.81128692626953)"/>
+  <text class="label" text-anchor="middle" x="914.182" y="275.873" font-size="32" font-weight="bold" style="white-space: pre; stroke-width: 1; font-size: 18px;">M</text>
+  <line class="signal-line" marker-end="url(#arrow-head)" x1="807.816" y1="270.344" x2="886.79" y2="270.344" style="stroke-width: 2.5;"/>
+  <line class="shaft" x1="944.69" y1="268.114" x2="1024.69" y2="268.114" style="stroke-width: 4;"/>
+  <text class="param-label" text-anchor="middle" x="986.593" y="261.95" style="white-space: pre; font-size: 13px; stroke-width: 1;">wał</text>
+  <circle class="fan" cx="1069" cy="375" r="80" style="stroke-width: 3;" transform="matrix(0.5152289867401123, 0, 0, 0.5128549933433533, 515.0387573242188, 76.93721771240234)"/>
+  <text class="small-label" text-anchor="middle" x="1001.58" y="380.512" style="white-space: pre; font-size: 14px;" transform="matrix(1, 0, 0, 1, 64.374267578125, -116.5987548828125)">Wentylator<tspan x="1001.5800170898438" dy="1em">​</tspan><tspan x="1001.5800170898438" dy="1em">​</tspan>W1</text>
+  <line class="air-line" marker-end="url(#arrow-head)" x1="994.599" y1="155.517" x2="1135.22" y2="155.518" style="stroke-width: 3.5; transform-origin: 1064.91px 155.518px;" transform="matrix(0, 1, -1, 0, -0.00007629, 0.0000458)"/>
+  <text class="annotation" x="1135.56" y="130.731" fill="#7f8c8d" style="white-space: pre; font-size: 14px; stroke-width: 1;">Powietrze</text>
+  <text class="param-label" x="1147.55" y="147.649" fill="#7f8c8d" style="white-space: pre; font-size: 13px; stroke-width: 1;">(wlot)</text>
+  <rect x="921.016" y="477.033" width="383.349" height="118.999" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0);" transform="matrix(1, 0.0006210000137798488, 0, 1, 47.41447830200195, -0.6863240003585815)"/>
+  <line class="air-line" marker-end="url(#arrow-head)" x1="1067.9" y1="310.473" x2="1067.9" y2="631.631" style="stroke-width: 3.5;"/>
+  <rect x="1029.47" y="635.951" width="75.708" height="91.827" fill="#e0e0e0" stroke="#333" stroke-width="2" rx="3" style="stroke-width: 2;"/>
+  <text class="param-label" text-anchor="middle" x="1067.19" y="759.391" style="white-space: pre; stroke-width: 1; font-size: 13px;" transform="matrix(1, 0, 0, 1, 0.3529960215091714, -77.05804443359375)">Poziom<tspan x="1067.18994140625" dy="1em">​</tspan>-4,30m</text>
+  <rect x="1117.67" y="762.925" width="75.708" height="106.144" fill="#e0e0e0" stroke="#333" stroke-width="2" rx="3" style="stroke-width: 2;"/>
+  <circle class="sensor" cx="1154.98" cy="835.458" r="25" style="stroke-width: 2;"/>
+  <text class="small-label" text-anchor="middle" x="1245.05" y="841.284" style="white-space: pre; stroke-width: 1; font-size: 14px;">Czujnik temp.</text>
   <rect x="87.66" y="638.697" width="493.455" height="222.694" fill="#fffef0" stroke="#111" stroke-width="1.5" rx="5" style="stroke-width: 1.5;"/>
   <text class="label" font-weight="bold" x="94.818" y="658.852" style="white-space: pre; stroke-width: 1; font-size: 18px;">Legenda:</text>
   <line class="signal-line" x1="94.818" y1="688.852" x2="154.818" y2="688.852" style="stroke-width: 2.5;"/>
@@ -98,7 +87,7 @@
   <text class="annotation" x="94.818" y="808.852" style="white-space: pre; stroke-width: 1; font-size: 14px;">CV (Control Variable) - sygnał wyjściowy regulatora (częstotliwość 25-50 Hz)</text>
   <text class="annotation" x="94.818" y="828.852" style="white-space: pre; stroke-width: 1; font-size: 14px;">M - silnik elektryczny 3-fazowy napędzający wentylator</text>
   <text class="annotation" x="94.818" y="848.852" style="white-space: pre; stroke-width: 1; font-size: 14px;">W1 - wentylator obsługujący nagrzewnice N1-N4</text>
-  <g transform="matrix(1, 0, 0, 1, 216.0571746826172, 3.16251802444458)">
+  <g transform="matrix(1, 0, 0, 1, 225.5609130859375, 283.0574951171875)">
     <rect x="253.119" y="77.614" width="456.559" height="187.379" fill="#fffef0" stroke="#111" stroke-width="1.5" rx="5" style="stroke-width: 1.5;"/>
     <text class="label" font-weight="bold" x="263.119" y="97.614" style="white-space: pre; stroke-width: 1; font-size: 18px;">Zasada działania UAR prędkości wentylatora:</text>
     <text class="annotation" x="263.119" y="122.614" style="white-space: pre; stroke-width: 1; font-size: 14px;">• Regulator PID porównuje temperaturę zadaną w szybie (Ts=2°C)</text>
@@ -109,26 +98,32 @@
     <text class="annotation" x="268.119" y="232.614" style="white-space: pre; stroke-width: 1; font-size: 14px;">(przetwornica zmniejsza częstotliwość 50→25 Hz)</text>
     <text class="annotation" x="263.119" y="257.614" style="white-space: pre; stroke-width: 1; font-size: 14px;">• Zakres częstotliwości: 25-50 Hz (min-max prędkości obrotowej)</text>
   </g>
-  <rect x="1224.75" y="634.551" width="75.708" height="149.595" fill="#e0e0e0" stroke="#333" stroke-width="2" rx="3" style="stroke-width: 2;"/>
-  <text class="param-label" text-anchor="middle" x="1067.19" y="759.391" style="white-space: pre; stroke-width: 1; font-size: 13px;" transform="matrix(1, 0, 0, 1, 194.29888916015625, -67.74482727050781)">Poziom<tspan x="1067.18994140625" dy="1em">​</tspan>-7,90m</text>
-  <line class="air-line" marker-end="url(#arrow-head)" x1="1262.73" y1="428.554" x2="1262.73" y2="632.729" style="stroke-width: 3.5;"/>
+  <rect x="1224.75" y="634.551" width="75.708" height="90.318" fill="#e0e0e0" stroke="#333" stroke-width="2" rx="3" style="stroke-width: 2;"/>
+  <text class="param-label" text-anchor="middle" x="1067.19" y="759.391" style="white-space: pre; stroke-width: 1; font-size: 13px;" transform="matrix(1, 0, 0, 1, 195.38623046875, -77.25901794433594)">Poziom<tspan x="1067.18994140625" dy="1em">​</tspan>-7,90m</text>
+  <line class="air-line" marker-end="url(#arrow-head)" x1="1262.73" y1="312.833" x2="1262.73" y2="632.729" style="stroke-width: 3.5;"/>
   <line class="air-line" x1="1262.25" y1="535.524" x2="1066.64" y2="535.525" style="stroke-width: 3.5; transform-origin: 1164.44px 536.526px;"/>
   <rect x="1160.14" y="517.687" width="11.959" height="41.793" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0);"/>
-  <rect x="1030.05" y="627.981" width="11.959" height="41.793" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); stroke-width: 1; transform-origin: 1036.03px 648.878px;" transform="matrix(0, 1, -1, 0, 31.98095703, -91.1461792)"/>
-  <rect x="1030.05" y="627.981" width="11.959" height="41.793" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); stroke-width: 1; transform-origin: 1036.03px 648.878px;" transform="matrix(0, 1, -1, 0, 31.74316406, -135.75830078)"/>
-  <rect x="1030.05" y="627.981" width="11.959" height="41.793" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); stroke-width: 1; transform-origin: 1036.03px 648.878px;" transform="matrix(0, 1, -1, 0, 227.42657471, -89.31887817)"/>
+  <rect x="1030.05" y="627.981" width="11.959" height="41.793" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); stroke-width: 1; transform-origin: 1036.03px 648.878px;" transform="matrix(0, 1, -1, 0, 31.98095703, -91.14611816)"/>
+  <rect x="1030.05" y="627.981" width="11.959" height="41.793" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); stroke-width: 1; transform-origin: 1036.03px 648.878px;" transform="matrix(0, 1, -1, 0, 31.74316406, -135.75823975)"/>
+  <rect x="1030.05" y="627.981" width="11.959" height="41.793" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); stroke-width: 1; transform-origin: 1036.03px 648.878px;" transform="matrix(0, 1, -1, 0, 226.42657471, -89.31887817)"/>
   <rect x="1030.05" y="627.981" width="11.959" height="41.793" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); stroke-width: 1; transform-origin: 1036.03px 648.878px;" transform="matrix(0, 1, -1, 0, 225.61468506, -141.48974609)"/>
   <text class="param-label" x="978.655" y="515.969" style="white-space: pre; font-size: 13px; stroke-width: 1;">Zawór Z/O</text>
   <text class="param-label" x="979.658" y="563.033" style="white-space: pre; font-size: 13px; stroke-width: 1;">Zawór Z/O</text>
   <text class="param-label" x="1135.19" y="583.522" style="white-space: pre; font-size: 13px; stroke-width: 1;">Zawór Z/O</text>
-  <text class="param-label" x="1290.28" y="518.457" style="white-space: pre; font-size: 13px; stroke-width: 1;">Zawór Z/O</text>
-  <text class="param-label" x="1288.79" y="566.079" style="white-space: pre; font-size: 13px; stroke-width: 1;">Zawór Z/O</text>
-  <rect x="1205.86" y="320.181" width="112.339" height="107.473" fill="#e0e0e0" stroke="#333" stroke-width="2" rx="3" style="stroke-width: 2;"/>
-  <text class="param-label" style="font-weight: 700; text-anchor: middle; white-space: pre;" transform="matrix(1, 0, 0, 1, 194.07449340820312, -393.4618835449219)"><tspan x="1067.19" y="759.391">UAR </tspan><tspan x="1067.19" dy="1em">​</tspan><tspan>Wentylatora </tspan><tspan x="1067.19" dy="1em">​</tspan><tspan>W2</tspan></text>
-  <circle class="sensor" cx="1262.55" cy="745.722" r="25" style="stroke-width: 2;"/>
-  <text class="label" text-anchor="middle" x="1262.37" y="752.252" font-size="16" style="white-space: pre; stroke-width: 1; font-size: 18px;">T</text>
+  <text class="param-label" x="1285.53" y="511.87" style="white-space: pre; font-size: 13px; stroke-width: 1;">Zawór Z/O</text>
+  <text class="param-label" x="1286.23" y="563.866" style="white-space: pre; font-size: 13px; stroke-width: 1;">Zawór Z/O</text>
+  <text class="label" text-anchor="middle" x="1155.48" y="842.138" font-size="16" style="white-space: pre; stroke-width: 1; font-size: 18px;">T</text>
   <line class="signal-line" x1="94.818" y1="688.852" x2="154.818" y2="688.852" style="stroke-width: 2.5;"/>
   <line class="signal-line" x1="665.501" y1="566.351" x2="316.712" y2="566.351" style="stroke-width: 2.5;"/>
-  <line class="signal-line" x1="753.516" y1="656.049" x2="577.559" y2="656.049" style="stroke-width: 2.5; transform-origin: 665.538px 656.049px;" transform="matrix(0.0000016, 0.99999917, -0.99999669, 0.00000165, -0.00338746, -0.00084686)"/>
+  <line class="signal-line" x1="665.535" y1="838.262" x2="665.534" y2="568.07" style="stroke-width: 2.5; transform-origin: 665.538px 656.049px;"/>
   <text class="annotation" style="font-weight: 700; text-anchor: middle; white-space: pre;" x="1169.1" y="494.272">UAR zaworów</text>
+  <text class="param-label" x="340.382" y="311.776" style="white-space: pre; stroke-width: 1; font-size: 13px;">SP</text>
+  <rect x="1012.95" y="348.847" width="112.339" height="107.473" fill="#e0e0e0" stroke="#333" stroke-width="2" rx="3" style="stroke-width: 2;"/>
+  <text class="param-label" style="font-weight: 700; text-anchor: middle; white-space: pre;" transform="matrix(1, 0, 0, 1, 3.118000030517579, -368.39898681640625)" x="1067.18994140625" y="759.3909912109375">Zespół<tspan x="1067.18994140625" dy="1em">​</tspan>nagrzewnic<tspan x="1067.18994140625" dy="1em">​</tspan>ciągu 1</text>
+  <rect x="1206.92" y="349.765" width="112.339" height="107.473" fill="#e0e0e0" stroke="#333" stroke-width="2" rx="3" style="stroke-width: 2;"/>
+  <text class="param-label" style="font-weight: 700; text-anchor: middle; white-space: pre;" transform="matrix(1, 0, 0, 1, 193.59300231933594, -367.81201171875)" x="1067.18994140625" y="759.3909912109375">Zespół<tspan x="1067.18994140625" dy="1em">​</tspan>nagrzewnic<tspan x="1067.18994140625" dy="1em">​</tspan>ciągu 2</text>
+  <circle class="fan" cx="1069" cy="375" r="80" style="stroke-width: 3;" transform="matrix(0.5152289867401123, 0, 0, 0.5128549933433533, 711.9459228515625, 78.57866668701172)"/>
+  <text class="small-label" text-anchor="middle" x="1001.58" y="380.512" style="white-space: pre; font-size: 14px;" transform="matrix(1, 0, 0, 1, 261.28143310546875, -114.95730590820312)">Wentylator<tspan x="1001.5800170898438" dy="1em">​</tspan><tspan x="1001.5800170898438" dy="1em">​</tspan>W2</text>
+  <line class="air-line" marker-end="url(#arrow-head)" x1="1191.51" y1="157.159" x2="1332.13" y2="157.16" style="stroke-width: 3.5; transform-origin: 1261.82px 157.159px;" transform="matrix(0, 1, -1, 0, 0.00010681, -0.00001528)"/>
+  <text class="param-label" text-anchor="middle" x="1067.19" y="759.391" style="white-space: pre; stroke-width: 1; font-size: 13px;" transform="matrix(1, 0, 0, 1, 89.8224105834961, 29.326168060302734)">Poziom<tspan x="1067.18994140625" dy="1em">​</tspan>-30m</text>
 </svg>
