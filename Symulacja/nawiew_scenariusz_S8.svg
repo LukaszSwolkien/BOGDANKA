@@ -42,18 +42,18 @@
   
   <!-- Valve labels -->
   <text class="label" font-size="18" id="svg_8" x="275" y="99.13">O</text>
-  <text class="label" font-size="18" id="svg_10" x="206.61" y="452.67">O</text>
-  <text class="label" font-size="18" id="svg_12" x="220.37" y="739.25">Z</text>
+  <text class="label" font-size="18" id="svg_10" x="206.61" y="452.67">Z</text>
+  <text class="label" font-size="18" id="svg_12" x="220.37" y="739.25">O</text>
   
   <!-- Outlet to level 4.30m - ACTIVE -->
   <line class="duct-active" id="svg_13" marker-end="url(#arrow-head)" x1="249.08" x2="90" y1="126.13" y2="126.13"/>
   <text class="annotation" font-size="16" id="svg_14" x="77.24" y="80.71">Do wyrzutni</text>
   <text class="annotation" font-size="16" id="svg_15" x="77" y="103.83">Poziom 4,30 m</text>
   
-  <!-- Outlet to level 7.90m - INACTIVE -->
-  <line class="duct-inactive" id="svg_16" marker-end="url(#arrow-head-inactive)" x1="249.52" x2="89.82" y1="774.54" y2="774.54"/>
-  <text class="annotation" font-size="16" id="svg_17" x="86.53" y="816.22">Do wyrzutni</text>
-  <text class="annotation" font-size="16" id="svg_18" x="85.53" y="840.88">Poziom 7,90 m</text>
+  <!-- Outlet to level 7.90m - ACTIVE -->
+  <line class="duct-active" id="svg_16" marker-end="url(#arrow-head)" x1="249.52" x2="89.82" y1="774.54" y2="774.54"/>
+  <text class="annotation" font-size="16" font-weight="bold" fill="#28a745" id="svg_17" x="86.53" y="816.22">Do wyrzutni</text>
+  <text class="annotation" font-size="16" font-weight="bold" fill="#28a745" id="svg_18" x="85.53" y="840.88">Poziom 7,90 m</text>
   
   <!-- Lower horizontal duct - ACTIVE -->
   <line class="duct-active" id="svg_23" x1="383.49" x2="1033.16" y1="544.76" y2="544.76"/>

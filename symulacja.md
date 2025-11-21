@@ -32,7 +32,11 @@ Rys. Nawiew powietrza ogrzanego do wyrzutni poziomu 4,30 m z wykorzystaniem drug
 
 ## Scenariusze Pracy Systemu
 
-System automatycznie przełącza się między 9 scenariuszami pracy w zależności od temperatury zewnętrznej (t_zewn).
+System automatycznie przełącza się między scenariuszami pracy w zależności od temperatury zewnętrznej (t_zewn) oraz algorytmów rotacji:
+
+**Scenariusze bazowe (S0-S8):** 9 scenariuszy zależnych od temperatury  
+**Algorytm 5A:** Rotacja układów pracy ciągów (Podstawowy ↔ Ograniczony)  
+**Algorytm 5B:** Rotacja nagrzewnic w obrębie ciągu
 
 ### Scenariusz S0: Brak Ogrzewania
 **Warunki:** t ≥ 3°C | **Nagrzewnice:** Brak | **Wentylatory:** Brak
@@ -101,63 +105,196 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
 ---
 
 ### Scenariusz S5: Uruchomienie Dolnego Ciągu
-**Warunki:** -15°C < t ≤ -11°C | **Nagrzewnice:** N1-N5 | **Wentylatory:** W1, W2
+**Warunki:** -15°C < t ≤ -11°C | **Nagrzewnice:** N1-N5 | **Wentylatory:** W1 (MAX), W2 (PID)
 
 ![Scenariusz S5](Symulacja/nawiew_scenariusz_S5.svg)
 
 **Stan systemu:**
-- Nagrzewnice N1-N5 aktywne
-- Oba wentylatory W1, W2 pracują
-- Górne zawory otwarte
-- Dolny zawór zamknięty (poziom 7,90m)
-- Nawiew TYLKO do wyrzutni 4,30m
+- Nagrzewnice N1-N5 aktywne (wszystkie z ciągu 1 + jedna z ciągu 2)
+- Wentylator W1 pracuje z maksymalną prędkością (50 Hz)
+- Wentylator W2 sterowany regulatorem PID (25-50 Hz)
+- **Nawiew na OBA poziomy: +4,30m i +7,90m**
 - Uruchomienie drugiego ciągu wentylacyjnego
 - Znaczące zwiększenie mocy grzewczej
 
 ---
 
 ### Scenariusz S6: Sześć Nagrzewnic
-**Warunki:** -18°C < t ≤ -15°C | **Nagrzewnice:** N1-N6 | **Wentylatory:** W1, W2
+**Warunki:** -18°C < t ≤ -15°C | **Nagrzewnice:** N1-N6 | **Wentylatory:** W1 (MAX), W2 (PID)
 
 ![Scenariusz S6](Symulacja/nawiew_scenariusz_S6.svg)
 
 **Stan systemu:**
-- Nagrzewnice N1-N6 aktywne
-- Oba wentylatory W1, W2 pracują
-- Górne zawory otwarte
-- Dolny zawór zamknięty (poziom 7,90m)
-- Nawiew TYLKO do wyrzutni 4,30m
+- Nagrzewnice N1-N6 aktywne (cały ciąg 1 + dwie z ciągu 2)
+- Wentylator W1 pracuje z maksymalną prędkością (50 Hz)
+- Wentylator W2 sterowany regulatorem PID (25-50 Hz)
+- **Nawiew na OBA poziomy: +4,30m i +7,90m**
 - Zwiększona moc dolnego ciągu (N5-N6)
 
 ---
 
 ### Scenariusz S7: Siedem Nagrzewnic
-**Warunki:** -21°C < t ≤ -18°C | **Nagrzewnice:** N1-N7 | **Wentylatory:** W1, W2
+**Warunki:** -21°C < t ≤ -18°C | **Nagrzewnice:** N1-N7 | **Wentylatory:** W1 (MAX), W2 (PID)
 
 ![Scenariusz S7](Symulacja/nawiew_scenariusz_S7.svg)
 
 **Stan systemu:**
-- Nagrzewnice N1-N7 aktywne
-- Oba wentylatory W1, W2 w wysokiej mocy
-- Górne zawory otwarte
-- Dolny zawór zamknięty (poziom 7,90m)
-- Nawiew TYLKO do wyrzutni 4,30m
+- Nagrzewnice N1-N7 aktywne (cały ciąg 1 + trzy z ciągu 2)
+- Wentylator W1 pracuje z maksymalną prędkością (50 Hz)
+- Wentylator W2 sterowany regulatorem PID (25-50 Hz)
+- **Nawiew na OBA poziomy: +4,30m i +7,90m**
 - Bardzo niskie temperatury zewnętrzne
 
 ---
 
 ### Scenariusz S8: Maksymalne Obciążenie
-**Warunki:** t ≤ -21°C | **Nagrzewnice:** N1-N8 | **Wentylatory:** W1, W2
+**Warunki:** t ≤ -21°C | **Nagrzewnice:** N1-N8 | **Wentylatory:** W1 (MAX), W2 (PID)
 
 ![Scenariusz S8](Symulacja/nawiew_scenariusz_S8.svg)
 
 **Stan systemu:**
-- WSZYSTKIE nagrzewnice N1-N8 aktywne (zielone)
-- Oba wentylatory W1, W2 w maksymalnej mocy
-- Górne zawory otwarte
-- Dolny zawór zamknięty (poziom 7,90m)
-- Nawiew TYLKO do wyrzutni 4,30m
-- System działa na maksymalnym obciążeniu - cała moc skoncentrowana na jednej wyrzutni
+- WSZYSTKIE nagrzewnice N1-N8 aktywne (wszystkie z obu ciągów)
+- Wentylator W1 pracuje z maksymalną prędkością (50 Hz)
+- Wentylator W2 sterowany regulatorem PID (25-50 Hz)
+- **Nawiew na OBA poziomy: +4,30m i +7,90m**
+- System działa na maksymalnym obciążeniu - pełna moc obu ciągów
+
+---
+
+## Algorytmy Rotacji - Wizualizacje
+
+System wykorzystuje dwa algorytmy rotacji w celu równomiernego rozłożenia eksploatacji urządzeń:
+- **Algorytm 5A:** Rotacja Układów Pracy Ciągów (C1 ↔ C2)
+- **Algorytm 5B:** Rotacja Nagrzewnic w Obrębie Ciągu
+
+### Rotacja 5A: Układ Podstawowy vs Układ Ograniczony
+
+System okresowo zmienia układ pracy między **Podstawowym** a **Ograniczonym** w scenariuszach S1-S4 w celu wyrównania eksploatacji ciągów.
+
+**Cel rotacji 5A:**
+- Wyrównanie eksploatacji W1 i W2
+- Okres rotacji: definiowany przez technologa (np. 168h / 7 dni)
+- Po upływie okresu system przełącza się: Podstawowy → Ograniczony → Podstawowy
+
+**Zasada działania:**
+- **Układ Podstawowy:** Ciąg 1 (N1-N4) + W1 → nawiew na +4,30m
+- **Układ Ograniczony:** Ciąg 2 (N5-N8) + W2 → nawiew przez **spinę ciągów** na +4,30m
+
+---
+
+#### S1: Rotacja przy minimalnym ogrzewaniu (1 nagrzewnica)
+
+**Zakres temperatur:** -1°C < t ≤ 2°C
+
+| Układ | Nagrzewnice | Wentylator | Wizualizacja |
+|-------|-------------|------------|--------------|
+| **Podstawowy** | N1 | W1 PID | ![S1 Podstawowy](Symulacja/nawiew_scenariusz_S1.svg) |
+| **Ograniczony** | N5 | W2 PID | ![S1 Ograniczony](Symulacja/nawiew_S1_uklad_ograniczony.svg) |
+
+**Charakterystyka układu ograniczonego:**
+- Spinka ciągów: **OTWARTA**
+- Przepustnica C1: **ZAMKNIĘTA**
+- Nawiew przez spinę na +4,30m
+
+---
+
+#### S2: Rotacja przy umiarkowanym ogrzewaniu (2 nagrzewnice)
+
+**Zakres temperatur:** -4°C < t ≤ -1°C
+
+| Układ | Nagrzewnice | Wentylator | Wizualizacja |
+|-------|-------------|------------|--------------|
+| **Podstawowy** | N1, N2 | W1 PID | ![S2 Podstawowy](Symulacja/nawiew_scenariusz_S2.svg) |
+| **Ograniczony** | N5, N6 | W2 PID | ![S2 Ograniczony](Symulacja/nawiew_S2_uklad_ograniczony.svg) |
+
+**Charakterystyka układu ograniczonego:**
+- Spinka ciągów: **OTWARTA**
+- Przepustnica C1: **ZAMKNIĘTA**
+- Nawiew przez spinę na +4,30m
+
+---
+
+#### S3: Rotacja przy średnim ogrzewaniu (3 nagrzewnice)
+
+**Zakres temperatur:** -8°C < t ≤ -4°C
+
+| Układ | Nagrzewnice | Wentylator | Wizualizacja |
+|-------|-------------|------------|--------------|
+| **Podstawowy** | N1, N2, N3 | W1 PID | ![S3 Podstawowy](Symulacja/nawiew_scenariusz_S3.svg) |
+| **Ograniczony** | N5, N6, N7 | W2 PID | ![S3 Ograniczony](Symulacja/nawiew_S3_uklad_ograniczony.svg) |
+
+**Charakterystyka układu ograniczonego:**
+- Spinka ciągów: **OTWARTA**
+- Przepustnica C1: **ZAMKNIĘTA**
+- Nawiew przez spinę na +4,30m
+
+---
+
+#### S4: Rotacja przy wysokim ogrzewaniu (4 nagrzewnice)
+
+**Zakres temperatur:** -11°C < t ≤ -8°C
+
+| Układ | Nagrzewnice | Wentylator | Wizualizacja |
+|-------|-------------|------------|--------------|
+| **Podstawowy** | N1-N4 | W1 PID | ![S4 Podstawowy](Symulacja/nawiew_scenariusz_S4.svg) |
+| **Ograniczony** | N5-N8 | W2 PID | ![S4 Ograniczony](Symulacja/nawiew_S4_uklad_ograniczony.svg) |
+
+**Charakterystyka układu ograniczonego:**
+- Spinka ciągów: **OTWARTA**
+- Przepustnica C1: **ZAMKNIĘTA**
+- Nawiew przez spinę na +4,30m
+- **Uwaga:** Cały ciąg 2 aktywny (wszystkie 4 nagrzewnice)
+
+---
+
+**Uwagi do rotacji 5A:**
+- Rotacja działa **tylko** w scenariuszach S1-S4 (temperatury umiarkowane)
+- W scenariuszach S5-S8 rotacja **nie jest stosowana** - system zawsze pracuje w układzie Podstawowym z możliwością dogrz ewania przez ciąg 2
+- Przełączenie między układami odbywa się **automatycznie** po upływie `OKRES_ROTACJI_UKŁADÓW`
+- Warunkiem przełączenia jest gotowość ciągu 2 i stabilność systemu
+
+---
+
+### Rotacja 5B: Wymiana Nagrzewnic w Ciągu
+
+Algorytm rotacji nagrzewnic w obrębie jednego ciągu - przykład dla S3 (3 nagrzewnice):
+
+#### Tydzień 1: N1, N2, N3
+![S3 Rotacja - Tydzień 1](Symulacja/nawiew_scenariusz_S3.svg)
+
+**Pracują:** N1 (najstarsza), N2, N3  
+**Postój:** N4
+
+#### Tydzień 2: N2, N3, N4
+
+![Rotacja 5B - Tydzień 2](Symulacja/nawiew_S3_rotacja5B_tydzien2.svg)
+
+**Pracują:** N2, N3, N4 (najnowsza)  
+**Postój:** N1 (odpoczynek po najdłuższym czasie pracy)  
+**Akcja:** Wyłączono N1, załączono N4
+
+#### Tydzień 3: N3, N4, N1
+
+![Rotacja 5B - Tydzień 3](Symulacja/nawiew_S3_rotacja5B_tydzien3.svg)
+
+**Pracują:** N3, N4, N1  
+**Postój:** N2 (odpoczynek)  
+**Akcja:** Wyłączono N2, załączono N1
+
+#### Tydzień 4: N4, N1, N2
+
+![Rotacja 5B - Tydzień 4](Symulacja/nawiew_S3_rotacja5B_tydzien4.svg)
+
+**Pracują:** N4, N1, N2  
+**Postój:** N3 (odpoczynek)  
+**Akcja:** Wyłączono N3, załączono N2
+
+**Cel rotacji 5B:**
+- Równomierne zużycie wszystkich nagrzewnic w ciągu
+- Okres rotacji: definiowany przez technologa (np. 168h / 7 dni)
+- Po 3 miesiącach: > 90% wyrównania czasu pracy wszystkich nagrzewnic
+
+**Zasada:** Najdłużej pracująca → Postój, Najdłużej w postoju → Praca
 
 ---
 
@@ -295,8 +432,19 @@ System automatycznie przełącza się między 9 scenariuszami pracy w zależnoś
 
 ### Statusy:
 - **Scenariusz** - Aktualny scenariusz pracy (S0-S8)
+- **Układ Pracy** - Podstawowy / Ograniczony
 - **Tryb** - AUTO / MANUAL
 - **Alarmy** - Lista aktywnych alarmów
+
+### Rotacje (Algorytmy 5A i 5B):
+- **Czas do rotacji układów (5A)** - Pozostały czas do zmiany układu [h]
+- **Aktualny układ** - Podstawowy / Ograniczony
+- **Czas pracy C1** - Łączny czas pracy ciągu 1 [h]
+- **Czas pracy C2** - Łączny czas pracy ciągu 2 [h]
+- **Stosunek C1/C2** - Proporcja eksploatacji (cel: ~1.0)
+- **Czas do rotacji nagrzewnic (5B)** - Pozostały czas do wymiany nagrzewnicy [h]
+- **Czasy pracy N1-N8** - Łączne czasy pracy poszczególnych nagrzewnic [h]
+- **Liczba załączeń N1-N8** - Liczniki startów nagrzewnic
 
 ---
 
@@ -379,13 +527,15 @@ f_max = 50 Hz (maksymalna prędkość)
 ## Podsumowanie Funkcjonalności HMI
 
 ### Ekrany Dostępne w Systemie:
-1. **Ekran Główny** - Synoptyka z aktualnym scenariuszem
-2. **Szczegóły Nagrzewnic** - Parametry N1-N8
-3. **Szczegóły Wentylatorów** - Parametry W1-W2
+1. **Ekran Główny** - Synoptyka z aktualnym scenariuszem i układem pracy
+2. **Szczegóły Nagrzewnic** - Parametry N1-N8, czasy pracy, liczba załączeń
+3. **Szczegóły Wentylatorów** - Parametry W1-W2, czasy pracy ciągów
 4. **Trendy** - Wykresy historyczne
 5. **Alarmy** - Historia i aktywne alarmy
-6. **Nastawy** - Parametry PID i temperatury zadane
+6. **Nastawy** - Parametry PID, temperatury zadane, okresy rotacji
 7. **Diagnostyka** - Stan urządzeń i statystyki
+8. **Rotacja 5A** - Historia zmian układów, stosunek eksploatacji C1/C2
+9. **Rotacja 5B** - Czasy pracy nagrzewnic, predykcja następnej rotacji
 
 ### Możliwości Operatora:
 - Monitoring wszystkich parametrów w czasie rzeczywistym
@@ -417,7 +567,38 @@ f_max = 50 Hz (maksymalna prędkość)
 
 ---
 
-**Ostatnia aktualizacja:** 2025-11-20
-**Wersja dokumentu:** 1.1
-**Status:** Symulacja/Propozycja HMI
+---
+
+## Wymagane Wizualizacje SVG
+
+### Istniejące:
+✅ nawiew_scenariusz_S0.svg - S8.svg (9 plików)  
+✅ schemat_uar_nagrzewnica.svg  
+✅ schemat_uar_predkosc_wentylatora.svg
+
+### Nowo utworzone dla rotacji 5A (Układy Ograniczone):
+✅ **S1 Układ Ograniczony** - ciąg 2 (N5) przez spinę na +4,30m → `nawiew_S1_uklad_ograniczony.svg`  
+✅ **S2 Układ Ograniczony** - ciąg 2 (N5-N6) przez spinę na +4,30m → `nawiew_S2_uklad_ograniczony.svg`  
+✅ **S3 Układ Ograniczony** - ciąg 2 (N5-N6-N7) przez spinę na +4,30m → `nawiew_S3_uklad_ograniczony.svg`  
+✅ **S4 Układ Ograniczony** - ciąg 2 (N5-N8) przez spinę na +4,30m → `nawiew_S4_uklad_ograniczony.svg`
+
+### Nowo utworzone dla rotacji 5B (Rotacja nagrzewnic):
+✅ **Rotacja 5B - Tydzień 2** - S3 z N2-N3-N4 → `nawiew_S3_rotacja5B_tydzien2.svg`  
+✅ **Rotacja 5B - Tydzień 3** - S3 z N3-N4-N1 → `nawiew_S3_rotacja5B_tydzien3.svg`  
+✅ **Rotacja 5B - Tydzień 4** - S3 z N4-N1-N2 → `nawiew_S3_rotacja5B_tydzien4.svg`
+
+### Podsumowanie:
+- **Łącznie plików SVG:** 19
+- **Scenariusze podstawowe (S0-S8):** 9 plików
+- **Schematy UAR:** 3 pliki
+- **Rotacja 5A (Układy Ograniczone S1-S4):** 4 pliki
+- **Rotacja 5B (Cykl nagrzewnic):** 3 pliki
+
+**Uwaga:** Rotacja 5A pokazana dla wszystkich scenariuszy S1-S4. Rotacja 5B pokazana przykładowo dla S3.
+
+---
+
+**Ostatnia aktualizacja:** 2025-11-21  
+**Wersja dokumentu:** 2.1  
+**Status:** Zaktualizowana symulacja z kompletnymi wizualizacjami rotacji 5A (wszystkie scenariusze S1-S4) i 5B
 
