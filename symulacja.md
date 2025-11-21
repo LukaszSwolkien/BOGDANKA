@@ -569,23 +569,8 @@ f_max = 50 Hz (maksymalna prędkość)
 
 ---
 
-## Wymagane Wizualizacje SVG
+## Wizualizacje SVG
 
-### Istniejące:
-✅ nawiew_scenariusz_S0.svg - S8.svg (9 plików)  
-✅ schemat_uar_nagrzewnica.svg  
-✅ schemat_uar_predkosc_wentylatora.svg
-
-### Nowo utworzone dla rotacji 5A (Układy Ograniczone):
-✅ **S1 Układ Ograniczony** - ciąg 2 (N5) przez spinę na +4,30m → `nawiew_S1_uklad_ograniczony.svg`  
-✅ **S2 Układ Ograniczony** - ciąg 2 (N5-N6) przez spinę na +4,30m → `nawiew_S2_uklad_ograniczony.svg`  
-✅ **S3 Układ Ograniczony** - ciąg 2 (N5-N6-N7) przez spinę na +4,30m → `nawiew_S3_uklad_ograniczony.svg`  
-✅ **S4 Układ Ograniczony** - ciąg 2 (N5-N8) przez spinę na +4,30m → `nawiew_S4_uklad_ograniczony.svg`
-
-### Nowo utworzone dla rotacji 5B (Rotacja nagrzewnic):
-✅ **Rotacja 5B - Tydzień 2** - S3 z N2-N3-N4 → `nawiew_S3_rotacja5B_tydzien2.svg`  
-✅ **Rotacja 5B - Tydzień 3** - S3 z N3-N4-N1 → `nawiew_S3_rotacja5B_tydzien3.svg`  
-✅ **Rotacja 5B - Tydzień 4** - S3 z N4-N1-N2 → `nawiew_S3_rotacja5B_tydzien4.svg`
 
 ### Podsumowanie:
 - **Łącznie plików SVG:** 19
