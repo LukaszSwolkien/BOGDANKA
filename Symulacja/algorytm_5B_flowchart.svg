@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1400" height="2400" xmlns="http://www.w3.org/2000/svg">
+
+<!-- White background -->
+<rect width="1400" height="2400" fill="#ffffff"/>
+
+<style>
+  .title { font-family: Arial, sans-serif; font-size: 28px; font-weight: bold; fill: #1a1a1a; }
+  .subtitle { font-family: Arial, sans-serif; font-size: 18px; fill: #555; }
+  .box-text { font-family: Arial, sans-serif; font-size: 15px; fill: #1a1a1a; text-anchor: middle; }
+  .box-text-small { font-family: Arial, sans-serif; font-size: 13px; fill: #1a1a1a; text-anchor: middle; }
+  .box-label { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #1a1a1a; }
+  .decision { fill: #fff3cd; stroke: #ffc107; stroke-width: 2; }
+  .process { fill: #d4edda; stroke: #28a745; stroke-width: 2; }
+  .start-end { fill: #cce5ff; stroke: #0066cc; stroke-width: 3; rx: 25; }
+  .action { fill: #f8d7da; stroke: #dc3545; stroke-width: 2; }
+  .data { fill: #e7f3ff; stroke: #007bff; stroke-width: 2; }
+  .arrow { stroke: #333; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+  .arrow-yes { stroke: #28a745; stroke-width: 2.5; fill: none; marker-end: url(#arrowhead-yes); }
+  .arrow-no { stroke: #dc3545; stroke-width: 2.5; fill: none; marker-end: url(#arrowhead-no); }
+  .label { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #28a745; }
+  .label-no { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #dc3545; }
+  .note { font-family: Arial, sans-serif; font-size: 12px; fill: #666; font-style: italic; }
+  .loop { font-family: Arial, sans-serif; font-size: 13px; fill: #0066cc; font-style: italic; }
+</style>
+
+<defs>
+  <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+    <polygon points="0 0, 10 3, 0 6" fill="#333" />
+  </marker>
+  <marker id="arrowhead-yes" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+    <polygon points="0 0, 10 3, 0 6" fill="#28a745" />
+  </marker>
+  <marker id="arrowhead-no" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+    <polygon points="0 0, 10 3, 0 6" fill="#dc3545" />
+  </marker>
+</defs>
+
+<!-- Title -->
+<text class="title" x="700" y="40" text-anchor="middle">Algorytm 5B: Rotacja Nagrzewnic w Obrębie Ciągu</text>
+<text class="subtitle" x="700" y="65" text-anchor="middle">Wyrównanie Czasu Pracy N1-N8</text>
+
+<!-- START -->
+<rect class="start-end" x="550" y="90" width="300" height="60"/>
+<text class="box-text" x="700" y="125">START - Główna pętla</text>
+<text class="box-text-small" x="700" y="142">(wykonywana co 1 sekundę)</text>
+<line class="arrow" x1="700" y1="150" x2="700" y2="180"/>
+
+<!-- Pętla DLA KAŻDEGO CIĄGU -->
+<rect class="process" x="550" y="190" width="300" height="50"/>
+<text class="box-text" x="700" y="215">DLA KAŻDEGO ciągu</text>
+<text class="box-text-small" x="700" y="232">w [CIĄG1, CIĄG2]</text>
+<line class="arrow" x1="700" y1="240" x2="700" y2="280"/>
+
+<!-- KROK 1: Aktualizuj liczniki -->
+<text class="box-label" x="50" y="315">KROK 1</text>
+<rect class="data" x="500" y="290" width="400" height="70"/>
+<text class="box-text-small" x="700" y="315">Aktualizuj liczniki:</text>
+<text class="box-text-small" x="700" y="332">DLA KAŻDEJ nagrzewnicy ciągu:</text>
+<text class="box-text-small" x="700" y="349">czas_pracy[N] lub czas_postoju[N] += 1</text>
+<line class="arrow" x1="700" y1="360" x2="700" y2="400"/>
+
+<!-- KROK 2: Sprawdź warunki rotacji -->
+<text class="box-label" x="50" y="445">KROK 2</text>
+<polygon class="decision" points="700,410 1000,480 700,550 400,480"/>
+<text class="box-text" x="700" y="465">Warunki rotacji</text>
+<text class="box-text" x="700" y="485">spełnione?</text>
+<text class="box-text-small" x="700" y="505">(ilość, okres, stabilność)</text>
+
+<!-- NIE - pomiń ciąg -->
+<line class="arrow-no" x1="400" y1="480" x2="250" y2="480"/>
+<text class="label-no" x="300" y="470">NIE</text>
+<rect class="action" x="100" y="450" width="150" height="60"/>
+<text class="box-text-small" x="175" y="475">POMIŃ ciąg</text>
+<text class="box-text-small" x="175" y="492">(przejdź do</text>
+<text class="box-text-small" x="175" y="509">następnego)</text>
+<line class="arrow-no" x1="175" y1="510" x2="175" y2="540"/>
+<line class="arrow-no" x1="175" y1="540" x2="175" y2="2200"/>
+<line class="arrow-no" x1="175" y1="2200" x2="650" y2="2200"/>
+<line class="arrow-no" x1="650" y1="2200" x2="650" y2="2280"/>
+
+<!-- TAK - kontynuuj -->
+<line class="arrow-yes" x1="700" y1="550" x2="700" y2="600"/>
+<text class="label" x="720" y="580">TAK</text>
+
+<!-- KROK 3: Wybierz nagrzewnice -->
+<text class="box-label" x="50" y="650">KROK 3</text>
+<rect class="process" x="500" y="610" width="400" height="90"/>
+<text class="box-text-small" x="700" y="635">Wybierz nagrzewnicę:</text>
+<text class="box-text-small" x="700" y="652">• do WYŁĄCZENIA: najdłużej pracująca</text>
+<text class="box-text-small" x="700" y="669">• do ZAŁĄCZENIA: najdłużej w postoju</text>
+<text class="box-text-small" x="700" y="686">Sprawdź: delta_czasu ≥ MIN_DELTA</text>
+<line class="arrow" x1="700" y1="700" x2="700" y2="740"/>
+
+<!-- KROK 4: Rotacja możliwa? -->
+<text class="box-label" x="50" y="790">KROK 4</text>
+<polygon class="decision" points="700,750 950,810 700,870 450,810"/>
+<text class="box-text" x="700" y="800">Wybrano nagrzewnice</text>
+<text class="box-text" x="700" y="820">i delta OK?</text>
+
+<!-- NIE - pomiń -->
+<line class="arrow-no" x1="950" y1="810" x2="1100" y2="810"/>
+<text class="label-no" x="1000" y="800">NIE</text>
+<line class="arrow-no" x1="1100" y1="810" x2="1100" y2="2220"/>
+<line class="arrow-no" x1="1100" y1="2220" x2="750" y2="2220"/>
+<line class="arrow-no" x1="750" y1="2220" x2="750" y2="2280"/>
+
+<!-- TAK - Wykonaj rotację -->
+<line class="arrow-yes" x1="700" y1="870" x2="700" y2="920"/>
+<text class="label" x="720" y="900">TAK</text>
+
+<!-- Rejestruj rozpoczęcie -->
+<rect class="data" x="550" y="930" width="300" height="50"/>
+<text class="box-text-small" x="700" y="955">📝 Rejestruj zdarzenie:</text>
+<text class="box-text-small" x="700" y="972">"Rotacja N_stara → N_nowa"</text>
+<line class="arrow" x1="700" y1="980" x2="700" y2="1020"/>
+
+<!-- Wykonaj rotację -->
+<rect class="action" x="500" y="1030" width="400" height="60"/>
+<text class="box-text" x="700" y="1055">⚙️ Wykonaj_Rotację_Nagrzewnicy()</text>
+<text class="box-text-small" x="700" y="1075">(szczegóły poniżej)</text>
+<line class="arrow" x1="700" y1="1090" x2="700" y2="1130"/>
+
+<!-- Sekwencja rotacji -->
+<rect class="process" x="520" y="1140" width="360" height="30"/>
+<text class="box-text-small" x="700" y="1160">1. Ustaw zawór N_nowa na 20%</text>
+<line class="arrow" x1="700" y1="1170" x2="700" y2="1190"/>
+
+<rect class="process" x="520" y="1200" width="360" height="30"/>
+<text class="box-text-small" x="700" y="1220">2. Otwórz przepustnicę N_nowa</text>
+<line class="arrow" x1="700" y1="1230" x2="700" y2="1250"/>
+
+<rect class="process" x="520" y="1260" width="360" height="30"/>
+<text class="box-text-small" x="700" y="1280">3. Aktywuj N_nowa (zawór PID)</text>
+<line class="arrow" x1="700" y1="1290" x2="700" y2="1310"/>
+
+<rect class="process" x="520" y="1320" width="360" height="30"/>
+<text class="box-text-small" x="700" y="1340">4. Czekaj na stabilizację (30s)</text>
+<line class="arrow" x1="700" y1="1350" x2="700" y2="1370"/>
+
+<rect class="process" x="520" y="1380" width="360" height="30"/>
+<text class="box-text-small" x="700" y="1400">5. Deaktywuj N_stara (zawór 20%)</text>
+<line class="arrow" x1="700" y1="1410" x2="700" y2="1430"/>
+
+<rect class="process" x="520" y="1440" width="360" height="30"/>
+<text class="box-text-small" x="700" y="1460">6. Zamknij przepustnicę N_stara</text>
+<line class="arrow" x1="700" y1="1470" x2="700" y2="1490"/>
+
+<rect class="process" x="520" y="1500" width="360" height="30"/>
+<text class="box-text-small" x="700" y="1520">7. Zamknij zawór N_stara (0%)</text>
+<line class="arrow" x1="700" y1="1530" x2="700" y2="1570"/>
+
+<!-- Aktualizacja stanu -->
+<rect class="data" x="550" y="1580" width="300" height="70"/>
+<text class="box-text-small" x="700" y="1605">Aktualizuj stan:</text>
+<text class="box-text-small" x="700" y="1622">nagrzewnice_aktywne[ciąg]</text>
+<text class="box-text-small" x="700" y="1639">czas_ostatniej_rotacji[ciąg]</text>
+<line class="arrow" x1="700" y1="1650" x2="700" y2="1690"/>
+
+<!-- Rejestruj zakończenie -->
+<rect class="data" x="550" y="1700" width="300" height="50"/>
+<text class="box-text-small" x="700" y="1725">📝 Rejestruj zdarzenie:</text>
+<text class="box-text-small" x="700" y="1742">"Rotacja zakończona pomyślnie"</text>
+<line class="arrow" x1="700" y1="1750" x2="700" y2="1810"/>
+
+<!-- Monitorowanie -->
+<rect class="data" x="550" y="1820" width="300" height="100"/>
+<text class="box-text-small" x="700" y="1845">Monitoruj i aktualizuj:</text>
+<text class="box-text-small" x="700" y="1862">• czas_pracy[N1..N8]</text>
+<text class="box-text-small" x="700" y="1879">• czas_postoju[N1..N8]</text>
+<text class="box-text-small" x="700" y="1896">• liczba_rotacji[CIĄG]</text>
+<text class="box-text-small" x="700" y="1913">• stosunek_eksploatacji[N1..N8]</text>
+<line class="arrow" x1="700" y1="1920" x2="700" y2="1980"/>
+
+<!-- Sprawdź czy więcej ciągów -->
+<polygon class="decision" points="700,1990 900,2050 700,2110 500,2050"/>
+<text class="box-text" x="700" y="2040">Więcej ciągów</text>
+<text class="box-text" x="700" y="2060">do sprawdzenia?</text>
+
+<!-- TAK - następny ciąg -->
+<line class="arrow-yes" x1="500" y1="2050" x2="350" y2="2050"/>
+<text class="label" x="400" y="2040">TAK</text>
+<line class="arrow-yes" x1="350" y1="2050" x2="350" y2="215"/>
+<line class="arrow-yes" x1="350" y1="215" x2="550" y2="215"/>
+
+<!-- NIE - koniec pętli ciągów -->
+<line class="arrow-no" x1="700" y1="2110" x2="700" y2="2170"/>
+<text class="label-no" x="720" y="2145">NIE</text>
+
+<!-- Punkt zbiorczy -->
+<line class="arrow" x1="650" y1="2280" x2="700" y2="2280"/>
+<line class="arrow" x1="750" y1="2280" x2="700" y2="2280"/>
+<line class="arrow" x1="700" y1="2170" x2="700" y2="2280"/>
+<line class="arrow" x1="700" y1="2280" x2="700" y2="2250"/>
+
+<!-- Czekaj -->
+<rect class="process" x="550" y="2260" width="300" height="50"/>
+<text class="box-text" x="700" y="2290">Czekaj 1 sekundę</text>
+
+<!-- Pętla zwrotna -->
+<line class="arrow" x1="550" y1="2285" x2="50" y2="2285"/>
+<line class="arrow" x1="50" y1="2285" x2="50" y2="120"/>
+<line class="arrow" x1="50" y1="120" x2="550" y2="120"/>
+
+<!-- Legend -->
+<rect x="50" y="2340" width="1300" height="50" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1"/>
+<text class="note" x="70" y="2360">Legenda:</text>
+<rect class="decision" x="170" y="2345" width="60" height="30"/>
+<text class="note" x="240" y="2363">Decyzja</text>
+<rect class="process" x="320" y="2345" width="60" height="30"/>
+<text class="note" x="390" y="2363">Proces</text>
+<rect class="action" x="470" y="2345" width="60" height="30"/>
+<text class="note" x="540" y="2363">Akcja rotacji</text>
+<rect class="data" x="630" y="2345" width="60" height="30"/>
+<text class="note" x="700" y="2363">Dane/Log</text>
+<text class="note" x="850" y="2363">⚙️ OKRES_ROTACJI_NAGRZEWNIC = parametr technologa (np. 168h-720h)</text>
+
+</svg>
+

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -1 1600 2200" width="1600px" height="2200px">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#333"/>
+    </marker>
+    <marker id="arrowhead-yes" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#28a745"/>
+    </marker>
+    <marker id="arrowhead-no" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#dc3545"/>
+    </marker>
+    <style>
+  .title { font-family: Arial, sans-serif; font-size: 28px; font-weight: bold; fill: #1a1a1a; }
+  .subtitle { font-family: Arial, sans-serif; font-size: 18px; fill: #555; }
+  .box-text { font-family: Arial, sans-serif; font-size: 15px; fill: #1a1a1a; text-anchor: middle; }
+  .box-text-small { font-family: Arial, sans-serif; font-size: 13px; fill: #1a1a1a; text-anchor: middle; }
+  .box-label { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #1a1a1a; }
+  .decision { fill: #fff3cd; stroke: #ffc107; stroke-width: 2; }
+  .process { fill: #d4edda; stroke: #28a745; stroke-width: 2; }
+  .start-end { fill: #cce5ff; stroke: #0066cc; stroke-width: 3; rx: 25; }
+  .action { fill: #f8d7da; stroke: #dc3545; stroke-width: 2; }
+  .data { fill: #e7f3ff; stroke: #007bff; stroke-width: 2; }
+  .arrow { stroke: #333; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+  .arrow-yes { stroke: #28a745; stroke-width: 2.5; fill: none; marker-end: url(#arrowhead-yes); }
+  .arrow-no { stroke: #dc3545; stroke-width: 2.5; fill: none; marker-end: url(#arrowhead-no); }
+  .label { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #28a745; }
+  .label-no { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #dc3545; }
+  .note { font-family: Arial, sans-serif; font-size: 12px; fill: #666; font-style: italic; }
+</style>
+  </defs>
+  <rect width="1600" height="2200" fill="#ffffff" y="-1"/>
+  <text class="title" x="800" y="40" text-anchor="middle" style="white-space: pre;">Algorytm 5A: Rotacja Układów Pracy Ciągów</text>
+  <text class="subtitle" x="800" y="65" text-anchor="middle" style="white-space: pre;">Podstawowy ↔ Ograniczony (C1 ↔ C2)</text>
+  <rect class="start-end" x="650" y="90" width="300" height="60"/>
+  <text class="box-text" x="800" y="125" style="white-space: pre;">START - Główna pętla</text>
+  <text class="box-text-small" x="800" y="142" style="white-space: pre;">(wykonywana co 1 sekundę)</text>
+  <line class="arrow" x1="800" y1="150" x2="800" y2="190"/>
+  <text class="box-label" x="50" y="205" style="white-space: pre;">KROK 1</text>
+  <polygon class="decision" points="800,190 1050,260 800,330 550,260"/>
+  <text class="box-text" x="800" y="250" style="white-space: pre;">Czy warunki rotacji</text>
+  <text class="box-text" x="800" y="270" style="white-space: pre;">spełnione?</text>
+  <text class="box-text-small" x="800" y="290" style="white-space: pre;">(S1-S4, C2 sprawny, AUTO)</text>
+  <line class="arrow-yes" x1="800" y1="330" x2="800" y2="390"/>
+  <text class="label" x="820" y="360" style="white-space: pre;">TAK</text>
+  <line class="arrow-no" x1="550" y1="260" x2="350" y2="260"/>
+  <text class="label-no" x="420" y="250" style="white-space: pre;">NIE</text>
+  <rect class="action" x="200" y="230" width="150" height="60"/>
+  <text class="box-text-small" x="275" y="255" style="white-space: pre;">Jeśli układ</text>
+  <text class="box-text-small" x="275" y="272" style="white-space: pre;">= Ograniczony:</text>
+  <text class="box-text-small" x="275" y="289" style="white-space: pre;">→ Podstawowy</text>
+  <line class="arrow-no" x1="199.53" y1="260.21" x2="146.93" y2="260.21" style=""/>
+  <line class="arrow-no" x1="149" y1="257.415" x2="149" y2="1806.5" style=""/>
+  <line class="arrow-no" x1="149.646" y1="1805.79" x2="699.658" y2="1805.79" style=""/>
+  <line class="arrow-no" x1="698.346" y1="1850.64" x2="698.345" y2="1805.9" style="transform-origin: 698.345px 1828.27px;" transform="matrix(-1, 0, 0, -1, -0.00012206, -0.00024411)"/>
+  <text class="box-label" x="50" y="415" style="white-space: pre;">KROK 2</text>
+  <polygon class="decision" points="800,390 1020,450 800,510 580,450"/>
+  <text class="box-text" x="800" y="440" style="white-space: pre;">Upłynął</text>
+  <text class="box-text" x="800" y="460" style="white-space: pre;">OKRES_ROTACJI?</text>
+  <line class="arrow-yes" x1="800" y1="510" x2="800" y2="570"/>
+  <text class="label" x="820" y="540" style="white-space: pre;">TAK</text>
+  <line class="arrow-no" x1="1020" y1="450" x2="1486.82" y2="450" style=""/>
+  <text class="label-no" x="1200" y="440" style="white-space: pre;">NIE</text>
+  <line class="arrow-no" x1="1486.18" y1="448.059" x2="1486.18" y2="1818.06"/>
+  <line class="arrow-no" x1="1484.91" y1="1820" x2="1003.86" y2="1820" style=""/>
+  <line class="arrow-no" x1="1004.96" y1="1818.46" x2="1004.96" y2="1874.4" style=""/>
+  <text class="box-label" x="50" y="595" style="white-space: pre;">KROK 3</text>
+  <rect class="process" x="650" y="570" width="300" height="80"/>
+  <text class="box-text" x="800" y="600" style="white-space: pre;">Określ nowy układ:</text>
+  <text class="box-text-small" x="800" y="620" style="white-space: pre;">Jeśli Podstawowy → Ograniczony</text>
+  <text class="box-text-small" x="800" y="640" style="white-space: pre;">Jeśli Ograniczony → Podstawowy</text>
+  <line class="arrow" x1="800" y1="650" x2="800" y2="700"/>
+  <text class="box-label" x="50" y="720" style="white-space: pre;">KROK 4</text>
+  <polygon class="decision" points="800,700 1000,750 800,800 600,750"/>
+  <text class="box-text" x="800" y="740" style="white-space: pre;">Rotacja możliwa</text>
+  <text class="box-text" x="800" y="760" style="white-space: pre;">i wymagana?</text>
+  <line class="arrow-no" x1="1000" y1="750" x2="1416.78" y2="750" style=""/>
+  <text class="label-no" x="1250" y="740" style="white-space: pre;">NIE</text>
+  <line class="arrow-no" x1="1420.56" y1="751.898" x2="1420.56" y2="1759.1" style=""/>
+  <line class="arrow-no" x1="1419.17" y1="1756.55" x2="967.766" y2="1756.55" style=""/>
+  <line class="arrow-no" x1="970.675" y1="1757.15" x2="970.675" y2="1872.07" style=""/>
+  <line class="arrow-yes" x1="800" y1="800" x2="800" y2="860"/>
+  <text class="label" x="820" y="830" style="white-space: pre;">TAK</text>
+  <rect class="data" x="650" y="860" width="300" height="50"/>
+  <text class="box-text-small" x="800" y="885" style="white-space: pre;">📝 Rejestruj zdarzenie:</text>
+  <text class="box-text-small" x="800" y="902" style="white-space: pre;">"Rozpoczęcie zmiany układu"</text>
+  <line class="arrow" x1="800" y1="910" x2="800" y2="950"/>
+  <rect class="action" x="600" y="950" width="400" height="60"/>
+  <text class="box-text" x="800" y="975" style="white-space: pre;">⚙️ Wykonaj_Zmianę_Układu()</text>
+  <text class="box-text-small" x="800" y="995" style="white-space: pre;">(szczegóły poniżej)</text>
+  <line class="arrow" x1="800" y1="1010" x2="800" y2="1050"/>
+  <line class="arrow" x1="800" y1="1050" x2="400" y2="1110"/>
+  <line class="arrow" x1="800" y1="1050" x2="1200" y2="1110"/>
+  <rect class="action" x="200" y="1110" width="400" height="40"/>
+  <text class="box-text" x="400" y="1135" style="white-space: pre;">🔄 Podstawowy → Ograniczony</text>
+  <line class="arrow" x1="400" y1="1150" x2="400" y2="1170"/>
+  <rect class="process" x="220" y="1170" width="360" height="30"/>
+  <text class="box-text-small" x="400" y="1190" style="white-space: pre;">1. Zatrzymaj ciąg 1 (N1-N4, W1)</text>
+  <line class="arrow" x1="400" y1="1200" x2="400" y2="1210"/>
+  <rect class="process" x="220" y="1210" width="360" height="30"/>
+  <text class="box-text-small" x="400" y="1230" style="white-space: pre;">2. Otwórz spinę ciągów</text>
+  <line class="arrow" x1="400" y1="1240" x2="400" y2="1250"/>
+  <rect class="process" x="220" y="1250" width="360" height="30"/>
+  <text class="box-text-small" x="400" y="1270" style="white-space: pre;">3. Zamknij przepustnice C1</text>
+  <line class="arrow" x1="400" y1="1280" x2="400" y2="1290"/>
+  <rect class="process" x="220" y="1290" width="360" height="30"/>
+  <text class="box-text-small" x="400" y="1310" style="white-space: pre;">4. Uruchom ciąg 2 (N5-N8, W2)</text>
+  <line class="arrow" x1="400" y1="1320" x2="400" y2="1330"/>
+  <rect class="process" x="220" y="1330" width="360" height="30"/>
+  <text class="box-text-small" x="400" y="1350" style="white-space: pre;">5. Aktywuj PID dla W2 (Ts=2°C)</text>
+  <rect class="action" x="1000" y="1110" width="400" height="40"/>
+  <text class="box-text" x="1200" y="1135" style="white-space: pre;">🔄 Ograniczony → Podstawowy</text>
+  <line class="arrow" x1="1200" y1="1150" x2="1200" y2="1170"/>
+  <rect class="process" x="1020" y="1170" width="360" height="30"/>
+  <text class="box-text-small" x="1200" y="1190" style="white-space: pre;">1. Zatrzymaj ciąg 2 (N5-N8, W2)</text>
+  <line class="arrow" x1="1200" y1="1200" x2="1200" y2="1210"/>
+  <rect class="process" x="1020" y="1210" width="360" height="30"/>
+  <text class="box-text-small" x="1200" y="1230" style="white-space: pre;">2. Zamknij spinę ciągów</text>
+  <line class="arrow" x1="1200" y1="1240" x2="1200" y2="1250"/>
+  <rect class="process" x="1020" y="1250" width="360" height="30"/>
+  <text class="box-text-small" x="1200" y="1270" style="white-space: pre;">3. Otwórz przepustnice C1</text>
+  <line class="arrow" x1="1200" y1="1280" x2="1200" y2="1290"/>
+  <rect class="process" x="1020" y="1290" width="360" height="30"/>
+  <text class="box-text-small" x="1200" y="1310" style="white-space: pre;">4. Uruchom ciąg 1 (N1-N4, W1)</text>
+  <line class="arrow" x1="1200" y1="1320" x2="1200" y2="1330"/>
+  <rect class="process" x="1020" y="1330" width="360" height="30"/>
+  <text class="box-text-small" x="1200" y="1350" style="white-space: pre;">5. Aktywuj PID dla W1 (Ts=2°C)</text>
+  <line class="arrow" x1="400" y1="1360" x2="400" y2="1564.83" style=""/>
+  <line class="arrow" x1="396.753" y1="1564.99" x2="796.753" y2="1564.99"/>
+  <line class="arrow" x1="1200" y1="1360" x2="1200" y2="1568.13" style=""/>
+  <line class="arrow" x1="1201.9" y1="1565.85" x2="801.904" y2="1565.85"/>
+  <line class="arrow" x1="800" y1="1563.34" x2="800" y2="1610" style=""/>
+  <rect class="data" x="650" y="1610" width="300" height="70"/>
+  <text class="box-text-small" x="800" y="1635" style="white-space: pre;">Aktualizuj zmienne:</text>
+  <text class="box-text-small" x="800" y="1652" style="white-space: pre;">aktualny_układ = nowy_układ</text>
+  <text class="box-text-small" x="800" y="1669" style="white-space: pre;">czas_ostatniej_zmiany = teraz</text>
+  <line class="arrow" x1="800" y1="1680" x2="800" y2="1730"/>
+  <rect class="data" x="650" y="1730" width="300" height="50"/>
+  <text class="box-text-small" x="800" y="1755" style="white-space: pre;">📝 Rejestruj zdarzenie:</text>
+  <text class="box-text-small" x="800" y="1772" style="white-space: pre;">"Zakończono zmianę układu"</text>
+  <line class="arrow" x1="800" y1="1780" x2="800" y2="1830"/>
+  <text class="box-label" x="50" y="1875" style="white-space: pre;">KROK 5</text>
+  <polygon class="decision" points="800,1830 1020,1880 800,1930 580,1880"/>
+  <text class="box-text" x="800" y="1870" style="white-space: pre;">aktualny_układ</text>
+  <text class="box-text" x="800" y="1890" style="white-space: pre;">= Podstawowy?</text>
+  <line class="arrow-yes" x1="580" y1="1880" x2="450" y2="1880"/>
+  <text class="label" x="480" y="1870" style="white-space: pre;">TAK</text>
+  <rect class="data" x="250" y="1850" width="200" height="60"/>
+  <text class="box-text-small" x="350" y="1875" style="white-space: pre;">czas_pracy_</text>
+  <text class="box-text-small" x="350" y="1892" style="white-space: pre;">układu_podstawowego</text>
+  <text class="box-text-small" x="350" y="1909" style="white-space: pre;">+= 1</text>
+  <line class="arrow" x1="350" y1="1910" x2="350" y2="2020.79" style=""/>
+  <line class="arrow" x1="347.232" y1="2020.79" x2="797.232" y2="2020.79"/>
+  <line class="arrow-no" x1="1020" y1="1880" x2="1150" y2="1880"/>
+  <text class="label-no" x="1050" y="1870" style="white-space: pre;">NIE</text>
+  <rect class="data" x="1150" y="1850" width="200" height="60"/>
+  <text class="box-text-small" x="1250" y="1875" style="white-space: pre;">czas_pracy_</text>
+  <text class="box-text-small" x="1250" y="1892" style="white-space: pre;">układu_ograniczonego</text>
+  <text class="box-text-small" x="1250" y="1909" style="white-space: pre;">+= 1</text>
+  <line class="arrow" x1="1250" y1="1910" x2="1250" y2="2020.39" style=""/>
+  <line class="arrow" x1="1252.08" y1="2021.46" x2="802.078" y2="2021.46"/>
+  <line class="arrow" x1="800" y1="2020" x2="800" y2="2060"/>
+  <rect class="process" x="650" y="2060" width="300" height="50"/>
+  <text class="box-text" x="800" y="2090" style="white-space: pre;">Czekaj 1 sekundę</text>
+  <line class="arrow" x1="650" y1="2085" x2="100" y2="2085"/>
+  <line class="arrow" x1="100" y1="2085" x2="100" y2="120"/>
+  <line class="arrow" x1="100" y1="120" x2="650" y2="120"/>
+  <rect x="50" y="2140" width="1500" height="50" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1"/>
+  <text class="note" x="70" y="2160" style="white-space: pre;">Legenda:</text>
+  <rect class="decision" x="170" y="2145" width="60" height="30"/>
+  <text class="note" x="240" y="2163" style="white-space: pre;">Decyzja</text>
+  <rect class="process" x="320" y="2145" width="60" height="30"/>
+  <text class="note" x="390" y="2163" style="white-space: pre;">Proces</text>
+  <rect class="action" x="470" y="2145" width="60" height="30"/>
+  <text class="note" x="540" y="2163" style="white-space: pre;">Akcja zmiany</text>
+  <rect class="data" x="630" y="2145" width="60" height="30"/>
+  <text class="note" x="700" y="2163" style="white-space: pre;">Dane/Log</text>
+  <text class="note" x="800" y="2163" style="white-space: pre;">⚙️ OKRES_ROTACJI_UKŁADÓW = parametr technologa (np. 168h)</text>
+</svg>

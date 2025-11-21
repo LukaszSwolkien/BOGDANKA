@@ -180,6 +180,18 @@ System okresowo zmienia układ pracy między **Podstawowym** a **Ograniczonym** 
 - **Układ Podstawowy:** Ciąg 1 (N1-N4) + W1 → nawiew na +4,30m
 - **Układ Ograniczony:** Ciąg 2 (N5-N8) + W2 → nawiew przez **spinę ciągów** na +4,30m
 
+#### Diagram Przepływu Algorytmu 5A
+
+![Algorytm 5A - Flowchart](Symulacja/algorytm_5A_flowchart.svg)
+
+**Opis algorytmu:**
+- **Główna pętla:** Wykonywana co 1 sekundę
+- **Krok 1:** Sprawdzenie warunków rotacji (scenariusz S1-S4, gotowość C2, tryb AUTO)
+- **Krok 2:** Sprawdzenie czy upłynął okres rotacji (OKRES_ROTACJI_UKŁADÓW)
+- **Krok 3:** Określenie nowego układu (Podstawowy ↔ Ograniczony)
+- **Krok 4:** Wykonanie sekwencji zmiany układu
+- **Krok 5:** Aktualizacja liczników czasu pracy
+
 ---
 
 #### S1: Rotacja przy minimalnym ogrzewaniu (1 nagrzewnica)
@@ -257,7 +269,11 @@ System okresowo zmienia układ pracy między **Podstawowym** a **Ograniczonym** 
 
 ### Rotacja 5B: Wymiana Nagrzewnic w Ciągu
 
-Algorytm rotacji nagrzewnic w obrębie jednego ciągu - przykład dla S3 (3 nagrzewnice):
+**Diagram algorytmu rotacji nagrzewnic:**
+
+![Algorytm 5B Flowchart](Symulacja/algorytm_5B_flowchart.svg)
+
+**Przykład zastosowania algorytmu dla S3 (3 nagrzewnice w ciągu):**
 
 #### Tydzień 1: N1, N2, N3
 ![S3 Rotacja - Tydzień 1](Symulacja/nawiew_scenariusz_S3.svg)
@@ -571,19 +587,19 @@ f_max = 50 Hz (maksymalna prędkość)
 
 ## Wizualizacje SVG
 
-
 ### Podsumowanie:
-- **Łącznie plików SVG:** 19
+- **Łącznie plików SVG:** 21
 - **Scenariusze podstawowe (S0-S8):** 9 plików
 - **Schematy UAR:** 3 pliki
 - **Rotacja 5A (Układy Ograniczone S1-S4):** 4 pliki
 - **Rotacja 5B (Cykl nagrzewnic):** 3 pliki
+- **Diagramy algorytmów:** 2 pliki (Algorytmy 5A i 5B - flowcharts)
 
 **Uwaga:** Rotacja 5A pokazana dla wszystkich scenariuszy S1-S4. Rotacja 5B pokazana przykładowo dla S3.
 
 ---
 
 **Ostatnia aktualizacja:** 2025-11-21  
-**Wersja dokumentu:** 2.1  
-**Status:** Zaktualizowana symulacja z kompletnymi wizualizacjami rotacji 5A (wszystkie scenariusze S1-S4) i 5B
+**Wersja dokumentu:** 2.3  
+**Status:** Zaktualizowana symulacja z kompletnymi wizualizacjami rotacji 5A i 5B wraz z diagramami przepływu algorytmów
 

@@ -106,6 +106,12 @@ Rotacja układów jest możliwa **TYLKO** gdy spełnione są **WSZYSTKIE** warun
 
 ### 5A.5 Algorytm Rotacji Krok po Kroku
 
+**Diagram przepływu algorytmu:**
+
+![Algorytm 5A - Diagram przepływu](../Symulacja/algorytm_5A_flowchart.svg)
+
+**Pseudokod:**
+
 ```
 ZMIENNE:
   - czas_pracy_układu_podstawowego = 0  // [sekundy]
@@ -386,6 +392,10 @@ Rotacja nagrzewnic jest możliwa **TYLKO** gdy spełnione są **WSZYSTKIE** waru
    - Przepustnice sprawne
 
 ### 5B.5 Algorytm Rotacji Nagrzewnic Krok po Kroku
+
+**Diagram wizualizujący algorytm:**
+
+![Algorytm 5B Flowchart](../Symulacja/algorytm_5B_flowchart.svg)
 
 ```
 ZMIENNE (dla każdego ciągu osobno):
