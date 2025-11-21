@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-20.551 0.725 1400 900" width="1400px" height="900px">
+  <defs>
+    <marker id="arrow-head" markerHeight="8" markerWidth="8" orient="auto-start-reverse" refX="9" refY="5" viewBox="0 0 10 10">
+      <path d="m0,0l10,5l-10,5l0,-10z" fill="#111" id="arrow1"/>
+    </marker>
+    <style>
+    .title { font-family: "Arial", sans-serif; font-weight: 600; font-size: 26px; fill: #111; }
+    .label { font-family: "Arial", sans-serif; font-size: 18px; fill: #111; }
+    .small-label { font-family: "Arial", sans-serif; font-size: 14px; fill: #111; }
+    .note { font-family: "Arial", sans-serif; font-size: 16px; fill: #111; }
+    .flow-label { font-family: "Arial", sans-serif; font-size: 15px; fill: #111; text-anchor: middle; }
+    .component { stroke: #111; stroke-width: 2.2px; fill: #fff; }
+    .duct { stroke: #333; stroke-width: 3px; fill: none; }
+    .signal-line { stroke: #155724; stroke-width: 2.5px; fill: none; stroke-dasharray: 8 4; }
+    .water-line-hot { stroke: #dc3545; stroke-width: 3.5px; fill: none; }
+    .water-line-return { stroke: #3498db; stroke-width: 3.5px; fill: none; }
+    .air-line { stroke: #95a5a6; stroke-width: 3.5px; fill: none; }
+    .regulator { stroke: #111; stroke-width: 2.5px; fill: #e8f4f8; }
+    .valve { stroke: #111; stroke-width: 2.5px; fill: #f8f8f8; }
+    .heater { stroke: #111; stroke-width: 2.5px; fill: #fff5e6; }
+    .sensor { stroke: #111; stroke-width: 2px; fill: #ffe6e6; }
+    .annotation { font-family: "Arial", sans-serif; font-size: 14px; fill: #111; }
+    .param-label { font-family: "Arial", sans-serif; font-size: 13px; fill: #111; }
+</style>
+  </defs>
+  <rect width="1400" height="900" fill="#fff" y="0.725" x="-20.551"/>
+  <rect x="29.517" y="595.871" width="533.938" height="265.124" rx="10" ry="10" style="fill: rgb(255, 254, 240); stroke: rgb(17, 17, 17); stroke-width: 1.514;"/>
+  <text class="label" font-weight="bold" x="0" y="0" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, 35.028038024902344, 614.6853027343751)">Legenda:</text>
+  <line class="signal-line" x1="35.028" y1="644.685" x2="96.125" y2="644.685" style="stroke-width: 2.523;"/>
+  <text class="annotation" x="70" y="35" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, 35.028038024902344, 614.6853027343751)">Sygnał sterujący/pomiarowy</text>
+  <line class="water-line-hot" x1="35.028" y1="669.685" x2="96.125" y2="669.685" style="stroke-width: 3.532;"/>
+  <text class="annotation" x="70" y="60" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, 35.028038024902344, 614.6853027343751)">Woda grzewcza (zasilanie)</text>
+  <line class="water-line-return" x1="35.028" y1="694.686" x2="96.125" y2="694.686" style="stroke-width: 3.532;"/>
+  <text class="annotation" x="70" y="85" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, 35.028038024902344, 614.6853027343751)">Woda powrotna</text>
+  <line class="air-line" x1="35.028" y1="719.686" x2="96.125" y2="719.686" style="stroke-width: 3.532;"/>
+  <text class="annotation" x="70" y="110" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, 35.028038024902344, 614.6853027343751)">Powietrze</text>
+  <text class="annotation" x="0" y="20" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, 37.13639831542969, 727.8332519531251)">SP (Set Point) - wartość zadana regulacji</text>
+  <text class="annotation" x="0" y="40" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, 35.55512237548828, 728.8873901367189)">PV (Process Variable) - wartość mierzona</text>
+  <text class="annotation" x="0" y="60" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, 35.55512237548828, 728.8873901367189)">CV (Control Variable) - sygnał wyjściowy regulatora</text>
+  <text class="annotation" x="0" y="80" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, 35.55512237548828, 728.8873901367189)">Tz - temperatura zadana (50°C)</text>
+  <text class="annotation" x="0" y="100" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, 35.55512237548828, 728.8873901367189)">Pzmin - minimalne otwarcie zaworu (20%) - zabezpieczenie przed zamrożeniem</text>
+  <text class="annotation" x="0" y="120" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, 35.55512237548828, 728.8873901367189)">Pzmax - maksymalne otwarcie zaworu (100%)</text>
+  <text class="title" text-anchor="middle" x="700" y="40" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, -8.293183326721191, 13.704235076904297)">Schemat ideowy UAR temperatury powietrza na wylocie z nagrzewnicy</text>
+  <rect class="regulator" x="281.746" y="188.564" width="203.656" height="150" rx="5" style="stroke-width: 2.523;"/>
+  <text class="label" text-anchor="middle" x="250" y="330" font-weight="bold" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, 129.00399780273438, -111.43614196777344)">Regulator PID</text>
+  <text class="param-label" x="180" y="375" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, 106.88828277587892, -130.4413604736328)">CV max</text>
+  <text class="param-label" x="180" y="395" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, 106.88828277587892, -130.4413604736328)">CV min</text>
+  <text class="param-label" x="180" y="415" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, 106.88828277587892, -130.4413604736328)">CV man</text>
+  <line class="signal-line" marker-end="url(#arrow-head)" x1="138.091" y1="264.542" x2="282.846" y2="264.542" style="stroke-width: 2.523;" transform="matrix(1, 0, 0, 1, 0, 1.4210854715202004e-14)"/>
+  <text class="annotation" x="60" y="320" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, 84.14378356933595, -91.32899475097656)">SP (wartość zadana)</text>
+  <text class="param-label" x="60" y="340" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, 112.07937622070314, -89.50621795654297)">Tz = 50°C</text>
+  <line class="signal-line" marker-end="url(#arrow-head)" x1="383.09" y1="472.287" x2="383.09" y2="340.21" style="stroke-width: 2.523;" transform="matrix(1, 0, 0, 1, 0, 1.4210854715202004e-14)"/>
+  <text class="annotation" x="260" y="490" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, 156.0811309814453, -25.823820114135742)">PV (temperatura mierzona)</text>
+  <g transform="matrix(1, 0, 0, 1, 138.12208557128906, -125.4032974243164)">
+    <line class="signal-line" marker-end="url(#arrow-head)" x1="348.104" y1="388.704" x2="500.532" y2="388.704" style="stroke-width: 2.523;"/>
+    <text class="annotation" x="360" y="365" style="white-space: pre;" transform="matrix(1.018278, 0, 0, 1, -12.776884, -25.52952)">CV (sygnał sterujący)</text>
+    <text class="param-label" x="360" y="385" style="white-space: pre;" transform="matrix(1.018278, 0, 0, 1, -11.826181, -29.300888)">Pzmin = 20%</text>
+    <text class="param-label" x="360" y="400" style="white-space: pre;" transform="matrix(1.018278, 0, 0, 1, -13.193369, -27.920553)">Pzmax = 100%</text>
+  </g>
+  <rect class="valve" x="639.817" y="204.515" width="110.373" height="110" rx="3" style="stroke-width: 2.523;" transform="matrix(1, 0, 0, 1, 0, 1.4210854715202004e-14)"/>
+  <text class="label" text-anchor="middle" x="50" y="30" font-weight="bold" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, 642.29296875, 225.16128540039062)">Zawór</text>
+  <text class="label" text-anchor="middle" x="50" y="50" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, 643.266845703125, 225.53451538085938)">regulacyjny</text>
+  <rect class="heater" x="901.155" y="174.713" width="224.819" height="168.424" rx="5" style="stroke-width: 2.523;" transform="matrix(1, 0, 0, 1, 0, 1.4210854715202004e-14)"/>
+  <text class="label" text-anchor="middle" x="900" y="280" font-weight="bold" font-size="22" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, 97.8577346801758, -48.73284912109375)">NAGRZEWNICA</text>
+  <text class="label" text-anchor="middle" x="900" y="305" font-weight="bold" font-size="20" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, 95.17594146728517, -47.41496276855469)">(Nx)</text>
+  <g transform="matrix(0.7291749119758606, 0, 0, 0.5214838981628418, 928.433837890625, 278.979736328125)" style="">
+    <path d="M 0,0 Q 15,-15 30,0 T 60,0 T 90,0 T 120,0 T 150,0 T 180,0 T 210,0 T 240,0" stroke="#dc3545" stroke-width="3" fill="none"/>
+    <path d="M 0,20 Q 15,5 30,20 T 60,20 T 90,20 T 120,20 T 150,20 T 180,20 T 210,20 T 240,20" stroke="#dc3545" stroke-width="3" fill="none"/>
+    <path d="M 0,40 Q 15,25 30,40 T 60,40 T 90,40 T 120,40 T 150,40 T 180,40 T 210,40 T 240,40" stroke="#dc3545" stroke-width="3" fill="none"/>
+  </g>
+  <line class="water-line-hot" marker-end="url(#arrow-head)" x1="1128.49" y1="264.074" x2="1278.14" y2="264.074" style="stroke-width: 3.532; transform-origin: 1203.31px 264.074px;" transform="matrix(-0.99999951, 6.3e-7, 0, -1.00000535, -0.00049787, -0.00049787)"/>
+  <text class="annotation" x="660" y="310" fill="#dc3545" font-weight="bold" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, 490.2801513671875, -56.298004150390625)">Woda grzewcza</text>
+  <line class="water-line-return" marker-end="url(#arrow-head)" x1="749.053" y1="369.257" x2="637.752" y2="369.259" style="stroke-width: 3.532; transform-origin: 693.403px 369.259px;" transform="matrix(0, -1, 1, 0, -0.00003052, -0.00003051)"/>
+  <text class="annotation" x="700" y="520" fill="#3498db" font-weight="bold" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, -10.283438682556152, -145.9114990234375)">Woda powrotna</text>
+  <line class="air-line" marker-end="url(#arrow-head)" x1="975.169" y1="133.545" x2="1053.11" y2="133.545" style="stroke-width: 3.532; transform-origin: 1014.14px 133.545px;" transform="matrix(3.1e-7, 1.00000397, -0.9999986, 0, -0.00140402, -0.00430167)"/>
+  <text class="annotation" x="640" y="440" fill="#7f8c8d" font-weight="bold" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, 374.9651184082031, -315.8284912109375)">Powietrze zimne</text>
+  <line class="air-line" marker-end="url(#arrow-head)" x1="886.774" y1="471.171" x2="1137.96" y2="471.171" style="stroke-width: 3.532; transform-origin: 1012.37px 471.171px;" transform="matrix(0.0000012, 1.00000232, -1.0000029, 0, 0.00059323, -0.00237293)"/>
+  <text class="annotation" x="1100" y="365" fill="#7f8c8d" font-weight="bold" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, -96.1449966430664, 29.05652809143068)">Powietrze ogrzane</text>
+  <text class="param-label" x="1120" y="395" fill="#155724" font-weight="bold" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, -83.08113098144531, 100.13294982910158)">T = Tz (50°C)</text>
+  <circle class="sensor" cx="1150" cy="450" r="35" transform="matrix(1.0182780027389526, 0, 0, 1, -159.49436950683594, 20.726726531982436)"/>
+  <text class="label" text-anchor="middle" x="1150" y="455" font-size="16" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, -159.77369689941406, 21.605936050415053)">T</text>
+  <text class="small-label" text-anchor="middle" x="1150" y="505" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, -75.81520080566406, -46.87276840209961)">Czujnik</text>
+  <text class="small-label" text-anchor="middle" x="1150" y="520" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, -73.09879302978516, -44.252132415771484)">temperatury</text>
+  <line class="signal-line" x1="974.25" y1="471.116" x2="382.349" y2="471.116" style="stroke-width: 2.523;" transform="matrix(1, 0, 0, 1, 0, 1.4210854715202004e-14)"/>
+  <g transform="matrix(1, 0, 0, 1, -159.9589080810547, 24.71853637695314)">
+    <g>
+      <rect x="745.233" y="643.704" width="391.385" height="190.542" fill="#fffef0" stroke="#111" stroke-width="1.5" rx="5" style="stroke-width: 1.514;"/>
+    </g>
+    <text class="label" font-weight="bold" x="0" y="0" style="white-space: pre;" transform="matrix(1.018278, 0, 0, 1, 755.415367, 663.704304)">Zasada działania:</text>
+    <text class="annotation" x="0" y="25" style="white-space: pre;" transform="matrix(1.018278, 0, 0, 1, 755.415367, 663.704304)">• Regulator PID porównuje temperaturę zadaną (Tz=50°C)</text>
+    <text class="annotation" x="5" y="45" style="white-space: pre;" transform="matrix(1.018278, 0, 0, 1, 755.415367, 663.704304)">z temperaturą mierzoną na wylocie powietrza (PV)</text>
+    <text class="annotation" x="0" y="70" style="white-space: pre;" transform="matrix(1.018278, 0, 0, 1, 755.415367, 663.704304)">• Spadek temperatury → zwiększenie otwarcia zaworu</text>
+    <text class="annotation" x="5" y="90" style="white-space: pre;" transform="matrix(1.018278, 0, 0, 1, 755.415367, 663.704304)">(więcej gorącej wody przez nagrzewnicę)</text>
+    <text class="annotation" x="0" y="115" style="white-space: pre;" transform="matrix(1.018278, 0, 0, 1, 755.415367, 663.704304)">• Wzrost temperatury → zmniejszenie otwarcia zaworu</text>
+    <text class="annotation" x="5" y="135" style="white-space: pre;" transform="matrix(1.018278, 0, 0, 1, 755.415367, 663.704304)">(mniej gorącej wody przez nagrzewnicę)</text>
+    <text class="annotation" x="0" y="160" style="white-space: pre;" transform="matrix(1.018278, 0, 0, 1, 755.415367, 663.704304)">• Min. 20% otwarcia zapobiega zamrożeniu nagrzewnicy</text>
+  </g>
+  <line class="water-line-return" x1="751.588" y1="264.795" x2="901.445" y2="264.795" style="stroke-width: 3.532;"/>
+  <text class="param-label" x="180" y="415" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, 106.07303619384767, -111.80835723876953)">SP</text>
+  <text class="annotation" x="260" y="490" style="white-space: pre;" transform="matrix(1.0182780027389526, 0, 0, 1, 25.835601806640625, -167.14956665039062)">PV</text>
+</svg>

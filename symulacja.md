@@ -12,7 +12,14 @@ Ten dokument przedstawia symulację interfejsu operatorskiego (HMI) dla systemu 
 
 ### Schemat Bazowy Instalacji
 
-![Schemat instalacji nawiewu](Doc/assets/nawiew_z_dolnego_ciagu_wentylacyjnego.svg)
+![Nawiew z dwóch ciągów wentylacyjnych](Doc/Projekt%20instalacji%20ogrzewania%20szybu/nawiew_z_dwoch_ciagow_wentylacyjnych.svg)
+
+Rys. Nawiew powietrza ogrzanego z wykorzystaniem dwóch ciągów wentylacyjnych.
+
+![Nawiew z dolnego ciągu wentylacyjnego](Doc/Projekt%20instalacji%20ogrzewania%20szybu/nawiew_z_dolnego_ciagu_wentylacyjnego.svg)
+
+Rys. Nawiew powietrza ogrzanego do wyrzutni poziomu 4,30 m z wykorzystaniem drugiego ciągu wentylacyjnego.
+
 
 **Opis:**
 - Schemat przedstawia kompletny układ nawiewu powietrza ogrzanego
