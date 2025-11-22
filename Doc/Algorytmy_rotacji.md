@@ -8,7 +8,7 @@ _Plik ten jest częścią dokumentacji systemu sterowania nagrzewnicami BOGDANKA
 
 ---
 
-**Ostatnia aktualizacja:** 21 Listopad 2025  
+**Ostatnia aktualizacja:** 22 Listopad 2025  
 **Status:** Algorytmy do implementacji w PLC  
 **Zatwierdzenie:** Wymaga akceptacji technologa
 
@@ -28,13 +28,13 @@ System sterowania BOGDANKA Szyb 2 wykorzystuje **dwa niezależne algorytmy rotac
 ### **Algorytm 5A: Rotacja Układów Pracy Ciągów**
 - **Cel:** Wyrównanie eksploatacji między ciągiem 1 (W1) a ciągiem 2 (W2)
 - **Zakres:** Zmiana między układem Podstawowym a Ograniczonym
-- **Okres:** Tygodnie/miesiące (definiowany przez technologa)
+- **Okres:** Dni/tygodnie/miesiące (definiowany przez technologa)
 - **Dotyczy:** Scenariuszy S1-S4
 
 ### **Algorytm 5B: Rotacja Nagrzewnic w Ciągu**
 - **Cel:** Wyrównanie eksploatacji nagrzewnic w obrębie jednego ciągu
 - **Zakres:** Wymiana pracującej nagrzewnicy na rezerwową w tym samym ciągu
-- **Okres:** Dni/tygodnie (definiowany przez technologa)
+- **Okres:** Godziny/Dni/tygodnie (definiowany przez technologa)
 - **Dotyczy:** Wszystkich nagrzewnic N1-N8
 
 ### **Koordynacja Algorytmów**
@@ -300,7 +300,7 @@ System rejestruje następujące dane dla analizy:
    - Nawiew na +4,30m
 
 2. **Dzień 7, godz. 01:00** - Upłynął OKRES_ROTACJI_UKŁADÓW
-   - Warunki rotacji spełnione ✅
+   - Warunki rotacji spełnione 
    - Algorytm rozpoczyna zmianę: Podstawowy → Ograniczony
 
 3. **Dzień 7, godz. 01:05** - Zmiana zakończona
@@ -360,12 +360,6 @@ Dzień 22-28: N4, N1, N2 pracują  (N3 odpoczynek, N2 wchodzi)
 - **168h (7 dni)** - typowa wartość dla równomiernego rozłożenia eksploatacji
 - **720h (30 dni)** - dla zmniejszenia częstotliwości przełączeń
 - **48h (2 dni)** - dla intensywnej rotacji i szybszego wyrównania
-
-**Zależność od scenariusza:**
-Możliwe jest ustawienie różnych okresów rotacji dla różnych scenariuszy:
-- S1 (1 nagrzewnica): rotacja co 168h
-- S2 (2 nagrzewnice): rotacja co 336h (dłużej, bo obciążenie rozproszone)
-- S3 (3 nagrzewnice): rotacja co 504h
 
 ### 5B.4 Warunki Aktywacji Rotacji Nagrzewnic
 
@@ -600,15 +594,31 @@ KONIEC FUNKCJI
 
 ### 5B.6 Priorytety Rotacji
 
-System może pracować w różnych scenariuszach jednocześnie w różnych ciągach. Priorytet rotacji:
+W scenariuszach S5-S8 pracują oba ciągi jednocześnie. W S1-S4 pracuje **albo C1 (Układ Podstawowy) albo C2 (Układ Ograniczony)** w zależności od aktualnego układu pracy (Algorytm 5A). Gdy wiele ciągów wymaga rotacji jednocześnie, stosuje się następujące priorytety:
 
 | Priorytet | Ciąg | Warunek | Uzasadnienie |
 |-----------|------|---------|--------------|
-| 1 | Ciąg 1 (S1-S4) | Tylko C1 pracuje | Najwyższe zużycie - priorytetowa rotacja |
-| 2 | Ciąg 2 (S5-S8) | C1 MAX + C2 PID | Średnie zużycie - rotacja gdy C1 już zrotowano |
-| 3 | Ciąg 1 (S5-S8) | C1 MAX + C2 PID | C1 pracuje z MAX - mniejsza potrzeba rotacji |
+| 1 | **Ciąg aktywny w S1-S4** | **C1 (Układ Podstawowy)** ALBO **C2 (Układ Ograniczony)** - pracuje SOLO | Najwyższe zużycie - całe obciążenie grzewcze na jednym ciągu, priorytetowa rotacja |
+| 2 | Ciąg 2 (S5-S7) | C1 MAX + C2 PID | C2 reguluje temperaturę PID - rotacja **MOŻLIWA** i ważna dla stabilności (są nagrzewnice rezerwowe) |
+| 3 | Ciąg 1 (S5-S8) | C1 MAX + C2 PID/MAX | C1 pracuje na MAX - rotacja **NIEMOŻLIWA*** (wszystkie N1-N4 pracują, brak rezerwowej) |
 
-**Zasada:** Nie wykonuj rotacji w dwóch ciągach jednocześnie - zachowaj min. 15 minut odstępu między rotacjami.
+**Ograniczenia rotacji:**
+- *W **S5-S8**: rotacja 5B w **C1 jest NIEMOŻLIWA** - wszystkie nagrzewnice N1-N4 muszą pracować (brak nagrzewnicy rezerwowej)
+- W **S5-S7**: rotacja 5B w **C2 jest MOŻLIWA** - są nagrzewnice rezerwowe (N8 w S7, N7-N8 w S6, N6-N8 w S5)
+- W **S8**: rotacja 5B w **C2 jest NIEMOŻLIWA** - wszystkie nagrzewnice N5-N8 muszą pracować (brak nagrzewnicy rezerwowej)
+
+**Koordynacja z Algorytmem 5A (Rotacja Układów):**
+- W S1-S4, gdy aktywny jest **Układ Podstawowy**: rotacja 5B dotyczy **C1** (priorytet 1)
+- W S1-S4, gdy aktywny jest **Układ Ograniczony**: rotacja 5B dotyczy **C2** (priorytet 1)
+- Po zmianie układu (5A) poczekaj min. **1 godzinę** przed rotacją nagrzewnic (5B)
+- Priorytet ma zawsze **ciąg aktywny** (pracujący w danym układzie)
+
+**Zasada odstępu:** Nie wykonuj rotacji w dwóch ciągach jednocześnie - zachowaj min. 15 minut odstępu między rotacjami.
+
+**Uzasadnienie odstępu 15 minut:**
+- Stabilność systemu (uniknięcie podwójnych perturbacji temperatury)
+- Łatwiejsza diagnostyka problemów (wiadomo który ciąg jest przyczyną)
+- Czas na reakcję operatora/SCADA w przypadku nieprawidłowości
 
 ### 5B.7 Obsługa Stanów Awaryjnych
 
