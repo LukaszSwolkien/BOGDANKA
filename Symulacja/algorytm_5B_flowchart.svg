@@ -1,10 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="1400" height="3220" xmlns="http://www.w3.org/2000/svg">
-
-<!-- White background -->
-<rect width="1400" height="3220" fill="#ffffff"/>
-
-<style>
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 3220" width="1400px" height="3220px">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#333"/>
+    </marker>
+    <marker id="arrowhead-no" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#dc3545"/>
+    </marker>
+    <marker id="arrowhead-yes" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#28a745"/>
+    </marker>
+    <style>
   .title { font-family: Arial, sans-serif; font-size: 28px; font-weight: bold; fill: #1a1a1a; }
   .subtitle { font-family: Arial, sans-serif; font-size: 18px; fill: #555; }
   .box-text { font-family: Arial, sans-serif; font-size: 15px; fill: #1a1a1a; text-anchor: middle; }
@@ -24,244 +30,160 @@
   .note { font-family: Arial, sans-serif; font-size: 12px; fill: #666; font-style: italic; }
   .loop { font-family: Arial, sans-serif; font-size: 13px; fill: #0066cc; font-style: italic; }
 </style>
-
-<defs>
-  <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
-    <polygon points="0 0, 10 3, 0 6" fill="#333" />
-  </marker>
-  <marker id="arrowhead-yes" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
-    <polygon points="0 0, 10 3, 0 6" fill="#28a745" />
-  </marker>
-  <marker id="arrowhead-no" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
-    <polygon points="0 0, 10 3, 0 6" fill="#dc3545" />
-  </marker>
-</defs>
-
-<!-- Title -->
-<text class="title" x="700" y="40" text-anchor="middle">Algorytm 5B: Rotacja Nagrzewnic w Obrębie Ciągu</text>
-<text class="subtitle" x="700" y="65" text-anchor="middle">Wyrównanie Czasu Pracy N1-N8 (z koordynacją 5A)</text>
-
-<!-- START -->
-<rect class="start-end" x="550" y="90" width="300" height="60"/>
-<text class="box-text" x="700" y="125">START - Główna pętla</text>
-<text class="box-text-small" x="700" y="142">(co CYKL_PĘTLI, domyślnie 60s)</text>
-<line class="arrow" x1="700" y1="150" x2="700" y2="180"/>
-
-<!-- Zmienne globalne -->
-<rect class="warning" x="450" y="190" width="500" height="90"/>
-<text class="box-text-small" x="700" y="210">⚙️ Zmienne globalne (koordynacja z 5A):</text>
-<text class="box-text-small" x="700" y="227">aktualny_układ, zmiana_układu_w_toku,</text>
-<text class="box-text-small" x="700" y="244">czas_ostatniej_zmiany_układu,</text>
-<text class="box-text-small" x="700" y="261">rotacja_nagrzewnic_w_toku,</text>
-<text class="box-text-small" x="700" y="278">czas_ostatniej_rotacji_globalny</text>
-<line class="arrow" x1="700" y1="280" x2="700" y2="310"/>
-
-<!-- Pętla DLA KAŻDEGO CIĄGU -->
-<rect class="process" x="550" y="320" width="300" height="50"/>
-<text class="box-text" x="700" y="345">DLA KAŻDEGO ciągu</text>
-<text class="box-text-small" x="700" y="362">w [CIĄG1, CIĄG2]</text>
-<line class="arrow" x1="700" y1="370" x2="700" y2="410"/>
-
-<!-- KROK 0: Sprawdź aktywność ciągu (NOWY - KRYTYCZNY!) -->
-<text class="box-label" x="50" y="460">KROK 0</text>
-<polygon class="decision" points="700,420 1050,520 700,620 350,520"/>
-<text class="box-text" x="700" y="500">Ciąg aktywny w aktualnym</text>
-<text class="box-text" x="700" y="520">układzie/scenariuszu?</text>
-<text class="box-text-small" x="700" y="540">S1-S4: C1(Podst) lub C2(Ogr)</text>
-<text class="box-text-small" x="700" y="557">S5-S8: tylko C2 (C1 niemożliwa)</text>
-
-<!-- NIE - pomiń ciąg -->
-<line class="arrow-no" x1="350" y1="520" x2="200" y2="520"/>
-<text class="label-no" x="250" y="510">NIE</text>
-<rect class="action" x="50" y="490" width="150" height="60"/>
-<text class="box-text-small" x="125" y="515">POMIŃ ciąg</text>
-<text class="box-text-small" x="125" y="532">(ciąg wyłączony)</text>
-<line class="arrow-no" x1="125" y1="550" x2="125" y2="2980"/>
-<line class="arrow-no" x1="125" y1="2980" x2="600" y2="2980"/>
-
-<!-- TAK - kontynuuj do KROK 1 -->
-<line class="arrow-yes" x1="700" y1="620" x2="700" y2="670"/>
-<text class="label" x="720" y="650">TAK</text>
-
-<!-- KROK 1: Aktualizuj liczniki -->
-<text class="box-label" x="50" y="705">KROK 1</text>
-<rect class="data" x="500" y="680" width="400" height="70"/>
-<text class="box-text-small" x="700" y="705">Aktualizuj liczniki:</text>
-<text class="box-text-small" x="700" y="722">DLA KAŻDEJ nagrzewnicy ciągu:</text>
-<text class="box-text-small" x="700" y="739">czas_pracy[N] lub czas_postoju[N] += 1</text>
-<line class="arrow" x1="700" y1="750" x2="700" y2="790"/>
-
-<!-- KROK 2: Sprawdź warunki rotacji (ROZSZERZONY) -->
-<text class="box-label" x="50" y="865">KROK 2</text>
-<polygon class="decision" points="700,800 1050,920 700,1040 350,920"/>
-<text class="box-text" x="700" y="885">Warunki rotacji spełnione?</text>
-<text class="box-text-small" x="700" y="905">1. Czy 5A nie zmienia układu?</text>
-<text class="box-text-small" x="700" y="922">2. Upłynęła 1h od zmiany układu?</text>
-<text class="box-text-small" x="700" y="939">3. Upłynęło 15min od rotacji?</text>
-<text class="box-text-small" x="700" y="956">4. Sprawne, okres, stabilność OK?</text>
-
-<!-- NIE - pomiń ciąg -->
-<line class="arrow-no" x1="350" y1="920" x2="200" y2="920"/>
-<text class="label-no" x="250" y="910">NIE</text>
-<line class="arrow-no" x1="200" y1="920" x2="200" y2="3000"/>
-<line class="arrow-no" x1="200" y1="3000" x2="650" y2="3000"/>
-
-<!-- TAK - kontynuuj -->
-<line class="arrow-yes" x1="700" y1="1040" x2="700" y2="1090"/>
-<text class="label" x="720" y="1070">TAK</text>
-
-<!-- KROK 3: Wybierz nagrzewnice -->
-<text class="box-label" x="50" y="1145">KROK 3</text>
-<rect class="process" x="500" y="1100" width="400" height="90"/>
-<text class="box-text-small" x="700" y="1125">Wybierz nagrzewnicę:</text>
-<text class="box-text-small" x="700" y="1142">• do WYŁĄCZENIA: najdłużej pracująca</text>
-<text class="box-text-small" x="700" y="1159">  (przy równych czasach: wcześniejszy timestamp)</text>
-<text class="box-text-small" x="700" y="1176">• do ZAŁĄCZENIA: najdłużej w postoju</text>
-<line class="arrow" x1="700" y1="1190" x2="700" y2="1230"/>
-
-<!-- Sprawdź MIN_DELTA -->
-<polygon class="decision" points="700,1240 950,1300 700,1360 450,1300"/>
-<text class="box-text" x="700" y="1290">delta_czasu ≥</text>
-<text class="box-text" x="700" y="1310">MIN_DELTA_CZASU?</text>
-
-<!-- NIE - pomiń -->
-<line class="arrow-no" x1="950" y1="1300" x2="1100" y2="1300"/>
-<text class="label-no" x="1000" y="1290">NIE</text>
-<line class="arrow-no" x1="1100" y1="1300" x2="1100" y2="3020"/>
-<line class="arrow-no" x1="1100" y1="3020" x2="750" y2="3020"/>
-
-<!-- TAK - kontynuuj do KROK 4 -->
-<line class="arrow-yes" x1="700" y1="1360" x2="700" y2="1410"/>
-<text class="label" x="720" y="1390">TAK</text>
-
-<!-- KROK 4: Wykonaj rotację (z blokadami) -->
-<text class="box-label" x="50" y="1445">KROK 4</text>
-<rect class="warning" x="550" y="1420" width="300" height="50"/>
-<text class="box-text-small" x="700" y="1440">🔒 Ustaw blokadę:</text>
-<text class="box-text-small" x="700" y="1457">rotacja_nagrzewnic_w_toku = PRAWDA</text>
-<line class="arrow" x1="700" y1="1470" x2="700" y2="1510"/>
-
-<!-- Rejestruj rozpoczęcie -->
-<rect class="data" x="550" y="1520" width="300" height="50"/>
-<text class="box-text-small" x="700" y="1545">📝 Rejestruj zdarzenie:</text>
-<text class="box-text-small" x="700" y="1562">"Rotacja N_stara → N_nowa"</text>
-<line class="arrow" x1="700" y1="1570" x2="700" y2="1610"/>
-
-<!-- Wykonaj rotację -->
-<rect class="action" x="500" y="1620" width="400" height="60"/>
-<text class="box-text" x="700" y="1645">⚙️ Wykonaj_Rotację_Nagrzewnicy()</text>
-<text class="box-text-small" x="700" y="1665">(szczegóły poniżej)</text>
-<line class="arrow" x1="700" y1="1680" x2="700" y2="1720"/>
-
-<!-- Sekwencja rotacji -->
-<rect class="process" x="520" y="1730" width="360" height="30"/>
-<text class="box-text-small" x="700" y="1750">1. Ustaw zawór N_nowa na 20%</text>
-<line class="arrow" x1="700" y1="1760" x2="700" y2="1780"/>
-
-<rect class="process" x="520" y="1790" width="360" height="30"/>
-<text class="box-text-small" x="700" y="1810">2. Otwórz przepustnicę N_nowa</text>
-<line class="arrow" x1="700" y1="1820" x2="700" y2="1840"/>
-
-<rect class="process" x="520" y="1850" width="360" height="30"/>
-<text class="box-text-small" x="700" y="1870">3. Aktywuj N_nowa (zawór PID → 100%)</text>
-<line class="arrow" x1="700" y1="1880" x2="700" y2="1900"/>
-
-<rect class="process" x="520" y="1910" width="360" height="30"/>
-<text class="box-text-small" x="700" y="1930">4. Czekaj na stabilizację (30s)</text>
-<line class="arrow" x1="700" y1="1940" x2="700" y2="1960"/>
-
-<rect class="process" x="520" y="1970" width="360" height="30"/>
-<text class="box-text-small" x="700" y="1990">5. Deaktywuj N_stara (zawór → 20%)</text>
-<line class="arrow" x1="700" y1="2000" x2="700" y2="2020"/>
-
-<rect class="process" x="520" y="2030" width="360" height="30"/>
-<text class="box-text-small" x="700" y="2050">6. Zamknij przepustnicę N_stara</text>
-<line class="arrow" x1="700" y1="2060" x2="700" y2="2080"/>
-
-<rect class="process" x="520" y="2090" width="360" height="30"/>
-<text class="box-text-small" x="700" y="2110">7. Zamknij zawór N_stara (0%)</text>
-<line class="arrow" x1="700" y1="2120" x2="700" y2="2160"/>
-
-<!-- Aktualizacja stanu -->
-<rect class="data" x="500" y="2170" width="400" height="90"/>
-<text class="box-text-small" x="700" y="2195">Aktualizuj stan:</text>
-<text class="box-text-small" x="700" y="2212">• nagrzewnice_aktywne[ciąg]</text>
-<text class="box-text-small" x="700" y="2229">• czas_ostatniej_rotacji[ciąg]</text>
-<text class="box-text-small" x="700" y="2246">• czas_ostatniej_rotacji_globalny (15min)</text>
-<line class="arrow" x1="700" y1="2260" x2="700" y2="2300"/>
-
-<!-- Rejestruj zakończenie -->
-<rect class="data" x="550" y="2310" width="300" height="50"/>
-<text class="box-text-small" x="700" y="2335">📝 Rejestruj zdarzenie:</text>
-<text class="box-text-small" x="700" y="2352">"Rotacja zakończona pomyślnie"</text>
-<line class="arrow" x1="700" y1="2360" x2="700" y2="2400"/>
-
-<!-- Zwolnij blokadę -->
-<rect class="warning" x="550" y="2410" width="300" height="50"/>
-<text class="box-text-small" x="700" y="2430">🔓 Zwolnij blokadę:</text>
-<text class="box-text-small" x="700" y="2447">rotacja_nagrzewnic_w_toku = FAŁSZ</text>
-<line class="arrow" x1="700" y1="2460" x2="700" y2="2500"/>
-
-<!-- Monitorowanie -->
-<rect class="data" x="550" y="2510" width="300" height="100"/>
-<text class="box-text-small" x="700" y="2535">Monitoruj i aktualizuj:</text>
-<text class="box-text-small" x="700" y="2552">• czas_pracy[N1..N8]</text>
-<text class="box-text-small" x="700" y="2569">• czas_postoju[N1..N8]</text>
-<text class="box-text-small" x="700" y="2586">• liczba_rotacji[CIĄG]</text>
-<text class="box-text-small" x="700" y="2603">• stosunek_eksploatacji[N1..N8]</text>
-<line class="arrow" x1="700" y1="2610" x2="700" y2="2670"/>
-
-<!-- Sprawdź czy więcej ciągów -->
-<polygon class="decision" points="700,2680 900,2740 700,2800 500,2740"/>
-<text class="box-text" x="700" y="2730">Więcej ciągów</text>
-<text class="box-text" x="700" y="2750">do sprawdzenia?</text>
-
-<!-- TAK - następny ciąg -->
-<line class="arrow-yes" x1="500" y1="2740" x2="350" y2="2740"/>
-<text class="label" x="400" y="2730">TAK</text>
-<line class="arrow-yes" x1="350" y1="2740" x2="350" y2="345"/>
-<line class="arrow-yes" x1="350" y1="345" x2="550" y2="345"/>
-
-<!-- NIE - koniec pętli ciągów -->
-<line class="arrow-no" x1="700" y1="2800" x2="700" y2="2860"/>
-<text class="label-no" x="720" y="2835">NIE</text>
-
-<!-- Punkt zbiorczy -->
-<line class="arrow" x1="600" y1="2980" x2="675" y2="2980"/>
-<line class="arrow" x1="650" y1="3000" x2="675" y2="3000"/>
-<line class="arrow" x1="750" y1="3020" x2="725" y2="3020"/>
-<line class="arrow" x1="700" y1="2860" x2="700" y2="2980"/>
-<line class="arrow" x1="700" y1="2980" x2="700" y2="2940"/>
-
-<!-- Czekaj -->
-<rect class="process" x="550" y="2950" width="300" height="50"/>
-<text class="box-text" x="700" y="2980">Czekaj CYKL_PĘTLI</text>
-
-<!-- Pętla zwrotna -->
-<line class="arrow" x1="550" y1="2975" x2="50" y2="2975"/>
-<line class="arrow" x1="50" y1="2975" x2="50" y2="120"/>
-<line class="arrow" x1="50" y1="120" x2="550" y2="120"/>
-
-<!-- Legend -->
-<rect x="50" y="3030" width="1300" height="150" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1"/>
-<text class="note" x="70" y="3050">Legenda:</text>
-<rect class="decision" x="170" y="3035" width="60" height="30"/>
-<text class="note" x="240" y="3053">Decyzja</text>
-<rect class="process" x="320" y="3035" width="60" height="30"/>
-<text class="note" x="390" y="3053">Proces</text>
-<rect class="action" x="470" y="3035" width="60" height="30"/>
-<text class="note" x="540" y="3053">Akcja rotacji</text>
-<rect class="data" x="630" y="3035" width="60" height="30"/>
-<text class="note" x="700" y="3053">Dane/Log</text>
-<rect class="warning" x="780" y="3035" width="60" height="30"/>
-<text class="note" x="850" y="3053">Blokada/Sync</text>
-
-<text class="note" x="70" y="3085">⚙️ Parametry technologa:</text>
-<text class="note" x="90" y="3105">• OKRES_ROTACJI_NAGRZEWNIC = 168h-720h (typowo 168h = 7 dni)</text>
-<text class="note" x="90" y="3125">• MIN_DELTA_CZASU = 1800-7200s (typowo 3600s = 1h)</text>
-<text class="note" x="90" y="3145">• CYKL_PĘTLI_ALGORYTMÓW = 10-600s (domyślnie 60s = 1 min, współdzielony z 5A)</text>
-
-<text class="note" x="70" y="3175">🔒 Koordynacja z Algorytmem 5A:</text>
-<text class="note" x="90" y="3195">• KROK 0: Sprawdza czy ciąg aktywny (S1-S4: C1 lub C2, S5-S8: tylko C2)</text>
-
+  </defs>
+  <rect width="1400" height="3220" fill="#ffffff" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="title" x="700" y="40" text-anchor="middle" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">Algorytm 5B: Rotacja Nagrzewnic w Obrębie Ciągu</text>
+  <text class="subtitle" x="700" y="65" text-anchor="middle" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">Wyrównanie Czasu Pracy N1-N8 (z koordynacją 5A)</text>
+  <rect class="start-end" x="550" y="90" width="300" height="60" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="box-text" x="700" y="125" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">START - Główna pętla</text>
+  <text class="box-text-small" x="700" y="142" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">(co CYKL_PĘTLI, domyślnie 60s)</text>
+  <line class="arrow" x1="700" y1="150" x2="700" y2="180" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <rect class="warning" x="450" y="190" width="500" height="90" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="box-text-small" x="700" y="210" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">⚙️ Zmienne globalne (koordynacja z 5A):</text>
+  <text class="box-text-small" x="700" y="227" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">aktualny_układ, zmiana_układu_w_toku,</text>
+  <text class="box-text-small" x="700" y="244" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">czas_ostatniej_zmiany_układu,</text>
+  <text class="box-text-small" x="700" y="261" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">rotacja_nagrzewnic_w_toku,</text>
+  <text class="box-text-small" x="700" y="278" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">czas_ostatniej_rotacji_globalny</text>
+  <line class="arrow" x1="700" y1="280" x2="700" y2="310" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <rect class="process" x="550" y="320" width="300" height="50" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="box-text" x="700" y="345" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">DLA KAŻDEGO ciągu</text>
+  <text class="box-text-small" x="700" y="362" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">w [CIĄG1, CIĄG2]</text>
+  <line class="arrow" x1="700" y1="370" x2="700" y2="410" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="box-label" x="50" y="460" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">KROK 0</text>
+  <polygon class="decision" points="700,420 1050,520 700,620 350,520" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="box-text" x="700" y="500" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">Ciąg aktywny w aktualnym</text>
+  <text class="box-text" x="700" y="520" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">układzie/scenariuszu?</text>
+  <text class="box-text-small" x="700" y="540" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">S1-S4: C1(Podst) lub C2(Ogr)</text>
+  <text class="box-text-small" x="700" y="557" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">S5-S8: tylko C2 (C1 niemożliwa)</text>
+  <line class="arrow-no" x1="350" y1="520" x2="200" y2="520" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="label-no" x="250" y="510" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">NIE</text>
+  <rect class="action" x="50" y="490" width="150" height="60" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="box-text-small" x="125" y="515" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">POMIŃ ciąg</text>
+  <text class="box-text-small" x="125" y="532" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">(ciąg wyłączony)</text>
+  <line class="arrow-no" x1="125" y1="550" x2="125" y2="2980" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <line class="arrow-no" x1="125" y1="2980" x2="545.949" y2="2980" style="" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <line class="arrow-yes" x1="700" y1="620" x2="700" y2="670" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="label" x="720" y="650" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">TAK</text>
+  <text class="box-label" x="50" y="705" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">KROK 1</text>
+  <rect class="data" x="500" y="680" width="400" height="70" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="box-text-small" x="700" y="705" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">Aktualizuj liczniki:</text>
+  <text class="box-text-small" x="700" y="722" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">DLA KAŻDEJ nagrzewnicy ciągu:</text>
+  <text class="box-text-small" x="700" y="739" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">czas_pracy[N] lub czas_postoju[N] += 1</text>
+  <line class="arrow" x1="700" y1="750" x2="700" y2="790" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="box-label" x="50" y="865" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">KROK 2</text>
+  <polygon class="decision" points="700,800 1050,920 700,1040 350,920" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="box-text" x="700" y="885" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">Warunki rotacji spełnione?</text>
+  <text class="box-text-small" x="700" y="905" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">1. Czy 5A nie zmienia układu?</text>
+  <text class="box-text-small" x="700" y="922" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">2. Upłynęła 1h od zmiany układu?</text>
+  <text class="box-text-small" x="700" y="939" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">3. Upłynęło 15min od rotacji?</text>
+  <text class="box-text-small" x="700" y="956" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">4. Sprawne, okres, stabilność OK?</text>
+  <line class="arrow-no" x1="350" y1="920" x2="200" y2="920" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="label-no" x="250" y="910" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">NIE</text>
+  <line class="arrow-no" x1="200" y1="920" x2="200" y2="2957.98" style="" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <line class="arrow-no" x1="200.793" y1="2958.41" x2="546.935" y2="2958.41" style="" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <line class="arrow-yes" x1="700" y1="1040" x2="700" y2="1090" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="label" x="720" y="1070" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">TAK</text>
+  <text class="box-label" x="50" y="1145" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">KROK 3</text>
+  <rect class="process" x="500" y="1100" width="400" height="90" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="box-text-small" x="700" y="1125" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">Wybierz nagrzewnicę:</text>
+  <text class="box-text-small" x="700" y="1142" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">• do WYŁĄCZENIA: najdłużej pracująca</text>
+  <text class="box-text-small" x="700" y="1159" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">  (przy równych czasach: wcześniejszy timestamp)</text>
+  <text class="box-text-small" x="700" y="1176" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">• do ZAŁĄCZENIA: najdłużej w postoju</text>
+  <line class="arrow" x1="700" y1="1190" x2="700" y2="1230" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <polygon class="decision" points="700,1240 950,1300 700,1360 450,1300" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="box-text" x="700" y="1290" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">delta_czasu ≥</text>
+  <text class="box-text" x="700" y="1310" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">MIN_DELTA_CZASU?</text>
+  <line class="arrow-no" x1="950" y1="1300" x2="1100" y2="1300" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="label-no" x="1000" y="1290" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">NIE</text>
+  <line class="arrow-no" x1="1100" y1="1300" x2="1100" y2="2977.06" style="" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <line class="arrow-no" x1="1099.96" y1="2976.21" x2="850.632" y2="2976.21" style="" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <line class="arrow-yes" x1="700" y1="1360" x2="700" y2="1410" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="label" x="720" y="1390" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">TAK</text>
+  <text class="box-label" x="50" y="1445" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">KROK 4</text>
+  <rect class="warning" x="550" y="1420" width="300" height="50" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="box-text-small" x="700" y="1440" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">🔒 Ustaw blokadę:</text>
+  <text class="box-text-small" x="700" y="1457" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">rotacja_nagrzewnic_w_toku = PRAWDA</text>
+  <line class="arrow" x1="700" y1="1470" x2="700" y2="1517.64" style="" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <rect class="data" x="550" y="1520" width="300" height="50" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="box-text-small" x="700" y="1545" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">📝 Rejestruj zdarzenie:</text>
+  <text class="box-text-small" x="700" y="1562" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">"Rotacja N_stara → N_nowa"</text>
+  <line class="arrow" x1="700" y1="1570" x2="700" y2="1619.34" style="" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <rect class="action" x="500" y="1620" width="400" height="60" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="box-text" x="700" y="1645" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">⚙️ Wykonaj_Rotację_Nagrzewnicy()</text>
+  <text class="box-text-small" x="700" y="1665" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">(szczegóły poniżej)</text>
+  <line class="arrow" x1="700" y1="1680" x2="700" y2="1727.64" style="" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <rect class="process" x="520" y="1730" width="360" height="30" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="box-text-small" x="700" y="1750" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">1. Ustaw zawór N_nowa na 20%</text>
+  <line class="arrow" x1="700" y1="1760" x2="700" y2="1791.47" style="" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <rect class="process" x="520" y="1790" width="360" height="30" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="box-text-small" x="700" y="1810" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">2. Otwórz przepustnicę N_nowa</text>
+  <line class="arrow" x1="700" y1="1820" x2="700" y2="1848.92" style="" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <rect class="process" x="520" y="1850" width="360" height="30" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="box-text-small" x="700" y="1870" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">3. Aktywuj N_nowa (zawór PID → 100%)</text>
+  <line class="arrow" x1="700" y1="1880" x2="700" y2="1911.47" style="" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <rect class="process" x="520" y="1910" width="360" height="30" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="box-text-small" x="700" y="1930" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">4. Czekaj na stabilizację (30s)</text>
+  <line class="arrow" x1="700" y1="1940" x2="700" y2="1969.34" style="" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <rect class="process" x="520" y="1970" width="360" height="30" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="box-text-small" x="700" y="1990" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">5. Deaktywuj N_stara (zawór → 20%)</text>
+  <line class="arrow" x1="700" y1="2000" x2="700" y2="2029.77" style="" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <rect class="process" x="520" y="2030" width="360" height="30" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="box-text-small" x="700" y="2050" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">6. Zamknij przepustnicę N_stara</text>
+  <line class="arrow" x1="700" y1="2060" x2="700" y2="2090.19" style="" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <rect class="process" x="520" y="2090" width="360" height="30" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="box-text-small" x="700" y="2110" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">7. Zamknij zawór N_stara (0%)</text>
+  <line class="arrow" x1="700" y1="2120" x2="700" y2="2168.07" style="" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <rect class="data" x="500" y="2170" width="400" height="90" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="box-text-small" x="700" y="2195" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">Aktualizuj stan:</text>
+  <text class="box-text-small" x="700" y="2212" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">• nagrzewnice_aktywne[ciąg]</text>
+  <text class="box-text-small" x="700" y="2229" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">• czas_ostatniej_rotacji[ciąg]</text>
+  <text class="box-text-small" x="700" y="2246" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">• czas_ostatniej_rotacji_globalny (15min)</text>
+  <line class="arrow" x1="700" y1="2260" x2="700" y2="2310.19" style="" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <rect class="data" x="550" y="2310" width="300" height="50" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="box-text-small" x="700" y="2335" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">📝 Rejestruj zdarzenie:</text>
+  <text class="box-text-small" x="700" y="2352" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">"Rotacja zakończona pomyślnie"</text>
+  <line class="arrow" x1="700" y1="2360" x2="700" y2="2407.22" style="" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <rect class="warning" x="550" y="2410" width="300" height="50" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="box-text-small" x="700" y="2430" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">🔓 Zwolnij blokadę:</text>
+  <text class="box-text-small" x="700" y="2447" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">rotacja_nagrzewnic_w_toku = FAŁSZ</text>
+  <line class="arrow" x1="700" y1="2460" x2="700" y2="2509.34" style="" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <rect class="data" x="550" y="2510" width="300" height="100" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="box-text-small" x="700" y="2535" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">Monitoruj i aktualizuj:</text>
+  <text class="box-text-small" x="700" y="2552" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">• czas_pracy[N1..N8]</text>
+  <text class="box-text-small" x="700" y="2569" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">• czas_postoju[N1..N8]</text>
+  <text class="box-text-small" x="700" y="2586" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">• liczba_rotacji[CIĄG]</text>
+  <text class="box-text-small" x="700" y="2603" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">• stosunek_eksploatacji[N1..N8]</text>
+  <line class="arrow" x1="700" y1="2610" x2="700" y2="2680.62" style="" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <polygon class="decision" points="700,2680 900,2740 700,2800 500,2740" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="box-text" x="700" y="2730" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">Więcej ciągów</text>
+  <text class="box-text" x="700" y="2750" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">do sprawdzenia?</text>
+  <line class="arrow-yes" x1="500" y1="2740" x2="350" y2="2740" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="label" x="400" y="2730" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">TAK</text>
+  <line class="arrow-yes" x1="350" y1="2740" x2="350" y2="345" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <line class="arrow-yes" x1="350" y1="345" x2="550" y2="345" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <line class="arrow-no" x1="700" y1="2800" x2="700" y2="2949.19" style="" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="label-no" x="720" y="2835" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">NIE</text>
+  <rect class="process" x="550" y="2950" width="300" height="50" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="box-text" x="700" y="2980" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">Czekaj CYKL_PĘTLI</text>
+  <line class="arrow" x1="548.967" y1="2991.94" x2="31.896" y2="2991.94" style="" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <line class="arrow" x1="32.848" y1="2991.98" x2="32.848" y2="120.421" style="" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <line class="arrow" x1="31.99" y1="120" x2="550" y2="120" style="" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <rect x="50" y="3030" width="1300" height="177.922" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1" style="" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="note" x="70" y="3050" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">Legenda:</text>
+  <rect class="decision" x="170" y="3035" width="60" height="30" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="note" x="240" y="3053" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">Decyzja</text>
+  <rect class="process" x="320" y="3035" width="60" height="30" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="note" x="390" y="3053" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">Proces</text>
+  <rect class="action" x="470" y="3035" width="60" height="30" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="note" x="540" y="3053" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">Akcja rotacji</text>
+  <rect class="data" x="630" y="3035" width="60" height="30" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="note" x="700" y="3053" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">Dane/Log</text>
+  <rect class="warning" x="780" y="3035" width="60" height="30" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
+  <text class="note" x="850" y="3053" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">Blokada/Sync</text>
+  <text class="note" x="70" y="3085" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">⚙️ Parametry technologa:</text>
+  <text class="note" x="90" y="3105" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">• OKRES_ROTACJI_NAGRZEWNIC = 168h-720h (typowo 168h = 7 dni)</text>
+  <text class="note" x="90" y="3125" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">• MIN_DELTA_CZASU = 1800-7200s (typowo 3600s = 1h)</text>
+  <text class="note" x="90" y="3145" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">• CYKL_PĘTLI_ALGORYTMÓW = 10-600s (domyślnie 60s = 1 min, współdzielony z 5A)</text>
+  <text class="note" x="70" y="3175" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">🔒 Koordynacja z Algorytmem 5A:</text>
+  <text class="note" x="90" y="3195" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">• KROK 0: Sprawdza czy ciąg aktywny (S1-S4: C1 lub C2, S5-S8: tylko C2)</text>
 </svg>
