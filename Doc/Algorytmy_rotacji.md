@@ -784,4 +784,6 @@ Dzień 28: Rotacja układów → Układ Podstawowy, C1: N2, N3, N4
 - Równomierne zużycie obu ciągów (W1, W2)
 - Maksymalna niezawodność systemu
 
+UWAGA: Powyzsze wyliczenia trzeba potwierdzic w symulacji z roznymi scenariuszami i okresami rotacji
+
 ---
