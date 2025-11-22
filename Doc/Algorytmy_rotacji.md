@@ -28,13 +28,13 @@ System sterowania BOGDANKA Szyb 2 wykorzystuje **dwa niezależne algorytmy rotac
 ### **Algorytm 5A: Rotacja Układów Pracy Ciągów**
 - **Cel:** Wyrównanie eksploatacji między ciągiem 1 (W1) a ciągiem 2 (W2)
 - **Zakres:** Zmiana między układem Podstawowym a Ograniczonym
-- **Okres:** Dni/tygodnie/miesiące (definiowany przez technologa)
+- **Okres:** dni/tygodnie/miesiące (definiowany przez technologa)
 - **Dotyczy:** Scenariuszy S1-S4
 
 ### **Algorytm 5B: Rotacja Nagrzewnic w Ciągu**
 - **Cel:** Wyrównanie eksploatacji nagrzewnic w obrębie jednego ciągu
 - **Zakres:** Wymiana pracującej nagrzewnicy na rezerwową w tym samym ciągu
-- **Okres:** Godziny/Dni/tygodnie (definiowany przez technologa)
+- **Okres:** godziny/dni/tygodnie (definiowany przez technologa)
 - **Dotyczy:** Wszystkich nagrzewnic N1-N8
 
 ### **Koordynacja Algorytmów**
@@ -346,20 +346,27 @@ Dzień 22-28: N4, N1, N2 pracują  (N3 odpoczynek, N2 wchodzi)
 ```
 - **Rezultat:** Równomierne zużycie wszystkich 4 nagrzewnic ciągu
 
-### 5B.3 Parametr Konfiguracyjny
+### 5B.3 Parametry Konfiguracyjne
 
-**⚙️ OKRES_ROTACJI_NAGRZEWNIC** - parametr definiowany przez **technologa podczas rozruchu**
+Parametry definiowane przez **technologa podczas rozruchu**:
 
 | Parametr | Wartość domyślna | Jednostka | Zakres | Opis |
 |----------|-----------------|-----------|--------|------|
-| OKRES_ROTACJI_NAGRZEWNIC | Do ustalenia* | godziny | 24h - 720h | Czas po którym następuje zmiana nagrzewnicy w ciągu |
+| **OKRES_ROTACJI_NAGRZEWNIC** | Do ustalenia* | godziny | 24h - 720h | Czas po którym następuje zmiana nagrzewnicy w ciągu |
+| **MIN_DELTA_CZASU** | 3600 | sekundy | 1800 - 7200 | Minimalna różnica czasu pracy dla wykonania rotacji |
 
-*Wartość zostanie ustalona podczas testowania pracy układu na obiekcie (zgodnie z sekcją 1.4 projektu).
+*Wartości zostaną ustalone podczas testowania pracy układu na obiekcie (zgodnie z sekcją 1.4 projektu).
 
-**Przykładowe wartości:**
+**Przykładowe wartości OKRES_ROTACJI_NAGRZEWNIC:**
 - **168h (7 dni)** - typowa wartość dla równomiernego rozłożenia eksploatacji
 - **720h (30 dni)** - dla zmniejszenia częstotliwości przełączeń
 - **48h (2 dni)** - dla intensywnej rotacji i szybszego wyrównania
+
+**Uzasadnienie MIN_DELTA_CZASU:**
+- **3600s (1h)** - wartość domyślna, zapobiega częstym rotacjom przy niewielkich różnicach
+- **7200s (2h)** - dla bardziej konserwatywnego podejścia
+- **1800s (30min)** - dla agresywniejszego wyrównywania w scenariuszach dynamicznych
+- Jeśli różnica czasu pracy jest mniejsza niż MIN_DELTA_CZASU, rotacja nie ma sensu (zmiana dla zmiany)
 
 ### 5B.4 Warunki Aktywacji Rotacji Nagrzewnic
 
@@ -393,15 +400,16 @@ Rotacja nagrzewnic jest możliwa **TYLKO** gdy spełnione są **WSZYSTKIE** waru
 
 ```
 ZMIENNE (dla każdego ciągu osobno):
-  - czas_pracy[N1..N8] = [0, 0, 0, 0, 0, 0, 0, 0]  // [sekundy]
-  - czas_postoju[N1..N8] = [0, 0, 0, 0, 0, 0, 0, 0] // [sekundy]
-  - czas_ostatniej_rotacji[CIĄG1, CIĄG2] = [0, 0]   // [timestamp]
-  - nagrzewnice_aktywne[CIĄG] = []                   // lista aktywnych
+  - czas_pracy[N1..N8] = [0, 0, 0, 0, 0, 0, 0, 0]       // [sekundy]
+  - czas_postoju[N1..N8] = [0, 0, 0, 0, 0, 0, 0, 0]     // [sekundy]
+  - timestamp_zalaczenia[N1..N8] = [0, 0, 0, 0, 0, 0, 0, 0] // [timestamp pierwszego załączenia]
+  - czas_ostatniej_rotacji[CIĄG1, CIĄG2] = [0, 0]       // [timestamp]
+  - nagrzewnice_aktywne[CIĄG] = []                       // lista aktywnych
 
 PARAMETRY:
   - OKRES_ROTACJI_NAGRZEWNIC[S1..S8]  // definiowany przez technologa [s]
+  - MIN_DELTA_CZASU                   // definiowany przez technologa [s] (domyślnie 3600)
   - CZAS_STABILIZACJI = 30            // czas na stabilizację po zmianie [s]
-  - MIN_DELTA_CZASU = 3600            // min. różnica czasu pracy dla rotacji [s]
 
 GŁÓWNA PĘTLA (co 1 sekundę):
   
@@ -443,11 +451,19 @@ GŁÓWNA PĘTLA (co 1 sekundę):
       // Znajdź nagrzewnicę najdłużej pracującą (aktywną)
       nagrzewnica_do_wyłączenia = NULL
       max_czas_pracy = 0
+      earliest_timestamp = nieskonczonosc
       
       DLA KAŻDEJ N w nagrzewnice_aktywne[ciąg]:
         JEŻELI czas_pracy[N] > max_czas_pracy WTEDY
           max_czas_pracy = czas_pracy[N]
           nagrzewnica_do_wyłączenia = N
+          earliest_timestamp = timestamp_zalaczenia[N]
+        W PRZECIWNYM RAZIE JEŻELI czas_pracy[N] = max_czas_pracy WTEDY
+          // Przy identycznych czasach pracy wybierz tę załączoną wcześniej
+          JEŻELI timestamp_zalaczenia[N] < earliest_timestamp WTEDY
+            nagrzewnica_do_wyłączenia = N
+            earliest_timestamp = timestamp_zalaczenia[N]
+          KONIEC JEŻELI
         KONIEC JEŻELI
       KONIEC DLA
       
@@ -557,6 +573,9 @@ FUNKCJA Wykonaj_Rotację_Nagrzewnicy(ciąg, N_stara, N_nowa):
     
     // Zeruj licznik postoju dla N_nowa
     czas_postoju[N_nowa] = 0
+    
+    // Zapisz timestamp załączenia N_nowa (do rozstrzygania przy identycznych czasach)
+    timestamp_zalaczenia[N_nowa] = czas_systemowy
     
     // Kontynuuj liczenie czasu pracy dla N_stara
     // (nie zeruj - chcemy pamiętać łączny czas)
@@ -673,7 +692,7 @@ System rejestruje następujące dane dla każdej nagrzewnicy:
 2. **Dzień 7** - Pierwsza rotacja (upłynęło 168h)
    ```
    Analiza:
-   - Najdłużej pracująca: N1, N2, N3 (wszystkie 336h) - wybór N1 (losowy/wg kolejności)
+   - Najdłużej pracująca: N1, N2, N3 (wszystkie 336h) - wybór N1 (najwcześniejszy timestamp załączenia)
    - Najdłużej postój: N4 (168h postoju)
    - Delta: 336h - 0h = 336h > MIN_DELTA_CZASU ✅
    
@@ -690,7 +709,7 @@ System rejestruje następujące dane dla każdej nagrzewnicy:
    Czasy pracy: N1=336h (postój 168h), N2=504h, N3=504h, N4=168h
    
    Analiza:
-   - Najdłużej pracująca: N2, N3 (obie 504h) - wybór N2 (losowy/wg kolejności)
+   - Najdłużej pracująca: N2, N3 (obie 504h) - wybór N2 (wcześniejszy timestamp załączenia niż N3)
    - Najdłużej postój: N1 (168h postoju)
    
    Akcja: Wyłącz N2, załącz N1
@@ -722,7 +741,7 @@ System rejestruje następujące dane dla każdej nagrzewnicy:
    Czasy pracy: N1=672h, N2=672h, N3=672h (postój 168h), N4=504h
    
    Analiza:
-   - Najdłużej pracująca: N1, N2 (obie 672h) - wybór N1 (losowy/wg kolejności)
+   - Najdłużej pracująca: N1, N2 (obie 672h) - wybór wg timestamp (ta załączona wcześniej)
    - Najdłużej postój: N3 (168h postoju)
    
    Akcja: Wyłącz N1, załącz N3
@@ -778,16 +797,28 @@ Dzień 6-7: S3 (N1, N2, N3) - 48h → N3 wraca do pracy
 **Zasady koordynacji:**
 - Nie wykonuj rotacji nagrzewnic w ciągu, który jest w trakcie zmiany układu
 - Po zmianie układu (5A) poczekaj min. 1h przed rotacją nagrzewnic (5B)
-- Jeśli zbiegły się oba okresy rotacji → najpierw rotacja układów (5A), potem nagrzewnic (5B)
+- Jeśli zbiegły się oba okresy rotacji → najpierw rotacja układów (5A), potem nagrzewnic (5B) z odstępem min. 1h
 
-**Przykład:**
+**⚠️ WAŻNE - Przesunięcie faz rotacji:**
+
+Jeśli oba algorytmy (5A i 5B) mają ten sam okres (np. 168h), NIE MOGĄ wykonać rotacji w tym samym momencie. System musi zapewnić przesunięcie faz aby uniknąć:
+- Podwójnej perturbacji systemu (zmiana układu + zmiana nagrzewnicy)
+- Trudności w diagnostyce (niejednoznaczność przyczyny zmian temperatury)
+
+**Rozwiązania:**
+1. **Różne okresy rotacji** - np. 5A: 10 dni, 5B: 7 dni
+2. **Przesunięcie fazy startowej** - np. 5A start w dniu 0, 5B start w dniu 3
+3. **Logika zapobiegania kolizji** - jeśli obie rotacje przypadają tego samego dnia, wykonaj tylko 5A, a 5B przełóż o 1 dzień
+
+**Przykład (zakłada przesunięcie faz):**
 ```
-Dzień 0: Układ Podstawowy, C1: N1, N2, N3
-Dzień 7: Rotacja nagrzewnic → C1: N2, N3, N4
-Dzień 14: Rotacja układów → Układ Ograniczony, C2: N5, N6, N7
-Dzień 21: Rotacja nagrzewnic → C2: N6, N7, N8
-Dzień 28: Rotacja układów → Układ Podstawowy, C1: N2, N3, N4
+Dzień 0:  Układ Podstawowy, C1: N1, N2, N3
+Dzień 7:  Rotacja nagrzewnic (5B) → C1: N2, N3, N4
+Dzień 14: Rotacja układów (5A) → Układ Ograniczony, C2: N5, N6, N7
+Dzień 21: Rotacja nagrzewnic (5B) → C2: N6, N7, N8
+Dzień 28: Rotacja układów (5A) → Układ Podstawowy, C1: N2, N3, N4
 ```
+*Uwaga: W tym przykładzie okresy są różne lub fazy przesunięte, więc rotacje nie kolidują.*
 
 **Efekt końcowy:**
 - Równomierne zużycie wszystkich 8 nagrzewnic
