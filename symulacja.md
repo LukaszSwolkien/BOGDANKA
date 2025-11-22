@@ -185,11 +185,11 @@ System okresowo zmienia układ pracy między **Podstawowym** a **Ograniczonym** 
 ![Algorytm 5A - Flowchart](Symulacja/algorytm_5A_flowchart.svg)
 
 **Opis algorytmu:**
-- **Główna pętla:** Wykonywana co 1 sekundę
+- **Główna pętla:** Wykonywana co CYKL_PĘTLI_ALGORYTMÓW (domyślnie 60s = 1 minuta, zakres 10-600s)
 - **Krok 1:** Sprawdzenie warunków rotacji (scenariusz S1-S4, gotowość C2, tryb AUTO)
 - **Krok 2:** Sprawdzenie czy upłynął okres rotacji (OKRES_ROTACJI_UKŁADÓW)
 - **Krok 3:** Określenie nowego układu (Podstawowy ↔ Ograniczony)
-- **Krok 4:** Wykonanie sekwencji zmiany układu
+- **Krok 4:** Wykonanie sekwencji zmiany układu (z koordynacją z Algorytmem 5B)
 - **Krok 5:** Aktualizacja liczników czasu pracy
 
 ---
@@ -588,18 +588,34 @@ f_max = 50 Hz (maksymalna prędkość)
 ## Wizualizacje SVG
 
 ### Podsumowanie:
-- **Łącznie plików SVG:** 21
+- **Łącznie plików SVG:** 22
 - **Scenariusze podstawowe (S0-S8):** 9 plików
 - **Schematy UAR:** 3 pliki
 - **Rotacja 5A (Układy Ograniczone S1-S4):** 4 pliki
 - **Rotacja 5B (Cykl nagrzewnic):** 3 pliki
-- **Diagramy algorytmów:** 2 pliki (Algorytmy 5A i 5B - flowcharts)
+- **Diagramy algorytmów:** 3 pliki
+  - `algorytm_5A_flowchart.svg` - flowchart algorytmu 5A (z koordynacją 5B)
+  - `algorytm_5B_flowchart.svg` - flowchart algorytmu 5B (z koordynacją 5A)
+  - `algorytm_5A_5B_koordynacja.svg` - **NOWY!** timeline diagram koordynacji 5A ↔ 5B
 
-**Uwaga:** Rotacja 5A pokazana dla wszystkich scenariuszy S1-S4. Rotacja 5B pokazana przykładowo dla S3.
+### Diagram Koordynacji Algorytmów 5A i 5B
+
+![Koordynacja 5A ↔ 5B](Symulacja/algorytm_5A_5B_koordynacja.svg)
+
+**Diagram timeline** pokazuje przykładową sekwencję zdarzeń dla scenariusza S3:
+- Blokady (mutex) między algorytmami
+- Odstępy czasowe (1h po zmianie układu, 15min między rotacjami)
+- Mechanizmy zapobiegania konfliktom
+- 10 kluczowych wydarzeń w czasie (0h → 410h)
+
+**Uwaga:** 
+- Rotacja 5A pokazana dla wszystkich scenariuszy S1-S4
+- Rotacja 5B pokazana przykładowo dla S3
+- Flowcharty 5A i 5B zaktualizowane z pełną koordynacją (KROK 0, blokady, odstępy)
 
 ---
 
-**Ostatnia aktualizacja:** 2025-11-21  
-**Wersja dokumentu:** 2.3  
-**Status:** Zaktualizowana symulacja z kompletnymi wizualizacjami rotacji 5A i 5B wraz z diagramami przepływu algorytmów
+**Ostatnia aktualizacja:** 2025-11-22  
+**Wersja dokumentu:** 2.5  
+**Status:** Kompletna dokumentacja z wizualizacjami rotacji 5A, 5B oraz diagramem koordynacji algorytmów
 

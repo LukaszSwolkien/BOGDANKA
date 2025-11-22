@@ -81,6 +81,30 @@ Algorytm realizuje **cykliczną zmianę układów pracy ciągów grzewczych** w 
 - **720h (30 dni)** - dla zmniejszenia częstotliwości przełączeń
 - **24h (1 dzień)** - dla testów i weryfikacji działania
 
+**CYKL_PĘTLI_ALGORYTMÓW** - parametr częstotliwości sprawdzania (wspólny dla 5A i 5B)
+
+| Parametr | Wartość domyślna | Jednostka | Zakres | Opis |
+|----------|-----------------|-----------|--------|------|
+| CYKL_PĘTLI_ALGORYTMÓW | 60 | sekundy | 10s - 600s | Częstotliwość wykonywania pętli głównej algorytmów |
+
+**Uzasadnienie i przykładowe wartości:**
+- **60s (1 minuta)** - zalecane dla krótkich okresów rotacji (24h-168h)
+  - Dokładność: ±1 minuta (0.04% błędu dla 168h)
+  - Obciążenie: ~10,080 sprawdzeń na 7 dni
+  - Liczniki czasu pracy: aktualizacja co 1 minutę
+- **300s (5 minut)** - zalecane dla długich okresów rotacji (168h-720h)
+  - Dokładność: ±5 minut (0.2% błędu dla 168h)
+  - Obciążenie: ~2,016 sprawdzeń na 7 dni (bardzo niskie)
+  - Liczniki czasu pracy: aktualizacja co 5 minut
+- **600s (10 minut)** - dla bardzo długich okresów (>720h)
+  - Dokładność: ±10 minut (0.4% błędu dla 168h)
+  - Obciążenie: ~1,008 sprawdzeń na 7 dni (minimalne)
+
+**Wpływ na liczniki:**
+- `czas_pracy_układu_podstawowego` i `czas_pracy_układu_ograniczonego` aktualizują się co CYKL_PĘTLI_ALGORYTMÓW
+- Dla 60s: dokładność ±1 minuta (akceptowalna dla okresów dni/tygodni)
+- Dla 300s: dokładność ±5 minut (nadal akceptowalna)
+
 ### 5A.4 Warunki Aktywacji Rotacji
 
 Rotacja układów jest możliwa **TYLKO** gdy spełnione są **WSZYSTKIE** warunki:
@@ -128,8 +152,9 @@ ZMIENNE LOKALNE (tylko dla 5A):
 PARAMETRY:
   - OKRES_ROTACJI_UKŁADÓW                       // definiowany przez technologa [s]
   - HISTEREZA_CZASOWA = 300                     // 5 minut [s]
+  - CYKL_PĘTLI_ALGORYTMÓW = 60                  // częstość sprawdzania [s] (domyślnie 1 min)
 
-GŁÓWNA PĘTLA (co 1 sekundę):
+GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
   
   KROK 1: Sprawdź warunki rotacji
     JEŻELI scenariusz ∈ {S1, S2, S3, S4} ORAZ
@@ -198,9 +223,9 @@ GŁÓWNA PĘTLA (co 1 sekundę):
   
   KROK 5: Aktualizuj liczniki czasu pracy
     JEŻELI aktualny_układ = "Podstawowy" WTEDY
-      czas_pracy_układu_podstawowego += 1
+      czas_pracy_układu_podstawowego += CYKL_PĘTLI_ALGORYTMÓW
     W PRZECIWNYM RAZIE:
-      czas_pracy_układu_ograniczonego += 1
+      czas_pracy_układu_ograniczonego += CYKL_PĘTLI_ALGORYTMÓW
     KONIEC JEŻELI
 
 KONIEC PĘTLI
@@ -372,6 +397,7 @@ Parametry definiowane przez **technologa podczas rozruchu**:
 |----------|-----------------|-----------|--------|------|
 | **OKRES_ROTACJI_NAGRZEWNIC** | Do ustalenia* | godziny | 24h - 720h | Czas po którym następuje zmiana nagrzewnicy w ciągu |
 | **MIN_DELTA_CZASU** | 3600 | sekundy | 1800 - 7200 | Minimalna różnica czasu pracy dla wykonania rotacji |
+| **CYKL_PĘTLI_ALGORYTMÓW** | 60 | sekundy | 10 - 600 | Częstość wykonywania pętli głównej (współdzielony z 5A) |
 
 *Wartości zostaną ustalone podczas testowania pracy układu na obiekcie (zgodnie z sekcją 1.4 projektu).
 
@@ -385,6 +411,11 @@ Parametry definiowane przez **technologa podczas rozruchu**:
 - **7200s (2h)** - dla bardziej konserwatywnego podejścia
 - **1800s (30min)** - dla agresywniejszego wyrównywania w scenariuszach dynamicznych
 - Jeśli różnica czasu pracy jest mniejsza niż MIN_DELTA_CZASU, rotacja nie ma sensu (zmiana dla zmiany)
+
+**Uzasadnienie CYKL_PĘTLI_ALGORYTMÓW:**
+- Parametr **współdzielony** z Algorytmem 5A (wspólna wartość dla obu algorytmów)
+- Szczegółowe wyjaśnienie i przykładowe wartości: patrz sekcja 5A.3
+- Liczniki `czas_pracy[N]` i `czas_postoju[N]` aktualizują się co CYKL_PĘTLI_ALGORYTMÓW sekund
 
 ### 5B.4 Warunki Aktywacji Rotacji Nagrzewnic
 
@@ -435,8 +466,9 @@ PARAMETRY:
   - OKRES_ROTACJI_NAGRZEWNIC[S1..S8]  // definiowany przez technologa [s]
   - MIN_DELTA_CZASU                   // definiowany przez technologa [s] (domyślnie 3600)
   - CZAS_STABILIZACJI = 30            // czas na stabilizację po zmianie [s]
+  - CYKL_PĘTLI_ALGORYTMÓW = 60        // częstość sprawdzania [s] (współdzielony z 5A)
 
-GŁÓWNA PĘTLA (co 1 sekundę):
+GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
   
   DLA KAŻDEGO ciągu w [CIĄG1, CIĄG2]:
     
@@ -463,9 +495,9 @@ GŁÓWNA PĘTLA (co 1 sekundę):
     KROK 1: Aktualizuj liczniki czasu pracy i postoju
       DLA KAŻDEJ nagrzewnicy w ciągu:
         JEŻELI nagrzewnica_aktywna(N) WTEDY
-          czas_pracy[N] += 1
+          czas_pracy[N] += CYKL_PĘTLI_ALGORYTMÓW
         W PRZECIWNYM RAZIE:
-          czas_postoju[N] += 1
+          czas_postoju[N] += CYKL_PĘTLI_ALGORYTMÓW
         KONIEC JEŻELI
       KONIEC DLA
     
@@ -911,5 +943,42 @@ Dzień 28: Rotacja układów (5A) → Układ Podstawowy, C1: N2, N3, N4
 - Maksymalna niezawodność systemu
 
 UWAGA: Powyzsze wyliczenia trzeba potwierdzic w symulacji z roznymi scenariuszami i okresami rotacji
+
+## 5B.11 Wizualizacja Koordynacji Algorytmów 5A i 5B
+
+**Diagram Timeline - Przykładowy Scenariusz S3:**
+
+![Koordynacja 5A ↔ 5B](../Symulacja/algorytm_5A_5B_koordynacja.svg)
+
+Diagram timeline pokazuje praktyczny przykład koordynacji między algorytmami w scenariuszu S3:
+
+**Kluczowe elementy wizualizacji:**
+1. **Timeline zdarzeń** (0h → 410h):
+   - T=0h: System w układzie Podstawowym, C1 aktywny
+   - T=168h: Algorytm 5B rotuje nagrzewnice w C1 (N1 → N4)
+   - T=168h+2min: Algorytm 5A próbuje zmienić układ → **BLOKADA** (5B rotuje)
+   - T=168h+5min: 5B kończy, 5A wykonuje zmianę układu
+   - T=169h: Układ Ograniczony, C2 aktywny
+   - T=169h+15min: 5B próbuje rotować w C2 → **ODROCZONE** (odstęp 1h)
+   - T=170h: 5B może rotować w C2 ✅ (upłynęła 1h od zmiany układu)
+
+2. **Blokady (Mutex)**:
+   - `zmiana_układu_w_toku`: chroni przed rotacją nagrzewnic podczas zmiany układu
+   - `rotacja_nagrzewnic_w_toku`: chroni przed zmianą układu podczas rotacji nagrzewnic
+
+3. **Odstępy czasowe**:
+   - **1 godzina**: po zmianie układu (5A) przed rotacją nagrzewnic (5B)
+   - **15 minut**: między rotacjami w różnych ciągach
+
+4. **Kolorystyka**:
+   - 🟨 Żółty: Algorytm 5A (rotacja układów)
+   - 🟩 Zielony: Algorytm 5B (rotacja nagrzewnic)
+   - 🟥 Czerwony: Blokada / Odroczone
+
+**Wnioski z diagramu:**
+- System **NIGDY** nie wykonuje dwóch operacji jednocześnie
+- Wszystkie blokady są dwukierunkowe (5A ↔ 5B)
+- Odstępy czasowe zapewniają stabilność temperatury
+- Mechanizmy są zaimplementowane w pseudokodzie (KROK 0, KROK 2, KROK 4)
 
 ---
