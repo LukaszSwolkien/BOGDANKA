@@ -648,12 +648,14 @@ System rejestruje następujące dane dla każdej nagrzewnicy:
 - Ciąg 1: 4 nagrzewnice sprawne
 - Aktualnie pracują: N1, N2, N3
 - OKRES_ROTACJI_NAGRZEWNIC = 168h (7 dni)
-- Czasy pracy: N1=500h, N2=350h, N3=200h, N4=0h
+- Moment: System po pierwszym tygodniu pracy, przed pierwszą rotacją
+- Czasy pracy: N1=168h, N2=168h, N3=168h, N4=0h
 
 **Przebieg rotacji:**
 
 1. **Dzień 0** - System w konfiguracji początkowej
    ```
+   Czasy: N1=168h, N2=168h, N3=168h, N4=0h
    Pracują: [N1, N2, N3]
    Postój:  [N4]
    ```
@@ -661,60 +663,79 @@ System rejestruje następujące dane dla każdej nagrzewnicy:
 2. **Dzień 7** - Pierwsza rotacja (upłynęło 168h)
    ```
    Analiza:
-   - Najdłużej pracująca: N1 (500h + 168h = 668h)
-   - Najdłużej postój: N4 (0h + 168h postoju = 168h)
-   - Delta: 668h - 0h = 668h > MIN_DELTA_CZASU ✅
+   - Najdłużej pracująca: N1, N2, N3 (wszystkie 336h) - wybór N1 (losowy/wg kolejności)
+   - Najdłużej postój: N4 (168h postoju)
+   - Delta: 336h - 0h = 336h > MIN_DELTA_CZASU ✅
    
    Akcja: Wyłącz N1, załącz N4
    
    Po rotacji:
+   Czasy: N1=336h, N2=336h, N3=336h, N4=0h
    Pracują: [N2, N3, N4]
    Postój:  [N1]
    ```
 
 3. **Dzień 14** - Druga rotacja
    ```
-   Czasy pracy: N2=518h, N3=368h, N4=168h, N1=668h (postój: 168h)
+   Czasy pracy: N1=336h (postój 168h), N2=504h, N3=504h, N4=168h
+   
+   Analiza:
+   - Najdłużej pracująca: N2, N3 (obie 504h) - wybór N2 (losowy/wg kolejności)
+   - Najdłużej postój: N1 (168h postoju)
    
    Akcja: Wyłącz N2, załącz N1
    
    Po rotacji:
+   Czasy: N1=336h, N2=504h, N3=504h, N4=168h
    Pracują: [N3, N4, N1]
    Postój:  [N2]
    ```
 
 4. **Dzień 21** - Trzecia rotacja
    ```
-   Czasy pracy: N3=536h, N4=336h, N1=836h, N2=518h (postój: 168h)
+   Czasy pracy: N1=504h, N2=504h (postój 168h), N3=672h, N4=336h
+   
+   Analiza:
+   - Najdłużej pracująca: N3 (672h)
+   - Najdłużej postój: N2 (168h postoju)
    
    Akcja: Wyłącz N3, załącz N2
    
    Po rotacji:
+   Czasy: N1=504h, N2=504h, N3=672h, N4=336h
    Pracują: [N4, N1, N2]
    Postój:  [N3]
    ```
 
 5. **Dzień 28** - Czwarta rotacja
    ```
-   Czasy pracy: N4=504h, N1=1004h, N2=686h, N3=536h (postój: 168h)
+   Czasy pracy: N1=672h, N2=672h, N3=672h (postój 168h), N4=504h
+   
+   Analiza:
+   - Najdłużej pracująca: N1, N2 (obie 672h) - wybór N1 (losowy/wg kolejności)
+   - Najdłużej postój: N3 (168h postoju)
    
    Akcja: Wyłącz N1, załącz N3
    
    Po rotacji:
+   Czasy: N1=672h, N2=672h, N3=672h, N4=504h
    Pracują: [N4, N2, N3]
    Postój:  [N1]
    ```
 
 **Rezultat po 4 tygodniach:**
-- N1: 1004h pracy ≈ 25.1%
-- N2: 686h pracy ≈ 17.2%
-- N3: 536h pracy ≈ 13.4%
-- N4: 504h pracy ≈ 12.6%
-- **Suma:** ~58.3% wyrównania (w trakcie wyrównywania)
+- N1: 672h pracy ≈ 26.7% (ideał: 25%) → odchylenie +1.7%
+- N2: 672h pracy ≈ 26.7% (ideał: 25%) → odchylenie +1.7%
+- N3: 672h pracy ≈ 26.7% (ideał: 25%) → odchylenie +1.7%
+- N4: 504h pracy ≈ 20.0% (ideał: 25%) → odchylenie -5.0%
+- **Suma:** 2520h
+- **Różnica max-min:** 672h - 504h = 168h (1 okres rotacji)
+- **Wyrównanie:** ~93% ✅ (max odchylenie od średniej 630h to tylko 6.7%)
 
-**Po 3 miesiącach** (cykl powtarza się):
-- Wszystkie nagrzewnice: ~750h ± 50h
-- **Wyrównanie:** > 90% ✅
+**Po 3 miesiącach** (12 tygodni = 2016h):
+- Wszystkie nagrzewnice: ~1512h ± 50h
+- **Różnica max-min:** ~84h (0.5 okresu rotacji)
+- **Wyrównanie:** > 95% ✅
 
 #### **Przykład 2: Dynamiczna zmiana scenariuszy**
 
