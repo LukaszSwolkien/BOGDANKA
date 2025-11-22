@@ -114,6 +114,7 @@
   <line class="arrow" x1="800" y1="1530" x2="1200" y2="1598.55" style=""/>
   <rect class="action" x="200" y="1600" width="400" height="40"/>
   <text class="box-text" x="400" y="1625" style="white-space: pre;">🔄 Podstawowy → Ograniczony</text>
+  <line class="arrow" x1="400" y1="1641.19" x2="400" y2="1964.83" style=""/>
   <rect class="process" x="220" y="1670" width="360" height="30"/>
   <text class="box-text-small" x="400" y="1690" style="white-space: pre;">1. Zatrzymaj ciąg 1 (N1-N4, W1)</text>
   <rect class="process" x="220" y="1720" width="360" height="30"/>
@@ -126,6 +127,7 @@
   <text class="box-text-small" x="400" y="1890" style="white-space: pre;">5. Aktywuj PID dla W2 (Ts=2°C)</text>
   <rect class="action" x="1000" y="1600" width="400" height="40"/>
   <text class="box-text" x="1200" y="1625" style="white-space: pre;">🔄 Ograniczony → Podstawowy</text>
+  <line class="arrow" x1="1200" y1="1641.19" x2="1200" y2="1965.11" style=""/>
   <rect class="process" x="1020" y="1670" width="360" height="30"/>
   <text class="box-text-small" x="1200" y="1690" style="white-space: pre;">1. Zatrzymaj ciąg 2 (N5-N8, W2)</text>
   <rect class="process" x="1020" y="1720" width="360" height="30"/>
@@ -136,9 +138,7 @@
   <text class="box-text-small" x="1200" y="1840" style="white-space: pre;">4. Uruchom ciąg 1 (N1-N4, W1)</text>
   <rect class="process" x="1020" y="1870" width="360" height="30"/>
   <text class="box-text-small" x="1200" y="1890" style="white-space: pre;">5. Aktywuj PID dla W1 (Ts=2°C)</text>
-  <line class="arrow" x1="400" y1="1641.19" x2="400" y2="1964.83" style=""/>
   <line class="arrow" x1="401.248" y1="1964.99" x2="796.753" y2="1964.99" style=""/>
-  <line class="arrow" x1="1200" y1="1641.19" x2="1200" y2="1965.11" style=""/>
   <line class="arrow" x1="1201.9" y1="1964.85" x2="800.012" y2="1964.85" style=""/>
   <line class="arrow" x1="799" y1="1964.07" x2="799" y2="2018.62" style=""/>
   <rect class="data" x="600" y="2020" width="400" height="90"/>
