@@ -297,7 +297,7 @@ System rejestruje następujące dane dla analizy:
 
 1. **Dzień 0, godz. 00:00** - System w układzie Podstawowym
    - Pracują: N1, N2, N3 + W1 (PID)
-   - Nawiew na +4,30m
+   - Nawiew na -4,30m
 
 2. **Dzień 7, godz. 01:00** - Upłynął OKRES_ROTACJI_UKŁADÓW
    - Warunki rotacji spełnione 
@@ -305,7 +305,7 @@ System rejestruje następujące dane dla analizy:
 
 3. **Dzień 7, godz. 01:05** - Zmiana zakończona
    - Pracują: N5, N6, N7 + W2 (PID)
-   - Nawiew na +4,30m przez spinę ciągów
+   - Nawiew na -4,30m przez spinę ciągów
    - Zarejestrowano zdarzenie w dzienniku
 
 4. **Dzień 14, godz. 01:00** - Kolejna rotacja
@@ -613,7 +613,14 @@ KONIEC FUNKCJI
 
 ### 5B.6 Priorytety Rotacji
 
-W scenariuszach S5-S8 pracują oba ciągi jednocześnie. W S1-S4 pracuje **albo C1 (Układ Podstawowy) albo C2 (Układ Ograniczony)** w zależności od aktualnego układu pracy (Algorytm 5A). Gdy wiele ciągów wymaga rotacji jednocześnie, stosuje się następujące priorytety:
+**Aktywność ciągów w zależności od scenariusza:**
+
+| Scenariusz | Aktywne ciągi | Układ | Uwaga |
+|------------|---------------|-------|-------|
+| **S1-S4** | **TYLKO JEDEN ciąg** na raz | Układ Podstawowy: **C1** (W1 PID)<br>Układ Ograniczony: **C2** (W2 PID) | Algorytm 5A przełącza między układami → rotacja 5B dotyczy ciągu który **aktualnie pracuje** |
+| **S5-S8** | **OBA ciągi** jednocześnie | C1 MAX + C2 PID/MAX | Oba ciągi aktywne, ale tylko C2 może rotować (C1 niemożliwa - brak rezerwowej) |
+
+Gdy wiele ciągów wymaga rotacji jednocześnie, stosuje się następujące priorytety:
 
 | Priorytet | Ciąg | Warunek | Uzasadnienie |
 |-----------|------|---------|--------------|
@@ -627,10 +634,15 @@ W scenariuszach S5-S8 pracują oba ciągi jednocześnie. W S1-S4 pracuje **albo 
 - W **S8**: rotacja 5B w **C2 jest NIEMOŻLIWA** - wszystkie nagrzewnice N5-N8 muszą pracować (brak nagrzewnicy rezerwowej)
 
 **Koordynacja z Algorytmem 5A (Rotacja Układów):**
-- W S1-S4, gdy aktywny jest **Układ Podstawowy**: rotacja 5B dotyczy **C1** (priorytet 1)
-- W S1-S4, gdy aktywny jest **Układ Ograniczony**: rotacja 5B dotyczy **C2** (priorytet 1)
+
+⚠️ **WAŻNE - W S1-S4 pracuje TYLKO JEDEN ciąg na raz (nie oba jednocześnie!):**
+- Gdy aktywny jest **Układ Podstawowy**: pracuje **TYLKO C1**, rotacja 5B dotyczy **C1** (priorytet 1)
+- Gdy aktywny jest **Układ Ograniczony**: pracuje **TYLKO C2**, rotacja 5B dotyczy **C2** (priorytet 1)
+- Algorytm 5A przełącza między układami → zmiana który ciąg pracuje
+
+**Zasady koordynacji:**
 - Po zmianie układu (5A) poczekaj min. **1 godzinę** przed rotacją nagrzewnic (5B)
-- Priorytet ma zawsze **ciąg aktywny** (pracujący w danym układzie)
+- Priorytet ma zawsze **ciąg aktualnie pracujący** (w S1-S4 to jeden ciąg, w S5-S8 to oba ciągi, ale C2 ma priorytet rotacji bo C1 nie może rotować)
 
 **Zasada odstępu:** Nie wykonuj rotacji w dwóch ciągach jednocześnie - zachowaj min. 15 minut odstępu między rotacjami.
 
