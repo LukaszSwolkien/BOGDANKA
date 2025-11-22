@@ -113,16 +113,21 @@ Rotacja układów jest możliwa **TYLKO** gdy spełnione są **WSZYSTKIE** warun
 **Pseudokod:**
 
 ```
-ZMIENNE:
-  - czas_pracy_układu_podstawowego = 0  // [sekundy]
-  - czas_pracy_układu_ograniczonego = 0 // [sekundy]
-  - aktualny_układ = "Podstawowy"       // domyślnie
-  - czas_ostatniej_zmiany = czas_systemowy
-  - scenariusz = S0..S8
+ZMIENNE GLOBALNE (współdzielone z Algorytmem 5B):
+  - aktualny_układ = "Podstawowy"               // aktualny układ pracy
+  - zmiana_układu_w_toku = FAŁSZ                // blokada dla koordynacji z 5B
+  - czas_ostatniej_zmiany_układu = 0            // timestamp dla 5B [sekundy]
+  - rotacja_nagrzewnic_w_toku = FAŁSZ           // blokada dla koordynacji z 5B
+
+ZMIENNE LOKALNE (tylko dla 5A):
+  - czas_pracy_układu_podstawowego = 0          // [sekundy]
+  - czas_pracy_układu_ograniczonego = 0         // [sekundy]
+  - czas_ostatniej_zmiany = czas_systemowy      // timestamp ostatniej rotacji układu
+  - scenariusz = S0..S8                         // aktualny scenariusz
 
 PARAMETRY:
-  - OKRES_ROTACJI_UKŁADÓW              // definiowany przez technologa [s]
-  - HISTEREZA_CZASOWA = 300            // 5 minut [s]
+  - OKRES_ROTACJI_UKŁADÓW                       // definiowany przez technologa [s]
+  - HISTEREZA_CZASOWA = 300                     // 5 minut [s]
 
 GŁÓWNA PĘTLA (co 1 sekundę):
   
@@ -165,6 +170,15 @@ GŁÓWNA PĘTLA (co 1 sekundę):
   KROK 4: Wykonaj zmianę układu
     JEŻELI rotacja_możliwa = PRAWDA ORAZ rotacja_wymagana = PRAWDA WTEDY
       
+      // Sprawdź czy Algorytm 5B nie wykonuje rotacji nagrzewnic
+      JEŻELI rotacja_nagrzewnic_w_toku = PRAWDA WTEDY
+        Rejestruj_Zdarzenie("Zmiana układu odroczona - trwa rotacja nagrzewnic")
+        PRZEJDŹ DO KROKU 5
+      KONIEC JEŻELI
+      
+      // Ustaw blokadę dla Algorytmu 5B
+      zmiana_układu_w_toku = PRAWDA
+      
       Rejestruj_Zdarzenie("Rozpoczęcie zmiany układu z " + aktualny_układ + " na " + nowy_układ)
       
       // Sekwencja zmiany układu
@@ -173,8 +187,12 @@ GŁÓWNA PĘTLA (co 1 sekundę):
       // Aktualizacja zmiennych
       aktualny_układ = nowy_układ
       czas_ostatniej_zmiany = czas_systemowy
+      czas_ostatniej_zmiany_układu = czas_systemowy  // dla koordynacji z 5B
       
       Rejestruj_Zdarzenie("Zakończono zmianę układu na " + nowy_układ)
+      
+      // Zwolnij blokadę
+      zmiana_układu_w_toku = FAŁSZ
     
     KONIEC JEŻELI
   
@@ -399,7 +417,14 @@ Rotacja nagrzewnic jest możliwa **TYLKO** gdy spełnione są **WSZYSTKIE** waru
 ![Algorytm 5B Flowchart](../Symulacja/algorytm_5B_flowchart.svg)
 
 ```
-ZMIENNE (dla każdego ciągu osobno):
+ZMIENNE GLOBALNE (współdzielone z Algorytmem 5A):
+  - aktualny_układ                                       // Podstawowy lub Ograniczony
+  - zmiana_układu_w_toku                                 // blokada od 5A
+  - czas_ostatniej_zmiany_układu                         // timestamp od 5A
+  - rotacja_nagrzewnic_w_toku = FAŁSZ                    // blokada dla 5A
+  - czas_ostatniej_rotacji_globalny = 0                  // dla odstępu 15 min [sekundy]
+
+ZMIENNE LOKALNE (dla każdego ciągu osobno):
   - czas_pracy[N1..N8] = [0, 0, 0, 0, 0, 0, 0, 0]       // [sekundy]
   - czas_postoju[N1..N8] = [0, 0, 0, 0, 0, 0, 0, 0]     // [sekundy]
   - timestamp_zalaczenia[N1..N8] = [0, 0, 0, 0, 0, 0, 0, 0] // [timestamp pierwszego załączenia]
@@ -415,6 +440,26 @@ GŁÓWNA PĘTLA (co 1 sekundę):
   
   DLA KAŻDEGO ciągu w [CIĄG1, CIĄG2]:
     
+    KROK 0: Sprawdź czy ciąg jest aktywny w aktualnym układzie/scenariuszu
+      aktualny_scenariusz = Pobierz_Scenariusz()
+      aktualny_układ = Pobierz_Układ()  // Podstawowy lub Ograniczony
+      
+      // W S1-S4: tylko JEDEN ciąg jest aktywny (w zależności od układu)
+      JEŻELI aktualny_scenariusz ∈ {S1, S2, S3, S4} WTEDY
+        JEŻELI aktualny_układ = "Podstawowy" ORAZ ciąg = CIĄG2 WTEDY
+          POMIŃ ciąg  // C2 wyłączony w układzie podstawowym
+        KONIEC JEŻELI
+        
+        JEŻELI aktualny_układ = "Ograniczony" ORAZ ciąg = CIĄG1 WTEDY
+          POMIŃ ciąg  // C1 wyłączony w układzie ograniczonym
+        KONIEC JEŻELI
+      KONIEC JEŻELI
+      
+      // W S5-S8: oba ciągi aktywne, ale C1 nie może rotować (brak rezerwowej)
+      JEŻELI aktualny_scenariusz ∈ {S5, S6, S7, S8} ORAZ ciąg = CIĄG1 WTEDY
+        POMIŃ ciąg  // C1 niemożliwa - wszystkie nagrzewnice N1-N4 pracują
+      KONIEC JEŻELI
+    
     KROK 1: Aktualizuj liczniki czasu pracy i postoju
       DLA KAŻDEJ nagrzewnicy w ciągu:
         JEŻELI nagrzewnica_aktywna(N) WTEDY
@@ -425,6 +470,27 @@ GŁÓWNA PĘTLA (co 1 sekundę):
       KONIEC DLA
     
     KROK 2: Sprawdź warunki rotacji
+      
+      // Koordynacja z Algorytmem 5A - sprawdź czy 5A nie wykonuje zmiany układu
+      JEŻELI zmiana_układu_w_toku = PRAWDA WTEDY
+        POMIŃ ciąg  // odrocz rotację - trwa zmiana układu
+      KONIEC JEŻELI
+      
+      // Sprawdź czy upłynęła 1h od ostatniej zmiany układu (5A)
+      // (dotyczy tylko S1-S4, bo tylko tam działa Algorytm 5A)
+      JEŻELI aktualny_scenariusz ∈ {S1, S2, S3, S4} WTEDY
+        czas_od_zmiany_układu = czas_systemowy - czas_ostatniej_zmiany_układu
+        JEŻELI czas_od_zmiany_układu < 3600 WTEDY  // 1 godzina
+          POMIŃ ciąg  // za wcześnie po zmianie układu
+        KONIEC JEŻELI
+      KONIEC JEŻELI
+      
+      // Sprawdź odstęp 15 min od ostatniej rotacji (w dowolnym ciągu)
+      czas_od_ostatniej_rotacji_globalnej = czas_systemowy - czas_ostatniej_rotacji_globalny
+      JEŻELI czas_od_ostatniej_rotacji_globalnej < 900 WTEDY  // 15 minut
+        POMIŃ ciąg  // za krótki odstęp od ostatniej rotacji
+      KONIEC JEŻELI
+      
       aktualny_scenariusz = Pobierz_Scenariusz()
       ilość_pracujących = Liczba_Aktywnych_Nagrzewnic(ciąg)
       ilość_sprawnych = Liczba_Sprawnych_Nagrzewnic(ciąg)
@@ -491,6 +557,9 @@ GŁÓWNA PĘTLA (co 1 sekundę):
       JEŻELI nagrzewnica_do_wyłączenia ≠ NULL ORAZ 
              nagrzewnica_do_załączenia ≠ NULL WTEDY
         
+        // Ustaw blokadę dla Algorytmu 5A
+        rotacja_nagrzewnic_w_toku = PRAWDA
+        
         Rejestruj_Zdarzenie("Rotacja w " + ciąg + ": " + 
                           nagrzewnica_do_wyłączenia + " → " + 
                           nagrzewnica_do_załączenia)
@@ -502,8 +571,12 @@ GŁÓWNA PĘTLA (co 1 sekundę):
         
         // Aktualizacja stanu
         czas_ostatniej_rotacji[ciąg] = czas_systemowy
+        czas_ostatniej_rotacji_globalny = czas_systemowy  // dla odstępu 15 min
         
         Rejestruj_Zdarzenie("Rotacja zakończona pomyślnie")
+        
+        // Zwolnij blokadę
+        rotacja_nagrzewnic_w_toku = FAŁSZ
       
       KONIEC JEŻELI
   
