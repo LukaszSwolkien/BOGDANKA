@@ -1862,6 +1862,15 @@ KONIEC PĘTLI
 
 FUNKCJA Wykonaj_Rotację_Nagrzewnicy(ciąg, N_stara, N_nowa):
   
+  // ⚠️ WAŻNA ZASADA BEZPIECZEŃSTWA:
+  // Najpierw ZAŁĄCZAMY nową nagrzewnicę, potem WYŁĄCZAMY starą
+  // Oznacza to chwilowo WIĘCEJ nagrzewnic niż wymaga scenariusz (np. 4 zamiast 3)
+  // 
+  // UZASADNIENIE:
+  // ✓ Bezpieczeństwo termiczne - nigdy nie tracimy mocy grzewczej
+  // ✓ Weryfikacja - sprawdzamy czy N_nowa działa PRZED wyłączeniem N_starej
+  // ✓ Możliwość wycofania - jeśli N_nowa nie działa, N_stara nadal pracuje
+  
   KROK 1: Przygotowanie nagrzewnicy nowej
     // Sprawdź gotowość N_nowa
     JEŻELI NIE Sprawdź_Gotowość(N_nowa) WTEDY
@@ -1874,6 +1883,10 @@ FUNKCJA Wykonaj_Rotację_Nagrzewnicy(ciąg, N_stara, N_nowa):
     Czekaj(5 sekund)
   
   KROK 2: Załączenie nagrzewnicy nowej
+    // ⚠️ W tym momencie pracuje: N_stara + N_nowa = WIĘCEJ niż wymaga scenariusz
+    // Przykład dla S3: pracują 4 nagrzewnice zamiast 3
+    // To jest ZAMIERZONE dla bezpieczeństwa!
+    
     // Otwórz przepustnicę dolotową N_nowa
     Ustaw_Przepustnicę_Dolot(N_nowa, OTWARTA)
     Czekaj(5 sekund)
@@ -1894,13 +1907,16 @@ FUNKCJA Wykonaj_Rotację_Nagrzewnicy(ciąg, N_stara, N_nowa):
     JEŻELI |temp_N_nowa - 50°C| > 5°C WTEDY
       // Nowa nagrzewnica nie osiągnęła temperatury
       Rejestruj_Alarm("N_nowa nie osiągnęła temp. docelowej")
-      // Wycofaj zmianę
+      // Wycofaj zmianę - N_stara nadal pracuje, więc system bezpieczny
       Wyłącz_Nagrzewnicę(N_nowa)
       ZWRÓĆ BŁĄD
     KONIEC JEŻELI
   
   KROK 4: Wyłączenie nagrzewnicy starej
-    // Zatrzymaj regulator PID dla N_stara
+    // Dopiero teraz, gdy mamy pewność że N_nowa działa, wyłączamy N_starą
+    // Po tym kroku: poprawna ilość nagrzewnic zgodna ze scenariuszem
+    
+    // Przełącz regulator PID dla N_stara w tryb MANUAL
     Ustaw_Regulator_PID(N_stara, tryb = MANUAL)
     
     // Zamknij zawór N_stara stopniowo do 20%
@@ -2046,7 +2062,7 @@ System rejestruje następujące dane dla każdej nagrzewnicy:
 1. **Dzień 0** - System w konfiguracji początkowej
    ```
    Czasy: N1=168h, N2=168h, N3=168h, N4=0h
-   Pracują: [N1, N2, N3]
+   Pracują: [N1, N2, N3]  ← 3 nagrzewnice
    Postój:  [N4]
    ```
 
@@ -2057,13 +2073,28 @@ System rejestruje następujące dane dla każdej nagrzewnicy:
    - Najdłużej postój: N4 (168h postoju)
    - Delta: 336h - 0h = 336h > MIN_DELTA_CZASU ✅
    
-   Akcja: Wyłącz N1, załącz N4
+   Akcja: Wymiana N1 → N4
+   
+   Sekwencja czasowa:
+   t=0s:   Pracują: [N1, N2, N3]           ← 3 nagrzewnice
+   t=5s:   Załączanie N4...
+   t=35s:  Pracują: [N1, N2, N3, N4]       ← ⚠️ 4 nagrzewnice (WIĘCEJ!)
+           PID wentylatora kompensuje (zmniejsza prędkość)
+   t=65s:  N4 zweryfikowana (50°C) 
+   t=65s:  Rozpoczęcie wyłączania N1...
+   t=95s:  Pracują: [N2, N3, N4]           ← 3 nagrzewnice
    
    Po rotacji:
    Czasy: N1=336h, N2=336h, N3=336h, N4=0h
    Pracują: [N2, N3, N4]
    Postój:  [N1]
    ```
+
+**⚠️ Kluczowa obserwacja:**
+- Przez ~30 sekund (t=35s do t=65s) pracują 4 nagrzewnice zamiast 3
+- To jest **zamierzone** dla bezpieczeństwa
+- PID wentylatora automatycznie redukuje prędkość 
+- Gdyby N4 nie zadziałała, N1 nadal pracuje - system bezpieczny
 
 3. **Dzień 14** - Druga rotacja
    ```
