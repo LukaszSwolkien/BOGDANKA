@@ -161,11 +161,59 @@ System automatycznie przełącza się między scenariuszami pracy w zależności
 
 ---
 
-## Algorytmy Rotacji - Wizualizacje
+## Algorytmy Sterowania - Wizualizacje
 
-System wykorzystuje dwa algorytmy rotacji w celu równomiernego rozłożenia eksploatacji urządzeń:
+System wykorzystuje **trzy współpracujące algorytmy** zapewniające automatyczne sterowanie i równomierne rozłożenie eksploatacji urządzeń:
+- **Algorytm 5:** Automatyczny Wybór Scenariusza Pracy (S0-S8) - fundament sterowania
 - **Algorytm 5A:** Rotacja Układów Pracy Ciągów (C1 ↔ C2)
 - **Algorytm 5B:** Rotacja Nagrzewnic w Obrębie Ciągu
+
+### Algorytm 5: Automatyczny Wybór Scenariusza
+
+**Cel algorytmu:**
+- Automatyczny dobór scenariusza (S0-S8) w zależności od temperatury zewnętrznej
+- Określa ILE nagrzewnic potrzeba do utrzymania 2°C w szybie
+- Ciągły monitoring temperatury z histerezą przy wyłączaniu
+- Bezpieczne sekwencje przejść między scenariuszami
+
+**Kluczowe elementy:**
+- Odczyt i walidacja temperatury zewnętrznej (z filtrem uśredniania)
+- Drzewo decyzyjne wyboru scenariusza (z histerezami)
+- Sprawdzenie warunków stabilności i trybu pracy (AUTO/MANUAL)
+- Wykonanie sekwencji zmiany scenariusza
+- Koordynacja z algorytmami 5A i 5B
+
+#### Diagram Przepływu Algorytmu 5
+
+![Algorytm 5 - Wybór Scenariusza](Symulacja/algorytm_wybor_scenariusza_flowchart.svg)
+
+**Opis flowchartu:**
+- **KROK 1:** Odczyt czujnika t_zewn z filtrem uśredniania (3 próbki)
+- **KROK 2:** Określenie wymaganego scenariusza na podstawie drzewa decyzyjnego
+  - t ≥ 3°C → S0 (brak ogrzewania)
+  - -1°C < t ≤ 2°C → S1 (1 nagrzewnica)
+  - -4°C < t ≤ -1°C → S2 (2 nagrzewnice)
+  - ... itd. aż do S8 (8 nagrzewnic przy t ≤ -21°C)
+- **KROK 3:** Sprawdzenie czy wymagana zmiana scenariusza
+  - Uwzględnienie czasu stabilizacji (60s)
+  - Sprawdzenie trybu AUTO/MANUAL
+- **KROK 4:** Wykonanie zmiany scenariusza (sekwencja bezpieczna)
+  - Zatrzymanie zbędnych nagrzewnic
+  - Konfiguracja wentylatorów (PID/MAX/OFF)
+  - Uruchomienie dodatkowych nagrzewnic
+- **KROK 5:** Aktualizacja statystyk i monitoringu
+
+**Obsługa awarii czujnika:**
+- Przy braku odczytu → utrzymanie ostatniego scenariusza przez 300s
+- Po przekroczeniu czasu → alarm krytyczny i przełączenie na tryb MANUAL
+
+**Histereza temperaturowa:**
+- Różne progi dla włączania i wyłączania (zapobiega oscylacjom)
+- Przykład S3: włączenie przy -4°C, wyłączenie dopiero przy -3°C (1°C histerezy)
+
+📖 **[Szczegółowy algorytm → Algorytmy_rotacji.md - Sekcja 5](Doc/Algorytmy_rotacji.md#5-algorytm-automatycznego-wyboru-scenariusza-pracy)**
+
+---
 
 ### Rotacja 5A: Układ Podstawowy vs Układ Ograniczony
 
@@ -588,15 +636,16 @@ f_max = 50 Hz (maksymalna prędkość)
 ## Wizualizacje SVG
 
 ### Podsumowanie:
-- **Łącznie plików SVG:** 22
+- **Łącznie plików SVG:** 23
 - **Scenariusze podstawowe (S0-S8):** 9 plików
 - **Schematy UAR:** 3 pliki
 - **Rotacja 5A (Układy Ograniczone S1-S4):** 4 pliki
 - **Rotacja 5B (Cykl nagrzewnic):** 3 pliki
-- **Diagramy algorytmów:** 3 pliki
-  - `algorytm_5A_flowchart.svg` - flowchart algorytmu 5A (z koordynacją 5B)
-  - `algorytm_5B_flowchart.svg` - flowchart algorytmu 5B (z koordynacją 5A)
-  - `algorytm_5A_5B_koordynacja.svg` - **NOWY!** timeline diagram koordynacji 5A ↔ 5B
+- **Diagramy algorytmów:** 4 pliki
+  - `algorytm_wybor_scenariusza_flowchart.svg` flowchart algorytmu 5 (wybór scenariusza)
+  - `algorytm_5A_flowchart.svg` - flowchart algorytmu 5A (rotacja układów, z koordynacją 5B)
+  - `algorytm_5B_flowchart.svg` - flowchart algorytmu 5B (rotacja nagrzewnic, z koordynacją 5A)
+  - `algorytm_5A_5B_koordynacja.svg` - timeline diagram koordynacji 5A ↔ 5B
 
 ### Diagram Koordynacji Algorytmów 5A i 5B
 
@@ -615,7 +664,7 @@ f_max = 50 Hz (maksymalna prędkość)
 
 ---
 
-**Ostatnia aktualizacja:** 2025-11-22  
-**Wersja dokumentu:** 2.5  
-**Status:** Kompletna dokumentacja z wizualizacjami rotacji 5A, 5B oraz diagramem koordynacji algorytmów
+**Ostatnia aktualizacja:** 2025-11-23  
+**Wersja dokumentu:** 3.0  
+**Status:** Kompletna dokumentacja z wizualizacjami wszystkich algorytmów sterowania (5, 5A, 5B) oraz diagramem koordynacji
 

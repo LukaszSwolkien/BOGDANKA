@@ -143,7 +143,22 @@ Występują podczas przechodzenia z jednego trybu stabilnego do drugiego.
 
 W trybie MANUAL operator może dowolnie kształtować układ zasilania.
 
-## 5. Scenariusze
+## 5. Scenariusze i Algorytm Automatycznego Sterowania
+
+### 5.0 Algorytm Automatycznego Wyboru Scenariusza
+
+System wykorzystuje **Algorytm 5** do automatycznego doboru scenariusza pracy (S0-S8) w zależności od temperatury zewnętrznej.
+
+**Kluczowe cechy algorytmu:**
+- Ciągły monitoring temperatury zewnętrznej
+- Automatyczny dobór ilości nagrzewnic według tabeli poniżej
+- Histereza przy wyłączaniu (zapobiega częstym przełączeniom)
+- Bezpieczne sekwencje przejść między scenariuszami
+- Koordynacja z algorytmami rotacji 5A i 5B
+
+📖 **[Szczegółowy algorytm → Algorytmy_rotacji.md - Sekcja 5](Algorytmy_rotacji.md#5-algorytm-automatycznego-wyboru-scenariusza-pracy)**
+
+### 5.1 Tabela Scenariuszy
 
 Tabela definiująca stan systemu sterowania uzależniony od temperatury zewnętrznej (t_zewn)
 
@@ -191,11 +206,25 @@ Tabela definiująca stan systemu sterowania uzależniony od temperatury zewnętr
 - Temperatura docelowa na wylocie z nagrzewnicy: **50°C**
 - Otwarcie zaworu przy wyłączeniu: **20%** (ochrona antyzamrożeniowa)
 
-**⚠️ Uwaga - Dobór nagrzewnic:**
-Tabela stanów określa **ILOŚĆ** wymaganych nagrzewnic, ale nie konkretne numery.
-**KTÓRE nagrzewnice** pracują w danym scenariuszu jest określane dynamicznie przez:
-- **Algorytm 5A:** Wybór ciągu wentylacyjnego (C1 z N1-N4 lub C2 z N5-N8)
-- **Algorytm 5B:** Rotacja nagrzewnic w obrębie wybranego ciągu
+**⚠️ Uwaga - Hierarchia Algorytmów:**
+
+System wykorzystuje **trzy współpracujące algorytmy** do sterowania:
+
+1. **Algorytm 5: Automatyczny Wybór Scenariusza**
+   - Określa **ILE nagrzewnic** potrzeba (S0-S8) na podstawie t_zewn
+   - Tabela powyżej definiuje scenariusze
+   - Ciągły monitoring i histereza
+
+2. **Algorytm 5A: Rotacja Układów Pracy Ciągów**
+   - Określa **KTÓRY CIĄG** pracuje w S1-S4 (Podstawowy: C1, Ograniczony: C2)
+   - Wyrównuje eksploatację W1 i W2
+
+3. **Algorytm 5B: Rotacja Nagrzewnic w Ciągu**
+   - Określa **KTÓRE KONKRETNIE** nagrzewnice pracują w ciągu
+   - Wyrównuje eksploatację N1-N8
+
+**Tabela stanów określa ILOŚĆ wymaganych nagrzewnic, ale nie konkretne numery.**
+**KTÓRE nagrzewnice** pracują jest określane dynamicznie przez algorytmy 5A i 5B.
 
 **Przykład dla S3 (3 nagrzewnice):**
 - Tydzień 1: mogą pracować N1, N2, N3 (ciąg 1)
@@ -205,21 +234,31 @@ Tabela stanów określa **ILOŚĆ** wymaganych nagrzewnic, ale nie konkretne num
 
 ---
 
-## 5A. Rotacja Układów Pracy Ciągów
+### 5A. Rotacja Układów Pracy Ciągów
 
 **Cel:** Wyrównanie eksploatacji ciągu 1 (W1) i ciągu 2 (W2) przez cykliczną zmianę: Układ Podstawowy ↔ Układ Ograniczony
 
 **Parametr:** ⚙️ `OKRES_ROTACJI_UKŁADÓW` - definiowany przez technologa (przykład: 168h)
 
+**Działanie:**
+- Dotyczy scenariuszy S1-S4 (umiarkowane temperatury)
+- Okresowa zmiana układu po upłynięciu okresu rotacji
+- Zapewnia równomierne czasy pracy C1 i C2
+
 📖 **[Szczegółowy algorytm → Algorytmy_rotacji.md - Sekcja 5A](Algorytmy_rotacji.md#5a-algorytm-cyklicznej-rotacji-układów-pracy-ciągów)**
 
 ---
 
-## 5B. Rotacja Nagrzewnic w Obrębie Ciągu
+### 5B. Rotacja Nagrzewnic w Obrębie Ciągu
 
 **Cel:** Wyrównanie eksploatacji nagrzewnic N1-N8 przez cykliczną wymianę: najdłużej pracująca → najdłużej w postoju
 
 **Parametr:** ⚙️ `OKRES_ROTACJI_NAGRZEWNIC` - definiowany przez technologa (przykład: 168h)
+
+**Działanie:**
+- Dotyczy wszystkich nagrzewnic w obrębie aktywnego ciągu
+- Wymiana jednej nagrzewnicy po upłynięciu okresu rotacji
+- Zapewnia równomierne czasy pracy wszystkich N1-N8
 
 📖 **[Szczegółowy algorytm → Algorytmy_rotacji.md - Sekcja 5B](Algorytmy_rotacji.md#5b-algorytm-cyklicznej-rotacji-nagrzewnic-w-obrębie-ciągu)**
 
