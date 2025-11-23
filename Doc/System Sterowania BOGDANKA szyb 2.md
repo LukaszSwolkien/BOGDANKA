@@ -15,7 +15,7 @@ Dokument otrzymany 19 listopad 2025:
 **UWAGA** 
 ```Dokumentacja robocza - aktualizowana na podstawie otrzymywanych wymagan od zleceniodawcy```
 
-Ostatnia aktualizacja: 21 Listopad 2025
+Ostatnia aktualizacja: 23 Listopad 2025
 
 ## 2. Architektura Systemu Automatycznej Regulacji (SAR)
 
@@ -74,6 +74,8 @@ System automatycznej regulacji (SAR) temperatury szybu składa się z dwóch pod
 **Sekwencja załączania:**
 - Otwarcie przepustnicy na dolocie zimnego powietrza do nagrzewnicy
 - Rozpoczęcie procesu regulacji (AUTO lub MANUAL)
+
+📖 **[Szczegółowe sekwencje dla wszystkich przejść → Algorytmy_rotacji.md - Sekcja 5.10](Algorytmy_rotacji.md#510-szczegółowe-sekwencje-zmian-scenariuszy)**
 
 ### 3.2 Wyłączenie Nagrzewnicy z Ruchu
 
@@ -157,6 +159,8 @@ System wykorzystuje **Algorytm 5** do automatycznego doboru scenariusza pracy (S
 - Koordynacja z algorytmami rotacji 5A i 5B
 
 📖 **[Szczegółowy algorytm → Algorytmy_rotacji.md - Sekcja 5](Algorytmy_rotacji.md#5-algorytm-automatycznego-wyboru-scenariusza-pracy)**
+
+📖 **[Szczegółowe sekwencje zmian scenariuszy → Algorytmy_rotacji.md - Sekcja 5.10](Algorytmy_rotacji.md#510-szczegółowe-sekwencje-zmian-scenariuszy)**
 
 ### 5.1 Tabela Scenariuszy
 

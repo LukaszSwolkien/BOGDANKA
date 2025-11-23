@@ -875,6 +875,418 @@ System rejestruje następujące dane:
 - Statystyki zużycia energii w poszczególnych scenariuszach
 - Analiza efektywności (czy scenariusze dobierały się optymalnie)
 
+### 5.10 Szczegółowe Sekwencje Zmian Scenariuszy
+
+Każda zmiana scenariusza wymaga **skoordynowanej sekwencji** operacji na:
+- Zaworach regulacyjnych wody grzewczej (20-100%)
+- Przepustnicach dolotowych nagrzewnic (otwarte/zamknięte)
+- Przepustnicach głównych systemu (kolektory, spinka, wyrzutnie)
+- Wentylatorach (start/stop, tryb PID)
+
+**Hierarchia sterowania:**
+
+System ma **trzy poziomy sterowania**:
+
+1. **Algorytm 5 (Nadzorca scenariuszy)** ← monitoruje **t_zewn**
+   - Decyduje ILE nagrzewnic potrzeba
+   - WŁĄCZA i WYŁĄCZA nagrzewnice
+   - Zarządza przejściami między scenariuszami
+
+2. **PID Nagrzewnicy (UAR temperatury powietrza)** ← monitoruje **T_wylot**
+   - Utrzymuje 50°C na wylocie z nagrzewnicy
+   - Reguluje zawór wody (20-100%)
+
+3. **PID Wentylatora (UAR temperatury szybu)** ← monitoruje **T_szyb**
+   - Utrzymuje 2°C w szybie na -30m
+   - Reguluje prędkość wentylatora (25-50Hz)
+   - Dostosowuje się do ilości nagrzewnic
+
+**Przykład interakcji:**
+```
+t_zewn = 3°C (wzrost)
+  ↓
+Algorytm 5: "Nie potrzebuję już nagrzewnic" → decyzja o przejściu S1→S0
+  ↓
+Sekwencja wyłączania:
+  1. Przełącz PID nagrzewnicy: AUTO → MANUAL
+  2. Zamknij zawór ręcznie: aktualna_pozycja → 20%
+  3. Zamknij przepustnicę
+  4. Zatrzymaj wentylator
+```
+
+#### 5.10.1 Typy Przejść
+
+System rozróżnia 4 typy przejść między scenariuszami:
+
+| Typ | Opis | Przykłady | Złożoność |
+|-----|------|-----------|-----------|
+| **A** | Wyłączenie systemu | S1→S0 | Niska |
+| **B** | Uruchomienie systemu | S0→S1 | Średnia |
+| **C** | Zmiana w obrębie jednego ciągu | S1→S2, S2→S3, S3→S4 | Średnia |
+| **D** | Uruchomienie drugiego ciągu | S4→S5 | **Wysoka** |
+| **E** | Zatrzymanie drugiego ciągu | S5→S4 | **Wysoka** |
+| **F** | Zmiana w obrębie dwóch ciągów | S5→S6, S6→S7, S7→S8 | Niska |
+
+#### 5.10.2 Sekwencja TYP A: Wyłączenie Systemu (S1→S0)
+
+**Warunki:** Temperatura wzrosła do t ≥ 3°C
+
+```
+SEKWENCJA S1→S0 (Wyłączenie systemu):
+
+UWAGA: Algorytm 5 decyduje o wyłączeniu na podstawie t_zewn ≥ 3°C
+
+KROK 1: Przełącz PID nagrzewnicy w tryb MANUAL
+  Ustaw_Regulator_PID(N_aktywna, tryb=MANUAL)
+  // PID przestaje regulować, zawór "zamrażany" w aktualnej pozycji
+
+KROK 2: Zamknij zawór wody grzewczej stopniowo do 20%
+  aktualna_pozycja = Odczytaj_Pozycję_Zaworu(N_aktywna)
+  Dla pozycja = aktualna_pozycja DO 20 KROK -10:
+    Ustaw_Zawór(N_aktywna, pozycja)
+    Czekaj(2 sekundy)
+  KONIEC DLA
+  Czekaj(10 sekund)  // Stabilizacja
+
+KROK 3: Zamknij przepustnicę dolotową nagrzewnicy
+  Ustaw_Przepustnicę_Dolot(N_aktywna, ZAMKNIĘTA)
+  Czekaj(5 sekund)
+
+KROK 4: Zatrzymaj wentylator W1
+  Zmniejsz_Częstotliwość(W1, od_aktualnej DO 25Hz, krok=5Hz, czas=2s)
+  Czekaj(5 sekund)
+  Zatrzymaj_Wentylator(W1)
+  
+KROK 5: Zamknij przepustnice główne ciągu 1
+  Ustaw_Przepustnicę_Kolektor_C1(ZAMKNIĘTA)
+  Ustaw_Przepustnicę_Ciąg_C1(ZAMKNIĘTA)
+
+KROK 6: Rejestracja
+  Rejestruj_Zdarzenie("Scenariusz S0 aktywny - system wyłączony")
+  
+Czas sekwencji: ~60 sekund
+```
+
+#### 5.10.3 Sekwencja TYP B: Uruchomienie Systemu (S0→S1)
+
+**Warunki:** Temperatura spadła do t ≤ 2°C
+
+```
+SEKWENCJA S0→S1 (Uruchomienie systemu):
+
+KROK 1: Otwórz przepustnice główne ciągu 1
+  Ustaw_Przepustnicę_Ciąg_C1(OTWARTA)
+  Ustaw_Przepustnicę_Kolektor_C1(OTWARTA)
+  Ustaw_Przepustnicę_Wyrzutnia_430(OTWARTA)
+  Czekaj(10 sekund)  // Stabilizacja ciśnienia
+
+KROK 2: Uruchom wentylator W1
+  Uruchom_Wentylator(W1, częstotliwość=25Hz)
+  Czekaj(10 sekund)  // Stabilizacja obrotów
+  Sprawdź_Prąd_Silnika(W1)  // Weryfikacja pracy
+
+KROK 3: Przygotuj nagrzewnicę N (wybrana przez Algorytm 5A/5B)
+  Ustaw_Zawór(N, 20%)  // Pozycja startowa
+  Czekaj(5 sekund)
+
+KROK 4: Otwórz przepustnicę dolotową nagrzewnicy
+  Ustaw_Przepustnicę_Dolot(N, OTWARTA)
+  Czekaj(5 sekund)  // Przepływ powietrza przez nagrzewnicę
+
+KROK 5: Aktywuj regulację PID nagrzewnicy
+  Ustaw_Regulator_PID(N, tryb=AUTO, setpoint=50°C)
+  // Zawór zacznie się otwierać zgodnie z potrzebami
+  Czekaj(30 sekund)  // Stabilizacja temperatury
+
+KROK 6: Aktywuj regulację PID wentylatora
+  Ustaw_Wentylator(W1, tryb=AUTO, setpoint=2°C)
+  // Wentylator zacznie regulować prędkość
+
+KROK 7: Weryfikacja
+  temp_N = Odczytaj_Temperaturę(N)
+  JEŻELI temp_N < 30°C WTEDY
+    Alarm("Nagrzewnica nie osiąga temperatury")
+    PRZERWIJ
+  KONIEC JEŻELI
+  
+  Rejestruj_Zdarzenie("Scenariusz S1 aktywny")
+  
+Czas sekwencji: ~70 sekund
+```
+
+#### 5.10.4 Sekwencja TYP C: Dodanie Nagrzewnicy w Tym Samym Ciągu (S1→S2, S2→S3, S3→S4)
+
+**Przykład: S2→S3** (2 nagrzewnice → 3 nagrzewnice)
+
+```
+SEKWENCJA S2→S3 (Dodanie trzeciej nagrzewnicy):
+
+UWAGA: Wentylator W1 i nagrzewnice N1, N2 już pracują
+
+KROK 1: Wybierz nagrzewnicę do załączenia
+  N_nowa = Algorytm_5B_Wybierz_Nagrzewnicę(CIĄG1, ilość=3)
+  // Np. N3 (jeśli N1, N2 już pracują)
+
+KROK 2: Przygotuj nagrzewnicę N_nowa
+  Ustaw_Zawór(N_nowa, 20%)
+  Czekaj(3 sekundy)
+
+KROK 3: Otwórz przepustnicę dolotową
+  Ustaw_Przepustnicę_Dolot(N_nowa, OTWARTA)
+  Czekaj(5 sekund)
+
+KROK 4: Aktywuj regulację PID
+  Ustaw_Regulator_PID(N_nowa, tryb=AUTO, setpoint=50°C)
+  Czekaj(30 sekund)
+
+KROK 5: Weryfikacja i dostrojenie wentylatora
+  // PID wentylatora automatycznie dostosuje prędkość
+  // do zwiększonego zapotrzebowania (3 nagrzewnice zamiast 2)
+  
+KROK 6: Sprawdź stabilność
+  temp_N_nowa = Odczytaj_Temperaturę(N_nowa)
+  JEŻELI |temp_N_nowa - 50°C| > 5°C WTEDY
+    Alarm("N_nowa nie osiąga temperatury docelowej")
+  KONIEC JEŻELI
+  
+  Rejestruj_Zdarzenie("Scenariusz S3 aktywny")
+
+Czas sekwencji: ~45 sekund
+```
+
+#### 5.10.5 Sekwencja TYP D: Uruchomienie Drugiego Ciągu (S4→S5) 
+
+**Warunki:** Temperatura spadła do t ≤ -11°C  
+**Złożoność:** WYSOKA - uruchomienie drugiego poziomu wyrzutni
+
+```
+SEKWENCJA S4→S5 (Uruchomienie drugiego ciągu):
+
+UWAGA: Ciąg 1 (N1-N4 + W1) już pracuje w pełnej mocy
+
+KROK 0: Weryfikacja stanu początkowego
+  JEŻELI NIE (N1_aktywna ORAZ N2_aktywna ORAZ N3_aktywna ORAZ N4_aktywna) WTEDY
+    Alarm("S4→S5: Ciąg 1 niekompletny")
+    PRZERWIJ
+  KONIEC JEŻELI
+
+KROK 1: Przygotuj przepustnice dla układu dwuciągowego
+  // Przepustnice ciągu 1 pozostają OTWARTE
+  // Otwieramy przepustnice ciągu 2
+  Ustaw_Przepustnicę_Ciąg_C2(OTWARTA)
+  Ustaw_Przepustnicę_Wyrzutnia_790(OTWARTA)  // DRUGI poziom wyrzutni!
+  Czekaj(10 sekund)  // Stabilizacja ciśnienia w systemie
+
+KROK 2: Przełącz W1 na tryb MAX (pełna moc)
+  // W1 będzie teraz pracował z maksymalną częstotliwością
+  Ustaw_Wentylator(W1, tryb=MANUAL, częstotliwość=50Hz)
+  Czekaj(10 sekund)
+  Sprawdź_Prąd_Silnika(W1)  // Weryfikacja obciążenia
+
+KROK 3: Uruchom wentylator W2
+  Uruchom_Wentylator(W2, częstotliwość=25Hz)
+  Czekaj(10 sekund)
+  Sprawdź_Prąd_Silnika(W2)
+
+KROK 4: Przygotuj pierwszą nagrzewnicę ciągu 2 (N5)
+  N_nowa = N5  // Pierwsza z ciągu 2
+  Ustaw_Zawór(N5, 20%)
+  Czekaj(5 sekund)
+
+KROK 5: Otwórz przepustnicę dolotową N5
+  Ustaw_Przepustnicę_Dolot(N5, OTWARTA)
+  Czekaj(5 sekund)
+
+KROK 6: Aktywuj regulację PID dla N5
+  Ustaw_Regulator_PID(N5, tryb=AUTO, setpoint=50°C)
+  Czekaj(30 sekund)  // Stabilizacja temperatury N5
+
+KROK 7: Aktywuj regulację PID dla W2
+  // W2 teraz będzie regulacyjnym wentylatorem
+  Ustaw_Wentylator(W2, tryb=AUTO, setpoint=2°C)
+  Czekaj(20 sekund)
+
+KROK 8: Weryfikacja systemu dwuciągowego
+  temp_N5 = Odczytaj_Temperaturę(N5)
+  JEŻELI temp_N5 < 30°C WTEDY
+    Alarm("N5 nie osiąga temperatury")
+    // Wycofaj zmianę - przywróć S4
+    PRZERWIJ
+  KONIEC JEŻELI
+  
+  sprawdź_W1 = Sprawdź_Częstotliwość(W1)
+  sprawdź_W2 = Sprawdź_Częstotliwość(W2)
+  
+  JEŻELI sprawdź_W1 ≠ 50Hz LUB sprawdź_W2 < 25Hz WTEDY
+    Alarm("Wentylatory nie pracują poprawnie")
+    PRZERWIJ
+  KONIEC JEŻELI
+  
+KROK 9: Otwórz przepustnicę kolektora C2
+  Ustaw_Przepustnicę_Kolektor_C2(OTWARTA)
+  
+  Rejestruj_Zdarzenie("Scenariusz S5 aktywny - dwa ciągi w pracy")
+
+Czas sekwencji: ~100 sekund
+```
+
+**Kluczowe aspekty S4→S5:**
+- ⚠️ Pierwszy raz otwieramy wyrzutnie +7,90m
+- ⚠️ W1 przechodzi z PID → MAX (zmiana trybu regulacji)
+- ⚠️ Uruchomienie W2 jako regulacyjnego
+- ⚠️ Koordynacja dwóch niezależnych ciągów
+
+#### 5.10.6 Sekwencja TYP E: Zatrzymanie Drugiego Ciągu (S5→S4)
+
+**Warunki:** Temperatura wzrosła do t ≥ -10°C  
+**Złożoność:** WYSOKA - zamknięcie drugiego poziomu wyrzutni
+
+```
+SEKWENCJA S5→S4 (Zatrzymanie drugiego ciągu):
+
+UWAGA: Algorytm 5 decyduje o zatrzymaniu C2 na podstawie t_zewn ≥ -10°C
+       Oba ciągi pracują (C1: N1-N4 + W1 MAX, C2: N5 + W2 PID)
+
+KROK 1: Przełącz PID nagrzewnicy N5 w tryb MANUAL
+  Ustaw_Regulator_PID(N5, tryb=MANUAL)
+  // PID przestaje regulować, przejmujemy ręczne sterowanie
+  
+KROK 2: Zamknij zawór N5 do 20%
+  aktualna_pozycja = Odczytaj_Pozycję_Zaworu(N5)
+  Dla pozycja = aktualna_pozycja DO 20 KROK -10:
+    Ustaw_Zawór(N5, pozycja)
+    Czekaj(2 sekundy)
+  KONIEC DLA
+  Czekaj(10 sekund)
+
+KROK 3: Zamknij przepustnicę dolotową N5
+  Ustaw_Przepustnicę_Dolot(N5, ZAMKNIĘTA)
+  Czekaj(5 sekund)
+
+KROK 4: Zatrzymaj wentylator W2
+  Zmniejsz_Częstotliwość(W2, od_aktualnej DO 25Hz, krok=5Hz, czas=2s)
+  Czekaj(5 sekund)
+  Zatrzymaj_Wentylator(W2)
+
+KROK 5: Zamknij przepustnice ciągu 2
+  Ustaw_Przepustnicę_Kolektor_C2(ZAMKNIĘTA)
+  Ustaw_Przepustnicę_Wyrzutnia_790(ZAMKNIĘTA)  // ⚠️ Zamykamy poziom +7,90m
+  Ustaw_Przepustnicę_Ciąg_C2(ZAMKNIĘTA)
+  Czekaj(10 sekund)
+
+KROK 6: Przełącz W1 z MAX na PID
+  // W1 przejmuje pełną regulację temperatury
+  Ustaw_Wentylator(W1, tryb=AUTO, setpoint=2°C)
+  Czekaj(20 sekund)  // Stabilizacja regulacji
+
+KROK 7: Weryfikacja
+  JEŻELI Wentylator_Pracuje(W2) WTEDY
+    Alarm("W2 nie zatrzymał się")
+    PRZERWIJ
+  KONIEC JEŻELI
+  
+  temp_szyb = Odczytaj_Temperaturę_Szybu()
+  JEŻELI |temp_szyb - 2°C| > 1°C WTEDY
+    Alarm("Temperatura szybu niestabilna po przejściu na S4")
+  KONIEC JEŻELI
+  
+  Rejestruj_Zdarzenie("Scenariusz S4 aktywny - jeden ciąg w pracy")
+
+Czas sekwencji: ~70 sekund
+```
+
+#### 5.10.7 Sekwencja TYP F: Dodanie Nagrzewnicy w Drugim Ciągu (S5→S6, S6→S7, S7→S8)
+
+**Przykład: S5→S6** (5 nagrzewnic → 6 nagrzewnic)
+
+```
+SEKWENCJA S5→S6 (Dodanie szóstej nagrzewnicy):
+
+UWAGA: C1 (N1-N4) + W1 MAX, C2 (N5) + W2 PID już pracują
+
+KROK 1: Wybierz nagrzewnicę z ciągu 2
+  N_nowa = Algorytm_5B_Wybierz_Nagrzewnicę(CIĄG2, ilość=2)
+  // Np. N6 (jeśli N5 już pracuje)
+
+KROK 2: Przygotuj N_nowa
+  Ustaw_Zawór(N_nowa, 20%)
+  Czekaj(3 sekundy)
+
+KROK 3: Otwórz przepustnicę dolotową
+  Ustaw_Przepustnicę_Dolot(N_nowa, OTWARTA)
+  Czekaj(5 sekund)
+
+KROK 4: Aktywuj regulację PID
+  Ustaw_Regulator_PID(N_nowa, tryb=AUTO, setpoint=50°C)
+  Czekaj(30 sekund)
+
+KROK 5: Weryfikacja
+  // PID W2 automatycznie dostosuje prędkość
+  temp_N_nowa = Odczytaj_Temperaturę(N_nowa)
+  JEŻELI |temp_N_nowa - 50°C| > 5°C WTEDY
+    Alarm("N_nowa nie osiąga temperatury")
+  KONIEC JEŻELI
+  
+  Rejestruj_Zdarzenie("Scenariusz S6 aktywny")
+
+Czas sekwencji: ~45 sekund
+```
+
+#### 5.10.8 Tabela Czasów Sekwencji
+
+| Przejście | Typ | Czas [s] | Uwagi |
+|-----------|-----|----------|-------|
+| S0→S1 | B | ~70 | Uruchomienie systemu od zera |
+| S1→S0 | A | ~60 | Wyłączenie systemu |
+| S1→S2, S2→S3, S3→S4 | C | ~45 | Dodanie nagrzewnicy w C1 |
+| S4→S3, S3→S2, S2→S1 | C | ~50 | Usunięcie nagrzewnicy z C1 |
+| **S4→S5** | **D** | **~100** | **⚠️ uruchomienie C2** |
+| **S5→S4** | **E** | **~70** | **⚠️ zatrzymanie C2** |
+| S5→S6, S6→S7, S7→S8 | F | ~45 | Dodanie nagrzewnicy w C2 |
+| S8→S7, S7→S6, S6→S5 | F | ~50 | Usunięcie nagrzewnicy z C2 |
+
+#### 5.10.9 Koordynacja Przepustnic - Stany dla Wszystkich Scenariuszy
+
+| Element | S0 | S1-S4 Podst. | S1-S4 Ogr. | S5-S8 |
+|---------|----|--------------|-----------| ------|
+| **Ciąg 1:** | | | | |
+| Przepustnica C1 | Z | **O** | **Z** | **O** |
+| Kolektor C1 | Z | **O** | **Z** | **O** |
+| Wyrzutnia +4,30m | Z | **O** | Z | **O** |
+| **Ciąg 2:** | | | | |
+| Przepustnica C2 | Z | Z | **O** | **O** |
+| Kolektor C2 | Z | Z | **O** | **O** |
+| Wyrzutnia +7,90m | Z | Z | Z | **O** |
+| **Spinka:** | | | | |
+| Przepustnica spinka | Z | Z | **O** | Z |
+
+**Legenda:** O = Otwarta, Z = Zamknięta
+
+**Kluczowe przejścia przepustnic:**
+- **S4→S5:** Otwieramy wyrzutnię +7,90m po raz pierwszy
+- **S5→S4:** Zamykamy wyrzutnię +7,90m
+- **Układ Podst.→Ogr.:** Zamykamy C1, otwieramy spinę i C2
+- **Układ Ogr.→Podst.:** Zamykamy spinę i C2, otwieramy C1
+
+#### 5.10.10 Zarządzanie Zaworami - Strategia Bezpieczeństwa
+
+**Zasady zarządzania zaworami wody grzewczej:**
+
+1. **Nigdy nie zamykaj zaworu poniżej 20%** (ochrona antyzamrożeniowa)
+2. **Stopniowe zamykanie:** krok 10%, przerwa 2s (zapobiega uderzeniom hydraulicznym)
+3. **Stopniowe otwieranie:** krok 10%, przerwa 2s (stopniowe ogrzewanie)
+4. **Stabilizacja PID:** min. 30s po aktywacji regulatora
+5. **Weryfikacja temperatury:** przed uznaniem nagrzewnicy za aktywną
+
+**Stany zaworu podczas pracy:**
+
+| Stan nagrzewnicy | Pozycja zaworu | Tryb regulatora | Uwagi |
+|------------------|----------------|-----------------|-------|
+| **OFF** (postój) | 20% stała | MANUAL | Ochrona przed zamrożeniem |
+| **STARTING** | 20% → AUTO | MANUAL → AUTO | Przejście do pracy |
+| **RUNNING** | 20-100% PID | AUTO | Praca normalna |
+| **STOPPING** | AUTO → 20% | AUTO → MANUAL | Przejście do postoju |
+
 ---
 
 

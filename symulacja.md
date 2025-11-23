@@ -211,7 +211,14 @@ System wykorzystuje **trzy współpracujące algorytmy** zapewniające automatyc
 - Różne progi dla włączania i wyłączania (zapobiega oscylacjom)
 - Przykład S3: włączenie przy -4°C, wyłączenie dopiero przy -3°C (1°C histerezy)
 
+**Sekwencje zmian scenariuszy:**
+- Każda zmiana (np. S4→S5) wymaga skoordynowanej sekwencji operacji
+- Zarządzanie zaworami wody (20-100%), przepustnicami, wentylatorami
+- Przejście S4→S5 jest najbardziej złożone (uruchomienie drugiego ciągu)
+
 📖 **[Szczegółowy algorytm → Algorytmy_rotacji.md - Sekcja 5](Doc/Algorytmy_rotacji.md#5-algorytm-automatycznego-wyboru-scenariusza-pracy)**
+
+📖 **[Sekwencje zmian scenariuszy → Algorytmy_rotacji.md - Sekcja 5.10](Doc/Algorytmy_rotacji.md#510-szczegółowe-sekwencje-zmian-scenariuszy)**
 
 ---
 
@@ -665,6 +672,6 @@ f_max = 50 Hz (maksymalna prędkość)
 ---
 
 **Ostatnia aktualizacja:** 2025-11-23  
-**Wersja dokumentu:** 3.0  
-**Status:** Kompletna dokumentacja z wizualizacjami wszystkich algorytmów sterowania (5, 5A, 5B) oraz diagramem koordynacji
+**Wersja dokumentu:** 3.1  
+**Status:** Kompletna dokumentacja z wizualizacjami algorytmów sterowania (5, 5A, 5B), sekwencjami zmian scenariuszy oraz diagramem koordynacji
 
