@@ -1,13 +1,13 @@
 # Dokumentacja Systemu Sterowania BOGDANKA Szyb 2
 
-**Kompleksowa dokumentacja systemu automatycznego sterowania ogrzewaniem szybu**
+**Dokumentacja systemu automatycznego sterowania ogrzewaniem szybu**
 
 ---
 
 ## 📁 Struktura Dokumentacji
 
 ### [01-system/system.md](./01-system/system.md) - Przegląd Systemu
-- **Overview** systemu - widok z góry na całość
+- Przegląd systemu
 - Komponenty fizyczne (8 nagrzewnic, 2 wentylatory, 2 wyrzutnie)
 - Architektura sterowania (SAR): PARTPG i PARTS
 - Tabela scenariuszy (S0-S8) - referencyjna

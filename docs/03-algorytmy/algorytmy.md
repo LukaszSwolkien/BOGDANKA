@@ -349,6 +349,12 @@ GŁÓWNA PĘTLA (co CYKL_MONITORINGU_TEMP sekund):
       PRZEJDŹ DO KOŃCA PĘTLI
     KONIEC JEŻELI
   
+  KROK 4A: Sprawdź blokady RC/RN
+    JEŻELI zmiana_układu_w_toku = PRAWDA LUB rotacja_nagrzewnic_w_toku = PRAWDA WTEDY
+      Rejestruj_Zdarzenie("Zmiana scenariusza odroczona (koordynacja RC/RN)")
+      PRZEJDŹ DO KOŃCA PĘTLI
+    KONIEC JEŻELI
+  
   KROK 5: Wykonaj zmianę scenariusza
     Rejestruj_Zdarzenie("Zmiana scenariusza: " + aktualny_scenariusz + 
                        " → " + wymagany_scenariusz + " (t=" + T_zewn + "°C)")
@@ -388,24 +394,20 @@ FUNKCJA Określ_Scenariusz_Dla_Temperatury(T_zewn, aktualny_scenariusz):
   // Progi włączania (temperatura spada - dodajemy nagrzewnice)
   JEŻELI T_zewn ≥ 3.0 WTEDY
     ZWRÓĆ S0
+  KONIEC JEŻELI
   
-  JEŻELI T_zewn > 2.0 LUB (T_zewn > -1.0 ORAZ aktualny_scenariusz = S0) WTEDY
-    // Histereza: S0→S1 przy 2°C, ale S1→S0 dopiero przy 3°C
-    JEŻELI aktualny_scenariusz = S0 WTEDY
-      ZWRÓĆ S0  // Zostań w S0
+  JEŻELI T_zewn > 2.0 WTEDY
+    // Strefa histerezy: utrzymuj S1 aż do 3°C, ale nie wymuszaj przełączenia przy ochłodzeniu
+    JEŻELI aktualny_scenariusz = S1 WTEDY
+      ZWRÓĆ S1
     W PRZECIWNYM RAZIE:
-      ZWRÓĆ S1  // Utrzymuj S1
+      ZWRÓĆ S0
     KONIEC JEŻELI
   KONIEC JEŻELI
   
   // S1: -1°C < t ≤ 2°C (wyłączenie: t ≥ 3°C)
   JEŻELI T_zewn > -1.0 WTEDY
     ZWRÓĆ S1
-  KONIEC JEŻELI
-  
-  // Histereza S1→S0
-  JEŻELI T_zewn > 0.0 ORAZ aktualny_scenariusz = S1 WTEDY
-    ZWRÓĆ S0
   KONIEC JEŻELI
   
   // S2: -4°C < t ≤ -1°C (wyłączenie: t ≥ 0°C)
@@ -1543,9 +1545,11 @@ GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
     
     W PRZECIWNYM RAZIE:
       rotacja_możliwa = FAŁSZ
-      // Powrót do układu podstawowego jeśli był ograniczony
-      JEŻELI aktualny_układ = "Ograniczony" WTEDY
+      // Poza S1-S4 utrzymujemy definicyjnie układ podstawowy (oba ciągi pracują równolegle)
+      JEŻELI scenariusz ∈ {S1, S2, S3, S4} ORAZ aktualny_układ = "Ograniczony" WTEDY
         Wykonaj_Zmianę_Układu("Podstawowy")
+      W PRZECIWNYM RAZIE:
+        aktualny_układ = "Podstawowy"   // aktualizacja stanu logicznego bez ingerencji sprzętowej
       KONIEC JEŻELI
       PRZEJDŹ DO KROKU 5
     
