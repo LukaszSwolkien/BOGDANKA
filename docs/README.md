@@ -39,7 +39,7 @@ Kompleksowa dokumentacja systemu automatycznego sterowania ogrzewaniem szybu wyd
 
 **Dla programistów:**
 - Algorytmy: `02-algorytmy/`
-- Wizualizacje: `./wizualizacje/`
+- Wizualizacje: `./00-start/wizualizacja-systemu.md`
 
 **Dla inżynierów:**
 - Projekt instalacji: `03-projekt-instalacji/`
@@ -47,7 +47,7 @@ Kompleksowa dokumentacja systemu automatycznego sterowania ogrzewaniem szybu wyd
 
 ## 📊 Wizualizacje
 
-Wszystkie diagramy SVG znajdują się w katalogu [wizualizacje](./wizualizacje/):
+Wszystkie diagramy SVG znajdują się w katalogu [wizualizacje](./00-start/wizualizacja-systemu.md):
 - Flowcharty algorytmów
 - Scenariusze pracy
 - Schematy rotacji
@@ -57,7 +57,7 @@ Wszystkie diagramy SVG znajdują się w katalogu [wizualizacje](./wizualizacje/)
 
 - **Pliki MD**: kebab-case (np. `algorytm-WS-wybor-scenariusza.md`)
 - **Katalogi**: numerowane prefiksem dla kolejności (np. `00-start/`)
-- **Wizualizacje**: oddzielny katalog `docs/wizualizacje/`
+- **Wizualizacje**: oddzielny katalog `doc./00-start/wizualizacja-systemu.md`
 
 ## 🔗 Powiązania
 

@@ -2,7 +2,7 @@
 
 > **Część dokumentacji:** Algorytmy Sterowania  
 > **Powiązane algorytmy:** [Algorytm WS](./algorytm-WS-wybor-scenariusza.md), [Algorytm RN](./algorytm-RN-rotacja-nagrzewnic.md)  
-> **Wizualizacja:** [Flowchart](../wizualizacje/algorytmy/algorytm-RC-rotacja-ciagow-flowchart.svg), [Diagramy rotacji](../wizualizacje/rotacje/)
+> **Wizualizacja:** [Flowchart](./schematy/algorytm-RC-rotacja-ciagow-flowchart.svg), [Diagramy rotacji](./schematy/)
 
 ## 1. Cel Algorytmu
 
@@ -88,7 +88,7 @@ Rotacja układów jest możliwa **TYLKO** gdy spełnione są **WSZYSTKIE** warun
 
 **Diagram przepływu algorytmu:**
 
-![Algorytm RC - Diagram przepływu](../wizualizacje/algorytmy/algorytm-RC-rotacja-ciagow-flowchart.svg)
+![Algorytm RC - Diagram przepływu](./schematy/algorytm-RC-rotacja-ciagow-flowchart.svg)
 
 **Pseudokod:**
 

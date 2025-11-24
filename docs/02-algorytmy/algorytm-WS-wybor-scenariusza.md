@@ -2,7 +2,7 @@
 
 > **Część dokumentacji:** Algorytmy Sterowania  
 > **Powiązane algorytmy:** [Algorytm RC](./algorytm-RC-rotacja-ciagow.md), [Algorytm RN](./algorytm-RN-rotacja-nagrzewnic.md)  
-> **Wizualizacja:** [Flowchart](../wizualizacje/algorytmy/algorytm-WS-wybor-scenariusza-flowchart.svg)
+> **Wizualizacja:** [Flowchart](./schematy/algorytm-WS-wybor-scenariusza-flowchart.svg)
 
 ## 1. Cel Algorytmu
 
@@ -73,7 +73,7 @@ Szczegółowa tabela scenariuszy znajduje się w [dokumentacji głównej - Sekcj
 
 **Diagram przepływu algorytmu:**
 
-![Algorytm WS - Wybór Scenariusza](../wizualizacje/algorytmy/algorytm-WS-wybor-scenariusza-flowchart.svg)
+![Algorytm WS - Wybór Scenariusza](./schematy/algorytm-WS-wybor-scenariusza-flowchart.svg)
 
 **Pseudokod:**
 

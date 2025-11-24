@@ -20,7 +20,7 @@ System automatycznej regulacji (SAR) temperatury szybu składa się z dwóch pod
 - **Warstwa regulacji** - podstawowa funkcja utrzymania temperatury (PID)
 - **Warstwa zarządzania** - funkcja optymalizująca wykorzystanie urządzeń (algorytmy)
 
-![Architektura SAR](../wizualizacje/architektura_SAR_system.svg)
+![Architektura SAR](./architektura_SAR_system.svg)
 
 *Rys. Dwuwarstwowa architektura systemu SAR pokazująca relacje między podsystemami PARTS i PARTPG oraz algorytmami 5, RC i RN.*
 
@@ -195,7 +195,7 @@ System wykorzystuje **Algorytm WS** do automatycznego doboru scenariusza pracy (
 
 📖 **[Szczegółowy algorytm → Algorytm WS: Automatyczny Wybór Scenariusza](../02-algorytmy/algorytm-WS-wybor-scenariusza.md)**
 
-📖 **[Wizualizacja → Flowchart Algorytmu 5](../wizualizacje/algorytmy/algorytm-WS-wybor-scenariusza-flowchart.svg)**
+📖 **[Wizualizacja → Flowchart Algorytmu 5](../02-algorytmy/schematy/algorytm-WS-wybor-scenariusza-flowchart.svg)**
 
 ### 5.1 Tabela Scenariuszy
 
@@ -284,7 +284,7 @@ System wykorzystuje **trzy współpracujące algorytmy** do sterowania:
 - Okresowa zmiana układu po upłynięciu okresu rotacji
 - Zapewnia równomierne czasy pracy C1 i C2
 
-📖 **[Szczegółowy algorytm → Algorytm RC: Rotacja Układów](../02-algorytmy/algorytm-RC-rotacja-ciagow.md)** | [Flowchart](../wizualizacje/algorytmy/algorytm-RC-rotacja-ciagow-flowchart.svg)
+📖 **[Szczegółowy algorytm → Algorytm RC: Rotacja Układów](../02-algorytmy/algorytm-RC-rotacja-ciagow.md)** | [Flowchart](../02-algorytmy/schematy/algorytm-RC-rotacja-ciagow-flowchart.svg)
 
 ---
 
@@ -299,7 +299,7 @@ System wykorzystuje **trzy współpracujące algorytmy** do sterowania:
 - Wymiana jednej nagrzewnicy po upłynięciu okresu rotacji
 - Zapewnia równomierne czasy pracy wszystkich N1-N8
 
-📖 **[Szczegółowy algorytm → Algorytm RN: Rotacja Nagrzewnic](../02-algorytmy/algorytm-RN-rotacja-nagrzewnic.md)** | [Flowchart](../wizualizacje/algorytmy/algorytm-RN-rotacja-nagrzewnic-flowchart.svg)
+📖 **[Szczegółowy algorytm → Algorytm RN: Rotacja Nagrzewnic](../02-algorytmy/algorytm-RN-rotacja-nagrzewnic.md)** | [Flowchart](../02-algorytmy/schematy/algorytm-RN-rotacja-nagrzewnic-flowchart.svg)
 
 ---
 
@@ -377,4 +377,4 @@ System sterowania realizowany na sterowniku PLC z regulatorami PID.
 
 ## 11. Wizualizacja
 
-[Wizualizacje systemu](../wizualizacje/README.md)
+[Wizualizacje systemu](../00-start/wizualizacja-systemu.md)

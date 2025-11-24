@@ -10,8 +10,8 @@ To jest punkt startowy dla wszystkich użytkowników systemu automatycznego ster
 1. [Architektura Systemu](../01-system/architektura.md) - zrozum strukturę
 2. [Algorytmy Sterowania](../02-algorytmy/README.md) - poznaj logikę
 3. [Projekt Instalacji](../03-projekt-instalacji/) - schematy instalacji
-4. [Wizualizacje Algorytmów](../wizualizacje/algorytmy/) - zobacz flowcharty
-5. [Wizualizacje Scenariuszy](../wizualizacje/scenariusze/) - diagramy nawiewu
+4. [Wizualizacje Algorytmów](../02-algorytmy/schematy/) - zobacz flowcharty
+5. [Wizualizacje Scenariuszy](../01-system/scenariusze/) - diagramy nawiewu
 
 **Co znajdziesz:**
 - Pseudokod algorytmów WS, RC, RN
@@ -47,7 +47,7 @@ System ma 9 scenariuszy:
 - **S1-S4**: 1-4 nagrzewnice (jeden ciąg)
 - **S5-S8**: 5-8 nagrzewnic (dwa ciągi)
 
-📊 [Wizualizacje scenariuszy](../wizualizacje/scenariusze/)
+📊 [Wizualizacje scenariuszy](../01-system/scenariusze/)
 
 ### Krok 3: Zrozum Algorytmy (5 min)
 Trzy kluczowe algorytmy:
@@ -55,7 +55,7 @@ Trzy kluczowe algorytmy:
 - **Algorytm RC**: Rotuje układy pracy (Ciąg 1 ↔ Ciąg 2) co X dni
 - **Algorytm RN**: Rotuje nagrzewnice w ciągu (N1↔N2↔N3↔N4) co Y dni
 
-🔀 [Flowcharty algorytmów](../wizualizacje/algorytmy/)
+🔀 [Flowcharty algorytmów](../02-algorytmy/schematy/)
 
 ## 📚 Kluczowe Dokumenty
 
@@ -69,14 +69,14 @@ Trzy kluczowe algorytmy:
 
 ## 🎨 Wizualizacje
 
-Wszystkie diagramy SVG: [visualization/](../wizualizacje/)
+Wszystkie diagramy SVG: [visualization/](../00-start/wizualizacja-systemu.md)
 
 | Kategoria | Ilość | Opis |
 |-----------|-------|------|
-| [Algorytmy](../wizualizacje/algorytmy/) | 4 | Flowcharty WS, RC, RN + koordynacja |
-| [Scenariusze](../wizualizacje/scenariusze/) | 9 | Nawiew dla S0-S8 |
-| [Rotacje](../wizualizacje/rotacje/) | 12 | Diagramy rotacji układów i nagrzewnic |
-| [UAR](../wizualizacje/uar/) | 3 | Schematy regulacji |
+| [Algorytmy](../02-algorytmy/schematy/) | 4 | Flowcharty WS, RC, RN + koordynacja |
+| [Scenariusze](../01-system/scenariusze/) | 9 | Nawiew dla S0-S8 |
+| [Rotacje](../02-algorytmy/schematy/) | 12 | Diagramy rotacji układów i nagrzewnic |
+| [UAR](../03-projekt-instalacji/schematy/) | 3 | Schematy regulacji |
 
 ## ❓ Często Zadawane Pytania
 
@@ -101,7 +101,7 @@ Przykład S1: włącza się przy 2°C, wyłącza się przy 3°C (histereza 1°C)
 
 1. Sprawdź [Pytania i Wyjaśnienia](../04-analizy/pytania-wyjasnienia.md)
 2. Zobacz [Archiwum](../02-algorytmy/_ARCHIVE_pelny-dokument.md) - pełna dokumentacja
-3. Przejrzyj [Wizualizacje](../wizualizacje/)
+3. Przejrzyj [Wizualizacje](../00-start/wizualizacja-systemu.md)
 
 ---
 
