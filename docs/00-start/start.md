@@ -11,7 +11,7 @@ To jest punkt startowy dla wszystkich użytkowników systemu automatycznego ster
 2. [Algorytmy Sterowania](../02-algorytmy/algorytmy.md) - poznaj logikę
 3. [Projekt Instalacji](../03-projekt-instalacji/) - schematy instalacji
 4. [Wizualizacje Algorytmów](../02-algorytmy/schematy/) - zobacz flowcharty
-5. [Wizualizacje Scenariuszy](../01-system/scenariusze/) - diagramy nawiewu
+5. [Wizualizacje Scenariuszy](../03-projekt-instalacji/scenariusze/) - diagramy nawiewu
 
 **Co znajdziesz:**
 - Pseudokod algorytmów WS, RC, RN
@@ -47,7 +47,7 @@ System ma 9 scenariuszy:
 - **S1-S4**: 1-4 nagrzewnice (jeden ciąg)
 - **S5-S8**: 5-8 nagrzewnic (dwa ciągi)
 
-📊 [Wizualizacje scenariuszy](../01-system/scenariusze/)
+📊 [Wizualizacje scenariuszy](../03-projekt-instalacji/scenariusze/)
 
 ### Krok 3: Zrozum Algorytmy (5 min)
 Trzy kluczowe algorytmy:
@@ -74,7 +74,7 @@ Wszystkie diagramy SVG: [visualization/](../00-star../03-projekt-instalacji/proj
 | Kategoria | Ilość | Opis |
 |-----------|-------|------|
 | [Algorytmy](../02-algorytmy/schematy/) | 4 | Flowcharty WS, RC, RN + koordynacja |
-| [Scenariusze](../01-system/scenariusze/) | 9 | Nawiew dla S0-S8 |
+| [Scenariusze](../03-projekt-instalacji/scenariusze/) | 9 | Nawiew dla S0-S8 |
 | [Rotacje](../02-algorytmy/schematy/) | 12 | Diagramy rotacji układów i nagrzewnic |
 | [UAR](../03-projekt-instalacji/schematy/) | 3 | Schematy regulacji |
 
