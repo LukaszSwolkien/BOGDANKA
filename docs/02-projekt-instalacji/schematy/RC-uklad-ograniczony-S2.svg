@@ -38,11 +38,11 @@
   <!-- Status Box -->
   <rect class="status-box" x="850" y="20" width="520" height="100" rx="5"/>
   <text class="status-text" x="1110" y="45" text-anchor="middle">ROTACJA RC - UKŁAD OGRANICZONY</text>
-  <text class="status-text" x="1110" y="70" text-anchor="middle">S3: -8°C &lt; t ≤ -4°C</text>
-  <text class="status-text" x="1110" y="95" text-anchor="middle">Nagrzewnice: N5-N6-N7 | Wentylator: W2 PID</text>
-  <text class="status-text" x="1110" y="120" text-anchor="middle">Nawiew przez SPINĘ CIĄGU → +4,30m</text>
+  <text class="status-text" x="1110" y="70" text-anchor="middle">S2: -4°C &lt; t ≤ -1°C</text>
+  <text class="status-text" x="1110" y="95" text-anchor="middle">Nagrzewnice: N5-N6 | Wentylator: W2 PID</text>
+  <text class="status-text" x="1110" y="120" text-anchor="middle">Nawiew przez SPINĘ CIĄGU → -4,30m</text>
   
-  <text class="label" font-size="18" font-weight="bold" id="svg_4" text-anchor="middle" x="566.36" y="923.96">Układ Ograniczony: Ciąg 2 (W2) nawiewna +4,30m przez spinę ciągu</text>
+  <text class="label" font-size="18" font-weight="bold" id="svg_4" text-anchor="middle" x="566.36" y="923.96">Układ Ograniczony S2: Ciąg 2 (W2) nawiew na -4,30m przez spinę ciągu</text>
   
   <!-- Main vertical duct - ACTIVE full length (air flows from bottom through cross-connection to top) -->
   <line class="duct-active" id="svg_6" x1="249.39" x2="249.39" y1="126.82" y2="775.49"/>
@@ -72,7 +72,7 @@
   <!-- Upper horizontal duct - INACTIVE -->
   <line class="duct-inactive" id="svg_24" x1="384.02" x2="1030.09" y1="353.99" y2="353.99"/>
   
-  <!-- N1 Module - INACTIVE -->
+  <!-- Upper section - all INACTIVE (N1-N4) -->
   <line class="duct-inactive" id="svg_26" x1="385" x2="385" y1="126.13" y2="151.13"/>
   <rect class="component-inactive" height="35" id="svg_27" width="110" x="330" y="151.13"/>
   <text class="flow-label" fill="#888" font-size="13" id="svg_28" x="385" y="171.13">Przep.</text>
@@ -83,7 +83,6 @@
   <text class="flow-label" fill="#888" font-size="13" id="svg_33" x="385" y="313.13">Przep.</text>
   <line class="duct-inactive" id="svg_134" x1="384.71" x2="384.71" y1="325.9" y2="356.05"/>
   
-  <!-- N2 Module - INACTIVE -->
   <line class="duct-inactive" id="svg_35" x1="555" x2="555" y1="126.13" y2="151.13"/>
   <rect class="component-inactive" height="35" id="svg_36" width="110" x="500" y="151.13"/>
   <text class="flow-label" fill="#888" font-size="13" id="svg_37" x="555" y="171.13">Przep.</text>
@@ -94,7 +93,6 @@
   <text class="flow-label" fill="#888" font-size="13" id="svg_42" x="555" y="313.13">Przep.</text>
   <line class="duct-inactive" id="svg_135" x1="554.9" x2="554.9" y1="325.77" y2="355.93"/>
   
-  <!-- N3 Module - INACTIVE -->
   <line class="duct-inactive" id="svg_44" x1="725" x2="725" y1="126.13" y2="151.13"/>
   <rect class="component-inactive" height="35" id="svg_45" width="110" x="670" y="151.13"/>
   <text class="flow-label" fill="#888" font-size="13" id="svg_46" x="725" y="171.13">Przep.</text>
@@ -105,7 +103,6 @@
   <text class="flow-label" fill="#888" font-size="13" id="svg_51" x="725" y="313.13">Przep.</text>
   <line class="duct-inactive" id="svg_136" x1="725" x2="725" y1="325.78" y2="355.94"/>
   
-  <!-- N4 Module - INACTIVE -->
   <line class="duct-inactive" id="svg_53" x1="895" x2="895" y1="126.13" y2="151.13"/>
   <rect class="component-inactive" height="35" id="svg_54" width="110" x="840" y="151.13"/>
   <text class="flow-label" fill="#888" font-size="13" id="svg_151" x="895.59" y="172.58">Przep.</text>
@@ -116,7 +113,7 @@
   <text class="flow-label" fill="#888" font-size="13" id="svg_60" x="895" y="313.13">Przep.</text>
   <line class="duct-inactive" id="svg_137" x1="895.1" x2="895.1" y1="325.78" y2="355.94"/>
   
-  <!-- Lower section - N5, N6, N7 ACTIVE -->
+  <!-- Lower section - N5, N6 ACTIVE, N7, N8 INACTIVE -->
   <line class="duct-active" id="svg_62" x1="385" x2="385" y1="546.13" y2="571.13"/>
   <rect class="component-active" height="35" id="svg_63" width="110" x="330" y="571.13"/>
   <text class="flow-label" fill="#155724" font-size="13" id="svg_64" x="385" y="591.13">Przep.</text>
@@ -137,17 +134,16 @@
   <text class="flow-label" fill="#155724" font-size="13" id="svg_78" x="555" y="733.13">Przep.</text>
   <line class="duct-active" id="svg_131" x1="555.09" x2="555.09" y1="746.07" y2="776.23"/>
   
-  <line class="duct-active" id="svg_80" x1="725" x2="725" y1="546.13" y2="571.13"/>
-  <rect class="component-active" height="35" id="svg_81" width="110" x="670" y="571.13"/>
-  <text class="flow-label" fill="#155724" font-size="13" id="svg_82" x="725" y="590.83">Przep.</text>
-  <rect class="component-active" height="85" id="svg_83" width="110" x="669.09" y="617.64"/>
-  <line class="diag-active" id="svg_140" x1="669.42" x2="779.06" y1="618.05" y2="701.68"/>
-  <text class="heater-label" fill="#28a745" font-size="20" id="svg_85" x="762.23" y="637.68">N7</text>
-  <rect class="component-active" height="35" id="svg_86" width="110" x="670" y="711.13"/>
-  <text class="flow-label" fill="#155724" font-size="13" id="svg_87" x="725" y="733.13">Przep.</text>
-  <line class="duct-active" id="svg_132" x1="725" x2="725" y1="746.07" y2="776.23"/>
+  <line class="duct-inactive" id="svg_80" x1="725" x2="725" y1="546.13" y2="571.13"/>
+  <rect class="component-inactive" height="35" id="svg_81" width="110" x="670" y="571.13"/>
+  <text class="flow-label" fill="#888" font-size="13" id="svg_82" x="725" y="590.83">Przep.</text>
+  <rect class="component-inactive" height="85" id="svg_83" width="110" x="669.09" y="617.64"/>
+  <line class="diag-inactive" id="svg_140" x1="669.42" x2="779.06" y1="618.05" y2="701.68"/>
+  <text class="heater-label" fill="#888" font-size="20" id="svg_85" x="762.23" y="637.68">N7</text>
+  <rect class="component-inactive" height="35" id="svg_86" width="110" x="670" y="711.13"/>
+  <text class="flow-label" fill="#888" font-size="13" id="svg_87" x="725" y="733.13">Przep.</text>
+  <line class="duct-inactive" id="svg_132" x1="725" x2="725" y1="746.07" y2="776.23"/>
   
-  <!-- N8 INACTIVE -->
   <line class="duct-inactive" id="svg_89" x1="895" x2="895" y1="546.13" y2="571.13"/>
   <rect class="component-inactive" height="35" id="svg_90" width="110" x="840" y="571.13"/>
   <text class="flow-label" fill="#888" font-size="13" id="svg_142" x="892.42" y="591.29">Przep.</text>

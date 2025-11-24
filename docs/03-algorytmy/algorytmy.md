@@ -14,12 +14,91 @@ _Plik ten jest częścią dokumentacji systemu sterowania nagrzewnicami BOGDANKA
 
 ---
 
-## 📑 Spis Treści
+## 📑 Spis Treści - Nawigacja
 
-1. [Algorytm WS: Wybór Scenariusza Pracy](#algorytm-ws-automatyczny-wybór-scenariusza-pracy)
-2. [Algorytm RC: Rotacja Układów Pracy Ciągów](#algorytm-rc-cykliczna-rotacja-układów-pracy-ciągów)
-3. [Algorytm RN: Rotacja Nagrzewnic w Obrębie Ciągu](#algorytm-rn-cykliczna-rotacja-nagrzewnic-w-obrębie-ciągu)
-4. [Wizualizacja Koordynacji RC↔RN](./schematy/koordynacja-RC-RN-timeline.svg)
+### Przegląd
+- [Wprowadzenie](#wprowadzenie)
+- [Kontekst: Relacja PARTPG/PARTS ↔ Algorytmy](#kontekst-relacja-partpgparts--algorytmy)
+- [Zmienne Globalne dla Symulacji](#-zmienne-globalne-dla-symulacji) `[SYMULACJA]`
+
+### Algorytmy (szczegółowe)
+- **[Algorytm WS - Automatyczny Wybór Scenariusza](#algorytm-ws-automatyczny-wybór-scenariusza-pracy)**
+  - [Cel algorytmu](#1-cel-algorytmu)
+  - [Tabela scenariuszy](#3-tabela-scenariuszy---referencja)
+  - [Pseudokod](#5-algorytm-krok-po-kroku)
+  - [Koordynacja z RC/RN](#6-koordynacja-z-algorytmami-rc-i-rn)
+  - [Szczegółowe sekwencje](#10-szczegółowe-sekwencje-zmian-scenariuszy)
+
+- **[Algorytm RC - Rotacja Układów Pracy Ciągów](#algorytm-rc-cykliczna-rotacja-układów-pracy-ciągów)**
+  - [Cel algorytmu](#1-cel-algorytmu-1)
+  - [Pseudokod](#5-algorytm-rotacji-krok-po-kroku)
+  - [Przykład działania](#8-przykład-działania-1)
+
+- **[Algorytm RN - Rotacja Nagrzewnic](#algorytm-rn-cykliczna-rotacja-nagrzewnic-w-obrębie-ciągu)**
+  - [Cel algorytmu](#1-cel-algorytmu-2)
+  - [Pseudokod](#5-algorytm-rotacji-nagrzewnic-krok-po-kroku)
+  - [Integracja z RC](#10-integracja-z-rotacją-układów-sekcja-rc)
+  - [Wizualizacja koordynacji RC↔RN](#rn11-wizualizacja-koordynacji-algorytmów-rc-i-rn)
+
+
+---
+
+## ⚙️ Zmienne Globalne dla Symulacji
+
+**Tag:** `[SYMULACJA]` - sekcja kluczowa dla generowania kodu symulacyjnego
+
+### Współdzielone między algorytmami:
+
+```python
+# Stan układu i scenariusza
+aktualny_scenariusz = S0                     # S0-S8
+aktualny_układ = "Podstawowy"                # "Podstawowy" lub "Ograniczony"
+
+# Blokady koordynacji (mutexes)
+zmiana_układu_w_toku = False                 # Algorytm RC wykonuje rotację
+rotacja_nagrzewnic_w_toku = False            # Algorytm RN wykonuje rotację
+
+# Synchronizacja czasowa
+czas_ostatniej_zmiany_układu = 0             # timestamp [s] - dla RN
+czas_ostatniej_rotacji_globalny = 0          # timestamp [s] - odstęp 15 min między rotacjami
+
+# Stan nagrzewnic (8 elementów)
+czas_pracy = [0, 0, 0, 0, 0, 0, 0, 0]       # N1-N8 [sekundy]
+czas_postoju = [0, 0, 0, 0, 0, 0, 0, 0]     # N1-N8 [sekundy]
+timestamp_zalaczenia = [0, 0, 0, 0, 0, 0, 0, 0]  # N1-N8 [timestamp]
+nagrzewnice_aktywne = {CIĄG1: [], CIĄG2: []} # Listy aktywnych nagrzewnic
+
+# Stan ciągów
+czas_pracy_układu_podstawowego = 0           # [sekundy]
+czas_pracy_układu_ograniczonego = 0          # [sekundy]
+```
+
+### Parametry konfiguracyjne (definiowane przez technologa):
+
+```python
+# Algorytm WS
+CYKL_MONITORINGU_TEMP = 10                   # [s] częstotliwość odczytu T_zewn
+CZAS_STABILIZACJI_SCENARIUSZA = 60           # [s] min. czas w scenariuszu
+
+# Algorytm RC
+OKRES_ROTACJI_UKŁADÓW = 168 * 3600           # [s] np. 7 dni (168h)
+CYKL_PĘTLI_ALGORYTMÓW = 60                   # [s] częstość sprawdzania RC/RN
+
+# Algorytm RN
+OKRES_ROTACJI_NAGRZEWNIC = 168 * 3600        # [s] np. 7 dni
+MIN_DELTA_CZASU = 3600                       # [s] min. różnica dla rotacji
+```
+
+### Sygnały wejściowe dla symulacji:
+
+```python
+T_zewn = 0.0              # [°C] Temperatura zewnętrzna (-40 do +50)
+T_szyb = 2.0              # [°C] Temperatura w szybie (-30m)
+T_N = [50, 50, ...]       # [°C] Temperatury na wylotach N1-N8
+sprawne_N = [True] * 8    # Bool sprawność nagrzewnic
+sprawne_W = [True, True]  # Bool sprawność wentylatorów W1, W2
+tryb = "AUTO"             # "AUTO" lub "MANUAL"
+```
 
 ---
 
@@ -71,129 +150,42 @@ Algorytmy są **skoordynowane** i działają współbieżnie, zapewniając:
 
 ---
 
-## Relacja między PARTPG/PARTS a Algorytmami WS, RC, RN
+## Kontekst: Relacja PARTPG/PARTS ↔ Algorytmy
 
-### Architektura Dwuwarstwowa Systemu SAR
-
-System automatycznej regulacji (SAR) temperatury szybu ma **dwuwarstwową architekturę**:
+System automatycznej regulacji (SAR) ma **dwuwarstwową architekturę**:
 
 ![Architektura SAR](../01-system/schematy/architektura_SAR_system.svg)
 
 *Rys. Dwuwarstwowa architektura systemu SAR z podziałem na warstwy regulacji i zarządzania.*
 
-```
-┌──────────────────────────────────────────────────────────────┐
-│ PARTS - Podsystem Automatycznej Regulacji Temperatury Szybu  │
-│                                                              │
-│ ┌──────────────────────────────────────────────────────────┐ │
-│ │ WARSTWA REGULACJI (podstawowa funkcja systemu)           │ │
-│ │ • 2 × UAR (regulatory PID wentylatorów W1, W2)           │ │
-│ │ • Utrzymanie Ts = 2°C w szybie (-30m)                    │ │
-│ │ • Sterowanie częstotliwością (25-50 Hz)                  │ │
-│ └──────────────────────────────────────────────────────────┘ │
-│                                                              │
-│ ┌──────────────────────────────────────────────────────────┐ │
-│ │ WARSTWA ZARZĄDZANIA (optymalizacja użycia urządzeń)      │ │
-│ │ • Algorytm WS:  Automatyczny dobór scenariusza (S0-S8)    │ │
-│ │ • Algorytm RC: Rotacja układów pracy ciągów (C1 ↔ C2)    │ │
-│ └──────────────────────────────────────────────────────────┘ │
-└──────────────────────────────────────────────────────────────┘
+📖 **[Opis architektury → system.md](../01-system/system.md#2-architektura-sterowania-sar)**
 
-┌──────────────────────────────────────────────────────────────┐
-│ PARTPG - Podsystem Automatycznej Regulacji Temp. Pow. Grz.   │
-│                                                              │
-│ ┌──────────────────────────────────────────────────────────┐ │
-│ │ WARSTWA REGULACJI (podstawowa funkcja systemu)           │ │
-│ │ • 8 × UAR (regulatory PID zaworów N1-N8)                 │ │
-│ │ • Utrzymanie Tz = 50°C na wylocie z nagrzewnicy          │ │
-│ │ • Sterowanie zaworem wody grzewczej (20-100%)            │ │
-│ │ • Załączanie/wyłączanie nagrzewnic                       │ │
-│ └──────────────────────────────────────────────────────────┘ │
-│                                                              │
-│ ┌──────────────────────────────────────────────────────────┐ │
-│ │ WARSTWA ZARZĄDZANIA (optymalizacja użycia urządzeń)      │ │
-│ │ • Algorytm RN: Rotacja nagrzewnic w ciągach (N1-N8)      │ │
-│ └──────────────────────────────────────────────────────────┘ │
-└──────────────────────────────────────────────────────────────┘
-```
+### Kluczowe Różnice Między Warstwami
 
-### Kluczowe Zasady Relacji
-
-**1. PARTPG i PARTS to PODSYSTEMY zawierające warstwy regulacji i zarządzania**
-
-| Podsystem | Warstwa Regulacji | Warstwa Zarządzania (Optymalizacja) |
-|-----------|-------------------|-------------------------------------|
-| **PARTPG** | 8 × PID zaworów (Tz=50°C) | **Algorytm RN** - rotacja nagrzewnic |
-| **PARTS** | 2 × PID wentylatorów (Ts=2°C) | **Algorytmy WS i RC** - wybór scenariusza i rotacja układów |
-
-**2. Warstwa Regulacji = Funkcja Podstawowa**
-- Utrzymanie zadanych temperatur (50°C, 2°C)
+**Warstwa Regulacji = Funkcja Podstawowa**
+- Utrzymanie zadanych temperatur (Tz=50°C, Ts=2°C)
 - Praca ciągła, realizacja w czasie rzeczywistym
-- Niezbędna dla działania systemu
+- Regulatory PID (8 zaworów + 2 wentylatory)
+- **Niezbędna** dla działania systemu
 
-**3. Warstwa Zarządzania = Funkcja Optymalizująca**
+**Warstwa Zarządzania = Funkcja Optymalizująca** (Algorytmy WS, RC, RN)
 - Równomierne wykorzystanie urządzeń
 - Minimalizacja zużycia pojedynczych komponentów
 - Maksymalizacja niezawodności i żywotności systemu
 - Automatyczna adaptacja do warunków zewnętrznych
 
-### Przykład Działania Warstw
-
-**Scenariusz: Temperatura zewnętrzna -6°C**
-
-```
-┌─────────────────────────────────────────────────────────┐
-│ PARTS - WARSTWA ZARZĄDZANIA                             │
-│ Algorytm WS: t_zewn = -6°C → Scenariusz S3 (3 nagr.)     │
-│ Algorytm RC: Aktualny układ = "Podstawowy" → Ciąg C1    │
-└────────────────────────────┬────────────────────────────┘
-                             ▼
-┌─────────────────────────────────────────────────────────┐
-│ PARTPG - WARSTWA ZARZĄDZANIA                            │
-│ Algorytm RN: Wybiera N2, N3, N4 (na podstawie rotacji)  │
-└────────────────────────────┬────────────────────────────┘
-                             ▼
-┌─────────────────────────────────────────────────────────┐
-│ PARTPG - WARSTWA REGULACJI                              │
-│ • PID nagrzewnicy N2: reguluje zawór → Tz = 50°C        │
-│ • PID nagrzewnicy N3: reguluje zawór → Tz = 50°C        │
-│ • PID nagrzewnicy N4: reguluje zawór → Tz = 50°C        │
-└────────────────────────────┬────────────────────────────┘
-                             ▼
-┌─────────────────────────────────────────────────────────┐
-│ PARTS - WARSTWA REGULACJI                               │
-│ • PID wentylatora W1: reguluje częstotliwość → Ts = 2°C │
-└─────────────────────────────────────────────────────────┘
-```
-
 **Kluczowa obserwacja:**
-- Bez **warstwy regulacji** (PID) - system nie utrzyma temperatury
-- Bez **warstwy zarządzania** (algorytmy) - system działa, ale:
-  - Zawsze te same nagrzewnice (np. N1, N2, N3)
-  - Nierównomierne zużycie → awarie, przestoje
+- Bez warstwy **regulacji** (PID) → system nie utrzyma temperatury
+- Bez warstwy **zarządzania** (algorytmy) → system działa, ale nierównomierne zużycie → awarie
 
-### Dokumentacja w Kontekście Projektu
-
-**Ten katalog** (`docs/02-algorytmy/`) szczegółowo opisuje **warstwę zarządzania**:
-- Algorytm WS → część zarządzająca PARTS
-- Algorytm RC → część zarządzająca PARTS
-- Algorytm RN → część zarządzająca PARTPG
-
-**Dokument główny** ([`docs/01-system/system.md`](../01-system/system.md)) opisuje:
-- Definicje PARTPG i PARTS (warstwa regulacji + zarządzania)
-- Warunki załączania/wyłączania (warstwa regulacji)
-- Scenariusze (warstwa zarządzania - Algorytm WS)
-- UAR nagrzewnic i wentylatorów (warstwa regulacji)
-
----
-**Wersja:** 2.0 (zreorganizowana struktura)  
-**Data:** 24 Listopad 2025  
-**Branch:** `refactor/docs-restructure`
+**Ten dokument** opisuje szczegółowo **warstwę zarządzania** (algorytmy WS, RC, RN).  
+**Warstwa regulacji** (UAR, PID) jest opisana w [system.md](../01-system/system.md) i [projekt-instalacji.md](../02-projekt-instalacji/projekt-instalacji.md).
 
 
----
 
+# ═════════════════════════════════════
 # Algorytm WS: Automatyczny Wybór Scenariusza Pracy
+# ═════════════════════════════════════
 
 
 > **Powiązane algorytmy:** Algorytm RC, Algorytm RN
@@ -222,7 +214,7 @@ Algorytm realizuje **automatyczny dobór scenariusza pracy systemu (S0-S8)** w z
 
 ## 3. Tabela Scenariuszy - Referencja
 
-Szczegółowa tabela scenariuszy znajduje się w [dokumentacji głównej - Sekcja 5](../01-system/system.md#5-scenariusze).
+Szczegółowa tabela scenariuszy znajduje się w [dokumentacji głównej - Sekcja 4](../01-system/system.md#4-scenariusze-pracy-s0-s8).
 
 **Podsumowanie:**
 
@@ -265,6 +257,8 @@ Szczegółowa tabela scenariuszy znajduje się w [dokumentacji głównej - Sekcj
 
 ## 5. Algorytm Krok po Kroku
 
+**Tag:** `[SYMULACJA]` - kompletny pseudokod do implementacji
+
 **Diagram przepływu algorytmu:**
 
 ![Algorytm WS - Wybór Scenariusza](./schematy/algorytm-WS-wybor-scenariusza-flowchart.svg)
@@ -274,7 +268,7 @@ Szczegółowa tabela scenariuszy znajduje się w [dokumentacji głównej - Sekcj
 ```
 ZMIENNE GLOBALNE:
   - aktualny_scenariusz = S0                    // Scenariusz (S0-S8)
-  - t_zewn_bufor[FILTR_UŚREDNIANIA] = []       // Bufor pomiarów temp.
+  - T_zewn_bufor[FILTR_UŚREDNIANIA] = []       // Bufor pomiarów temp.
   - ostatni_poprawny_odczyt = 0                 // Ostatni prawidłowy odczyt temp.
   - timestamp_ostatniej_zmiany = 0              // Timestamp ostatniej zmiany scenariusza
   - timestamp_ostatniego_odczytu = 0            // Dla wykrywania awarii czujnika
@@ -292,12 +286,12 @@ PARAMETRY:
 GŁÓWNA PĘTLA (co CYKL_MONITORINGU_TEMP sekund):
   
   KROK 1: Odczyt i walidacja temperatury zewnętrznej
-    t_zewn_raw = Odczytaj_Czujnik_Temperatury_Zewnętrznej()
+    T_zewn_raw = Odczytaj_Czujnik_Temperatury_Zewnętrznej()
     
     // Walidacja odczytu
-    JEŻELI t_zewn_raw = NULL LUB 
-           t_zewn_raw < -40°C LUB 
-           t_zewn_raw > 50°C WTEDY
+    JEŻELI T_zewn_raw = NULL LUB 
+           T_zewn_raw < -40°C LUB 
+           T_zewn_raw > 50°C WTEDY
       
       // Awaria czujnika
       alarm_czujnik_temp = PRAWDA
@@ -307,9 +301,9 @@ GŁÓWNA PĘTLA (co CYKL_MONITORINGU_TEMP sekund):
       
       JEŻELI czas_od_ostatniego_odczytu < CZAS_UTRZYMANIA_PRZY_AWARII WTEDY
         // Utrzymaj ostatni scenariusz
-        t_zewn = ostatni_poprawny_odczyt
+        T_zewn = ostatni_poprawny_odczyt
         Rejestruj_Zdarzenie("Utrzymanie scenariusza " + aktualny_scenariusz + 
-                           " (awaria czujnika, t=" + t_zewn + "°C)")
+                           " (awaria czujnika, t=" + T_zewn + "°C)")
       W PRZECIWNYM RAZIE:
         // Za długi czas bez odczytu - przejdź na tryb bezpieczny (S4 lub aktualny)
         Rejestruj_Alarm("KRYTYCZNE: Brak odczytu > " + CZAS_UTRZYMANIA_PRZY_AWARII + "s")
@@ -320,17 +314,17 @@ GŁÓWNA PĘTLA (co CYKL_MONITORINGU_TEMP sekund):
     W PRZECIWNYM RAZIE:
       // Odczyt prawidłowy
       alarm_czujnik_temp = FAŁSZ
-      ostatni_poprawny_odczyt = t_zewn_raw
+      ostatni_poprawny_odczyt = T_zewn_raw
       timestamp_ostatniego_odczytu = czas_systemowy
       
       // Dodaj do bufora i oblicz średnią (filtr antyfluktuacyjny)
-      Dodaj_Do_Bufora(t_zewn_bufor, t_zewn_raw)
-      t_zewn = Średnia(t_zewn_bufor)
+      Dodaj_Do_Bufora(T_zewn_bufor, T_zewn_raw)
+      T_zewn = Średnia(T_zewn_bufor)
     
     KONIEC JEŻELI
   
   KROK 2: Określ wymagany scenariusz na podstawie temperatury
-    wymagany_scenariusz = Określ_Scenariusz_Dla_Temperatury(t_zewn, aktualny_scenariusz)
+    wymagany_scenariusz = Określ_Scenariusz_Dla_Temperatury(T_zewn, aktualny_scenariusz)
   
   KROK 3: Sprawdź czy wymagana zmiana scenariusza
     JEŻELI wymagany_scenariusz = aktualny_scenariusz WTEDY
@@ -357,7 +351,7 @@ GŁÓWNA PĘTLA (co CYKL_MONITORINGU_TEMP sekund):
   
   KROK 5: Wykonaj zmianę scenariusza
     Rejestruj_Zdarzenie("Zmiana scenariusza: " + aktualny_scenariusz + 
-                       " → " + wymagany_scenariusz + " (t=" + t_zewn + "°C)")
+                       " → " + wymagany_scenariusz + " (t=" + T_zewn + "°C)")
     
     timestamp_start_zmiany = czas_systemowy
     
@@ -389,13 +383,13 @@ KONIEC PĘTLI
 // FUNKCJA: Określenie wymaganego scenariusza z histerezą
 //=============================================================================
 
-FUNKCJA Określ_Scenariusz_Dla_Temperatury(t_zewn, aktualny_scenariusz):
+FUNKCJA Określ_Scenariusz_Dla_Temperatury(T_zewn, aktualny_scenariusz):
   
   // Progi włączania (temperatura spada - dodajemy nagrzewnice)
-  JEŻELI t_zewn ≥ 3.0 WTEDY
+  JEŻELI T_zewn ≥ 3.0 WTEDY
     ZWRÓĆ S0
   
-  JEŻELI t_zewn > 2.0 LUB (t_zewn > -1.0 ORAZ aktualny_scenariusz = S0) WTEDY
+  JEŻELI T_zewn > 2.0 LUB (T_zewn > -1.0 ORAZ aktualny_scenariusz = S0) WTEDY
     // Histereza: S0→S1 przy 2°C, ale S1→S0 dopiero przy 3°C
     JEŻELI aktualny_scenariusz = S0 WTEDY
       ZWRÓĆ S0  // Zostań w S0
@@ -405,82 +399,82 @@ FUNKCJA Określ_Scenariusz_Dla_Temperatury(t_zewn, aktualny_scenariusz):
   KONIEC JEŻELI
   
   // S1: -1°C < t ≤ 2°C (wyłączenie: t ≥ 3°C)
-  JEŻELI t_zewn > -1.0 WTEDY
+  JEŻELI T_zewn > -1.0 WTEDY
     ZWRÓĆ S1
   KONIEC JEŻELI
   
   // Histereza S1→S0
-  JEŻELI t_zewn > 0.0 ORAZ aktualny_scenariusz = S1 WTEDY
+  JEŻELI T_zewn > 0.0 ORAZ aktualny_scenariusz = S1 WTEDY
     ZWRÓĆ S0
   KONIEC JEŻELI
   
   // S2: -4°C < t ≤ -1°C (wyłączenie: t ≥ 0°C)
-  JEŻELI t_zewn > -4.0 WTEDY
+  JEŻELI T_zewn > -4.0 WTEDY
     ZWRÓĆ S2
   KONIEC JEŻELI
   
   // Histereza S2→S1
-  JEŻELI t_zewn ≥ 0.0 ORAZ aktualny_scenariusz = S2 WTEDY
+  JEŻELI T_zewn ≥ 0.0 ORAZ aktualny_scenariusz = S2 WTEDY
     ZWRÓĆ S1
   KONIEC JEŻELI
   
   // S3: -8°C < t ≤ -4°C (wyłączenie: t ≥ -3°C)
-  JEŻELI t_zewn > -8.0 WTEDY
+  JEŻELI T_zewn > -8.0 WTEDY
     ZWRÓĆ S3
   KONIEC JEŻELI
   
   // Histereza S3→S2
-  JEŻELI t_zewn ≥ -3.0 ORAZ aktualny_scenariusz = S3 WTEDY
+  JEŻELI T_zewn ≥ -3.0 ORAZ aktualny_scenariusz = S3 WTEDY
     ZWRÓĆ S2
   KONIEC JEŻELI
   
   // S4: -11°C < t ≤ -8°C (wyłączenie: t ≥ -6°C, histereza 2°C)
-  JEŻELI t_zewn > -11.0 WTEDY
+  JEŻELI T_zewn > -11.0 WTEDY
     ZWRÓĆ S4
   KONIEC JEŻELI
   
   // Histereza S4→S3
-  JEŻELI t_zewn ≥ -6.0 ORAZ aktualny_scenariusz = S4 WTEDY
+  JEŻELI T_zewn ≥ -6.0 ORAZ aktualny_scenariusz = S4 WTEDY
     ZWRÓĆ S3
   KONIEC JEŻELI
   
   // S5: -15°C < t ≤ -11°C (wyłączenie: t ≥ -10°C)
-  JEŻELI t_zewn > -15.0 WTEDY
+  JEŻELI T_zewn > -15.0 WTEDY
     ZWRÓĆ S5
   KONIEC JEŻELI
   
   // Histereza S5→S4
-  JEŻELI t_zewn ≥ -10.0 ORAZ aktualny_scenariusz = S5 WTEDY
+  JEŻELI T_zewn ≥ -10.0 ORAZ aktualny_scenariusz = S5 WTEDY
     ZWRÓĆ S4
   KONIEC JEŻELI
   
   // S6: -18°C < t ≤ -15°C (wyłączenie: t ≥ -13°C, histereza 2°C)
-  JEŻELI t_zewn > -18.0 WTEDY
+  JEŻELI T_zewn > -18.0 WTEDY
     ZWRÓĆ S6
   KONIEC JEŻELI
   
   // Histereza S6→S5
-  JEŻELI t_zewn ≥ -13.0 ORAZ aktualny_scenariusz = S6 WTEDY
+  JEŻELI T_zewn ≥ -13.0 ORAZ aktualny_scenariusz = S6 WTEDY
     ZWRÓĆ S5
   KONIEC JEŻELI
   
   // S7: -21°C < t ≤ -18°C (wyłączenie: t ≥ -15°C, histereza 3°C)
-  JEŻELI t_zewn > -21.0 WTEDY
+  JEŻELI T_zewn > -21.0 WTEDY
     ZWRÓĆ S7
   KONIEC JEŻELI
   
   // Histereza S7→S6
-  JEŻELI t_zewn ≥ -15.0 ORAZ aktualny_scenariusz = S7 WTEDY
+  JEŻELI T_zewn ≥ -15.0 ORAZ aktualny_scenariusz = S7 WTEDY
     ZWRÓĆ S6
   KONIEC JEŻELI
   
   // S8: t ≤ -21°C (wyłączenie: t ≥ -20°C)
-  JEŻELI t_zewn ≤ -21.0 WTEDY
+  JEŻELI T_zewn ≤ -21.0 WTEDY
     ZWRÓĆ S8
   KONIEC JEŻELI
   
   // Histereza S8→S7
-  JEŻELI t_zewn ≥ -20.0 ORAZ aktualny_scenariusz = S8 WTEDY
+  JEŻELI T_zewn ≥ -20.0 ORAZ aktualny_scenariusz = S8 WTEDY
     ZWRÓĆ S7
   KONIEC JEŻELI
   
@@ -615,7 +609,7 @@ FUNKCJA Pobierz_Konfigurację_Scenariusza(scenariusz):
         freq_W1: 25-50,  // Regulacja PID
         freq_W2: 0,
         układ_pracy: "Podstawowy lub Ograniczony",  // Zależy od Algorytmu RC
-        nawiew: "+4,30m"
+        nawiew: "-4,30m"
       }
     
     S2:
@@ -626,7 +620,7 @@ FUNKCJA Pobierz_Konfigurację_Scenariusza(scenariusz):
         freq_W1: 25-50,
         freq_W2: 0,
         układ_pracy: "Podstawowy lub Ograniczony",
-        nawiew: "+4,30m"
+        nawiew: "-4,30m"
       }
     
     S3:
@@ -637,7 +631,7 @@ FUNKCJA Pobierz_Konfigurację_Scenariusza(scenariusz):
         freq_W1: 25-50,
         freq_W2: 0,
         układ_pracy: "Podstawowy lub Ograniczony",
-        nawiew: "+4,30m"
+        nawiew: "-4,30m"
       }
     
     S4:
@@ -648,7 +642,7 @@ FUNKCJA Pobierz_Konfigurację_Scenariusza(scenariusz):
         freq_W1: 25-50,
         freq_W2: 0,
         układ_pracy: "Podstawowy lub Ograniczony",
-        nawiew: "+4,30m"
+        nawiew: "-4,30m"
       }
     
     S5:
@@ -659,7 +653,7 @@ FUNKCJA Pobierz_Konfigurację_Scenariusza(scenariusz):
         freq_W1: 50,    // Stała maksymalna częstotliwość
         freq_W2: 25-50, // Regulacja PID
         układ_pracy: "Podstawowy",  // ZAWSZE podstawowy w S5-S8
-        nawiew: "+4,30m +7,90m"
+        nawiew: "-4,30m -7,90m"
       }
     
     S6:
@@ -670,7 +664,7 @@ FUNKCJA Pobierz_Konfigurację_Scenariusza(scenariusz):
         freq_W1: 50,
         freq_W2: 25-50,
         układ_pracy: "Podstawowy",
-        nawiew: "+4,30m +7,90m"
+        nawiew: "-4,30m -7,90m"
       }
     
     S7:
@@ -681,7 +675,7 @@ FUNKCJA Pobierz_Konfigurację_Scenariusza(scenariusz):
         freq_W1: 50,
         freq_W2: 25-50,
         układ_pracy: "Podstawowy",
-        nawiew: "+4,30m +7,90m"
+        nawiew: "-4,30m -7,90m"
       }
     
     S8:
@@ -692,7 +686,7 @@ FUNKCJA Pobierz_Konfigurację_Scenariusza(scenariusz):
         freq_W1: 50,
         freq_W2: 25-50,
         układ_pracy: "Podstawowy",
-        nawiew: "+4,30m +7,90m"
+        nawiew: "-4,30m -7,90m"
       }
   
   KONIEC PRZYPADEK
@@ -917,7 +911,7 @@ KONIEC JEŻELI
 
 | Stan Awaryjny | Reakcja Systemu |
 |---------------|-----------------|
-| Brak odczytu t_zewn | Utrzymaj ostatni scenariusz przez CZAS_UTRZYMANIA_PRZY_AWARII (300s), potem alarm krytyczny i tryb MANUAL |
+| Brak odczytu T_zewn | Utrzymaj ostatni scenariusz przez CZAS_UTRZYMANIA_PRZY_AWARII (300s), potem alarm krytyczny i tryb MANUAL |
 | Nagrzewnica nie załącza się | Pomiń nagrzewnicę, kontynuuj z mniejszą ilością, alarm informacyjny |
 | Wentylator nie uruchamia się | Przerwij zmianę scenariusza, alarm krytyczny, tryb MANUAL |
 | Przekroczenie czasu zmiany | Przerwij zmianę, alarm, powrót do poprzedniego scenariusza lub tryb MANUAL |
@@ -1016,7 +1010,7 @@ Każda zmiana scenariusza wymaga **skoordynowanej sekwencji** operacji na:
 
 System ma **trzy poziomy sterowania**:
 
-1. **Algorytm WS (Nadzorca scenariuszy)** ← monitoruje **t_zewn**
+1. **Algorytm WS (Nadzorca scenariuszy)** ← monitoruje **T_zewn**
    - Decyduje ILE nagrzewnic potrzeba
    - WŁĄCZA i WYŁĄCZA nagrzewnice
    - Zarządza przejściami między scenariuszami
@@ -1032,7 +1026,7 @@ System ma **trzy poziomy sterowania**:
 
 **Przykład interakcji:**
 ```
-t_zewn = 3°C (wzrost)
+T_zewn = 3°C (wzrost)
   ↓
 Algorytm WS: "Nie potrzebuję już nagrzewnic" → decyzja o przejściu S1→S0
   ↓
@@ -1063,7 +1057,7 @@ System rozróżnia 4 typy przejść między scenariuszami:
 ```
 SEKWENCJA S1→S0 (Wyłączenie systemu):
 
-UWAGA: Algorytm WS decyduje o wyłączeniu na podstawie t_zewn ≥ 3°C
+UWAGA: Algorytm WS decyduje o wyłączeniu na podstawie T_zewn ≥ 3°C
 
 KROK 1: Przełącz PID nagrzewnicy w tryb MANUAL
   Ustaw_Regulator_PID(N_aktywna, tryb=MANUAL)
@@ -1265,7 +1259,7 @@ Czas sekwencji: ~100 sekund
 ```
 
 **Kluczowe aspekty S4→S5:**
-- ⚠️ Pierwszy raz otwieramy wyrzutnie +7,90m
+- ⚠️ Pierwszy raz otwieramy wyrzutnie -7,90m
 - ⚠️ W1 przechodzi z PID → MAX (zmiana trybu regulacji)
 - ⚠️ Uruchomienie W2 jako regulacyjnego
 - ⚠️ Koordynacja dwóch niezależnych ciągów
@@ -1278,7 +1272,7 @@ Czas sekwencji: ~100 sekund
 ```
 SEKWENCJA S5→S4 (Zatrzymanie drugiego ciągu):
 
-UWAGA: Algorytm WS decyduje o zatrzymaniu C2 na podstawie t_zewn ≥ -10°C
+UWAGA: Algorytm WS decyduje o zatrzymaniu C2 na podstawie T_zewn ≥ -10°C
        Oba ciągi pracują (C1: N1-N4 + W1 MAX, C2: N5 + W2 PID)
 
 KROK 1: Przełącz PID nagrzewnicy N5 w tryb MANUAL
@@ -1304,7 +1298,7 @@ KROK 4: Zatrzymaj wentylator W2
 
 KROK 5: Zamknij przepustnice ciągu 2
   Ustaw_Przepustnicę_Kolektor_C2(ZAMKNIĘTA)
-  Ustaw_Przepustnicę_Wyrzutnia_790(ZAMKNIĘTA)  // ⚠️ Zamykamy poziom +7,90m
+  Ustaw_Przepustnicę_Wyrzutnia_790(ZAMKNIĘTA)  // ⚠️ Zamykamy poziom -7,90m
   Ustaw_Przepustnicę_Ciąg_C2(ZAMKNIĘTA)
   Czekaj(10 sekund)
 
@@ -1386,19 +1380,19 @@ Czas sekwencji: ~45 sekund
 | **Ciąg 1:** | | | | |
 | Przepustnica C1 | Z | **O** | **Z** | **O** |
 | Kolektor C1 | Z | **O** | **Z** | **O** |
-| Wyrzutnia +4,30m | Z | **O** | Z | **O** |
+| Wyrzutnia -4,30m | Z | **O** | Z | **O** |
 | **Ciąg 2:** | | | | |
 | Przepustnica C2 | Z | Z | **O** | **O** |
 | Kolektor C2 | Z | Z | **O** | **O** |
-| Wyrzutnia +7,90m | Z | Z | Z | **O** |
+| Wyrzutnia -7,90m | Z | Z | Z | **O** |
 | **Spinka:** | | | | |
 | Przepustnica spinka | Z | Z | **O** | Z |
 
 **Legenda:** O = Otwarta, Z = Zamknięta
 
 **Kluczowe przejścia przepustnic:**
-- **S4→S5:** Otwieramy wyrzutnię +7,90m po raz pierwszy
-- **S5→S4:** Zamykamy wyrzutnię +7,90m
+- **S4→S5:** Otwieramy wyrzutnię -7,90m po raz pierwszy
+- **S5→S4:** Zamykamy wyrzutnię -7,90m
 - **Układ Podst.→Ogr.:** Zamykamy C1, otwieramy spinę i C2
 - **Układ Ogr.→Podst.:** Zamykamy spinę i C2, otwieramy C1
 
@@ -1421,13 +1415,9 @@ Czas sekwencji: ~45 sekund
 | **RUNNING** | 20-100% PID | AUTO | Praca normalna |
 | **STOPPING** | AUTO → 20% | AUTO → MANUAL | Przejście do postoju |
 
----
-
-
-
----
-
+# ═════════════════════════════════════
 # Algorytm RC: Cykliczna Rotacja Układów Pracy Ciągów
+# ═════════════════════════════════════
 
 
 > **Powiązane algorytmy:** Algorytm WS, Algorytm RN
@@ -1513,6 +1503,8 @@ Rotacja układów jest możliwa **TYLKO** gdy spełnione są **WSZYSTKIE** warun
    - System SAR stabilny (brak oscylacji temperatury)
 
 ## 5. Algorytm Rotacji Krok po Kroku
+
+**Tag:** `[SYMULACJA]` - kompletny pseudokod do implementacji
 
 **Diagram przepływu algorytmu:**
 
@@ -1756,12 +1748,9 @@ System rejestruje następujące dane dla analizy:
 - Ciąg 2: ~360h pracy (50%)
 - Stosunek eksploatacji: 1.0 ✅ Idealne wyrównanie
 
----
-
-
----
-
+# ═════════════════════════════════════
 # Algorytm RN: Cykliczna Rotacja Nagrzewnic w Obrębie Ciągu
+# ═════════════════════════════════════
 
 
 > **Powiązane algorytmy:** Algorytm WS, Algorytm RC
@@ -1844,6 +1833,8 @@ Rotacja nagrzewnic jest możliwa **TYLKO** gdy spełnione są **WSZYSTKIE** waru
    - Przepustnice sprawne
 
 ## 5. Algorytm Rotacji Nagrzewnic Krok po Kroku
+
+**Tag:** `[SYMULACJA]` - kompletny pseudokod do implementacji
 
 **WAŻNE - Algorytm RN jako serwis dla innych algorytmów:**
 
@@ -2483,3 +2474,15 @@ Diagram timeline pokazuje praktyczny przykład koordynacji między algorytmami w
 - Mechanizmy są zaimplementowane w pseudokodzie (KROK 0, KROK 2, KROK 4)
 
 ---
+
+## Powiązane Dokumenty
+
+- **[System sterowania](../01-system/system.md)** - przegląd systemu, architektura SAR, tabela scenariuszy
+- **[Projekt instalacji](../02-projekt-instalacji/projekt-instalacji.md)** - schematy instalacji, UAR, scenariusze z diagramami
+- **[System SCADA/HMI](../04-scada-hmi/scada-hmi.md)** - interfejs operatorski, wizualizacja, alarmy, trendy
+- **[Dokumentacja wejściowa](../01-system/dokumentacja-wejsciowa/Projekt%20instalacji%20ogrzewania%20szybu.md)** - pliki otrzymane od zleceniodawcy
+
+---
+
+**Ostatnia aktualizacja:** 24 Listopad 2025  
+**Wersja dokumentu:** 2.0

@@ -55,7 +55,7 @@ W pracy automatycznej nasępuje cykliczne sprawdzenie temperatury zewnętrznej. 
 
 #### Tab. 1. Warunki termiczne załączania nagrzewnic
 
-| Nr nagrz. | Zakres załączania Tz1 [°C] | Zakres załączania Tz2 [°C] | Wyłączenie Tzw [°C] |
+| Nr nagrz. | Zakres załączania Tz1 [°C] | Zakres załączania Tz2 [°C] | Wyłączenie T_zewn [°C] |
 |-----------|---------------------------|---------------------------|---------------------|
 | N1        |                           | 2                         | 3                   |
 | N2        | -1                        | -2                        | 0                   |
@@ -71,7 +71,7 @@ zewnętrznej. Unika się w ten sposób zakłóceń w pracy układu regulacyjnego
 
 # Tab. 2. Warunki termiczne dla elastycznej pracy nagrzewnic
 
-| Ilość nagrzewnic | Zakres załączania Tz1 [°C] | Zakres załączania Tz2 [°C] | Wyłączenie Tzw [°C] |
+| Ilość nagrzewnic | Zakres załączania Tz1 [°C] | Zakres załączania Tz2 [°C] | Wyłączenie T_zewn [°C] |
 |------------------|---------------------------|---------------------------|---------------------|
 | 0                |                           | >2                        | >3                  |
 | 1                |                           | 2                         | 3                   |
@@ -112,7 +112,7 @@ granicy,
 * po zamknięciu przepustnicy na wylocie powietrza z nagrzewnicy,
 * po wystąpieniu sygnału ządania wyłączenia nagrzewnicy związany
 z osiągnieciem określonej temperatury zewnętrznej dla danej nagrzewnicy.
-(Temperatura Tzw p. tab 1),
+(Temperatura T_zewn p. tab 1),
 * po wystąpieniu sygnału programowego wyłączenia nagrzewnicy przy rotacji
 nagrzewnic pracujących w jednym ciągu wentylacyjnym.
 
@@ -142,16 +142,16 @@ ustalony przez technologa w czasie testowania pracy układu na obiekcie.
 ### 2.1. Układy pracy ciągów grzewczych.
 Istnieją dwa stabilne układy pracy ciągów grzewczych:
 
-* **Podstawowy**, w którym wyrzutnie poziomu +4,30m zasilane są z ciągu
-pierwszego (wentylator W1), a wyrzutnie poziomu +7,90m zasilane są z ciągu
+* **Podstawowy**, w którym wyrzutnie poziomu -4,30m zasilane są z ciągu
+pierwszego (wentylator W1), a wyrzutnie poziomu -7,90m zasilane są z ciągu
 drugiego (wentylator W2). W tym przypadku przepustnica na spince ciągów
 wentylacyjnych jest zamknięta, a przepustnice w ciągach są otwarte. Stan ten
 przedstawiono na rysunku 3.
 
-* **Ograniczony**, w którym wyrzutnie poziomu +4,30m zasilane są z ciągu drugiego
-(wentylator W2), a wyrzutnie poziomu +7,90m nie są zasilane. W tym wypadku
+* **Ograniczony**, w którym wyrzutnie poziomu -4,30m zasilane są z ciągu drugiego
+(wentylator W2), a wyrzutnie poziomu -7,90m nie są zasilane. W tym wypadku
 na kolektorze ciepłego powietrza ciągu pierwszego oraz 
-przepustnica na zasilaniu wyrzutni poziomu +7,90m zostaje zamknięta.
+przepustnica na zasilaniu wyrzutni poziomu -7,90m zostaje zamknięta.
 Pozostałe przepustnice układu sterowania nawiewem pozostają otwarte. Stan ten
 przedstawiono na rysunku 4.
 

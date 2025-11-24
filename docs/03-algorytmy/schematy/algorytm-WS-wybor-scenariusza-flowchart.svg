@@ -32,14 +32,14 @@
   </defs>
   <rect x="0" y="0" width="1400" height="3420" fill="white"/>
   <text x="700" y="40" class="title" text-anchor="middle" style="white-space: pre;">Algorytm WS: Automatyczny Wybór Scenariusza Pracy</text>
-  <text x="700" y="70" class="subtitle" text-anchor="middle" style="white-space: pre;">System BOGDANKA Szyb 2 - Dobór S0-S8 na podstawie t_zewn</text>
+  <text x="700" y="70" class="subtitle" text-anchor="middle" style="white-space: pre;">System BOGDANKA Szyb 2 - Dobór S0-S8 na podstawie T_zewn</text>
   <rect x="550" y="100" width="300" height="60" class="start-end"/>
   <text x="700" y="125" class="box-text" style="white-space: pre;">START</text>
   <text x="700" y="145" class="box-text-small" style="white-space: pre;">Ciągły monitoring temperatury</text>
   <path d="M 700 160 L 700 200" class="arrow"/>
   <rect x="550" y="200" width="300" height="80" class="data"/>
   <text x="700" y="225" class="box-text" style="white-space: pre;">KROK 1:</text>
-  <text x="700" y="245" class="box-text" style="white-space: pre;">Odczytaj czujnik t_zewn</text>
+  <text x="700" y="245" class="box-text" style="white-space: pre;">Odczytaj czujnik T_zewn</text>
   <text x="700" y="265" class="box-text-small" style="white-space: pre;">+ filtr uśredniania (3 próbki)</text>
   <path d="M 700 280 L 700 320" class="arrow"/>
   <path d="M 700 320 L 900 380 L 700 440 L 500 380 Z" class="decision"/>
@@ -49,7 +49,7 @@
   <path d="M 900 380 L 1050 380" class="arrow-yes"/>
   <text x="960" y="370" class="label" style="white-space: pre;">TAK</text>
   <rect x="1050" y="350" width="250" height="60" class="process"/>
-  <text x="1175" y="375" class="box-text-small" style="white-space: pre;">t_zewn = średnia z bufora</text>
+  <text x="1175" y="375" class="box-text-small" style="white-space: pre;">T_zewn = średnia z bufora</text>
   <text x="1175" y="395" class="box-text-small" style="white-space: pre;">timestamp_odczytu = teraz</text>
   <path d="M 1175 410 L 1175 480 L 700 480 L 700 520" class="arrow"/>
   <path d="M 500 380 L 350 380" class="arrow-no"/>
@@ -72,7 +72,7 @@
   <text x="700" y="565" class="box-text" style="white-space: pre;">Określ wymagany scenariusz</text>
   <path d="M 700 580 L 700 620" class="arrow"/>
   <path d="M 700 620 L 850 680 L 700 740 L 550 680 Z" class="decision"/>
-  <text x="700" y="685" class="box-text" style="white-space: pre;">t_zewn ≥ 3°C?</text>
+  <text x="700" y="685" class="box-text" style="white-space: pre;">T_zewn ≥ 3°C?</text>
   <path d="M 850 680 L 1000 680" class="arrow-yes"/>
   <text x="910" y="670" class="label" style="white-space: pre;">TAK</text>
   <rect x="1000" y="650" width="120" height="60" class="process"/>

@@ -1,369 +1,224 @@
 # System Sterowania Nagrzewnicami BOGDANKA Szyb 2
 
+**Dokument główny - przegląd systemu**
+
 Ostatnia aktualizacja: 24 Listopad 2025
 
-## 📄 Dokumentacja Wejściowa
+## Wprowadzenie
 
-### Projekt instalacji ogrzewania szybu
+System automatycznej regulacji (SAR) temperatury szybu BOGDANKA Szyb 2 zapewnia:
+- **Ochronę przed przemarzaniem** - utrzymanie temperatury w szybie na poziomie **2°C** (na głębokości -30m)
+- **Automatyczną adaptację** do warunków atmosferycznych (temperatura zewnętrzna od +3°C do -21°C)
+- **Równomierne zużycie urządzeń** - algorytmy rotacji nagrzewnic i ciągów wentylacyjnych
+- **Optymalizację energetyczną** - tylko tyle mocy grzewczej ile potrzeba (9 scenariuszy pracy)
 
-Dokumenty otrzymane 19 listopad 2025:
+**Dokumentacja wejściowa:** [Projekt instalacji (PDF)](./dokumentacja-wejsciowa/Projekt%20instalacji%20ogrzewania%20szybu.pdf) | [Projekt instalacji (MD)](./dokumentacja-wejsciowa/Projekt%20instalacji%20ogrzewania%20szybu.md)
 
-- [Projekt instalacji ogrzewania szybu - skan PDF](./dokumentacja-wejsciowa/Projekt%20instalacji%20ogrzewania%20szybu.pdf)
-- [Projekt instalacji ogrzewania szybu - dokumentacja zmigrowana do formatu markdown (md)](./dokumentacja-wejsciowa/Projekt%20instalacji%20ogrzewania%20szybu.md)
 
----
+## 1. Komponenty Systemu
 
-## 1. Architektura Systemu Automatycznej Regulacji (SAR)
+**Układ fizyczny:**
+- **8 nagrzewnic** (N1-N8) - 2 ciągi po 4 nagrzewnice
+- **2 wentylatory** (W1, W2) - sterowanie częstotliwościowe 25-50 Hz
+- **2 poziomy wyrzutni** - -4,30m i -7,90m
+- **Zawory regulacyjne** - 8 zaworów wody grzewczej (20-100%)
+- **Przepustnice** - sterowanie przepływem powietrza i konfiguracją ciągów
 
-System automatycznej regulacji (SAR) temperatury szybu składa się z dwóch podsystemów, z których każdy ma **dwuwarstwową architekturę**:
-- **Warstwa regulacji** - podstawowa funkcja utrzymania temperatury (PID)
-- **Warstwa zarządzania** - funkcja optymalizująca wykorzystanie urządzeń (algorytmy)
+
+## 2. Architektura Sterowania (SAR)
+
+System ma **dwuwarstwową architekturę** składającą się z dwóch podsystemów:
 
 ![Architektura SAR](./schematy/architektura_SAR_system.svg)
 
 *Rys. Dwuwarstwowa architektura systemu SAR pokazująca relacje między podsystemami PARTS i PARTPG oraz algorytmami WS, RC i RN.*
 
-### 1.1 PARTPG - Podsystem Automatycznej Regulacji Temperatur Powietrza Grzewczego
+### 2.1 PARTPG - Podsystem Regulacji Temperatury Powietrza Grzewczego
 
-**Zadanie:** Stabilizacja temperatury powietrza grzewczego używanego przez PARTS.
+**Cel:** Stabilizacja temperatury powietrza grzewczego na poziomie **Tz = 50°C** (na wylocie z nagrzewnic)
 
-#### Warstwa Regulacji (podstawowa funkcja systemu)
+| Warstwa | Funkcja | Realizacja |
+|---------|---------|------------|
+| **Regulacja** | Utrzymanie 50°C na wylocie | 8 × regulatorów PID (zawory wody grzewczej 20-100%) |
+| **Zarządzanie** | Równomierne zużycie nagrzewnic | **Algorytm RN** - rotacja N1-N8 |
 
-**Składa się z:**
-- 8 układów automatycznej regulacji (UAR) temperatury powietrza - po jednym dla każdej nagrzewnicy
-- Każdy UAR kontroluje temperaturę na wylocie z nagrzewnicy (Tz = 50°C)
-- Realizuje załączanie/wyłączanie nagrzewnic do/z ruchu
-- Zabezpiecza nagrzewnice przed przemarzaniem (min. 20% otwarcia zaworu)
+📖 **[Schematy UAR nagrzewnic](../02-projekt-instalacji/projekt-instalacji.md#2-schematy-regulacji-uar)** | **[Algorytm RN](../03-algorytmy/algorytmy.md#algorytm-rn-cykliczna-rotacja-nagrzewnic-w-obrębie-ciągu)**
 
-**Struktura UAR nagrzewnicy:**
-- Regulator PID kontroluje zawór regulacyjny wody grzewczej
-- Zakres pracy zaworu: 20-100%
-- Tryby pracy: AUTO (regulacja PID) i MANUAL (sterowanie ręczne)
-- Bezuderzeniowe (bumpless) przejście między trybami
+### 2.2 PARTS - Podsystem Regulacji Temperatury Szybu
 
-#### Warstwa Zarządzania (optymalizacja użycia urządzeń)
+**Cel:** Utrzymanie temperatury w szybie na poziomie **Ts = 2°C** (na głębokości -30m)
 
-**Algorytm RN - Rotacja Nagrzewnic w Ciągu:**
-- Cykliczna wymiana pracujących nagrzewnic na rezerwowe w obrębie ciągu
-- Równomierne rozłożenie czasu pracy wszystkich 8 nagrzewnic (N1-N8)
-- Maksymalizacja niezawodności przez równomierne zużycie
-- Wybór nagrzewnic na podstawie historii pracy/postoju
+| Warstwa | Funkcja | Realizacja |
+|---------|---------|------------|
+| **Regulacja** | Utrzymanie 2°C w szybie | 2 × regulatory PID (prędkość wentylatorów W1, W2: 25-50 Hz) |
+| **Zarządzanie** | Dobór scenariusza i równomierne zużycie ciągów | **Algorytm WS** - wybór S0-S8<br>**Algorytm RC** - rotacja C1↔C2 |
 
-📖 **[Szczegółowy opis → Algorytm RN](../03-algorytmy/algorytmy.md#algorytm-rn-cykliczna-rotacja-nagrzewnic-w-obrębie-ciągu)**
+📖 **[Schematy UAR wentylatorów](../02-projekt-instalacji/projekt-instalacji.md#2-schematy-regulacji-uar)** | **[Algorytmy WS i RC](../03-algorytmy/algorytmy.md)**
 
-### 1.2 PARTS - Podsystem Automatycznej Regulacji Temperatury Szybu
+### 2.3 Hierarchia Sterowania
 
-**Zadanie:** Utrzymanie temperatury szybu na zadanym poziomie (Ts = 2°C na poziomie -30m).
+```
+Algorytm WS → określa ILE nagrzewnic (S0-S8) na podstawie T_zewn
+     ↓
+Algorytm RC → określa KTÓRY CIĄG (C1 lub C2) w S1-S4
+     ↓
+Algorytm RN → określa KTÓRE nagrzewnice (N1-N8)
+     ↓
+Regulatory PID → utrzymują temperatury (50°C, 2°C)
+```
 
-#### Warstwa Regulacji (podstawowa funkcja systemu)
-
-**Składa się z:**
-- 2 układów automatycznej regulacji (UAR) prędkości wentylatorów W1 i W2
-- Regulatory PID kontrolują częstotliwość pracy wentylatorów (25-50 Hz)
-
-**Struktura UAR wentylatorów:**
-- Regulator PID kontroluje przetwornicę częstotliwości (falownik)
-- Zakres częstotliwości: NWmin = 25 Hz, NWmax = 50 Hz
-- NWmax zależy od ilości nagrzewnic w gotowości operacyjnej (dla 4 nagrzewnic: 50 Hz)
-- Tryby pracy: AUTO i MANUAL
-
-#### Warstwa Zarządzania (optymalizacja użycia urządzeń)
-
-**Algorytm WS - Automatyczny Wybór Scenariusza Pracy:**
-- Automatyczny dobór ilości nagrzewnic (S0-S8) w zależności od temperatury zewnętrznej
-- Optymalne wykorzystanie mocy grzewczej (tylko tyle nagrzewnic ile potrzeba)
-- Automatyczna adaptacja do zmian warunków atmosferycznych
-- Histereza temperaturowa zapobiegająca częstym przełączeniom
-
-**Algorytm RC - Rotacja Układów Pracy Ciągów:**
-- Cykliczna zmiana między układem Podstawowym (C1) a Ograniczonym (C2)
-- Równomierne rozłożenie czasu pracy ciągów wentylacyjnych i wentylatorów (W1, W2)
-- Dotyczy scenariuszy S1-S4 (temperatura -11°C < t ≤ 2°C)
-- Maksymalizacja niezawodności przez równomierne zużycie
-
-📖 **[Szczegółowy opis algorytmów](../03-algorytmy/algorytmy.md)** | [Algorytm WS](../03-algorytmy/algorytmy.md#algorytm-ws-automatyczny-wybór-scenariusza-pracy) | [Algorytm RC](../03-algorytmy/algorytmy.md#algorytm-rc-cykliczna-rotacja-układów-pracy-ciągów)
-
-### 1.3 Zależności między Podsystemami
-
-**Hierarchia działania:**
-- PARTS wymaga stabilnych parametrów powietrza grzewczego od PARTPG
-- Brak stabilnych parametrów → pogorszenie jakości regulacji lub wyłączenie SAR szybu
-- Warstwa zarządzania PARTS (Alg. WS, RC) określa **ILE** i **KTÓRE CIĄGI** nagrzewnic
-- Warstwa zarządzania PARTPG (Alg. RN) określa **KTÓRE KONKRETNIE** nagrzewnice w ciągu
-- Warstwa regulacji obu podsystemów utrzymuje zadane temperatury (50°C, 2°C)
+**Przykład dla S3 (3 nagrzewnice, T_zewn = -6°C):**
+- WS: potrzebne 3 nagrzewnice
+- RC: układ Podstawowy → ciąg C1
+- RN: wybiera N1, N2, N3 (lub inne, zależnie od historii pracy)
+- PID: reguluje zawory i wentylator W1
 
 ---
 
-## 2. Załączanie i Wyłączanie Nagrzewnic
+## 3. Układy Pracy
 
-### 2.1 Warunki Startowe Załączenia Nagrzewnicy
+System może pracować w dwóch układach:
 
-**Nagrzewnica może być załączona gdy spełnione są wszystkie warunki:**
+| Układ | Ciągi aktywne | Wentylatory | Nawiew | Zastosowanie |
+|-------|---------------|-------------|--------|--------------|
+| **Podstawowy** | C1, C2 (niezależne) | W1, W2 | -4,30m, -7,90m | S5-S8 (t < -11°C)<br>ORAZ S1-S4 podczas rotacji RC |
+| **Ograniczony** | C2 przez spinę | W2 (PID) | -4,30m | S1-S4 (t > -11°C) podczas rotacji RC |
 
-1. Zawór regulacyjny sprawny, gotowość operacyjna przepustnicy dolotowej
-2. Zawór i przepustnica pracują w trybie sterowania zdalnego
-3. Parametry wody grzewczej powyżej dolnej dopuszczalnej granicy
-4. Przepustnica na wylocie powietrza z nagrzewnicy otwarta
-5. Sygnał żądania załączenia nagrzewnicy związany z osiągnięciem określonej granicy ujemnej temperatury zewnętrznej (według Tab. 1)
-6. LUB sygnał programowego załączenia nagrzewnicy przy rotacji nagrzewnic
+**Kluczowe różnice:**
+- **Podstawowy:** Oba ciągi pracują niezależnie, spinka **ZAMKNIĘTA**
+- **Ograniczony:** Tylko C2 pracuje, C1 wyłączony, spinka **OTWARTA**, nawiew przez spinę do -4,30m
 
-**Sekwencja załączania:**
-- Otwarcie przepustnicy na dolocie zimnego powietrza do nagrzewnicy
-- Rozpoczęcie procesu regulacji (AUTO lub MANUAL)
-
-📖 **[Automatyczny wybór scenariusza pracy](../03-algorytmy/algorytmy.md#algorytm-ws-automatyczny-wybór-scenariusza-pracy)**
-
-### 2.2 Wyłączenie Nagrzewnicy z Ruchu
-
-**Nagrzewnica jest wyłączana gdy:**
-- Parametry wody grzewczej osiągną wartości poniżej dolnej dopuszczalnej granicy
-- Nastąpi zamknięcie przepustnicy na wylocie powietrza z nagrzewnicy
-- Wystąpi sygnał żądania wyłączenia nagrzewnicy związany z osiągnięciem określonej temperatury zewnętrznej (według Tab. 1 - temperatura Tzw)
-- Wystąpi sygnał programowego wyłączenia nagrzewnicy przy rotacji nagrzewnic
-
-**Sekwencja wyłączania:**
-- Ustawienie zaworu regulacyjnego w pozycji minimalnego otwarcia (20%)
-- Zamknięcie przepustnicy dolotowej powietrza zimnego
-
-**Każde awaryjne wyłączenie nagrzewnicy powoduje załączenie sygnalizacji alarmowej systemu, co wymaga dokonania operacji skwitowania przez obsługę.**
+📖 **[Szczegółowe opisy układów i schematy](../02-projekt-instalacji/projekt-instalacji.md#3-układy-pracy)**
 
 ---
 
-## 3. Układy Pracy Ciągów Grzewczych
+## 4. Scenariusze Pracy (S0-S8)
 
-System może pracować w dwóch stabilnych układach pracy:
+System automatycznie przełącza się między 9 scenariuszami w zależności od temperatury zewnętrznej:
 
-### 3.1 Układ PODSTAWOWY
+| ID | Zakres Temp. | Ilość Nagrzewnic | Ciąg 1 (W1) | Ciąg 2 (W2) | Nawiew | Temp. Wył. | Hist. |
+|----|-------------|------------------|-------------|-------------|--------|-----------|-------|
+| S0 | t ≥ 3°C | 0 | OFF | OFF | - | - | - |
+| S1 | -1<t≤2 | 1 | PID | OFF | -4,30m | t≥3 | 1°C |
+| S2 | -4<t≤-1 | 2 | PID | OFF | -4,30m | t≥0 | 1°C |
+| S3 | -8<t≤-4 | 3 | PID | OFF | -4,30m | t≥-3 | 1°C |
+| S4 | -11<t≤-8 | 4 | PID lub MAX | OFF | -4,30m | t≥-6 | 2°C |
+| S5 | -15<t≤-11 | 5 | MAX | PID | -4,30m -7,90m | t≥-10 | 1°C |
+| S6 | -18<t≤-15 | 6 | MAX | PID | -4,30m -7,90m | t≥-13 | 2°C |
+| S7 | -21<t≤-18 | 7 | MAX | PID | -4,30m -7,90m | t≥-15 | 3°C |
+| S8 | t≤-21 | 8 | MAX | PID | -4,30m -7,90m | t≥-20 | 1°C |
 
-**Charakterystyka:**
-- Wyrzutnie poziomu +4,30m zasilane z ciągu pierwszego (wentylator W1)
-- Wyrzutnie poziomu +7,90m zasilane z ciągu drugiego (wentylator W2)
-- Przepustnica na spince ciągów wentylacyjnych: **ZAMKNIĘTA**
-- Przepustnice w ciągach: **OTWARTE**
-- Oba ciągi pracują niezależnie
-
-**Sterowanie wentylatorami w układzie podstawowym:**
-- **W1 pracuje z maksymalną prędkością** (NWmax, zazwyczaj 50 Hz)
-- **W2 jest wentylatorem regulacyjnym** - zmienia prędkość według regulatora PID
-- Taka konfiguracja zapewnia pełną moc ciągu pierwszego (priorytet +4,30m)
-
-**Warunki aktywacji:**
-- Temperatura zewnętrzna < -11°C (wymagane > 4 nagrzewnice)
-- LUB świadoma decyzja operatora w trybie MANUAL
-- LUB rotacja układów pracy ciągów (cykliczna zmiana)
-
-### 3.2 Układ OGRANICZONY
-
-**Charakterystyka:**
-- Wyrzutnie poziomu +4,30m zasilane z ciągu drugiego (wentylator W2) przez spinę ciągów
-- Wyrzutnie poziomu +7,90m: **NIE ZASILANE**
-- Przepustnica na spince ciągów wentylacyjnych: **OTWARTA**
-- Przepustnica na kolektorze ciepłego powietrza ciągu pierwszego: **ZAMKNIĘTA**
-- Przepustnica na zasilaniu wyrzutni poziomu +7,90m: **ZAMKNIĘTA**
-- Pozostałe przepustnice: **OTWARTE**
-
-**Sterowanie wentylatorami w układzie ograniczonym:**
-- W1: **WYŁĄCZONY**
-- W2: pracuje z regulacją PID (25-50 Hz)
-
-**Warunki aktywacji:**
-- Ilość wymaganych nagrzewnic ≤ ilość nagrzewnic ciągu drugiego w gotowości operacyjnej
-- Dla 4 sprawnych nagrzewnic C2: zakres temperatur do **-11°C**
-- Dla 3 sprawnych nagrzewnic C2: zakres temperatur do **-8°C**
-- Dla 2 sprawnych nagrzewnic C2: zakres temperatur do **-4°C**
-- Dla 1 sprawnej nagrzewnicy C2: zakres temperatur do **-1°C**
-
-**Ograniczenia:**
-- Spadek temperatury zewnętrznej poniżej dopuszczalnej → automatyczne przejście do układu podstawowego
-
-### 3.3 Układy Przejściowe
-
-W trybie AUTO, układy pracy różne od Podstawowego i Ograniczonego są **układami przejściowymi**.
-Występują podczas przechodzenia z jednego trybu stabilnego do drugiego.
-
-W trybie MANUAL operator może dowolnie kształtować układ zasilania.
-
----
-
-## 4. Scenariusze i Algorytm Automatycznego Sterowania
-
-### 4.1 Algorytm Automatycznego Wyboru Scenariusza
-
-System wykorzystuje **Algorytm WS** do automatycznego doboru scenariusza pracy (S0-S8) w zależności od temperatury zewnętrznej.
-
-**Kluczowe cechy algorytmu:**
-- Ciągły monitoring temperatury zewnętrznej
-- Automatyczny dobór ilości nagrzewnic według tabeli poniżej
-- Histereza przy wyłączaniu (zapobiega częstym przełączeniom)
-- Bezpieczne sekwencje przejść między scenariuszami
-- Koordynacja z algorytmami rotacji RC i RN
-
-📖 **[Szczegółowy algorytm WS](../03-algorytmy/algorytmy.md#algorytm-ws-automatyczny-wybór-scenariusza-pracy)** | **[Flowchart](../03-algorytmy/schematy/algorytm-WS-wybor-scenariusza-flowchart.svg)**
-
-### 4.2 Tabela Scenariuszy
-
-Tabela 1: Stan systemu sterowania w zależności od temperatury zewnętrznej (t_zewn)
-
-| ID | Zakres Temp. | Nagrzewnice | Ciąg 1 (W1) | Ciąg 2 (W2) | Układ Pracy | Nawiew | Temp. Wył. | Hist. |
-|----|-------------|-------------|-------------|-------------|-------------|--------|-----------|-------|
-| S0 | t ≥ 3°C | - | OFF | OFF | - | - | - | - |
-| S1 | -1<t≤2 | N1 | PID | OFF | Podstawowy | +4,30m | t≥3 | 1°C |
-| S2 | -4<t≤-1 | N1-N2 | PID | OFF | Podstawowy | +4,30m | t≥0 | 1°C |
-| S3 | -8<t≤-4 | N1-N3 | PID | OFF | Podstawowy | +4,30m | t≥-3 | 1°C |
-| S4 | -11<t≤-8 | N1-N4 | PID lub MAX | OFF | Podstawowy | +4,30m | t≥-6 | 2°C |
-| S5 | -15<t≤-11 | N1-N5 | MAX | PID | Podstawowy | +4,30m +7,90m | t≥-10 | 1°C |
-| S6 | -18<t≤-15 | N1-N6 | MAX | PID | Podstawowy | +4,30m +7,90m | t≥-13 | 2°C |
-| S7 | -21<t≤-18 | N1-N7 | MAX | PID | Podstawowy | +4,30m +7,90m | t≥-15 | 3°C |
-| S8 | t≤-21 | N1-N8 | MAX | PID | Podstawowy | +4,30m +7,90m | t≥-20 | 1°C |
-
-**Uwagi do tabeli stanów:**
-
-**Układy pracy w poszczególnych scenariuszach:**
-- **S0:** System wyłączony - brak ogrzewania
-- **S1-S4:** Układ **Podstawowy** - tylko ciąg 1 pracuje (priorytet +4,30m)
-  - Nagrzewnice N1-N4 z ciągu 1
-  - Wentylator W1 sterowany PID
-  - Wentylator W2 wyłączony
-  - Nawiew TYLKO na +4,30m
-- **S5-S8:** Układ **Podstawowy** - oba ciągi pracują
-  - Ciąg 1: N1-N4 (zawsze pełne 4 nagrzewnice)
-  - Ciąg 2: N5-N8 (tyle ile potrzeba)
-  - W1 pracuje z MAX (50 Hz)
-  - W2 sterowany PID (wentylatorem regulacyjnym)
-  - Nawiew na +4,30m I +7,90m
-
-**Układ Ograniczony (alternatywny):**
-- Może być użyty w S1-S4 podczas **cyklicznej rotacji układów** (Algorytm RC)
-- W2 przez spinę ciągów zasila +4,30m zamiast W1
-- W1 wyłączony, W2 sterowany PID
-- Cel: wyrównanie eksploatacji ciągów
-- Nagrzewnice: N5-N8 (z ciągu 2)
-
-**Sterowanie wentylatorami:**
-- **PID** = sterowanie regulatorem PID (25-50 Hz) - zmienia prędkość dla utrzymania Ts=2°C w szybie
-- **MAX** = stała maksymalna prędkość (50 Hz) - pełna moc
+**Legenda:**
+- **PID** = sterowanie regulatorem PID (25-50 Hz, zmienna prędkość)
+- **MAX** = stała maksymalna prędkość (50 Hz)
 - **OFF** = wentylator wyłączony
 
-**Parametry stałe:**
-- Temperatura docelowa na wylocie z nagrzewnicy: **50°C**
-- Otwarcie zaworu przy wyłączeniu: **20%** (ochrona antyzamrożeniowa)
+**Uwagi:**
+- **S0:** System wyłączony, oszczędzanie energii
+- **S1-S4:** Układ **Podstawowy** LUB **Ograniczony** (zależy od algorytmu RC)
+  - Konkretne nagrzewnice wybiera algorytm RN
+  - Wentylator W1 lub W2 sterowany PID
+  - Nawiew TYLKO na -4,30m
+- **S5-S8:** Układ **Podstawowy** (zawsze)
+  - W1 pracuje z MAX (50 Hz)
+  - W2 sterowany PID
+  - Nawiew na **OBA poziomy** (-4,30m i -7,90m)
 
-### 4.3 Hierarchia Algorytmów
-
-System wykorzystuje **trzy współpracujące algorytmy** do sterowania:
-
-1. **Algorytm WS: Automatyczny Wybór Scenariusza**
-   - Określa **ILE nagrzewnic** potrzeba (S0-S8) na podstawie t_zewn
-   - Tabela powyżej definiuje scenariusze
-   - Ciągły monitoring i histereza
-
-2. **Algorytm RC: Rotacja Układów Pracy Ciągów**
-   - Określa **KTÓRY CIĄG** pracuje w S1-S4 (Podstawowy: C1, Ograniczony: C2)
-   - Wyrównuje eksploatację W1 i W2
-   - 📖 [Szczegóły](../03-algorytmy/algorytmy.md#algorytm-rc-cykliczna-rotacja-układów-pracy-ciągów)
-
-3. **Algorytm RN: Rotacja Nagrzewnic w Ciągu**
-   - Określa **KTÓRE KONKRETNIE** nagrzewnice pracują w ciągu
-   - Wyrównuje eksploatację N1-N8
-   - 📖 [Szczegóły](../03-algorytmy/algorytmy.md#algorytm-rn-cykliczna-rotacja-nagrzewnic-w-obrębie-ciągu)
-
-**Tabela scenariuszy określa ILOŚĆ wymaganych nagrzewnic, ale nie konkretne numery.**
-**KTÓRE nagrzewnice** pracują jest określane dynamicznie przez algorytmy RC i RN.
-
-**Przykład dla S3 (3 nagrzewnice):**
-- Tydzień 1: mogą pracować N1, N2, N3 (ciąg 1)
-- Tydzień 2: mogą pracować N2, N3, N4 (ciąg 1, po rotacji RN)
-- Tydzień 3: mogą pracować N5, N6, N7 (ciąg 2, po rotacji RC)
-- Tydzień 4: mogą pracować N6, N7, N8 (ciąg 2, po rotacji RN)
+📖 **[Szczegółowe opisy scenariuszy z diagramami](../02-projekt-instalacji/projekt-instalacji.md#5-scenariusze-pracy-systemu)** | **[Algorytm WS](../03-algorytmy/algorytmy.md#algorytm-ws-automatyczny-wybór-scenariusza-pracy)**
 
 ---
 
-## 5. Parametry Systemowe
+## 5. Algorytmy Sterowania
 
-Tabela 2: Parametry konfiguracyjne systemu
+System wykorzystuje trzy współpracujące algorytmy:
 
-| Parameter | Wartość | Jednostka | Opis |
-|-----------|---------|-----------|------|
-| Temperatura docelowa Tz | 50 | °C | Temperatura wyjściowa z nagrzewnicy |
-| Temperatura docelowa Ts | 2 | °C | Temperatura w szybie na poziomie -30m |
-| Min pozycja zaworu (Pzmin) | 20 | % | Minimalne otwarcie zaworu, ochrona przed zamarzaniem |
-| Max pozycja zaworu (Pzmax) | 100 | % | Maksymalne otwarcie zaworu |
-| Min częstotliwość wentylatorów (NWmin) | 25 | Hz | Minimalna prędkość obrotowa |
-| Max częstotliwość wentylatorów (NWmax) | 50 | Hz | Maksymalna prędkość (dla 4 nagrzewnic) |
+### 5.1 Algorytm WS - Automatyczny Wybór Scenariusza
 
-**Uwaga:** Nastawy regulatorów PID (Kp, Ti, Td) będą dobrane doświadczalnie podczas procesu uruchomienia UAR na obiekcie.
+**Cel:** Dobór scenariusza (S0-S8) w zależności od T_zewn
 
-## 6. Parametry Techniczne - Podsumowanie
+**Funkcje:**
+- Ciągły monitoring temperatury zewnętrznej (co 10s)
+- Automatyczny wybór ilości nagrzewnic
+- Histereza przy wyłączaniu (zapobiega oscylacjom)
+- Bezpieczne sekwencje przejść między scenariuszami
 
-Tabela 3: Zestawienie głównych parametrów technicznych
+📖 **[Szczegóły algorytmu WS](../03-algorytmy/algorytmy.md#algorytm-ws-automatyczny-wybór-scenariusza-pracy)**
 
-| Parameter | Wartość | Uwagi |
-|-----------|---------|-------|
-| Liczba nagrzewnic | 8 (N1-N8) | Po 4 na ciąg |
-| Liczba wentylatorów | 2 (W1, W2) | Sterowanie częstotliwościowe |
-| Temperatura zadana Tz | 50°C | Powietrze na wylocie z nagrzewnicy |
-| Temperatura zadana Ts | 2°C | Temperatura w szybie na -30m |
-| Zakres częstotliwości wentylatorów | 25-50 Hz | NWmin - NWmax |
-| Zakres otwarcia zaworu | 20-100% | Pzmin - Pzmax |
-| Liczba poziomów wyrzutni | 2 | +4,30m i +7,90m |
-| Sterowanie | PLC | Z regulatorami PID |
+### 5.2 Algorytm RC - Rotacja Układów Pracy Ciągów
 
----
+**Cel:** Wyrównanie eksploatacji ciągów C1 i C2 (wentylatorów W1 i W2)
 
-## 7. Schemat ogrzewania
+**Funkcje:**
+- Cykliczna zmiana: Podstawowy ↔ Ograniczony
+- Dotyczy tylko S1-S4 (temperatura -11°C < t ≤ 2°C)
+- Okres rotacji: dni/tygodnie (definiowany przez technologa)
 
-![Schemat nawiewu powietrza](../02-projekt-instalacji/schematy/nawiew_z_dolnego_ciagu_wentylacyjnego.svg)
+📖 **[Szczegóły algorytmu RC](../03-algorytmy/algorytmy.md#algorytm-rc-cykliczna-rotacja-układów-pracy-ciągów)**
 
-📊 **Więcej schematów:** [Projekt instalacji](../03-projekt-instalacji/projekt-instalacji.md)
+### 5.3 Algorytm RN - Rotacja Nagrzewnic w Ciągu
 
----
+**Cel:** Wyrównanie eksploatacji nagrzewnic N1-N8
 
-## 8. Monitoring i Diagnostyka
+**Funkcje:**
+- Cykliczna wymiana: najdłużej pracująca → najdłużej w postoju
+- Działa w obrębie jednego ciągu (C1 lub C2)
+- Okres rotacji: godziny/dni/tygodnie (definiowany przez technologa)
 
-Wszystkie wejściowe sygnały pomiarowe systemu są testowane na poziomie sterownika PLC:
-
-**Testowanie torów pomiarowych:**
-- Sprawdzanie ciągłości torów pomiarowych (wykrywanie przerw i zwarć)
-- Programowe filtrowanie i uśrednianie sygnałów
-- Kontrola czy dany pomiar mieści się w dopuszczalnym zakresie
-
-**Cel:** Wzrost bezpieczeństwa działania systemu.
-
-**Uwaga:** Każde zakłócenie spowodowane niedotrzymaniem warunków (sprawność układów pomiarowych, sprawność sterowanych urządzeń, odpowiedni poziom mocy cieplnej czynnika grzewczego) może skutkować **utratą stabilności SAR i przełączeniem systemu na sterowanie ręczne.**
+📖 **[Szczegóły algorytmu RN](../03-algorytmy/algorytmy.md#algorytm-rn-cykliczna-rotacja-nagrzewnic-w-obrębie-ciągu)**
 
 ---
 
-## 9. System SCADA/HMI - Wymagania Podstawowe
+## 6. Parametry Systemowe
 
-System sterowania realizowany na sterowniku PLC z regulatorami PID.
+**Temperatury docelowe:**
+- **Tz = 50°C** - temperatura na wylocie z nagrzewnicy
+- **Ts = 2°C** - temperatura w szybie (poziom -30m)
 
-**Poziom sterowania (PLC):**
-- Realizacja algorytmów regulacji PARTPG i PARTS
-- Bloki funkcyjne regulatorów PID dla:
-  - UAR temperatury powietrza z nagrzewnic (8 pętli PID)
-  - UAR temperatury w szybie (2 pętle PID dla wentylatorów W1 i W2)
-- Sterowanie zaworami regulacyjnymi i przepustnicami
-- Monitoring czujników temperatury
-- Generowanie sygnałów alarmowych
+**Zawory regulacyjne:**
+- Zakres: 20-100%
+- Min. 20% = ochrona antyzamrożeniowa
+
+**Wentylatory:**
+- Zakres częstotliwości: 25-50 Hz
+- Sterowanie: PLC z regulatorami PID
 
 **Tryby pracy:**
-- **AUTO** - praca w trybie automatycznym (regulacja PID)
-- **MANUAL** - sterowanie ręczne zdalne
-- Bezuderzeniowe (bumpless) przejście między trybami sterowania
+- **AUTO** - regulacja PID
+- **MANUAL** - sterowanie ręczne
 
-**Funkcje automatyczne:**
-- Automatyczne załączanie/wyłączanie nagrzewnic według Tab. 1
-- Cykliczna rotacja nagrzewnic w jednym ciągu wentylacyjnym (Algorytm RN)
-- Cykliczna zmiana układów pracy ciągów grzewczych (Algorytm RC)
+**Uwaga:** Parametry PID (Kp, Ti, Td) i okresy rotacji (RC, RN) będą dobrane doświadczalnie podczas rozruchu na obiekcie.
 
-**Parametry do ustawienia przez technologa:**
-- Wartości zadane: Tz (50°C), Ts (2°C)
-- Nastawy regulatorów PID: Kp, Ti, Td (dobierane doświadczalnie podczas rozruchu)
-- Okres rotacji nagrzewnic
-- Okres zmiany układów pracy ciągów
+---
+
+## 7. System SCADA/HMI
+
+System sterowania realizowany na sterowniku PLC z interfejsem operatorskim SCADA/HMI.
+
+**Funkcje podstawowe:**
+- Monitoring temperatury szybu, nagrzewnic i zewnętrznej
+- Wizualizacja aktualnego scenariusza i układu pracy
+- System alarmów (krytyczne, ostrzegawcze, informacyjne)
+- Trendy historyczne (24h, 7 dni, 30 dni)
+- Przełączanie AUTO/MANUAL
+- Nastawy PID i parametrów rotacji
+
+**Poziomy dostępu:**
+- **Operator:** monitoring, kwitowanie alarmów
+- **Inżynier:** zmiana trybu, ręczne sterowanie
+- **Administrator:** zmiana nastaw PID, konfiguracja
+
+📖 **[Szczegóły SCADA/HMI](../04-scada-hmi/scada-hmi.md)**
+
+---
 
 ## Powiązane Dokumenty
 
-- [Projekt instalacji](../02-projekt-instalacji/projekt-instalacji.md) - schematy instalacji grzewczej
-- [Algorytmy WS, RC, RN](../03-algorytmy/algorytmy.md) - szczegółowe opisy algorytmów sterowania
-- [Dokumentacja wejściowa](./dokumentacja-wejsciowa/Projekt%20instalacji%20ogrzewania%20szybu.md) - pliki otrzymane od zleceniodawcy
+- **[Projekt instalacji](../02-projekt-instalacji/projekt-instalacji.md)** - schematy instalacji, UAR, scenariusze z diagramami
+- **[Algorytmy WS, RC, RN](../03-algorytmy/algorytmy.md)** - szczegółowe pseudokody, flowcharty, przykłady
+- **[System SCADA/HMI](../04-scada-hmi/scada-hmi.md)** - interfejs operatorski, wizualizacja, alarmy, trendy
+- **[Dokumentacja wejściowa](./dokumentacja-wejsciowa/Projekt%20instalacji%20ogrzewania%20szybu.md)** - pliki otrzymane od zleceniodawcy
+
+---
+
+**Ostatnia aktualizacja:** 24 Listopad 2025  
+**Wersja dokumentu:** 1.0
