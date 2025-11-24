@@ -69,7 +69,7 @@ Trzy kluczowe algorytmy:
 
 ## 🎨 Wizualizacje
 
-Wszystkie diagramy SVG: [visualization/](../00-star../03-projekt-instalacji/wizualizacja-systemu.md)
+Wszystkie diagramy SVG: [visualization/](../00-star../03-projekt-instalacji/projekt-instalacji.md)
 
 | Kategoria | Ilość | Opis |
 |-----------|-------|------|
@@ -101,7 +101,7 @@ Przykład S1: włącza się przy 2°C, wyłącza się przy 3°C (histereza 1°C)
 
 1. Sprawdź [Pytania i Wyjaśnienia](../04-analizy/pytania-wyjasnienia.md)
 2. Zobacz [Archiwum](../02-algorytmy/_ARCHIVE_pelny-dokument.md) - pełna dokumentacja
-3. Przejrzyj [Wizualizacje](../00-star../03-projekt-instalacji/wizualizacja-systemu.md)
+3. Przejrzyj [Wizualizacje](../00-star../03-projekt-instalacji/projekt-instalacji.md)
 
 ---
 

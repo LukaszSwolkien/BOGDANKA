@@ -366,7 +366,7 @@ System sterowania realizowany na sterowniku PLC z regulatorami PID.
 
 ## 10. Wizualizacja Systemu
 
-📊 **[Pełna wizualizacja systemu z osadzonymi diagramami](../03-projekt-instalacji/wizualizacja-systemu.md)**
+📊 **[Pełna wizualizacja systemu z osadzonymi diagramami](../03-projekt-instalacji/projekt-instalacji.md)**
 
 Dokument zawiera:
 - Wszystkie scenariusze S0-S8 z diagramami
