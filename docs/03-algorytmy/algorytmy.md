@@ -99,7 +99,6 @@ sprawne_N = [True] * 8    # Bool sprawność nagrzewnic
 sprawne_W = [True, True]  # Bool sprawność wentylatorów W1, W2
 tryb = "AUTO"             # "AUTO" lub "MANUAL"
 ```
-
 ---
 
 ## Wprowadzenie
@@ -264,6 +263,7 @@ Szczegółowa tabela scenariuszy znajduje się w [dokumentacji głównej - Sekcj
 ![Algorytm WS - Wybór Scenariusza](./schematy/algorytm-WS-wybor-scenariusza-flowchart.svg)
 
 **Pseudokod:**
+<details>
 
 ```
 ZMIENNE GLOBALNE:
@@ -874,6 +874,7 @@ FUNKCJA Weryfikuj_Scenariusz(scenariusz):
 
 KONIEC FUNKCJI
 ```
+</details>
 
 ## 6. Koordynacja z Algorytmami RC i RN
 
@@ -1513,6 +1514,7 @@ Rotacja układów jest możliwa **TYLKO** gdy spełnione są **WSZYSTKIE** warun
 ![Algorytm RC - Diagram przepływu](./schematy/algorytm-RC-rotacja-ciagow-flowchart.svg)
 
 **Pseudokod:**
+<details>
 
 ```
 ZMIENNE GLOBALNE (współdzielone z Algorytmem RN):
@@ -1690,6 +1692,7 @@ FUNKCJA Wykonaj_Zmianę_Układu(docelowy_układ):
   
 KONIEC FUNKCJI
 ```
+</details>
 
 ## 6. Obsługa Stanów Awaryjnych Podczas Rotacji
 
@@ -1858,6 +1861,9 @@ Algorytm RN pełni **podwójną funkcję**:
 **Diagram wizualizujący algorytm:**
 
 ![Algorytm RN Flowchart](./schematy/algorytm-RN-rotacja-nagrzewnic-flowchart.svg)
+
+**Pseudokod:**
+<details>
 
 ```
 ZMIENNE GLOBALNE (współdzielone z Algorytmem RC):
@@ -2196,6 +2202,7 @@ FUNKCJA Algorytm_RN_Wybierz_Nagrzewnicę(ciąg, ilość_docelowa):
 
 KONIEC FUNKCJI
 ```
+</details>
 
 ## 6. Priorytety Rotacji
 
