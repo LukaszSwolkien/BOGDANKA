@@ -63,9 +63,9 @@ Trzy kluczowe algorytmy:
 |----------|---------------|------|
 | [Architektura Systemu](../01-system/system.md) | 60 min | Kompletny opis systemu PARTPG i PARTS |
 | [Przegląd Algorytmów](../02-algorytmy/algorytmy.md) | 15 min | Wprowadzenie do algorytmów WS, RC, RN |
-| [Algorytm WS](../02-algorytmy/algorytm-WS-wybor-scenariusza.md) | 45 min | Wybór scenariusza pracy |
-| [Algorytm RC](../02-algorytmy/algorytm-RC-rotacja-ciagow.md) | 30 min | Rotacja układów ciągów |
-| [Algorytm RN](../02-algorytmy/algorytm-RN-rotacja-nagrzewnic.md) | 45 min | Rotacja nagrzewnic |
+| [Algorytm WS](../02-algorytmy/algorytmy.md#algorytm-ws-automatyczny-wybór-scenariusza-pracy) | 45 min | Wybór scenariusza pracy |
+| [Algorytm RC](../02-algorytmy/algorytmy.md#algorytm-rc-cykliczna-rotacja-układów-pracy-ciągów) | 30 min | Rotacja układów ciągów |
+| [Algorytm RN](../02-algorytmy/algorytmy.md#algorytm-rn-cykliczna-rotacja-nagrzewnic-w-obrębie-ciągu) | 45 min | Rotacja nagrzewnic |
 
 ## 🎨 Wizualizacje
 

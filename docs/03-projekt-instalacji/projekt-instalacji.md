@@ -355,7 +355,7 @@ System wykorzystuje **trzy współpracujące algorytmy** zapewniające automatyc
 - Różne progi dla włączania i wyłączania (zapobiega oscylacjom)
 - Przykład S3: włączenie przy -4°C, wyłączenie dopiero przy -3°C (1°C histerezy)
 
-📖 **[Szczegółowy algorytm WS](../02-algorytmy/algorytm-WS-wybor-scenariusza.md)**
+📖 **[Szczegółowy algorytm WS](../02-algorytmy/algorytmy.md#algorytm-ws-automatyczny-wybór-scenariusza-pracy)**
 
 ---
 
@@ -428,7 +428,7 @@ System wykorzystuje **trzy współpracujące algorytmy** zapewniające automatyc
 - Rotacja działa **tylko** w scenariuszach S1-S4 (temperatury umiarkowane)
 - W scenariuszach S5-S8 rotacja **nie jest stosowana** - system zawsze pracuje w układzie Podstawowym
 
-📖 **[Szczegółowy algorytm RC](../02-algorytmy/algorytm-RC-rotacja-ciagow.md)**
+📖 **[Szczegółowy algorytm RC](../02-algorytmy/algorytmy.md#algorytm-rc-cykliczna-rotacja-układów-pracy-ciągów)**
 
 ---
 
@@ -482,7 +482,7 @@ System wykorzystuje **trzy współpracujące algorytmy** zapewniające automatyc
 **Postój:** N3 (odpoczynek)  
 **Akcja:** Wyłączono N3, załączono N2
 
-📖 **[Szczegółowy algorytm RN](../02-algorytmy/algorytm-RN-rotacja-nagrzewnic.md)**
+📖 **[Szczegółowy algorytm RN](../02-algorytmy/algorytmy.md#algorytm-rn-cykliczna-rotacja-nagrzewnic-w-obrębie-ciągu)**
 
 ---
 

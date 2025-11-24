@@ -17,9 +17,9 @@ Kompleksowa dokumentacja systemu automatycznego sterowania ogrzewaniem szybu wyd
 
 ### [02-algorytmy](./02-algorytmy/) - Algorytmy Sterowania
 - `algorytmy.md` - Przegląd algorytmów WS, RC, RN
-- `algorytm-WS-wybor-scenariusza.md` - Automatyczny wybór scenariusza
-- `algorytm-RC-rotacja-ciagow.md` - Rotacja układów pracy ciągów
-- `algorytm-RN-rotacja-nagrzewnic.md` - Rotacja nagrzewnic w ciągu
+- `algorytmy.md#algorytm-ws-automatyczny-wybór-scenariusza-pracy` - Automatyczny wybór scenariusza
+- `algorytmy.md#algorytm-rc-cykliczna-rotacja-układów-pracy-ciągów` - Rotacja układów pracy ciągów
+- `algorytmy.md#algorytm-rn-cykliczna-rotacja-nagrzewnic-w-obrębie-ciągu` - Rotacja nagrzewnic w ciągu
 - `_ARCHIVE_pelny-dokument.md` - Archiwum oryginalnej dokumentacji
 
 ### [03-projekt-instalacji](./03-projekt-instalacji/) - Projekt Instalacji
@@ -55,7 +55,7 @@ Wszystkie diagramy SVG znajdują się w katalogu [wizualizacje](./03-projekt-ins
 
 ## 📝 Konwencje
 
-- **Pliki MD**: kebab-case (np. `algorytm-WS-wybor-scenariusza.md`)
+- **Pliki MD**: kebab-case (np. `algorytmy.md#algorytm-ws-automatyczny-wybór-scenariusza-pracy`)
 - **Katalogi**: numerowane prefiksem dla kolejności (np. `00-start/`)
 - **Wizualizacje**: oddzielny katalog `doc./03-projekt-instalacji/projekt-instalacji.md`
 

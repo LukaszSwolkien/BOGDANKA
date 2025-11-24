@@ -49,7 +49,7 @@ System automatycznej regulacji (SAR) temperatury szybu składa się z dwóch pod
 - Maksymalizacja niezawodności przez równomierne zużycie
 - Wybór nagrzewnic na podstawie historii pracy/postoju
 
-📖 **[Szczegółowy opis → Algorytm RN](../02-algorytmy/algorytm-RN-rotacja-nagrzewnic.md)**
+📖 **[Szczegółowy opis → Algorytm RN](../02-algorytmy/algorytmy.md#algorytm-rn-cykliczna-rotacja-nagrzewnic-w-obrębie-ciągu)**
 
 ### 1.2 PARTS - Podsystem Automatycznej Regulacji Temperatury Szybu
 
@@ -81,7 +81,7 @@ System automatycznej regulacji (SAR) temperatury szybu składa się z dwóch pod
 - Dotyczy scenariuszy S1-S4 (temperatura -11°C < t ≤ 2°C)
 - Maksymalizacja niezawodności przez równomierne zużycie
 
-📖 **[Szczegółowy opis algorytmów](../02-algorytmy/algorytmy.md)** | [Algorytm WS](../02-algorytmy/algorytm-WS-wybor-scenariusza.md) | [Algorytm RC](../02-algorytmy/algorytm-RC-rotacja-ciagow.md)
+📖 **[Szczegółowy opis algorytmów](../02-algorytmy/algorytmy.md)** | [Algorytm WS](../02-algorytmy/algorytmy.md#algorytm-ws-automatyczny-wybór-scenariusza-pracy) | [Algorytm RC](../02-algorytmy/algorytmy.md#algorytm-rc-cykliczna-rotacja-układów-pracy-ciągów)
 
 ### 1.3 Zależności między Podsystemami
 
@@ -111,7 +111,7 @@ System automatycznej regulacji (SAR) temperatury szybu składa się z dwóch pod
 - Otwarcie przepustnicy na dolocie zimnego powietrza do nagrzewnicy
 - Rozpoczęcie procesu regulacji (AUTO lub MANUAL)
 
-📖 **[Szczegółowe sekwencje dla wszystkich przejść](../02-algorytmy/algorytm-WS-wybor-scenariusza.md)**
+📖 **[Szczegółowe sekwencje dla wszystkich przejść](../02-algorytmy/algorytmy.md#algorytm-ws-automatyczny-wybór-scenariusza-pracy)**
 
 ### 2.2 Wyłączenie Nagrzewnicy z Ruchu
 
@@ -198,7 +198,7 @@ System wykorzystuje **Algorytm WS** do automatycznego doboru scenariusza pracy (
 - Bezpieczne sekwencje przejść między scenariuszami
 - Koordynacja z algorytmami rotacji RC i RN
 
-📖 **[Szczegółowy algorytm WS](../02-algorytmy/algorytm-WS-wybor-scenariusza.md)** | **[Flowchart](../02-algorytmy/schematy/algorytm-WS-wybor-scenariusza-flowchart.svg)**
+📖 **[Szczegółowy algorytm WS](../02-algorytmy/algorytmy.md#algorytm-ws-automatyczny-wybór-scenariusza-pracy)** | **[Flowchart](../02-algorytmy/schematy/algorytm-WS-wybor-scenariusza-flowchart.svg)**
 
 ### 4.2 Tabela Scenariuszy
 
@@ -260,12 +260,12 @@ System wykorzystuje **trzy współpracujące algorytmy** do sterowania:
 2. **Algorytm RC: Rotacja Układów Pracy Ciągów**
    - Określa **KTÓRY CIĄG** pracuje w S1-S4 (Podstawowy: C1, Ograniczony: C2)
    - Wyrównuje eksploatację W1 i W2
-   - 📖 [Szczegóły](../02-algorytmy/algorytm-RC-rotacja-ciagow.md)
+   - 📖 [Szczegóły](../02-algorytmy/algorytmy.md#algorytm-rc-cykliczna-rotacja-układów-pracy-ciągów)
 
 3. **Algorytm RN: Rotacja Nagrzewnic w Ciągu**
    - Określa **KTÓRE KONKRETNIE** nagrzewnice pracują w ciągu
    - Wyrównuje eksploatację N1-N8
-   - 📖 [Szczegóły](../02-algorytmy/algorytm-RN-rotacja-nagrzewnic.md)
+   - 📖 [Szczegóły](../02-algorytmy/algorytmy.md#algorytm-rn-cykliczna-rotacja-nagrzewnic-w-obrębie-ciągu)
 
 **Tabela scenariuszy określa ILOŚĆ wymaganych nagrzewnic, ale nie konkretne numery.**
 **KTÓRE nagrzewnice** pracują jest określane dynamicznie przez algorytmy RC i RN.
