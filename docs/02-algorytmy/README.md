@@ -19,7 +19,7 @@ _Plik ten jest częścią dokumentacji systemu sterowania nagrzewnicami BOGDANKA
 1. [Algorytm 5: Wybór Scenariusza Pracy](algorytm-5-wybor-scenariusza.md)
 2. [Algorytm 5A: Rotacja Układów Pracy Ciągów](algorytm-5A-rotacja-ukladow.md)
 3. [Algorytm 5B: Rotacja Nagrzewnic w Obrębie Ciągu](algorytm-5B-rotacja-nagrzewnic.md)
-4. [Koordynacja Algorytmów](koordynacja.md)
+4. [Wizualizacja Koordynacji 5A↔5B](../../visualization/algorytmy/koordynacja-5A-5B-timeline.svg)
 
 ---
 

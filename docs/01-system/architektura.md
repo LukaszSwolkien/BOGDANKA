@@ -6,9 +6,9 @@
 
 Dokument otrzymany 19 listopad 2025:
 
-[Projekt instalacji ogrzewania szybu - skan dokumentacji](assets/Projekt%20instalacji%20ogrzewania%20szybu.pdf)
+[Projekt instalacji ogrzewania szybu - skan dokumentacji](../assets/images/assets/Projekt%20instalacji%20ogrzewania%20szybu.pdf)
 
-[Projekt instalacji ogrzewania szybu - zmigrowany skan dokumentacji do formatu MD](Projekt%20instalacji%20ogrzewania%20szybu/Projekt%20instalacji%20ogrzewania%20szybu.md)
+[Projekt instalacji ogrzewania szybu - dokumentacja](../03-projekt-instalacji/schematy/Projekt%20instalacji%20ogrzewania%20szybu.md)
 
 # Opracowanie specyfikacji
 
@@ -23,7 +23,7 @@ System automatycznej regulacji (SAR) temperatury szybu składa się z dwóch pod
 - **Warstwa regulacji** - podstawowa funkcja utrzymania temperatury (PID)
 - **Warstwa zarządzania** - funkcja optymalizująca wykorzystanie urządzeń (algorytmy)
 
-![Architektura SAR](../Symulacja/architektura_SAR_system.svg)
+![Architektura SAR](../assets/images/architektura_SAR_system.svg)
 
 *Rys. Dwuwarstwowa architektura systemu SAR pokazująca relacje między podsystemami PARTS i PARTPG oraz algorytmami 5, 5A i 5B.*
 
@@ -53,7 +53,7 @@ System automatycznej regulacji (SAR) temperatury szybu składa się z dwóch pod
 - Maksymalizacja niezawodności przez równomierne zużycie
 - Wybór nagrzewnic na podstawie historii pracy/postoju
 
-📖 **[Szczegółowy opis → Algorytmy_rotacji.md - Sekcja 5B](Algorytmy_rotacji.md#5b-algorytm-cyklicznej-rotacji-nagrzewnic-w-obrębie-ciągu)**
+📖 **[Szczegółowy opis → Algorytm 5B](../02-algorytmy/algorytm-5B-rotacja-nagrzewnic.md)**
 
 ### 2.2 PARTS - Podsystem Automatycznej Regulacji Temperatury Szybu
 
@@ -85,7 +85,7 @@ System automatycznej regulacji (SAR) temperatury szybu składa się z dwóch pod
 - Dotyczy scenariuszy S1-S4 (temperatura -11°C < t ≤ 2°C)
 - Maksymalizacja niezawodności przez równomierne zużycie
 
-📖 **[Szczegółowy opis → Algorytmy_rotacji.md - Sekcja 5 i 5A](Algorytmy_rotacji.md#5-algorytm-automatycznego-wyboru-scenariusza-pracy)**
+📖 **[Szczegółowy opis → Algorytmy 5 i 5A](../02-algorytmy/README.md)** | [Algorytm 5](../02-algorytmy/algorytm-5-wybor-scenariusza.md) | [Algorytm 5A](../02-algorytmy/algorytm-5A-rotacja-ukladow.md)
 
 ### 2.3 Zależności między Podsystemami
 
@@ -113,7 +113,7 @@ System automatycznej regulacji (SAR) temperatury szybu składa się z dwóch pod
 - Otwarcie przepustnicy na dolocie zimnego powietrza do nagrzewnicy
 - Rozpoczęcie procesu regulacji (AUTO lub MANUAL)
 
-📖 **[Szczegółowe sekwencje dla wszystkich przejść → Algorytmy_rotacji.md - Sekcja 5.10](Algorytmy_rotacji.md#510-szczegółowe-sekwencje-zmian-scenariuszy)**
+📖 **[Szczegółowe sekwencje dla wszystkich przejść → Algorytm 5](../02-algorytmy/algorytm-5-wybor-scenariusza.md)**
 
 ### 3.2 Wyłączenie Nagrzewnicy z Ruchu
 
@@ -196,9 +196,9 @@ System wykorzystuje **Algorytm 5** do automatycznego doboru scenariusza pracy (S
 - Bezpieczne sekwencje przejść między scenariuszami
 - Koordynacja z algorytmami rotacji 5A i 5B
 
-📖 **[Szczegółowy algorytm → Algorytmy_rotacji.md - Sekcja 5](Algorytmy_rotacji.md#5-algorytm-automatycznego-wyboru-scenariusza-pracy)**
+📖 **[Szczegółowy algorytm → Algorytm 5: Automatyczny Wybór Scenariusza](../02-algorytmy/algorytm-5-wybor-scenariusza.md)**
 
-📖 **[Szczegółowe sekwencje zmian scenariuszy → Algorytmy_rotacji.md - Sekcja 5.10](Algorytmy_rotacji.md#510-szczegółowe-sekwencje-zmian-scenariuszy)**
+📖 **[Wizualizacja → Flowchart Algorytmu 5](../../visualization/algorytmy/algorytm-5-wybor-scenariusza-flowchart.svg)**
 
 ### 5.1 Tabela Scenariuszy
 
@@ -287,7 +287,7 @@ System wykorzystuje **trzy współpracujące algorytmy** do sterowania:
 - Okresowa zmiana układu po upłynięciu okresu rotacji
 - Zapewnia równomierne czasy pracy C1 i C2
 
-📖 **[Szczegółowy algorytm → Algorytmy_rotacji.md - Sekcja 5A](Algorytmy_rotacji.md#5a-algorytm-cyklicznej-rotacji-układów-pracy-ciągów)**
+📖 **[Szczegółowy algorytm → Algorytm 5A: Rotacja Układów](../02-algorytmy/algorytm-5A-rotacja-ukladow.md)** | [Flowchart](../../visualization/algorytmy/algorytm-5A-rotacja-ukladow-flowchart.svg)
 
 ---
 
@@ -302,7 +302,7 @@ System wykorzystuje **trzy współpracujące algorytmy** do sterowania:
 - Wymiana jednej nagrzewnicy po upłynięciu okresu rotacji
 - Zapewnia równomierne czasy pracy wszystkich N1-N8
 
-📖 **[Szczegółowy algorytm → Algorytmy_rotacji.md - Sekcja 5B](Algorytmy_rotacji.md#5b-algorytm-cyklicznej-rotacji-nagrzewnic-w-obrębie-ciągu)**
+📖 **[Szczegółowy algorytm → Algorytm 5B: Rotacja Nagrzewnic](../02-algorytmy/algorytm-5B-rotacja-nagrzewnic.md)** | [Flowchart](../../visualization/algorytmy/algorytm-5B-rotacja-nagrzewnic-flowchart.svg)
 
 ---
 
@@ -334,7 +334,7 @@ System wykorzystuje **trzy współpracujące algorytmy** do sterowania:
 
 ## 8. Schematy
 
-![nawiew powietrza](assets/nawiew_z_dolnego_ciagu_wentylacyjnego.svg)
+![nawiew powietrza](../03-projekt-instalacji/schematy/nawiew_z_dolnego_ciagu_wentylacyjnego.svg)
 
 ## 9. Monitoring i Diagnostyka
 
@@ -380,4 +380,4 @@ System sterowania realizowany na sterowniku PLC z regulatorami PID.
 
 ## 11. Symulacja
 
-[Symulacja HMI](../symulacja.md)
+[Wizualizacje systemu](../../visualization/README.md)

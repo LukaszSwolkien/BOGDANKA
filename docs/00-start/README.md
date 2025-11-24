@@ -34,7 +34,7 @@ To jest punkt startowy dla wszystkich użytkowników systemu automatycznego ster
 **Zacznij tutaj:**
 1. [Przegląd Systemu](../01-system/architektura.md#1-wprowadzenie) - cel i zakres
 2. [Pytania i Wyjaśnienia](../04-analizy/pytania-wyjasnienia.md) - wymagania
-3. [Wycena Projektu](../../wycena_projektu.md) - szacunki czasowe i kosztowe
+3. [Architektura Systemu](../01-system/architektura.md) - szczegóły techniczne
 
 **Co znajdziesz:**
 - Cele biznesowe systemu
