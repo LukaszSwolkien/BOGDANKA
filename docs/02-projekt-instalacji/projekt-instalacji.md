@@ -188,7 +188,7 @@ System automatycznie przełącza się między scenariuszami pracy w zależności
 **Algorytm RC:** Rotacja układów pracy ciągów (Podstawowy ↔ Ograniczony)  
 **Algorytm RN:** Rotacja nagrzewnic w obrębie ciągu
 
-**[Szczegóły algorytmów sterowania](../02-algorytmy/algorytmy.md)**
+**[Szczegóły algorytmów sterowania](../03-algorytmy/algorytmy.md)**
 
 ### 5.0 Scenariusz S0: Brak Ogrzewania
 **Warunki:** t ≥ 3°C | **Nagrzewnice:** Brak | **Wentylatory:** Brak

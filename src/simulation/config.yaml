@@ -1,0 +1,82 @@
+# Simulation services Observability Configuration
+# Single YAML file containing all telemetry and service settings
+
+# Simulation Configuration
+simulation:
+  acceleration: 1000       # time acceleration: 1s simulation = 1000s real time (common for both services)
+
+# Telemetry Configuration
+telemetry:
+  # Export configuration: "otlp" for Splunk Observability, "console" for local testing
+  exporter_type: "otlp"
+  
+  # OTLP endpoints for Splunk Observability Cloud
+  # Replace 'us1' with your Splunk realm (us0, us1, eu0, jp0, au0)
+  endpoints:
+    metrics: "https://ingest.signalfx.com/v2/datapoint/otlp"
+  
+  # Headers for Splunk Observability authentication
+  headers:
+    X-SF-Token: "<YOUR_SF_TOKEN>" 
+    Content-Type: "application/x-protobuf"
+  
+  # Resource attributes & default dimensions applied to every metric/log/span
+  resource_attributes:
+    environment: "dev"
+    project: "bogdanka-simulation"
+  default_dimensions:
+    site: "Szyb-2"
+  
+  # Log level: DEBUG, INFO, WARNING, ERROR
+  log_level: "INFO"
+
+# Service Configuration
+services:
+  # Algo Service is the main service that implements the algorithms. We will collect metrics from this service to see how algorithms are working.
+  algo:
+    service_name: "bogdanka-algo"
+    metrics_prefix: "bogdanka.algo"
+    weather_endpoint: "http://localhost:8080/temperature"
+    otlp_timeout_ms: 1000
+    
+    # Algorithm Configuration (parameters for WS, RC, RN)
+    algorithms:
+      # Algorithm WS - Scenario Selection
+      ws:
+        temp_monitoring_cycle_s: 10          # [s] T_extern reading frequency
+        scenario_stabilization_time_s: 60    # [s] minimum time in scenario before change
+        hysteresis_delta_c: 1.0              # [°C] hysteresis for scenario transitions
+      
+      # Algorithm RC - Configuration Rotation (Primary ↔ Limited)
+      rc:
+        rotation_period_hours: 168           # [h] rotation period (7 days = 168h)
+        algorithm_loop_cycle_s: 60           # [s] RC check frequency
+        min_operating_time_s: 3600           # [s] minimum time before rotation allowed
+      
+      # Algorithm RN - Heater Rotation
+      rn:
+        rotation_period_hours: 168           # [h] rotation period (7 days = 168h)
+        min_time_delta_s: 3600               # [s] minimum difference for rotation eligibility
+        gap_after_rc_s: 3600                 # [s] 1h gap after RC rotation
+        global_gap_between_rotations_s: 900  # [s] 15 min gap between RN rotations
+  
+  # Weather Service provides temperature to the algo service 
+  weather:
+    host: "localhost"
+    port: 8080
+    service_name: "bogdanka-weather"
+    metrics_prefix: "bogdanka.weather"
+    # Realistic winter temperature profile that tests ALL scenarios S0-S8
+    winter_profile:
+      # Profile simulates realistic winter with gradual cooling and warming cycles
+      # Temperature range: +5°C (autumn) → -25°C (harsh winter) → +3°C (spring)
+      # This ensures testing of all scenarios: S0, S1, S2, S3, S4, S5, S6, S7, S8
+      simulation_days: 30             # total simulation period
+      initial_temp_c: 5.0             # start temperature (autumn, scenario S0)
+      min_temp_c: -25.0               # coldest temperature (harsh winter, scenario S8)
+      final_temp_c: 3.0               # end temperature (early spring, scenario S0)
+      cooling_days: 15                # days to reach minimum temperature
+      warming_days: 15                # days to warm back up
+      daily_variation_c: 3.0          # daily temperature swing (day/night)
+      noise_sigma_c: 0.5              # random variation for realism
+      

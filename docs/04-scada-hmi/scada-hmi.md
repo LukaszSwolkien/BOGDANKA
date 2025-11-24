@@ -149,7 +149,34 @@ Panel HMI umożliwia wyświetlanie trendów:
 8. **Rotacja RC** - Historia zmian układów, stosunek eksploatacji C1/C2
 9. **Rotacja RN** - Czasy pracy nagrzewnic, predykcja następnej rotacji
 
-## 8. Parametry Nastaw PID
+## 8. Monitoring i Statystyki (Matryca WS/RC/RN)
+
+| Metryka | WS | RC | RN | Opis / Użycie |
+|---------|:--:|:--:|:--:|---------------|
+| Historia temperatury zewnętrznej | ✅ | – | – | Bufor 24 h, kroki wg `CYKL_MONITORINGU_TEMP` |
+| Timeline scenariuszy S0‑S8 | ✅ | – | – | Kontekst wszystkich zdarzeń (zaznacza decyzje WS) |
+| Liczba zmian + średni czas zmiany scenariusza | ✅ | – | – | KPI responsywności WS |
+| Odroczenia zmian (stabilizacja / blokady) | ✅ | – | – | Diagnostyka współdziałania WS↔RC↔RN |
+| Łączny czas w każdym scenariuszu | ✅ | – | – | Analiza energetyczna i raporty miesięczne |
+| Awarie czujników temperatury | ✅ | – | – | Bezpieczeństwo pomiarowe / SLA czujników |
+| Łączny czas pracy C1 / C2 | – | ✅ | – | Balans układów podstawowy/ograniczony |
+| Liczba i średni czas rotacji układów | – | ✅ | – | Skuteczność RC, średni czas procedury |
+| Nieudane/odrzucone rotacje układów | – | ✅ | – | Wskaźnik problemów wentylatorów / blokad |
+| Stosunek eksploatacji C1/C2 | – | ✅ | – | Cel ≈1.0; alarm gdy >1.2 lub <0.8 |
+| Czas pracy każdego N1‑N8 | – | – | ✅ | Podstawa równomiernej eksploatacji |
+| Czas postoju każdego N1‑N8 | – | – | ✅ | Używane przez RN przy wyborze kandydatów |
+| Liczba uruchomień nagrzewnic | – | – | ✅ | Statystyka serwisowa, B10d |
+| Historia rotacji nagrzewnic + różnica max‑min | – | – | ✅ | KPI – różnica <10% po 30 dniach |
+| Średnia temperatura wylotu nagrzewnic | – | – | ✅ | Ocena zdrowia wymienników |
+
+**Widoki rekomendowane:**
+- Wykres temperatury zewnętrznej z nałożoną timeline scenariuszy.
+- Histogram czasu pracy C1 vs C2 oraz wskaźnik C1/C2.
+- Słupki czasu pracy i postoju N1‑N8 + wykres różnicy max‑min.
+- Lista zdarzeń (WS/RC/RN) z czasem i rezultatem (sukces/odroczenie/błąd).
+- Dashboard KPI (liczba zmian scenariusza, rotacje RC/RN, alarmy krytyczne).
+
+## 9. Parametry Nastaw PID
 
 **UAR Temperatury Nagrzewnic (N1-N8):**
 ```
@@ -171,7 +198,7 @@ f_min = 25 Hz (minimalna prędkość)
 f_max = 50 Hz (maksymalna prędkość)
 ```
 
-## 9. Wymagania Techniczne
+## 10. Wymagania Techniczne
 
 **Platforma SCADA:** iFix, WinCC, Wonderware, Ignition lub podobna  
 **Komunikacja PLC:** Modbus TCP/RTU, OPC UA lub protokół właścicielski  

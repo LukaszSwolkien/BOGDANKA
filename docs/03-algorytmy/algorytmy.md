@@ -915,27 +915,7 @@ Dzień 2, godz. 16:00 - Temperatura: +4°C (ocieplenie)
 - System reaguje szybko na spadki temperatury
 - System wolniej reaguje na wzrosty (oszczędzanie energii z bezpieczeństwem)
 
-## 9. Monitoring i Statystyki
-
-System rejestruje następujące dane:
-
-| Parametr | Opis |
-|----------|------|
-| Historia temperatury zewnętrznej | Bufor 24h z rozdzielczością co CYKL_MONITORINGU_TEMP |
-| Historia scenariuszy | Timestampy zmian S0↔S1↔...↔S8 |
-| Liczba zmian scenariusza | Licznik przejść (dziennie/miesięcznie) |
-| Średni czas zmiany | Średni czas trwania sekwencji zmiany scenariusza |
-| Liczba odroczeń | Ile razy zmiana została odroczona (stabilizacja/koordynacja) |
-| Czas w każdym scenariuszu | Łączny czas pracy w S0, S1, ..., S8 [h] |
-| Awarie czujnika | Licznik i czas trwania awarii odczytu temperatury |
-
-**Raport dostępny w HMI:**
-- Wykres temperatury zewnętrznej (24h/7dni/30dni)
-- Timeline scenariuszy (wizualizacja kiedy system był w S0-S8)
-- Statystyki zużycia energii w poszczególnych scenariuszach
-- Analiza efektywności (czy scenariusze dobierały się optymalnie)
-
-## 10. Szczegółowe Sekwencje Zmian Scenariuszy
+## 9. Szczegółowe Sekwencje Zmian Scenariuszy
 
 Każda zmiana scenariusza wymaga **skoordynowanej sekwencji** operacji na:
 - Zaworach regulacyjnych wody grzewczej (20-100%)
@@ -974,7 +954,7 @@ Sekwencja wyłączania:
   4. Zatrzymaj wentylator
 ```
 
-#### 5.10.1 Typy Przejść
+#### 9.1 Typy Przejść
 
 System rozróżnia 4 typy przejść między scenariuszami:
 
@@ -987,317 +967,57 @@ System rozróżnia 4 typy przejść między scenariuszami:
 | **E** | Zatrzymanie drugiego ciągu | S5→S4 | **Wysoka** |
 | **F** | Zmiana w obrębie dwóch ciągów | S5→S6, S6→S7, S7→S8 | Niska |
 
-#### 5.10.2 Sekwencja TYP A: Wyłączenie Systemu (S1→S0)
-
-**Warunki:** Temperatura wzrosła do t ≥ 3°C
-
-```
-SEKWENCJA S1→S0 (Wyłączenie systemu):
-
-UWAGA: Algorytm WS decyduje o wyłączeniu na podstawie T_zewn ≥ 3°C
-
-KROK 1: Przełącz PID nagrzewnicy w tryb MANUAL
-  Ustaw_Regulator_PID(N_aktywna, tryb=MANUAL)
-  // PID przestaje regulować, zawór "zamrażany" w aktualnej pozycji
-
-KROK 2: Zamknij zawór wody grzewczej stopniowo do 20%
-  aktualna_pozycja = Odczytaj_Pozycję_Zaworu(N_aktywna)
-  Dla pozycja = aktualna_pozycja DO 20 KROK -10:
-    Ustaw_Zawór(N_aktywna, pozycja)
-    Czekaj(2 sekundy)
-  KONIEC DLA
-  Czekaj(10 sekund)  // Stabilizacja
-
-KROK 3: Zamknij przepustnicę dolotową nagrzewnicy
-  Ustaw_Przepustnicę_Dolot(N_aktywna, ZAMKNIĘTA)
-  Czekaj(5 sekund)
-
-KROK 4: Zatrzymaj wentylator W1
-  Zmniejsz_Częstotliwość(W1, od_aktualnej DO 25Hz, krok=5Hz, czas=2s)
-  Czekaj(5 sekund)
-  Zatrzymaj_Wentylator(W1)
-  
-KROK 5: Zamknij przepustnice główne ciągu 1
-  Ustaw_Przepustnicę_Kolektor_C1(ZAMKNIĘTA)
-  Ustaw_Przepustnicę_Ciąg_C1(ZAMKNIĘTA)
-
-KROK 6: Rejestracja
-  Rejestruj_Zdarzenie("Scenariusz S0 aktywny - system wyłączony")
-  
-Czas sekwencji: ~60 sekund
-```
-
-#### 5.10.3 Sekwencja TYP B: Uruchomienie Systemu (S0→S1)
-
-**Warunki:** Temperatura spadła do t ≤ 2°C
-
-```
-SEKWENCJA S0→S1 (Uruchomienie systemu):
-
-KROK 1: Otwórz przepustnice główne ciągu 1
-  Ustaw_Przepustnicę_Ciąg_C1(OTWARTA)
-  Ustaw_Przepustnicę_Kolektor_C1(OTWARTA)
-  Ustaw_Przepustnicę_Wyrzutnia_430(OTWARTA)
-  Czekaj(10 sekund)  // Stabilizacja ciśnienia
-
-KROK 2: Uruchom wentylator W1
-  Uruchom_Wentylator(W1, częstotliwość=25Hz)
-  Czekaj(10 sekund)  // Stabilizacja obrotów
-  Sprawdź_Prąd_Silnika(W1)  // Weryfikacja pracy
-
-KROK 3: Przygotuj nagrzewnicę N (wybrana przez Algorytm RC/RN)
-  Ustaw_Zawór(N, 20%)  // Pozycja startowa
-  Czekaj(5 sekund)
-
-KROK 4: Otwórz przepustnicę dolotową nagrzewnicy
-  Ustaw_Przepustnicę_Dolot(N, OTWARTA)
-  Czekaj(5 sekund)  // Przepływ powietrza przez nagrzewnicę
-
-KROK 5: Aktywuj regulację PID nagrzewnicy
-  Ustaw_Regulator_PID(N, tryb=AUTO, setpoint=50°C)
-  // Zawór zacznie się otwierać zgodnie z potrzebami
-  Czekaj(30 sekund)  // Stabilizacja temperatury
-
-KROK 6: Aktywuj regulację PID wentylatora
-  Ustaw_Wentylator(W1, tryb=AUTO, setpoint=2°C)
-  // Wentylator zacznie regulować prędkość
-
-KROK 7: Weryfikacja
-  temp_N = Odczytaj_Temperaturę(N)
-  JEŻELI temp_N < 30°C WTEDY
-    Alarm("Nagrzewnica nie osiąga temperatury")
-    PRZERWIJ
-  KONIEC JEŻELI
-  
-  Rejestruj_Zdarzenie("Scenariusz S1 aktywny")
-  
-Czas sekwencji: ~70 sekund
-```
-
-#### 5.10.4 Sekwencja TYP C: Dodanie Nagrzewnicy w Tym Samym Ciągu (S1→S2, S2→S3, S3→S4)
-
-**Przykład: S2→S3** (2 nagrzewnice → 3 nagrzewnice)
-
-```
-SEKWENCJA S2→S3 (Dodanie trzeciej nagrzewnicy):
-
-UWAGA: Wentylator W1 i nagrzewnice N1, N2 już pracują
-
-KROK 1: Wybierz nagrzewnicę do załączenia
-  N_nowa = Algorytm_RN_Wybierz_Nagrzewnicę(CIĄG1, ilość=3)
-  // Algorytm RN wybiera na podstawie czasu postoju (najdłużej nieużywana)
-
-KROK 2: Przygotuj nagrzewnicę N_nowa
-  Ustaw_Zawór(N_nowa, 20%)
-  Czekaj(3 sekundy)
-
-KROK 3: Otwórz przepustnicę dolotową
-  Ustaw_Przepustnicę_Dolot(N_nowa, OTWARTA)
-  Czekaj(5 sekund)
-
-KROK 4: Aktywuj regulację PID
-  Ustaw_Regulator_PID(N_nowa, tryb=AUTO, setpoint=50°C)
-  Czekaj(30 sekund)
-
-KROK 5: Weryfikacja i dostrojenie wentylatora
-  // PID wentylatora automatycznie dostosuje prędkość
-  // do zwiększonego zapotrzebowania (3 nagrzewnice zamiast 2)
-  
-KROK 6: Sprawdź stabilność
-  temp_N_nowa = Odczytaj_Temperaturę(N_nowa)
-  JEŻELI |temp_N_nowa - 50°C| > 5°C WTEDY
-    Alarm("N_nowa nie osiąga temperatury docelowej")
-  KONIEC JEŻELI
-  
-  Rejestruj_Zdarzenie("Scenariusz S3 aktywny")
-
-Czas sekwencji: ~45 sekund
-```
-
-#### 5.10.5 Sekwencja TYP D: Uruchomienie Drugiego Ciągu (S4→S5) 
-
-**Warunki:** Temperatura spadła do t ≤ -11°C  
-**Złożoność:** WYSOKA - uruchomienie drugiego poziomu wyrzutni
-
-```
-SEKWENCJA S4→S5 (Uruchomienie drugiego ciągu):
-
-UWAGA: Ciąg 1 (N1-N4 + W1) już pracuje w pełnej mocy
-
-KROK 0: Weryfikacja stanu początkowego
-  // Sprawdź czy C1 ma 4 aktywne nagrzewnice (wymagane w S4)
-  ilość_aktywnych_C1 = Policz_Aktywne_Nagrzewnice(CIĄG1)
-  JEŻELI ilość_aktywnych_C1 ≠ 4 WTEDY
-    Alarm("S4→S5: Ciąg 1 niekompletny (" + ilość_aktywnych_C1 + "/4)")
-    PRZERWIJ
-  KONIEC JEŻELI
-
-KROK 1: Przygotuj przepustnice dla układu dwuciągowego
-  // Przepustnice ciągu 1 pozostają OTWARTE
-  // Otwieramy przepustnice ciągu 2
-  Ustaw_Przepustnicę_Ciąg_C2(OTWARTA)
-  Ustaw_Przepustnicę_Wyrzutnia_790(OTWARTA)  // DRUGI poziom wyrzutni!
-  Czekaj(10 sekund)  // Stabilizacja ciśnienia w systemie
-
-KROK 2: Przełącz W1 na tryb MAX (pełna moc)
-  // W1 będzie teraz pracował z maksymalną częstotliwością
-  Ustaw_Wentylator(W1, tryb=MANUAL, częstotliwość=50Hz)
-  Czekaj(10 sekund)
-  Sprawdź_Prąd_Silnika(W1)  // Weryfikacja obciążenia
-
-KROK 3: Uruchom wentylator W2
-  Uruchom_Wentylator(W2, częstotliwość=25Hz)
-  Czekaj(10 sekund)
-  Sprawdź_Prąd_Silnika(W2)
-
-KROK 4: Wybierz i przygotuj pierwszą nagrzewnicę ciągu 2
-  // Deleguj wybór do Algorytmu RC (śledzi czasy pracy/postoju)
-  N_nowa = Algorytm_RN_Wybierz_Nagrzewnicę(CIĄG2, ilość=1)
-  // Może to być N5, N6, N7 lub N8 - zależy od historii pracy
-  
-  Ustaw_Zawór(N_nowa, 20%)
-  Czekaj(5 sekund)
-
-KROK 5: Otwórz przepustnicę dolotową N_nowa
-  Ustaw_Przepustnicę_Dolot(N_nowa, OTWARTA)
-  Czekaj(5 sekund)
-
-KROK 6: Aktywuj regulację PID dla N_nowa
-  Ustaw_Regulator_PID(N_nowa, tryb=AUTO, setpoint=50°C)
-  Czekaj(30 sekund)  // Stabilizacja temperatury N_nowa
-
-KROK 7: Aktywuj regulację PID dla W2
-  // W2 teraz będzie regulacyjnym wentylatorem
-  Ustaw_Wentylator(W2, tryb=AUTO, setpoint=2°C)
-  Czekaj(20 sekund)
-
-KROK 8: Weryfikacja systemu dwuciągowego
-  temp_N_nowa = Odczytaj_Temperaturę(N_nowa)
-  JEŻELI temp_N_nowa < 30°C WTEDY
-    Alarm(N_nowa + " nie osiąga temperatury")
-    // Wycofaj zmianę - przywróć S4
-    PRZERWIJ
-  KONIEC JEŻELI
-  
-  sprawdź_W1 = Sprawdź_Częstotliwość(W1)
-  sprawdź_W2 = Sprawdź_Częstotliwość(W2)
-  
-  JEŻELI sprawdź_W1 ≠ 50Hz LUB sprawdź_W2 < 25Hz WTEDY
-    Alarm("Wentylatory nie pracują poprawnie")
-    PRZERWIJ
-  KONIEC JEŻELI
-  
-KROK 9: Otwórz przepustnicę kolektora C2
-  Ustaw_Przepustnicę_Kolektor_C2(OTWARTA)
-  
-  Rejestruj_Zdarzenie("Scenariusz S5 aktywny - dwa ciągi w pracy")
-
-Czas sekwencji: ~100 sekund
-```
-
-**Kluczowe aspekty S4→S5:**
-- ⚠️ Pierwszy raz otwieramy wyrzutnie -7,90m
-- ⚠️ W1 przechodzi z PID → MAX (zmiana trybu regulacji)
-- ⚠️ Uruchomienie W2 jako regulacyjnego
-- ⚠️ Koordynacja dwóch niezależnych ciągów
-
-#### 5.10.6 Sekwencja TYP E: Zatrzymanie Drugiego Ciągu (S5→S4)
-
-**Warunki:** Temperatura wzrosła do t ≥ -10°C  
-**Złożoność:** WYSOKA - zamknięcie drugiego poziomu wyrzutni
-
-```
-SEKWENCJA S5→S4 (Zatrzymanie drugiego ciągu):
-
-UWAGA: Algorytm WS decyduje o zatrzymaniu C2 na podstawie T_zewn ≥ -10°C
-       Oba ciągi pracują (C1: N1-N4 + W1 MAX, C2: N5 + W2 PID)
-
-KROK 1: Przełącz PID nagrzewnicy N5 w tryb MANUAL
-  Ustaw_Regulator_PID(N5, tryb=MANUAL)
-  // PID przestaje regulować, przejmujemy ręczne sterowanie
-  
-KROK 2: Zamknij zawór N5 do 20%
-  aktualna_pozycja = Odczytaj_Pozycję_Zaworu(N5)
-  Dla pozycja = aktualna_pozycja DO 20 KROK -10:
-    Ustaw_Zawór(N5, pozycja)
-    Czekaj(2 sekundy)
-  KONIEC DLA
-  Czekaj(10 sekund)
-
-KROK 3: Zamknij przepustnicę dolotową N5
-  Ustaw_Przepustnicę_Dolot(N5, ZAMKNIĘTA)
-  Czekaj(5 sekund)
-
-KROK 4: Zatrzymaj wentylator W2
-  Zmniejsz_Częstotliwość(W2, od_aktualnej DO 25Hz, krok=5Hz, czas=2s)
-  Czekaj(5 sekund)
-  Zatrzymaj_Wentylator(W2)
-
-KROK 5: Zamknij przepustnice ciągu 2
-  Ustaw_Przepustnicę_Kolektor_C2(ZAMKNIĘTA)
-  Ustaw_Przepustnicę_Wyrzutnia_790(ZAMKNIĘTA)  // ⚠️ Zamykamy poziom -7,90m
-  Ustaw_Przepustnicę_Ciąg_C2(ZAMKNIĘTA)
-  Czekaj(10 sekund)
-
-KROK 6: Przełącz W1 z MAX na PID
-  // W1 przejmuje pełną regulację temperatury
-  Ustaw_Wentylator(W1, tryb=AUTO, setpoint=2°C)
-  Czekaj(20 sekund)  // Stabilizacja regulacji
-
-KROK 7: Weryfikacja
-  JEŻELI Wentylator_Pracuje(W2) WTEDY
-    Alarm("W2 nie zatrzymał się")
-    PRZERWIJ
-  KONIEC JEŻELI
-  
-  temp_szyb = Odczytaj_Temperaturę_Szybu()
-  JEŻELI |temp_szyb - 2°C| > 1°C WTEDY
-    Alarm("Temperatura szybu niestabilna po przejściu na S4")
-  KONIEC JEŻELI
-  
-  Rejestruj_Zdarzenie("Scenariusz S4 aktywny - jeden ciąg w pracy")
-
-Czas sekwencji: ~70 sekund
-```
-
-#### 5.10.7 Sekwencja TYP F: Dodanie Nagrzewnicy w Drugim Ciągu (S5→S6, S6→S7, S7→S8)
-
-**Przykład: S5→S6** (5 nagrzewnic → 6 nagrzewnic)
-
-```
-SEKWENCJA S5→S6 (Dodanie szóstej nagrzewnicy):
-
-UWAGA: C1 (N1-N4) + W1 MAX, C2 (N5) + W2 PID już pracują
-
-KROK 1: Wybierz nagrzewnicę z ciągu 2
-  N_nowa = Algorytm_RN_Wybierz_Nagrzewnicę(CIĄG2, ilość=2)
-  // Algorytm RN wybiera na podstawie czasu postoju (najdłużej nieużywana)
-
-KROK 2: Przygotuj N_nowa
-  Ustaw_Zawór(N_nowa, 20%)
-  Czekaj(3 sekundy)
-
-KROK 3: Otwórz przepustnicę dolotową
-  Ustaw_Przepustnicę_Dolot(N_nowa, OTWARTA)
-  Czekaj(5 sekund)
-
-KROK 4: Aktywuj regulację PID
-  Ustaw_Regulator_PID(N_nowa, tryb=AUTO, setpoint=50°C)
-  Czekaj(30 sekund)
-
-KROK 5: Weryfikacja
-  // PID W2 automatycznie dostosuje prędkość
-  temp_N_nowa = Odczytaj_Temperaturę(N_nowa)
-  JEŻELI |temp_N_nowa - 50°C| > 5°C WTEDY
-    Alarm("N_nowa nie osiąga temperatury")
-  KONIEC JEŻELI
-  
-  Rejestruj_Zdarzenie("Scenariusz S6 aktywny")
-
-Czas sekwencji: ~45 sekund
-```
-
-#### 5.10.8 Tabela Czasów Sekwencji
+#### 9.2 Procedury elementarne
+
+
+| Procedura | Wejście | Opis |
+|-----------|--------|------|
+| **STOP_HEATER(N)** | aktywna nagrzewnica | PID → MANUAL → zawór do 20% (krok 10% / 2 s) → zamknięcie przepustnicy dolotowej → log zdarzenia |
+| **START_HEATER(N)** | nagrzewnica gotowa | zawór 20% → przepustnica OTWARTA → PID AUTO 50 °C → weryfikacja T_wylot ≥ 30 °C |
+| **STOP_FAN(W)** | pracujący wentylator | redukcja do 25 Hz → STOP → zamknięcie przepustnic ciągu |
+| **START_FAN(W)** | wentylator w postoju | otwarcie przepustnic ciągu → start 25 Hz → przekazanie do PID (jeśli wymagane) |
+| **SWITCH_LINE(to)** | docelowy układ | zestaw CLOSE_LINE / OPEN_LINE wg tabeli przepustnic (sekcja 10.10) |
+| **VERIFY_SCENARIO(Sx)** | docelowy scenariusz | kontrola aktywnych nagrzewnic, pracy wentylatorów, temperatury szybu, log |
+
+Każdy typ przejścia korzysta z tych samych procedur, różni się tylko kolejnością oraz tym, które ciągi i wentylatory biorą udział.
+
+#### 9.3 Sekwencja TYP A: Wyłączenie Systemu (S1→S0)
+
+- **Warunki:** T_zewn ≥ 3 °C, aktywny tylko ciąg 1.
+- **Przebieg skrócony:** STOP_HEATER (dla wszystkich aktywnych nagrzewnic) → STOP_FAN(W1) → CLOSE_LINE(C1) → VERIFY_SCENARIO(S0).
+- **Uwagi:** jeśli czujnik T_szyb nadal raportuje <2 °C, WS opóźnia przejście do czasu stabilizacji.
+
+#### 9.4 Sekwencja TYP B: Uruchomienie Systemu (S0→S1)
+
+- **Warunki:** T_zewn ≤ 2 °C, oba ciągi w postoju.
+- **Przebieg:** OPEN_LINE(C1) → START_FAN(W1) → START_HEATER(N wybrana przez RC/RN) → VERIFY_SCENARIO(S1).
+- **Uwagi:** tylko jedna nagrzewnica w ciągu, więc RN wskazuje element z najdłuższym postojem.
+
+#### 9.5 Sekwencja TYP C: Dodanie Nagrzewnicy w Tym Samym Ciągu (S1→S4)
+
+- **Warunki:** Ciąg aktywny (C1 lub C2) ma rezerwową nagrzewnicę.
+- **Przebieg:** START_HEATER(N_now) → VERIFY_SCENARIO(Sx). Wentylator automatycznie dostosowuje PID, brak dodatkowych działań.
+- **Uwagi:** przy redukcji scenariusza (np. S3→S2) wykonujemy odwrotność, tj. STOP_HEATER dla ostatniej nagrzewnicy wskazanej przez RN.
+
+#### 9.6 Sekwencja TYP D: Uruchomienie Drugiego Ciągu (S4→S5)
+
+- **Warunki:** T_zewn ≤ -11 °C, C1 pracuje na pełnej mocy.
+- **Przebieg:** VERIFY linię C1 (4 nagrzewnice) → OPEN_LINE(C2) + START_FAN(W2) + W1→MAX → START_HEATER (pierwsza nagrzewnica C2) → SWITCH_LINE(to=dual) → VERIFY_SCENARIO(S5).
+- **Uwagi krytyczne:** pierwszy raz otwierana wyrzutnia -7,90 m, konieczne logi prądowe obu wentylatorów; w razie błędu natychmiastowy fallback do S4.
+
+#### 9.7 Sekwencja TYP E: Zatrzymanie Drugiego Ciągu (S5→S4)
+
+- **Warunki:** T_zewn ≥ -10 °C, oba ciągi pracują.
+- **Przebieg:** STOP_HEATER (nagrzewnice C2) → STOP_FAN(W2) → CLOSE_LINE(C2) → ustaw W1 na PID → VERIFY_SCENARIO(S4).
+- **Uwagi:** monitoruj T_szyb ±1 °C; jeśli niestabilna, WS cofnie zmianę.
+
+#### 9.8 Sekwencja TYP F: Dodanie Nagrzewnicy w Drugim Ciągu (S5→S8)
+
+- **Warunki:** Ciąg 2 posiada rezerwową nagrzewnicę (np. N6–N8).
+- **Przebieg:** START_HEATER(N wybrana przez RN) przy pracującym fanie W2 → VERIFY_SCENARIO(Sx).
+- **Uwagi:** analogiczne zasady jak w typie C, ale obowiązuje blokada „15 min od ostatniej rotacji” wynikająca z koordynacji RC↔RN.
+
+#### 9.9 Tabela Czasów Sekwencji
 
 | Przejście | Typ | Czas [s] | Uwagi |
 |-----------|-----|----------|-------|
@@ -1310,7 +1030,7 @@ Czas sekwencji: ~45 sekund
 | S5→S6, S6→S7, S7→S8 | F | ~45 | Dodanie nagrzewnicy w C2 |
 | S8→S7, S7→S6, S6→S5 | F | ~50 | Usunięcie nagrzewnicy z C2 |
 
-#### 5.10.9 Koordynacja Przepustnic - Stany dla Wszystkich Scenariuszy
+#### 9.10 Koordynacja Przepustnic - Stany dla Wszystkich Scenariuszy
 
 | Element | S0 | S1-S4 Podst. | S1-S4 Ogr. | S5-S8 |
 |---------|----|--------------|-----------| ------|
@@ -1333,7 +1053,7 @@ Czas sekwencji: ~45 sekund
 - **Układ Podst.→Ogr.:** Zamykamy C1, otwieramy spinę i C2
 - **Układ Ogr.→Podst.:** Zamykamy spinę i C2, otwieramy C1
 
-#### 5.10.10 Zarządzanie Zaworami - Strategia Bezpieczeństwa
+#### 9.11 Zarządzanie Zaworami - Strategia Bezpieczeństwa
 
 **Zasady zarządzania zaworami wody grzewczej:**
 
@@ -1352,10 +1072,22 @@ Czas sekwencji: ~45 sekund
 | **RUNNING** | 20-100% PID | AUTO | Praca normalna |
 | **STOPPING** | AUTO → 20% | AUTO → MANUAL | Przejście do postoju |
 
+# Globalne Parametry Rotacyjne (RC/RN)
+
+| Parametr | Wartość domyślna | Jednostka | Zakres | Stosowanie |
+|----------|-----------------|-----------|--------|------------|
+| **CYKL_PĘTLI_ALGORYTMÓW** | 60 | sekundy | 10‑600 | Częstość wywołania głównej pętli RC i RN (aktualizacja liczników, warunków) |
+| **HISTEREZA_CZASOWA** | 300 | sekundy | 60‑900 | Bufor czasowy przed uznaniem, że upłynął okres rotacji układów (RC) |
+| **MIN_DELTA_CZASU** | 3600 | sekundy | 1800‑7200 | Minimalna różnica czasów pracy nagrzewnic, aby RN wykonał zamianę |
+| **ODSTĘP_PO_ZMIANIE_UKŁADU** | 3600 | sekundy | 1800‑7200 | Czas blokujący RN po zakończeniu RC (`czas_ostatniej_zmiany_układu`) |
+| **ODSTĘP_MIĘDZY_ROTACJAMI** | 900 | sekundy | 600‑1800 | Globalny odstęp pomiędzy rotacjami RN w różnych ciągach |
+
+Parametry te są deklarowane w jednym miejscu konfiguracji systemu i wykorzystywane przez obydwa algorytmy rotacyjne. Szczegółowe wartości (np. `OKRES_ROTACJI_UKŁADÓW`, `OKRES_ROTACJI_NAGRZEWNIC`) pozostają w sekcjach konkretnych algorytmów.
+
 # Algorytm RC: Cykliczna Rotacja Układów Pracy Ciągów
 
 
-> **Powiązane algorytmy:** Algorytm WS, Algorytm RN
+**Powiązane algorytmy:** Algorytm WS, Algorytm RN
 
 ## 1. Cel Algorytmu
 
@@ -1377,7 +1109,7 @@ Algorytm realizuje **cykliczną zmianę układów pracy ciągów grzewczych** w 
 
 ## 3. Parametr Konfiguracyjny
 
-**⚙️ OKRES_ROTACJI_UKŁADÓW** - parametr definiowany przez **technologa podczas rozruchu**
+**OKRES_ROTACJI_UKŁADÓW** - parametr definiowany przez **technologa podczas rozruchu**
 
 | Parametr | Wartość domyślna | Jednostka | Zakres | Opis |
 |----------|-----------------|-----------|--------|------|
@@ -1390,29 +1122,7 @@ Algorytm realizuje **cykliczną zmianę układów pracy ciągów grzewczych** w 
 - **720h (30 dni)** - dla zmniejszenia częstotliwości przełączeń
 - **24h (1 dzień)** - dla testów i weryfikacji działania
 
-**CYKL_PĘTLI_ALGORYTMÓW** - parametr częstotliwości sprawdzania (wspólny dla RC i RN)
-
-| Parametr | Wartość domyślna | Jednostka | Zakres | Opis |
-|----------|-----------------|-----------|--------|------|
-| CYKL_PĘTLI_ALGORYTMÓW | 60 | sekundy | 10s - 600s | Częstotliwość wykonywania pętli głównej algorytmów |
-
-**Uzasadnienie i przykładowe wartości:**
-- **60s (1 minuta)** - zalecane dla krótkich okresów rotacji (24h-168h)
-  - Dokładność: ±1 minuta (0.04% błędu dla 168h)
-  - Obciążenie: ~10,080 sprawdzeń na 7 dni
-  - Liczniki czasu pracy: aktualizacja co 1 minutę
-- **300s (5 minut)** - zalecane dla długich okresów rotacji (168h-720h)
-  - Dokładność: ±5 minut (0.2% błędu dla 168h)
-  - Obciążenie: ~2,016 sprawdzeń na 7 dni (bardzo niskie)
-  - Liczniki czasu pracy: aktualizacja co 5 minut
-- **600s (10 minut)** - dla bardzo długich okresów (>720h)
-  - Dokładność: ±10 minut (0.4% błędu dla 168h)
-  - Obciążenie: ~1,008 sprawdzeń na 7 dni (minimalne)
-
-**Wpływ na liczniki:**
-- `czas_pracy_układu_podstawowego` i `czas_pracy_układu_ograniczonego` aktualizują się co CYKL_PĘTLI_ALGORYTMÓW
-- Dla 60s: dokładność ±1 minuta (akceptowalna dla okresów dni/tygodni)
-- Dla 300s: dokładność ±5 minut (nadal akceptowalna)
+`CYKL_PĘTLI_ALGORYTMÓW` oraz pozostałe ograniczenia czasowe opisano w sekcji „Globalne parametry rotacyjne”.
 
 ## 4. Warunki Aktywacji Rotacji
 
@@ -1634,25 +1344,7 @@ KONIEC FUNKCJI
 | Oscylacje temperatury podczas zmiany | Zwiększ czas stabilizacji (60s zamiast 30s), kontynuuj |
 | Brak przepływu wody grzewczej | Natychmiastowe zatrzymanie zmiany, wyłączenie wszystkich nagrzewnic, alarm krytyczny |
 
-## 7. Monitoring i Statystyki
-
-System rejestruje następujące dane dla analizy:
-
-| Parametr | Opis |
-|----------|------|
-| Łączny czas pracy C1 | Suma czasu pracy ciągu 1 w układzie podstawowym [h] |
-| Łączny czas pracy C2 | Suma czasu pracy ciągu 2 w układzie ograniczonym [h] |
-| Liczba zmian układów | Licznik wykonanych rotacji |
-| Średni czas zmiany układu | Średni czas trwania procedury zmiany [min] |
-| Liczba nieudanych zmian | Licznik przerwanych rotacji z powodu błędów |
-| Stosunek eksploatacji C1/C2 | Proporcja czasu pracy obu ciągów (cel: ~1.0) |
-
-**Raport dostępny w HMI:**
-- Wykres czasu pracy ciągów (histogram tygodniowy/miesięczny)
-- Historia zmian układów z timestampem
-- Analiza równomierności eksploatacji
-
-## 8. Przykład Działania
+## 7. Przykład Działania
 
 **Warunki początkowe:**
 - Temperatura zewnętrzna: -5°C
@@ -1722,7 +1414,6 @@ Parametry definiowane przez **technologa podczas rozruchu**:
 |----------|-----------------|-----------|--------|------|
 | **OKRES_ROTACJI_NAGRZEWNIC** | Do ustalenia* | godziny | 24h - 720h | Czas po którym następuje zmiana nagrzewnicy w ciągu |
 | **MIN_DELTA_CZASU** | 3600 | sekundy | 1800 - 7200 | Minimalna różnica czasu pracy dla wykonania rotacji |
-| **CYKL_PĘTLI_ALGORYTMÓW** | 60 | sekundy | 10 - 600 | Częstość wykonywania pętli głównej (współdzielony z RC) |
 
 *Wartości zostaną ustalone podczas testowania pracy układu na obiekcie (zgodnie z sekcją 1.4 projektu).
 
@@ -1737,10 +1428,7 @@ Parametry definiowane przez **technologa podczas rozruchu**:
 - **1800s (30min)** - dla agresywniejszego wyrównywania w scenariuszach dynamicznych
 - Jeśli różnica czasu pracy jest mniejsza niż MIN_DELTA_CZASU, rotacja nie ma sensu (zmiana dla zmiany)
 
-**Uzasadnienie CYKL_PĘTLI_ALGORYTMÓW:**
-- Parametr **współdzielony** z Algorytmem RC (wspólna wartość dla obu algorytmów)
-- Szczegółowe wyjaśnienie i przykładowe wartości: patrz sekcja RC.3
-- Liczniki `czas_pracy[N]` i `czas_postoju[N]` aktualizują się co CYKL_PĘTLI_ALGORYTMÓW sekund
+Parametr **CYKL_PĘTLI_ALGORYTMÓW** jest wspólny z algorytmem RC – opis szczegółowy znajduje się w sekcji RC.3. RN korzysta z tej samej wartości do aktualizacji liczników `czas_pracy[N]` i `czas_postoju[N]`.
 
 ## 4. Warunki Aktywacji Rotacji Nagrzewnic
 
@@ -2178,25 +1866,6 @@ Gdy wiele ciągów wymaga rotacji jednocześnie, stosuje się następujące prio
 | Wentylator zatrzymał się podczas rotacji | Natychmiastowe wyłączenie obu nagrzewnic, alarm krytyczny |
 | Temperatura szybu spadła o >1°C | Przerwij rotację, przywróć N_starą, zwiększ moc |
 | Przekroczenie czasu rotacji (>5 min) | Przerwij rotację, alarm, przejście na tryb MANUAL |
-
-## 8. Monitoring i Statystyki
-
-System rejestruje następujące dane dla każdej nagrzewnicy:
-
-| Parametr | Opis |
-|----------|------|
-| Łączny czas pracy [h] | Suma czasu aktywnej pracy nagrzewnicy |
-| Łączny czas postoju [h] | Suma czasu kiedy nagrzewnica była wyłączona |
-| Liczba załączeń | Licznik startów nagrzewnicy |
-| Ostatnie załączenie | Timestamp ostatniego startu |
-| Liczba rotacji | Ile razy nagrzewnica była wymieniana przez rotację |
-| Średnia temperatura [°C] | Średnia temp. na wylocie podczas pracy |
-
-**Raport dostępny w HMI:**
-- Wykres słupkowy czasu pracy dla N1-N8
-- Stosunek czasu pracy nagrzewnic w ciągu (cel: wyrównany)
-- Historia rotacji z timestampami
-- Predykcja następnej rotacji
 
 ## 9. Przykłady Działania
 
