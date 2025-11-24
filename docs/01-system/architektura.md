@@ -12,9 +12,6 @@ Dokument otrzymany 19 listopad 2025:
 
 # Opracowanie specyfikacji
 
-**UWAGA** 
-```Dokumentacja robocza - aktualizowana na podstawie otrzymywanych wymagan od zleceniodawcy```
-
 Ostatnia aktualizacja: 23 Listopad 2025
 
 ## 2. Architektura Systemu Automatycznej Regulacji (SAR)
