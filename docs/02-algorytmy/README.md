@@ -77,7 +77,7 @@ Algorytmy są **skoordynowane** i działają współbieżnie, zapewniając:
 
 System automatycznej regulacji (SAR) temperatury szybu ma **dwuwarstwową architekturę**:
 
-![Architektura SAR](../assets/images/architektura_SAR_system.svg)
+![Architektura SAR](../01-system/images/architektura_SAR_system.svg)
 
 *Rys. Dwuwarstwowa architektura systemu SAR z podziałem na warstwy regulacji i zarządzania.*
 

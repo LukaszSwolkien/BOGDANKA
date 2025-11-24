@@ -6,7 +6,7 @@
 
 Dokument otrzymany 19 listopad 2025:
 
-[Projekt instalacji ogrzewania szybu - skan dokumentacji](../assets/images/assets/Projekt%20instalacji%20ogrzewania%20szybu.pdf)
+[Projekt instalacji ogrzewania szybu - skan dokumentacji](./images/Projekt%20instalacji%20ogrzewania%20szybu.pdf)
 
 [Projekt instalacji ogrzewania szybu - dokumentacja](../03-projekt-instalacji/schematy/Projekt%20instalacji%20ogrzewania%20szybu.md)
 
@@ -23,7 +23,7 @@ System automatycznej regulacji (SAR) temperatury szybu składa się z dwóch pod
 - **Warstwa regulacji** - podstawowa funkcja utrzymania temperatury (PID)
 - **Warstwa zarządzania** - funkcja optymalizująca wykorzystanie urządzeń (algorytmy)
 
-![Architektura SAR](../assets/images/architektura_SAR_system.svg)
+![Architektura SAR](./images/architektura_SAR_system.svg)
 
 *Rys. Dwuwarstwowa architektura systemu SAR pokazująca relacje między podsystemami PARTS i PARTPG oraz algorytmami 5, RC i RN.*
 
