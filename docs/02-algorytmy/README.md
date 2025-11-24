@@ -16,10 +16,10 @@ _Plik ten jest częścią dokumentacji systemu sterowania nagrzewnicami BOGDANKA
 
 ## 📑 Spis Treści
 
-1. [Algorytm 5: Wybór Scenariusza Pracy](algorytm-5-wybor-scenariusza.md)
-2. [Algorytm 5A: Rotacja Układów Pracy Ciągów](algorytm-5A-rotacja-ukladow.md)
-3. [Algorytm 5B: Rotacja Nagrzewnic w Obrębie Ciągu](algorytm-5B-rotacja-nagrzewnic.md)
-4. [Wizualizacja Koordynacji 5A↔5B](../../visualization/algorytmy/koordynacja-5A-5B-timeline.svg)
+1. [Algorytm WS: Wybór Scenariusza Pracy](algorytm-WS-wybor-scenariusza.md)
+2. [Algorytm RC: Rotacja Układów Pracy Ciągów](algorytm-RC-rotacja-ciagow.md)
+3. [Algorytm RN: Rotacja Nagrzewnic w Obrębie Ciągu](algorytm-RN-rotacja-nagrzewnic.md)
+4. [Wizualizacja Koordynacji RC↔RN](../../visualization/algorytmy/koordynacja-RC-RN-timeline.svg)
 
 ---
 
@@ -27,19 +27,19 @@ _Plik ten jest częścią dokumentacji systemu sterowania nagrzewnicami BOGDANKA
 
 System sterowania BOGDANKA Szyb 2 wykorzystuje **trzy współpracujące algorytmy** zapewniające automatyczne sterowanie i równomierne rozłożenie eksploatacji urządzeń:
 
-### **Algorytm 5: Automatyczny Wybór Scenariusza Pracy**
+### **Algorytm WS: Automatyczny Wybór Scenariusza Pracy**
 - **Cel:** Automatyczny dobór ilości nagrzewnic i konfiguracji systemu w zależności od temperatury zewnętrznej
 - **Zakres:** Przełączanie między scenariuszami S0-S8
 - **Częstotliwość:** Ciągły monitoring temperatury
 - **Dotyczy:** Całego systemu - fundament sterowania
 
-### **Algorytm 5A: Rotacja Układów Pracy Ciągów**
+### **Algorytm RC: Rotacja Układów Pracy Ciągów**
 - **Cel:** Wyrównanie eksploatacji między ciągiem 1 (W1) a ciągiem 2 (W2)
 - **Zakres:** Zmiana między układem Podstawowym a Ograniczonym
 - **Okres:** dni/tygodnie/miesiące (definiowany przez technologa)
 - **Dotyczy:** Scenariuszy S1-S4
 
-### **Algorytm 5B: Rotacja Nagrzewnic w Ciągu**
+### **Algorytm RN: Rotacja Nagrzewnic w Ciągu**
 - **Cel:** Wyrównanie eksploatacji nagrzewnic w obrębie jednego ciągu
 - **Zakres:** Wymiana pracującej nagrzewnicy na rezerwową w tym samym ciągu
 - **Okres:** godziny/dni/tygodnie (definiowany przez technologa)
@@ -49,7 +49,7 @@ System sterowania BOGDANKA Szyb 2 wykorzystuje **trzy współpracujące algorytm
 
 ```
 ┌────────────────────────────────────────────┐
-│ Algorytm 5: Wybór Scenariusza (S0-S8)      │
+│ Algorytm WS: Wybór Scenariusza (S0-S8)      │
 │ └─ Decyduje: ile nagrzewnic, który układ   │
 └─────────────────────┬──────────────────────┘
                       │
@@ -57,7 +57,7 @@ System sterowania BOGDANKA Szyb 2 wykorzystuje **trzy współpracujące algorytm
             │                   │
             ▼                   ▼
      ┌──────────────┐    ┌──────────────┐
-     │ Algorytm 5A  │    │ Algorytm 5B  │
+     │ Algorytm RC  │    │ Algorytm RN  │
      │ Rotacja      │◄───┤ Rotacja      │
      │ Układów      │───►│ Nagrzewnic   │
      │ (C1 ↔ C2)    │    │ (N1-N8)      │
@@ -65,9 +65,9 @@ System sterowania BOGDANKA Szyb 2 wykorzystuje **trzy współpracujące algorytm
 ```
 
 Algorytmy są **skoordynowane** i działają współbieżnie, zapewniając:
-- Automatyczną adaptację do warunków atmosferycznych (Alg. 5)
-- Równomierność zużycia ciągów wentylacyjnych C1, C2 i wentylatorów W1, W2 (Alg. 5A)
-- Równomierność zużycia wszystkich 8 nagrzewnic N1-N8 (Alg. 5B)
+- Automatyczną adaptację do warunków atmosferycznych (Alg. WS)
+- Równomierność zużycia ciągów wentylacyjnych C1, C2 i wentylatorów W1, W2 (Alg. RC)
+- Równomierność zużycia wszystkich 8 nagrzewnic N1-N8 (Alg. RN)
 
 ---
 
@@ -94,8 +94,8 @@ System automatycznej regulacji (SAR) temperatury szybu ma **dwuwarstwową archit
 │                                                              │
 │ ┌──────────────────────────────────────────────────────────┐ │
 │ │ WARSTWA ZARZĄDZANIA (optymalizacja użycia urządzeń)      │ │
-│ │ • Algorytm 5:  Automatyczny dobór scenariusza (S0-S8)    │ │
-│ │ • Algorytm 5A: Rotacja układów pracy ciągów (C1 ↔ C2)    │ │
+│ │ • Algorytm WS:  Automatyczny dobór scenariusza (S0-S8)    │ │
+│ │ • Algorytm RC: Rotacja układów pracy ciągów (C1 ↔ C2)    │ │
 │ └──────────────────────────────────────────────────────────┘ │
 └──────────────────────────────────────────────────────────────┘
 
@@ -112,7 +112,7 @@ System automatycznej regulacji (SAR) temperatury szybu ma **dwuwarstwową archit
 │                                                              │
 │ ┌──────────────────────────────────────────────────────────┐ │
 │ │ WARSTWA ZARZĄDZANIA (optymalizacja użycia urządzeń)      │ │
-│ │ • Algorytm 5B: Rotacja nagrzewnic w ciągach (N1-N8)      │ │
+│ │ • Algorytm RN: Rotacja nagrzewnic w ciągach (N1-N8)      │ │
 │ └──────────────────────────────────────────────────────────┘ │
 └──────────────────────────────────────────────────────────────┘
 ```
@@ -123,8 +123,8 @@ System automatycznej regulacji (SAR) temperatury szybu ma **dwuwarstwową archit
 
 | Podsystem | Warstwa Regulacji | Warstwa Zarządzania (Optymalizacja) |
 |-----------|-------------------|-------------------------------------|
-| **PARTPG** | 8 × PID zaworów (Tz=50°C) | **Algorytm 5B** - rotacja nagrzewnic |
-| **PARTS** | 2 × PID wentylatorów (Ts=2°C) | **Algorytmy 5 i 5A** - wybór scenariusza i rotacja układów |
+| **PARTPG** | 8 × PID zaworów (Tz=50°C) | **Algorytm RN** - rotacja nagrzewnic |
+| **PARTS** | 2 × PID wentylatorów (Ts=2°C) | **Algorytmy WS i RC** - wybór scenariusza i rotacja układów |
 
 **2. Warstwa Regulacji = Funkcja Podstawowa**
 - Utrzymanie zadanych temperatur (50°C, 2°C)
@@ -144,13 +144,13 @@ System automatycznej regulacji (SAR) temperatury szybu ma **dwuwarstwową archit
 ```
 ┌─────────────────────────────────────────────────────────┐
 │ PARTS - WARSTWA ZARZĄDZANIA                             │
-│ Algorytm 5: t_zewn = -6°C → Scenariusz S3 (3 nagr.)     │
-│ Algorytm 5A: Aktualny układ = "Podstawowy" → Ciąg C1    │
+│ Algorytm WS: t_zewn = -6°C → Scenariusz S3 (3 nagr.)     │
+│ Algorytm RC: Aktualny układ = "Podstawowy" → Ciąg C1    │
 └────────────────────────────┬────────────────────────────┘
                              ▼
 ┌─────────────────────────────────────────────────────────┐
 │ PARTPG - WARSTWA ZARZĄDZANIA                            │
-│ Algorytm 5B: Wybiera N2, N3, N4 (na podstawie rotacji)  │
+│ Algorytm RN: Wybiera N2, N3, N4 (na podstawie rotacji)  │
 └────────────────────────────┬────────────────────────────┘
                              ▼
 ┌─────────────────────────────────────────────────────────┐
@@ -175,9 +175,9 @@ System automatycznej regulacji (SAR) temperatury szybu ma **dwuwarstwową archit
 ### Dokumentacja w Kontekście Projektu
 
 **Ten katalog** (`docs/02-algorytmy/`) szczegółowo opisuje **warstwę zarządzania**:
-- Algorytm 5 → część zarządzająca PARTS
-- Algorytm 5A → część zarządzająca PARTS
-- Algorytm 5B → część zarządzająca PARTPG
+- Algorytm WS → część zarządzająca PARTS
+- Algorytm RC → część zarządzająca PARTS
+- Algorytm RN → część zarządzająca PARTPG
 
 **Dokument główny** ([`docs/01-system/architektura.md`](../01-system/architektura.md)) opisuje:
 - Punkt 2: Definicje PARTPG i PARTS (warstwa regulacji + zarządzania)
@@ -191,10 +191,10 @@ System automatycznej regulacji (SAR) temperatury szybu ma **dwuwarstwową archit
 
 Wszystkie diagramy flowchart dostępne są w katalogu [`visualization/algorytmy/`](../../visualization/algorytmy/):
 
-- [Algorytm 5 - Wybór Scenariusza](../../visualization/algorytmy/algorytm-5-wybor-scenariusza-flowchart.svg)
-- [Algorytm 5A - Rotacja Układów](../../visualization/algorytmy/algorytm-5A-rotacja-ukladow-flowchart.svg)
-- [Algorytm 5B - Rotacja Nagrzewnic](../../visualization/algorytmy/algorytm-5B-rotacja-nagrzewnic-flowchart.svg)
-- [Koordynacja 5A ↔ 5B - Timeline](../../visualization/algorytmy/koordynacja-5A-5B-timeline.svg)
+- [Algorytm WS - Wybór Scenariusza](../../visualization/algorytmy/algorytm-WS-wybor-scenariusza-flowchart.svg)
+- [Algorytm RC - Rotacja Układów](../../visualization/algorytmy/algorytm-RC-rotacja-ciagow-flowchart.svg)
+- [Algorytm RN - Rotacja Nagrzewnic](../../visualization/algorytmy/algorytm-RN-rotacja-nagrzewnic-flowchart.svg)
+- [Koordynacja RC ↔ RN - Timeline](../../visualization/algorytmy/koordynacja-RC-RN-timeline.svg)
 
 ---
 

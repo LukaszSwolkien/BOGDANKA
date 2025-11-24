@@ -1,55 +1,36 @@
 # START - Przewodnik po Dokumentacji
 
-## 👋 Witaj w Dokumentacji Systemu BOGDANKA Szyb 2
 
 To jest punkt startowy dla wszystkich użytkowników systemu automatycznego sterowania ogrzewaniem szybu wydobywczego.
 
-## 🎯 Dla Kogo Jest Ta Dokumentacja?
+## Dla Kogo Jest Ta Dokumentacja?
 
-### 👨‍💻 Programiści PLC/SCADA
+### Programiści PLC/SCADA
 **Zacznij tutaj:**
 1. [Architektura Systemu](../01-system/architektura.md) - zrozum strukturę
 2. [Algorytmy Sterowania](../02-algorytmy/README.md) - poznaj logikę
-3. [Wizualizacje Algorytmów](../../visualization/algorytmy/) - zobacz flowcharty
+3. [Projekt Instalacji](../03-projekt-instalacji/) - schematy instalacji
+4. [Wizualizacje Algorytmów](../../visualization/algorytmy/) - zobacz flowcharty
+5. [Wizualizacje Scenariuszy](../../visualization/scenariusze/) - diagramy nawiewu
 
 **Co znajdziesz:**
-- Pseudokod algorytmów 5, 5A, 5B
+- Pseudokod algorytmów WS, RC, RN
 - Diagramy przepływu
 - Parametry konfiguracyjne
 - Obsługa stanów awaryjnych
-
-### 👷 Inżynierowie/Technolodzy
-**Zacznij tutaj:**
-1. [Scenariusze Pracy](../01-system/architektura.md#5-scenariusze) - tabela S0-S8
-2. [Projekt Instalacji](../03-projekt-instalacji/) - schematy instalacji
-3. [Wizualizacje Scenariuszy](../../visualization/scenariusze/) - diagramy nawiewu
-
-**Co znajdziesz:**
-- Zakresy temperatur dla scenariuszy
 - Konfiguracje nagrzewnic i wentylatorów
 - Schematy instalacji grzewczej
 - Warunki załączania/wyłączania
 
-### 👔 Kierownicy Projektów/Analitycy
-**Zacznij tutaj:**
-1. [Przegląd Systemu](../01-system/architektura.md#1-wprowadzenie) - cel i zakres
-2. [Pytania i Wyjaśnienia](../04-analizy/pytania-wyjasnienia.md) - wymagania
-3. [Architektura Systemu](../01-system/architektura.md) - szczegóły techniczne
-
-**Co znajdziesz:**
-- Cele biznesowe systemu
-- Wymagania funkcjonalne
-- Analizy techniczne
-
-## 📖 Struktura Dokumentacji
+## Struktura Dokumentacji
 
 ```
 docs/
-├── 00-start/           ← JESTEŚ TUTAJ
-├── 01-system/          → Architektura (PARTPG, PARTS, UAR)
-├── 02-algorytmy/       → Algorytmy 5, 5A, 5B
-├── 03-projekt-instalacji/ → Projekt instalacji grzewczej
-└── 04-analizy/         → Pytania, wyjaśnienia, analizy
+├── 00-start/               ← JESTEŚ TUTAJ
+├── 01-system/              → Architektura (PARTPG, PARTS, UAR)
+├── 02-algorytmy/           → Algorytmy WS, RC, RN
+├── 03-projekt-instalacji/  → Projekt instalacji grzewczej
+└── 04-analizy/             → Wyjaśnienia, analizy, otwarte pytania
 ```
 
 ## 🚀 Szybki Start - 15 Minut
@@ -70,9 +51,9 @@ System ma 9 scenariuszy:
 
 ### Krok 3: Zrozum Algorytmy (5 min)
 Trzy kluczowe algorytmy:
-- **Algorytm 5**: Wybiera scenariusz (S0-S8) na podstawie temp. zewnętrznej
-- **Algorytm 5A**: Rotuje układy pracy (Ciąg 1 ↔ Ciąg 2) co X dni
-- **Algorytm 5B**: Rotuje nagrzewnice w ciągu (N1↔N2↔N3↔N4) co Y dni
+- **Algorytm WS**: Wybiera scenariusz (S0-S8) na podstawie temp. zewnętrznej
+- **Algorytm RC**: Rotuje układy pracy (Ciąg 1 ↔ Ciąg 2) co X dni
+- **Algorytm RN**: Rotuje nagrzewnice w ciągu (N1↔N2↔N3↔N4) co Y dni
 
 🔀 [Flowcharty algorytmów](../../visualization/algorytmy/)
 
@@ -81,10 +62,10 @@ Trzy kluczowe algorytmy:
 | Dokument | Czas czytania | Opis |
 |----------|---------------|------|
 | [Architektura Systemu](../01-system/architektura.md) | 60 min | Kompletny opis systemu PARTPG i PARTS |
-| [Przegląd Algorytmów](../02-algorytmy/README.md) | 15 min | Wprowadzenie do algorytmów 5, 5A, 5B |
-| [Algorytm 5](../02-algorytmy/algorytm-5-wybor-scenariusza.md) | 45 min | Wybór scenariusza pracy |
-| [Algorytm 5A](../02-algorytmy/algorytm-5A-rotacja-ukladow.md) | 30 min | Rotacja układów ciągów |
-| [Algorytm 5B](../02-algorytmy/algorytm-5B-rotacja-nagrzewnic.md) | 45 min | Rotacja nagrzewnic |
+| [Przegląd Algorytmów](../02-algorytmy/README.md) | 15 min | Wprowadzenie do algorytmów WS, RC, RN |
+| [Algorytm WS](../02-algorytmy/algorytm-WS-wybor-scenariusza.md) | 45 min | Wybór scenariusza pracy |
+| [Algorytm RC](../02-algorytmy/algorytm-RC-rotacja-ciagow.md) | 30 min | Rotacja układów ciągów |
+| [Algorytm RN](../02-algorytmy/algorytm-RN-rotacja-nagrzewnic.md) | 45 min | Rotacja nagrzewnic |
 
 ## 🎨 Wizualizacje
 
@@ -92,7 +73,7 @@ Wszystkie diagramy SVG: [visualization/](../../visualization/)
 
 | Kategoria | Ilość | Opis |
 |-----------|-------|------|
-| [Algorytmy](../../visualization/algorytmy/) | 4 | Flowcharty 5, 5A, 5B + koordynacja |
+| [Algorytmy](../../visualization/algorytmy/) | 4 | Flowcharty WS, RC, RN + koordynacja |
 | [Scenariusze](../../visualization/scenariusze/) | 9 | Nawiew dla S0-S8 |
 | [Rotacje](../../visualization/rotacje/) | 12 | Diagramy rotacji układów i nagrzewnic |
 | [UAR](../../visualization/uar/) | 3 | Schematy regulacji |

@@ -1,8 +1,8 @@
-# Algorytm 5: Automatyczny Wybór Scenariusza Pracy
+# Algorytm WS: Automatyczny Wybór Scenariusza Pracy
 
 > **Część dokumentacji:** Algorytmy Sterowania  
-> **Powiązane algorytmy:** [Algorytm 5A](./algorytm-5A-rotacja-ukladow.md), [Algorytm 5B](./algorytm-5B-rotacja-nagrzewnic.md)  
-> **Wizualizacja:** [Flowchart](../../visualization/algorytmy/algorytm-5-wybor-scenariusza-flowchart.svg)
+> **Powiązane algorytmy:** [Algorytm RC](./algorytm-RC-rotacja-ciagow.md), [Algorytm RN](./algorytm-RN-rotacja-nagrzewnic.md)  
+> **Wizualizacja:** [Flowchart](../../visualization/algorytmy/algorytm-WS-wybor-scenariusza-flowchart.svg)
 
 ## 1. Cel Algorytmu
 
@@ -73,7 +73,7 @@ Szczegółowa tabela scenariuszy znajduje się w [dokumentacji głównej - Sekcj
 
 **Diagram przepływu algorytmu:**
 
-![Algorytm 5 - Wybór Scenariusza](../../visualization/algorytmy/algorytm-5-wybor-scenariusza-flowchart.svg)
+![Algorytm WS - Wybór Scenariusza](../../visualization/algorytmy/algorytm-WS-wybor-scenariusza-flowchart.svg)
 
 **Pseudokod:**
 
@@ -315,7 +315,7 @@ FUNKCJA Wykonaj_Zmianę_Scenariusza(scenariusz_stary, scenariusz_nowy):
       
       ilość_do_wyłączenia = config_stara.ilość_nagrzewnic - config_nowa.ilość_nagrzewnic
       
-      // Pobierz listę nagrzewnic do wyłączenia (koordynacja z Algorytmem 5A i 5B)
+      // Pobierz listę nagrzewnic do wyłączenia (koordynacja z Algorytmem RC i RN)
       nagrzewnice_do_wyłączenia = Pobierz_Nagrzewnice_Do_Wyłączenia(
                                     config_stara, 
                                     ilość_do_wyłączenia)
@@ -358,7 +358,7 @@ FUNKCJA Wykonaj_Zmianę_Scenariusza(scenariusz_stary, scenariusz_nowy):
       
       ilość_do_załączenia = config_nowa.ilość_nagrzewnic - config_stara.ilość_nagrzewnic
       
-      // Pobierz listę nagrzewnic do załączenia (koordynacja z Algorytmem 5A i 5B)
+      // Pobierz listę nagrzewnic do załączenia (koordynacja z Algorytmem RC i RN)
       nagrzewnice_do_załączenia = Pobierz_Nagrzewnice_Do_Załączenia(
                                      config_nowa, 
                                      ilość_do_załączenia)
@@ -420,7 +420,7 @@ FUNKCJA Pobierz_Konfigurację_Scenariusza(scenariusz):
         tryb_W2: OFF,
         freq_W1: 25-50,  // Regulacja PID
         freq_W2: 0,
-        układ_pracy: "Podstawowy lub Ograniczony",  // Zależy od Algorytmu 5A
+        układ_pracy: "Podstawowy lub Ograniczony",  // Zależy od Algorytmu RC
         nawiew: "+4,30m"
       }
     
@@ -511,14 +511,14 @@ KONIEC FUNKCJI
 
 FUNKCJA Pobierz_Nagrzewnice_Do_Załączenia(config, ilość):
   
-  // KOORDYNACJA z Algorytmem 5A i 5B
-  // Algorytm 5A decyduje o układzie (Podstawowy: C1, Ograniczony: C2)
-  // Algorytm 5B decyduje które nagrzewnice w ciągu (rotacja N1-N4 lub N5-N8)
+  // KOORDYNACJA z Algorytmem RC i RN
+  // Algorytm RC decyduje o układzie (Podstawowy: C1, Ograniczony: C2)
+  // Algorytm RN decyduje które nagrzewnice w ciągu (rotacja N1-N4 lub N5-N8)
   
-  aktualny_układ = Pobierz_Aktualny_Układ()  // Od Algorytmu 5A
+  aktualny_układ = Pobierz_Aktualny_Układ()  // Od Algorytmu RC
   
   JEŻELI config.układ_pracy = "Podstawowy lub Ograniczony" WTEDY
-    // Scenariusze S1-S4 - decyduje Algorytm 5A
+    // Scenariusze S1-S4 - decyduje Algorytm RC
     
     JEŻELI aktualny_układ = "Podstawowy" WTEDY
       // Użyj ciągu 1 (N1-N4)
@@ -528,8 +528,8 @@ FUNKCJA Pobierz_Nagrzewnice_Do_Załączenia(config, ilość):
       ciąg = CIĄG2
     KONIEC JEŻELI
     
-    // Pobierz nagrzewnice z Algorytmu 5B (uwzględnia rotację)
-    nagrzewnice = Algorytm_5B_Pobierz_Nagrzewnice_Do_Pracy(ciąg, ilość)
+    // Pobierz nagrzewnice z Algorytmu RC (uwzględnia rotację)
+    nagrzewnice = Algorytm_RN_Pobierz_Nagrzewnice_Do_Pracy(ciąg, ilość)
   
   W PRZECIWNYM RAZIE:  // Układ Podstawowy (S5-S8)
     // W S5-S8 zawsze:
@@ -537,18 +537,18 @@ FUNKCJA Pobierz_Nagrzewnice_Do_Załączenia(config, ilość):
     // - C2 pracuje z N5, N6, N7, N8 w zależności od scenariusza
     
     JEŻELI ilość ≤ 4 WTEDY
-      // Tylko C1 - Deleguj wybór do 5B (śledzi czasy pracy dla statystyk)
-      nagrzewnice = Algorytm_5B_Pobierz_Nagrzewnice_Do_Pracy(CIĄG1, ilość)
-      // Uwaga: W S1-S4 wybór jest dynamiczny (rotacja 5B aktywna)
+      // Tylko C1 - Deleguj wybór do RN (śledzi czasy pracy dla statystyk)
+      nagrzewnice = Algorytm_RN_Pobierz_Nagrzewnice_Do_Pracy(CIĄG1, ilość)
+      // Uwaga: W S1-S4 wybór jest dynamiczny (rotacja RN aktywna)
       // W praktyce przy braku awarii to będą N1-N4 w S4, ale 5B decyduje
     W PRZECIWNYM RAZIE:
       // C1 cały + częściowo C2
       // W S5-S8 wszystkie N1-N4 MUSZĄ pracować (brak rezerwowej w C1)
-      nagrzewnice_C1 = Algorytm_5B_Pobierz_Nagrzewnice_Do_Pracy(CIĄG1, 4)
+      nagrzewnice_C1 = Algorytm_RN_Pobierz_Nagrzewnice_Do_Pracy(CIĄG1, 4)
       ilość_C2 = ilość - 4
       
-      // W C2 może działać Algorytm 5B (jeśli są nagrzewnice rezerwowe)
-      nagrzewnice_C2 = Algorytm_5B_Pobierz_Nagrzewnice_Do_Pracy(CIĄG2, ilość_C2)
+      // W C2 może działać Algorytm RN (jeśli są nagrzewnice rezerwowe)
+      nagrzewnice_C2 = Algorytm_RN_Pobierz_Nagrzewnice_Do_Pracy(CIĄG2, ilość_C2)
       
       nagrzewnice = nagrzewnice_C1 + nagrzewnice_C2
     KONIEC JEŻELI
@@ -685,35 +685,35 @@ FUNKCJA Weryfikuj_Scenariusz(scenariusz):
 KONIEC FUNKCJI
 ```
 
-## 6. Koordynacja z Algorytmami 5A i 5B
+## 6. Koordynacja z Algorytmami RC i RN
 
 **Hierarchia działania:**
 
-1. **Algorytm 5**  - określa **ILE** nagrzewnic potrzeba (S0-S8)
-2. **Algorytm 5A** - określa **KTÓRY CIĄG** w S1-S4 (Podstawowy: C1, Ograniczony: C2)
-3. **Algorytm 5B** - określa **KTÓRE KONKRETNIE** nagrzewnice w ciągu (rotacja)
+1. **Algorytm WS**  - określa **ILE** nagrzewnic potrzeba (S0-S8)
+2. **Algorytm RC** - określa **KTÓRY CIĄG** w S1-S4 (Podstawowy: C1, Ograniczony: C2)
+3. **Algorytm RN** - określa **KTÓRE KONKRETNIE** nagrzewnice w ciągu (rotacja)
 
 **Zasady koordynacji:**
 
-- **S0:** Brak nagrzewnic - algorytmy 5A i 5B nieaktywne
+- **S0:** Brak nagrzewnic - algorytmy RC i RN nieaktywne
 - **S1-S4:** 
-  - Algorytm 5A wybiera układ (C1 lub C2)
-  - Algorytm 5B wybiera konkretne nagrzewnice w aktywnym ciągu
-  - Algorytm 5 wywołuje funkcje pomocnicze które respektują wybory 5A i 5B
+  - Algorytm RC wybiera układ (C1 lub C2)
+  - Algorytm RN wybiera konkretne nagrzewnice w aktywnym ciągu
+  - Algorytm 5 wywołuje funkcje pomocnicze które respektują wybory RC i RN
 - **S5-S8:**
-  - Algorytm 5A nieaktywny (zawsze układ Podstawowy)
-  - Algorytm 5B aktywny tylko dla C2 (jeśli są nagrzewnice rezerwowe)
+  - Algorytm RC nieaktywny (zawsze układ Podstawowy)
+  - Algorytm RN aktywny tylko dla C2 (jeśli są nagrzewnice rezerwowe)
   - C1 pracuje zawsze w pełnej konfiguracji (N1-N4)
 
 **Blokady:**
 
 ```
-JEŻELI zmiana_układu_w_toku = PRAWDA (Algorytm 5A) WTEDY
+JEŻELI zmiana_układu_w_toku = PRAWDA (Algorytm RC) WTEDY
   // Odrocz zmianę scenariusza do zakończenia rotacji układów
   Czekaj(...)
 KONIEC JEŻELI
 
-JEŻELI rotacja_nagrzewnic_w_toku = PRAWDA (Algorytm 5B) WTEDY
+JEŻELI rotacja_nagrzewnic_w_toku = PRAWDA (Algorytm RN) WTEDY
   // Odrocz zmianę scenariusza do zakończenia rotacji nagrzewnic
   Czekaj(...)
 KONIEC JEŻELI
@@ -744,7 +744,7 @@ Dzień 1, godz. 20:00 - Temperatura: +1°C (spadek)
   Scenariusz: S0 → S1
   Akcja:
     - Uruchom wentylator W1 (PID, 25 Hz)
-    - Załącz nagrzewnicę N1 (zgodnie z Algorytmem 5A/5B)
+    - Załącz nagrzewnicę N1 (zgodnie z Algorytmem RC/RN)
     - Czas zmiany: ~50 sekund
   
 Dzień 1, godz. 22:00 - Temperatura: -2°C (dalszy spadek)
@@ -840,7 +840,7 @@ System ma **trzy poziomy sterowania**:
 ```
 t_zewn = 3°C (wzrost)
   ↓
-Algorytm 5: "Nie potrzebuję już nagrzewnic" → decyzja o przejściu S1→S0
+Algorytm WS: "Nie potrzebuję już nagrzewnic" → decyzja o przejściu S1→S0
   ↓
 Sekwencja wyłączania:
   1. Przełącz PID nagrzewnicy: AUTO → MANUAL
@@ -920,7 +920,7 @@ KROK 2: Uruchom wentylator W1
   Czekaj(10 sekund)  // Stabilizacja obrotów
   Sprawdź_Prąd_Silnika(W1)  // Weryfikacja pracy
 
-KROK 3: Przygotuj nagrzewnicę N (wybrana przez Algorytm 5A/5B)
+KROK 3: Przygotuj nagrzewnicę N (wybrana przez Algorytm RC/5B)
   Ustaw_Zawór(N, 20%)  // Pozycja startowa
   Czekaj(5 sekund)
 
@@ -959,8 +959,8 @@ SEKWENCJA S2→S3 (Dodanie trzeciej nagrzewnicy):
 UWAGA: Wentylator W1 i nagrzewnice N1, N2 już pracują
 
 KROK 1: Wybierz nagrzewnicę do załączenia
-  N_nowa = Algorytm_5B_Wybierz_Nagrzewnicę(CIĄG1, ilość=3)
-  // Algorytm 5B wybiera na podstawie czasu postoju (najdłużej nieużywana)
+  N_nowa = Algorytm_RN_Wybierz_Nagrzewnicę(CIĄG1, ilość=3)
+  // Algorytm RN wybiera na podstawie czasu postoju (najdłużej nieużywana)
 
 KROK 2: Przygotuj nagrzewnicę N_nowa
   Ustaw_Zawór(N_nowa, 20%)
@@ -1026,8 +1026,8 @@ KROK 3: Uruchom wentylator W2
   Sprawdź_Prąd_Silnika(W2)
 
 KROK 4: Wybierz i przygotuj pierwszą nagrzewnicę ciągu 2
-  // Deleguj wybór do Algorytmu 5B (śledzi czasy pracy/postoju)
-  N_nowa = Algorytm_5B_Wybierz_Nagrzewnicę(CIĄG2, ilość=1)
+  // Deleguj wybór do Algorytmu RC (śledzi czasy pracy/postoju)
+  N_nowa = Algorytm_RN_Wybierz_Nagrzewnicę(CIĄG2, ilość=1)
   // Może to być N5, N6, N7 lub N8 - zależy od historii pracy
   
   Ustaw_Zawór(N_nowa, 20%)
@@ -1145,8 +1145,8 @@ SEKWENCJA S5→S6 (Dodanie szóstej nagrzewnicy):
 UWAGA: C1 (N1-N4) + W1 MAX, C2 (N5) + W2 PID już pracują
 
 KROK 1: Wybierz nagrzewnicę z ciągu 2
-  N_nowa = Algorytm_5B_Wybierz_Nagrzewnicę(CIĄG2, ilość=2)
-  // Algorytm 5B wybiera na podstawie czasu postoju (najdłużej nieużywana)
+  N_nowa = Algorytm_RN_Wybierz_Nagrzewnicę(CIĄG2, ilość=2)
+  // Algorytm RN wybiera na podstawie czasu postoju (najdłużej nieużywana)
 
 KROK 2: Przygotuj N_nowa
   Ustaw_Zawór(N_nowa, 20%)

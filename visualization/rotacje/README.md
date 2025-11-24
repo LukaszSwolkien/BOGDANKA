@@ -4,7 +4,7 @@
 
 Ten katalog zawiera wizualizacje przedstawiające różne konfiguracje układów pracy podczas rotacji.
 
-## 📊 Rotacja Układów (Algorytm 5A)
+## 📊 Rotacja Układów (Algorytm RC)
 
 ### Układ Podstawowy vs Ograniczony w Scenariuszach S1-S4
 
@@ -22,7 +22,7 @@ Diagram pokazuje:
 
 ---
 
-#### `5A-uklad-ograniczony-S1.svg` do `5A-uklad-ograniczony-S4.svg`
+#### `RC-uklad-ograniczony-S1.svg` do `RC-uklad-ograniczony-S4.svg`
 **Układ Ograniczony - Ciąg 2 Aktywny**
 
 Diagram pokazuje:
@@ -36,7 +36,7 @@ Diagram pokazuje:
 
 ---
 
-## 🔁 Rotacja Nagrzewnic (Algorytm 5B)
+## 🔁 Rotacja Nagrzewnic (Algorytm RN)
 
 ### Przykłady Rotacji w Scenariuszu S3
 
@@ -125,13 +125,13 @@ Postój: N3
 |----------|-----------------|--------|------|
 | OKRES_ROTACJI_UKŁADÓW | Do ustalenia | 24h - 30 dni | Częstotliwość zmiany układu |
 | OKRES_ROTACJI_NAGRZEWNIC | Do ustalenia | 24h - 720h | Częstotliwość zmiany nagrzewnicy |
-| MIN_DELTA_CZASU | 3600s | 1800s - 7200s | Min. różnica czasu dla rotacji 5B |
+| MIN_DELTA_CZASU | 3600s | 1800s - 7200s | Min. różnica czasu dla rotacji RN |
 
 ## 🔗 Powiązana Dokumentacja
 
-- [Algorytm 5A](../../docs/02-algorytmy/algorytm-5A-rotacja-ukladow.md) - rotacja układów
-- [Algorytm 5B](../../docs/02-algorytmy/algorytm-5B-rotacja-nagrzewnic.md) - rotacja nagrzewnic
-- [Koordynacja 5A↔5B](../algorytmy/koordynacja-5A-5B-timeline.svg) - timeline
+- [Algorytm RC](../../docs/02-algorytmy/algorytm-RC-rotacja-ciagow.md) - rotacja układów
+- [Algorytm RN](../../docs/02-algorytmy/algorytm-RN-rotacja-nagrzewnic.md) - rotacja nagrzewnic
+- [Koordynacja RC↔RN](../algorytmy/koordynacja-RC-RN-timeline.svg) - timeline
 - [Scenariusze](../scenariusze/) - konfiguracje scenariuszy S0-S8
 
 ## 🎨 Konwencje Wizualne

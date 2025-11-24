@@ -16,10 +16,10 @@ Kompleksowa dokumentacja systemu automatycznego sterowania ogrzewaniem szybu wyd
 - Układy automatycznej regulacji (UAR)
 
 ### [02-algorytmy](./02-algorytmy/) - Algorytmy Sterowania
-- `README.md` - Przegląd algorytmów 5, 5A, 5B
-- `algorytm-5-wybor-scenariusza.md` - Automatyczny wybór scenariusza
-- `algorytm-5A-rotacja-ukladow.md` - Rotacja układów pracy ciągów
-- `algorytm-5B-rotacja-nagrzewnic.md` - Rotacja nagrzewnic w ciągu
+- `README.md` - Przegląd algorytmów WS, RC, RN
+- `algorytm-WS-wybor-scenariusza.md` - Automatyczny wybór scenariusza
+- `algorytm-RC-rotacja-ciagow.md` - Rotacja układów pracy ciągów
+- `algorytm-RN-rotacja-nagrzewnic.md` - Rotacja nagrzewnic w ciągu
 - `_ARCHIVE_pelny-dokument.md` - Archiwum oryginalnej dokumentacji
 
 ### [03-projekt-instalacji](./03-projekt-instalacji/) - Projekt Instalacji
@@ -55,7 +55,7 @@ Wszystkie diagramy SVG znajdują się w katalogu [visualization](../visualizatio
 
 ## 📝 Konwencje
 
-- **Pliki MD**: kebab-case (np. `algorytm-5-wybor-scenariusza.md`)
+- **Pliki MD**: kebab-case (np. `algorytm-WS-wybor-scenariusza.md`)
 - **Katalogi**: numerowane prefiksem dla kolejności (np. `00-start/`)
 - **Wizualizacje**: oddzielny katalog `visualization/`
 

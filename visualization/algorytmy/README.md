@@ -6,8 +6,8 @@ Ten katalog zawiera diagramy przepływu dla algorytmów 5, 5A i 5B.
 
 ### 📊 Dostępne Diagramy
 
-#### 1. `algorytm-5-wybor-scenariusza-flowchart.svg`
-**Algorytm 5: Automatyczny Wybór Scenariusza Pracy**
+#### 1. `algorytm-WS-wybor-scenariusza-flowchart.svg`
+**Algorytm WS: Automatyczny Wybór Scenariusza Pracy**
 
 Diagram przedstawia:
 - Monitoring temperatury zewnętrznej (co 10s)
@@ -23,12 +23,12 @@ Diagram przedstawia:
 - Wykonanie zmiany scenariusza
 - Weryfikacja stanu końcowego
 
-📖 [Dokumentacja Algorytmu 5](../../docs/02-algorytmy/algorytm-5-wybor-scenariusza.md)
+📖 [Dokumentacja Algorytmu 5](../../docs/02-algorytmy/algorytm-WS-wybor-scenariusza.md)
 
 ---
 
-#### 2. `algorytm-5A-rotacja-ukladow-flowchart.svg`
-**Algorytm 5A: Cykliczna Rotacja Układów Pracy Ciągów**
+#### 2. `algorytm-RC-rotacja-ciagow-flowchart.svg`
+**Algorytm RC: Cykliczna Rotacja Układów Pracy Ciągów**
 
 Diagram przedstawia:
 - Sprawdzanie warunków rotacji (scenariusz, sprawność, tryb)
@@ -44,12 +44,12 @@ Diagram przedstawia:
 - Sekwencja: zatrzymaj C1 → otwórz spinę → uruchom C2
 - Aktualizacja liczników
 
-📖 [Dokumentacja Algorytmu 5A](../../docs/02-algorytmy/algorytm-5A-rotacja-ukladow.md)
+📖 [Dokumentacja Algorytmu RC](../../docs/02-algorytmy/algorytm-RC-rotacja-ciagow.md)
 
 ---
 
-#### 3. `algorytm-5B-rotacja-nagrzewnic-flowchart.svg`
-**Algorytm 5B: Cykliczna Rotacja Nagrzewnic w Obrębie Ciągu**
+#### 3. `algorytm-RN-rotacja-nagrzewnic-flowchart.svg`
+**Algorytm RN: Cykliczna Rotacja Nagrzewnic w Obrębie Ciągu**
 
 Diagram przedstawia:
 - Aktualizację liczników czasu pracy nagrzewnic
@@ -65,12 +65,12 @@ Diagram przedstawia:
 - Zasada bezpieczeństwa: najpierw załącz, potem wyłącz
 - Weryfikacja MIN_DELTA_CZASU
 
-📖 [Dokumentacja Algorytmu 5B](../../docs/02-algorytmy/algorytm-5B-rotacja-nagrzewnic.md)
+📖 [Dokumentacja Algorytmu RC](../../docs/02-algorytmy/algorytm-RN-rotacja-nagrzewnic.md)
 
 ---
 
-#### 4. `koordynacja-5A-5B-timeline.svg`
-**Timeline Koordynacji Algorytmów 5A ↔ 5B**
+#### 4. `koordynacja-RC-RN-timeline.svg`
+**Timeline Koordynacji Algorytmów RC ↔ RN**
 
 Diagram przedstawia:
 - Oś czasu z przykładowym scenariuszem działania
@@ -86,7 +86,7 @@ Diagram przedstawia:
 - Odstęp 15 min między rotacjami w różnych ciągach
 - Praktyczny przykład koordynacji
 
-📖 [Koordynacja 5A↔5B](../../docs/02-algorytmy/README.md#koordynacja-algorytmów-5a-i-5b)
+📖 [Koordynacja RC↔RN](../../docs/02-algorytmy/README.md#koordynacja-algorytmów-5a-i-5b)
 
 ---
 
@@ -94,21 +94,21 @@ Diagram przedstawia:
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│  Algorytm 5: Wybór Scenariusza (S0-S8)             │
+│  Algorytm WS: Wybór Scenariusza (S0-S8)             │
 │  • Monitoruje: t_zewn                               │
 │  • Decyduje: ILE nagrzewnic (0-8)                   │
 │  • Częstotliwość: co 10s                            │
 └────────────────────┬────────────────────────────────┘
                      ▼
 ┌─────────────────────────────────────────────────────┐
-│  Algorytm 5A: Rotacja Układów (tylko S1-S4)        │
+│  Algorytm RC: Rotacja Układów (tylko S1-S4)        │
 │  • Monitoruje: czas pracy układu                    │
 │  • Decyduje: KTÓRY ciąg (C1 lub C2)                 │
 │  • Częstotliwość: co OKRES_ROTACJI_UKŁADÓW          │
 └────────────────────┬────────────────────────────────┘
                      ▼
 ┌─────────────────────────────────────────────────────┐
-│  Algorytm 5B: Rotacja Nagrzewnic                   │
+│  Algorytm RN: Rotacja Nagrzewnic                   │
 │  • Monitoruje: czas pracy nagrzewnic                │
 │  • Decyduje: KTÓRE nagrzewnice (N1-N8)              │
 │  • Częstotliwość: co OKRES_ROTACJI_NAGRZEWNIC       │
@@ -137,9 +137,9 @@ Diagram przedstawia:
 ## 📖 Powiązana Dokumentacja
 
 - [Przegląd Algorytmów](../../docs/02-algorytmy/README.md) - wprowadzenie
-- [Algorytm 5](../../docs/02-algorytmy/algorytm-5-wybor-scenariusza.md) - szczegóły
-- [Algorytm 5A](../../docs/02-algorytmy/algorytm-5A-rotacja-ukladow.md) - szczegóły
-- [Algorytm 5B](../../docs/02-algorytmy/algorytm-5B-rotacja-nagrzewnic.md) - szczegóły
+- [Algorytm WS](../../docs/02-algorytmy/algorytm-WS-wybor-scenariusza.md) - szczegóły
+- [Algorytm RC](../../docs/02-algorytmy/algorytm-RC-rotacja-ciagow.md) - szczegóły
+- [Algorytm RN](../../docs/02-algorytmy/algorytm-RN-rotacja-nagrzewnic.md) - szczegóły
 - [Architektura](../../docs/01-system/architektura.md) - kontekst systemowy
 
 ## 🎨 Format Diagramów

@@ -1,8 +1,8 @@
-# Algorytm 5A: Cykliczna Rotacja Układów Pracy Ciągów
+# Algorytm RC: Cykliczna Rotacja Układów Pracy Ciągów
 
 > **Część dokumentacji:** Algorytmy Sterowania  
-> **Powiązane algorytmy:** [Algorytm 5](./algorytm-5-wybor-scenariusza.md), [Algorytm 5B](./algorytm-5B-rotacja-nagrzewnic.md)  
-> **Wizualizacja:** [Flowchart](../../visualization/algorytmy/algorytm-5A-rotacja-ukladow-flowchart.svg), [Diagramy rotacji](../../visualization/rotacje/)
+> **Powiązane algorytmy:** [Algorytm WS](./algorytm-WS-wybor-scenariusza.md), [Algorytm RN](./algorytm-RN-rotacja-nagrzewnic.md)  
+> **Wizualizacja:** [Flowchart](../../visualization/algorytmy/algorytm-RC-rotacja-ciagow-flowchart.svg), [Diagramy rotacji](../../visualization/rotacje/)
 
 ## 1. Cel Algorytmu
 
@@ -88,7 +88,7 @@ Rotacja układów jest możliwa **TYLKO** gdy spełnione są **WSZYSTKIE** warun
 
 **Diagram przepływu algorytmu:**
 
-![Algorytm 5A - Diagram przepływu](../../visualization/algorytmy/algorytm-5A-rotacja-ukladow-flowchart.svg)
+![Algorytm RC - Diagram przepływu](../../visualization/algorytmy/algorytm-RC-rotacja-ciagow-flowchart.svg)
 
 **Pseudokod:**
 
@@ -151,13 +151,13 @@ GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
   KROK 4: Wykonaj zmianę układu
     JEŻELI rotacja_możliwa = PRAWDA ORAZ rotacja_wymagana = PRAWDA WTEDY
       
-      // Sprawdź czy Algorytm 5B nie wykonuje rotacji nagrzewnic
+      // Sprawdź czy Algorytm RN nie wykonuje rotacji nagrzewnic
       JEŻELI rotacja_nagrzewnic_w_toku = PRAWDA WTEDY
         Rejestruj_Zdarzenie("Zmiana układu odroczona - trwa rotacja nagrzewnic")
         PRZEJDŹ DO KROKU 5
       KONIEC JEŻELI
       
-      // Ustaw blokadę dla Algorytmu 5B
+      // Ustaw blokadę dla Algorytmu RC
       zmiana_układu_w_toku = PRAWDA
       
       Rejestruj_Zdarzenie("Rozpoczęcie zmiany układu z " + aktualny_układ + " na " + nowy_układ)
@@ -213,7 +213,7 @@ FUNKCJA Wykonaj_Zmianę_Układu(docelowy_układ):
       Uruchom_Wentylator(W2, częstotliwość = 25Hz)
       Czekaj(10 sekund)
       
-      // Deleguj wybór nagrzewnic do Algorytmu 5B
+      // Deleguj wybór nagrzewnic do Algorytmu RC
       nagrzewnice_do_załączenia = Algorytm_5B_Pobierz_Nagrzewnice_Do_Pracy(CIĄG2, wymagana_ilość_nagrzewnic)
       
       Dla KAŻDEJ N w nagrzewnice_do_załączenia:
@@ -250,7 +250,7 @@ FUNKCJA Wykonaj_Zmianę_Układu(docelowy_układ):
       Uruchom_Wentylator(W1, częstotliwość = 25Hz)
       Czekaj(10 sekund)
       
-      // Deleguj wybór nagrzewnic do Algorytmu 5B
+      // Deleguj wybór nagrzewnic do Algorytmu RC
       nagrzewnice_do_załączenia = Algorytm_5B_Pobierz_Nagrzewnice_Do_Pracy(CIĄG1, wymagana_ilość_nagrzewnic)
       
       Dla KAŻDEJ N w nagrzewnice_do_załączenia:

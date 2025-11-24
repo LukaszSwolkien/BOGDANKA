@@ -25,7 +25,7 @@ System automatycznej regulacji (SAR) temperatury szybu składa się z dwóch pod
 
 ![Architektura SAR](../assets/images/architektura_SAR_system.svg)
 
-*Rys. Dwuwarstwowa architektura systemu SAR pokazująca relacje między podsystemami PARTS i PARTPG oraz algorytmami 5, 5A i 5B.*
+*Rys. Dwuwarstwowa architektura systemu SAR pokazująca relacje między podsystemami PARTS i PARTPG oraz algorytmami 5, RC i RN.*
 
 ### 2.1 PARTPG - Podsystem Automatycznej Regulacji Temperatur Powietrza Grzewczego
 
@@ -47,13 +47,13 @@ System automatycznej regulacji (SAR) temperatury szybu składa się z dwóch pod
 
 #### Warstwa Zarządzania (optymalizacja użycia urządzeń)
 
-**Algorytm 5B - Rotacja Nagrzewnic w Ciągu:**
+**Algorytm RN - Rotacja Nagrzewnic w Ciągu:**
 - Cykliczna wymiana pracujących nagrzewnic na rezerwowe w obrębie ciągu
 - Równomierne rozłożenie czasu pracy wszystkich 8 nagrzewnic (N1-N8)
 - Maksymalizacja niezawodności przez równomierne zużycie
 - Wybór nagrzewnic na podstawie historii pracy/postoju
 
-📖 **[Szczegółowy opis → Algorytm 5B](../02-algorytmy/algorytm-5B-rotacja-nagrzewnic.md)**
+📖 **[Szczegółowy opis → Algorytm RN](../02-algorytmy/algorytm-RN-rotacja-nagrzewnic.md)**
 
 ### 2.2 PARTS - Podsystem Automatycznej Regulacji Temperatury Szybu
 
@@ -73,27 +73,27 @@ System automatycznej regulacji (SAR) temperatury szybu składa się z dwóch pod
 
 #### Warstwa Zarządzania (optymalizacja użycia urządzeń)
 
-**Algorytm 5 - Automatyczny Wybór Scenariusza Pracy:**
+**Algorytm WS - Automatyczny Wybór Scenariusza Pracy:**
 - Automatyczny dobór ilości nagrzewnic (S0-S8) w zależności od temperatury zewnętrznej
 - Optymalne wykorzystanie mocy grzewczej (tylko tyle nagrzewnic ile potrzeba)
 - Automatyczna adaptacja do zmian warunków atmosferycznych
 - Histereza temperaturowa zapobiegająca częstym przełączeniom
 
-**Algorytm 5A - Rotacja Układów Pracy Ciągów:**
+**Algorytm RC - Rotacja Układów Pracy Ciągów:**
 - Cykliczna zmiana między układem Podstawowym (C1) a Ograniczonym (C2)
 - Równomierne rozłożenie czasu pracy ciągów wentylacyjnych i wentylatorów (W1, W2)
 - Dotyczy scenariuszy S1-S4 (temperatura -11°C < t ≤ 2°C)
 - Maksymalizacja niezawodności przez równomierne zużycie
 
-📖 **[Szczegółowy opis → Algorytmy 5 i 5A](../02-algorytmy/README.md)** | [Algorytm 5](../02-algorytmy/algorytm-5-wybor-scenariusza.md) | [Algorytm 5A](../02-algorytmy/algorytm-5A-rotacja-ukladow.md)
+📖 **[Szczegółowy opis → Algorytmy WS i RC](../02-algorytmy/README.md)** | [Algorytm WS](../02-algorytmy/algorytm-WS-wybor-scenariusza.md) | [Algorytm RC](../02-algorytmy/algorytm-RC-rotacja-ciagow.md)
 
 ### 2.3 Zależności między Podsystemami
 
 **Hierarchia działania:**
 - PARTS wymaga stabilnych parametrów powietrza grzewczego od PARTPG
 - Brak stabilnych parametrów → pogorszenie jakości regulacji lub wyłączenie SAR szybu
-- Warstwa zarządzania PARTS (Alg. 5, 5A) określa **ILE** i **KTÓRE CIĄGI** nagrzewnic
-- Warstwa zarządzania PARTPG (Alg. 5B) określa **KTÓRE KONKRETNIE** nagrzewnice w ciągu
+- Warstwa zarządzania PARTS (Alg. WS, 5A) określa **ILE** i **KTÓRE CIĄGI** nagrzewnic
+- Warstwa zarządzania PARTPG (Alg. RN) określa **KTÓRE KONKRETNIE** nagrzewnice w ciągu
 - Warstwa regulacji obu podsystemów utrzymuje zadane temperatury (50°C, 2°C)
 
 ## 3. Załączanie i Wyłączanie Nagrzewnic
@@ -113,7 +113,7 @@ System automatycznej regulacji (SAR) temperatury szybu składa się z dwóch pod
 - Otwarcie przepustnicy na dolocie zimnego powietrza do nagrzewnicy
 - Rozpoczęcie procesu regulacji (AUTO lub MANUAL)
 
-📖 **[Szczegółowe sekwencje dla wszystkich przejść → Algorytm 5](../02-algorytmy/algorytm-5-wybor-scenariusza.md)**
+📖 **[Szczegółowe sekwencje dla wszystkich przejść → Algorytm 5](../02-algorytmy/algorytm-WS-wybor-scenariusza.md)**
 
 ### 3.2 Wyłączenie Nagrzewnicy z Ruchu
 
@@ -187,18 +187,18 @@ W trybie MANUAL operator może dowolnie kształtować układ zasilania.
 
 ### 5.0 Algorytm Automatycznego Wyboru Scenariusza
 
-System wykorzystuje **Algorytm 5** do automatycznego doboru scenariusza pracy (S0-S8) w zależności od temperatury zewnętrznej.
+System wykorzystuje **Algorytm WS** do automatycznego doboru scenariusza pracy (S0-S8) w zależności od temperatury zewnętrznej.
 
 **Kluczowe cechy algorytmu:**
 - Ciągły monitoring temperatury zewnętrznej
 - Automatyczny dobór ilości nagrzewnic według tabeli poniżej
 - Histereza przy wyłączaniu (zapobiega częstym przełączeniom)
 - Bezpieczne sekwencje przejść między scenariuszami
-- Koordynacja z algorytmami rotacji 5A i 5B
+- Koordynacja z algorytmami rotacji RC i RN
 
-📖 **[Szczegółowy algorytm → Algorytm 5: Automatyczny Wybór Scenariusza](../02-algorytmy/algorytm-5-wybor-scenariusza.md)**
+📖 **[Szczegółowy algorytm → Algorytm WS: Automatyczny Wybór Scenariusza](../02-algorytmy/algorytm-WS-wybor-scenariusza.md)**
 
-📖 **[Wizualizacja → Flowchart Algorytmu 5](../../visualization/algorytmy/algorytm-5-wybor-scenariusza-flowchart.svg)**
+📖 **[Wizualizacja → Flowchart Algorytmu 5](../../visualization/algorytmy/algorytm-WS-wybor-scenariusza-flowchart.svg)**
 
 ### 5.1 Tabela Scenariuszy
 
@@ -252,31 +252,31 @@ Tabela definiująca stan systemu sterowania uzależniony od temperatury zewnętr
 
 System wykorzystuje **trzy współpracujące algorytmy** do sterowania:
 
-1. **Algorytm 5: Automatyczny Wybór Scenariusza**
+1. **Algorytm WS: Automatyczny Wybór Scenariusza**
    - Określa **ILE nagrzewnic** potrzeba (S0-S8) na podstawie t_zewn
    - Tabela powyżej definiuje scenariusze
    - Ciągły monitoring i histereza
 
-2. **Algorytm 5A: Rotacja Układów Pracy Ciągów**
+2. **Algorytm RC: Rotacja Układów Pracy Ciągów**
    - Określa **KTÓRY CIĄG** pracuje w S1-S4 (Podstawowy: C1, Ograniczony: C2)
    - Wyrównuje eksploatację W1 i W2
 
-3. **Algorytm 5B: Rotacja Nagrzewnic w Ciągu**
+3. **Algorytm RN: Rotacja Nagrzewnic w Ciągu**
    - Określa **KTÓRE KONKRETNIE** nagrzewnice pracują w ciągu
    - Wyrównuje eksploatację N1-N8
 
 **Tabela stanów określa ILOŚĆ wymaganych nagrzewnic, ale nie konkretne numery.**
-**KTÓRE nagrzewnice** pracują jest określane dynamicznie przez algorytmy 5A i 5B.
+**KTÓRE nagrzewnice** pracują jest określane dynamicznie przez algorytmy RC i RN.
 
 **Przykład dla S3 (3 nagrzewnice):**
 - Tydzień 1: mogą pracować N1, N2, N3 (ciąg 1)
-- Tydzień 2: mogą pracować N2, N3, N4 (ciąg 1, po rotacji 5B)
-- Tydzień 3: mogą pracować N5, N6, N7 (ciąg 2, po rotacji 5A)
-- Tydzień 4: mogą pracować N6, N7, N8 (ciąg 2, po rotacji 5B)
+- Tydzień 2: mogą pracować N2, N3, N4 (ciąg 1, po rotacji RN)
+- Tydzień 3: mogą pracować N5, N6, N7 (ciąg 2, po rotacji RC)
+- Tydzień 4: mogą pracować N6, N7, N8 (ciąg 2, po rotacji RN)
 
 ---
 
-### 5A. Rotacja Układów Pracy Ciągów
+### RC. Rotacja Układów Pracy Ciągów
 
 **Cel:** Wyrównanie eksploatacji ciągu 1 (W1) i ciągu 2 (W2) przez cykliczną zmianę: Układ Podstawowy ↔ Układ Ograniczony
 
@@ -287,11 +287,11 @@ System wykorzystuje **trzy współpracujące algorytmy** do sterowania:
 - Okresowa zmiana układu po upłynięciu okresu rotacji
 - Zapewnia równomierne czasy pracy C1 i C2
 
-📖 **[Szczegółowy algorytm → Algorytm 5A: Rotacja Układów](../02-algorytmy/algorytm-5A-rotacja-ukladow.md)** | [Flowchart](../../visualization/algorytmy/algorytm-5A-rotacja-ukladow-flowchart.svg)
+📖 **[Szczegółowy algorytm → Algorytm RC: Rotacja Układów](../02-algorytmy/algorytm-RC-rotacja-ciagow.md)** | [Flowchart](../../visualization/algorytmy/algorytm-RC-rotacja-ciagow-flowchart.svg)
 
 ---
 
-### 5B. Rotacja Nagrzewnic w Obrębie Ciągu
+### RN. Rotacja Nagrzewnic w Obrębie Ciągu
 
 **Cel:** Wyrównanie eksploatacji nagrzewnic N1-N8 przez cykliczną wymianę: najdłużej pracująca → najdłużej w postoju
 
@@ -302,7 +302,7 @@ System wykorzystuje **trzy współpracujące algorytmy** do sterowania:
 - Wymiana jednej nagrzewnicy po upłynięciu okresu rotacji
 - Zapewnia równomierne czasy pracy wszystkich N1-N8
 
-📖 **[Szczegółowy algorytm → Algorytm 5B: Rotacja Nagrzewnic](../02-algorytmy/algorytm-5B-rotacja-nagrzewnic.md)** | [Flowchart](../../visualization/algorytmy/algorytm-5B-rotacja-nagrzewnic-flowchart.svg)
+📖 **[Szczegółowy algorytm → Algorytm RN: Rotacja Nagrzewnic](../02-algorytmy/algorytm-RN-rotacja-nagrzewnic.md)** | [Flowchart](../../visualization/algorytmy/algorytm-RN-rotacja-nagrzewnic-flowchart.svg)
 
 ---
 

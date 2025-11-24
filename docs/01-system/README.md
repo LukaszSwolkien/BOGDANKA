@@ -30,7 +30,7 @@ Główny dokument opisujący **kompletną architekturę systemu sterowania BOGDA
 │  │                                                 │    │
 │  │  • Regulacja prędkości wentylatorów W1, W2    │    │
 │  │  • Utrzymanie Ts = 2°C (na głębokości -30m)   │    │
-│  │  • Algorytmy 5 i 5A (scenariusze + rotacja)   │    │
+│  │  • Algorytmy WS i RC (scenariusze + rotacja)   │    │
 │  └────────────────────────────────────────────────┘    │
 │                          ▼                              │
 │  ┌────────────────────────────────────────────────┐    │
@@ -39,7 +39,7 @@ Główny dokument opisujący **kompletną architekturę systemu sterowania BOGDA
 │  │                                                 │    │
 │  │  • 8 × UAR zaworów (regulatory PID)           │    │
 │  │  • Utrzymanie Tz = 50°C (wylot z nagrzewnicy) │    │
-│  │  • Algorytm 5B (rotacja nagrzewnic)           │    │
+│  │  • Algorytm RN (rotacja nagrzewnic)           │    │
 │  └────────────────────────────────────────────────┘    │
 └─────────────────────────────────────────────────────────┘
 ```
@@ -54,9 +54,9 @@ Główny dokument opisujący **kompletną architekturę systemu sterowania BOGDA
 - Praca ciągła, realizacja w czasie rzeczywistym
 
 **Warstwa Zarządzania** (optymalizacja):
-- Algorytm 5 → wybór scenariusza (ile nagrzewnic)
-- Algorytm 5A → rotacja układów (który ciąg)
-- Algorytm 5B → rotacja nagrzewnic (które konkretnie)
+- Algorytm WS → wybór scenariusza (ile nagrzewnic)
+- Algorytm RC → rotacja układów (który ciąg)
+- Algorytm RN → rotacja nagrzewnic (które konkretnie)
 
 ### Scenariusze Pracy (S0-S8)
 
@@ -82,7 +82,7 @@ System automatycznie dobiera konfigurację w zależności od temperatury zewnęt
 
 ## 🔗 Powiązane Dokumenty
 
-- [Algorytmy](../02-algorytmy/README.md) - szczegóły algorytmów 5, 5A, 5B
+- [Algorytmy](../02-algorytmy/README.md) - szczegóły algorytmów WS, RC, RN
 - [Projekt Instalacji](../03-projekt-instalacji/) - schematy instalacji
 - [Wizualizacje UAR](../../visualization/uar/) - schematy regulacji
 

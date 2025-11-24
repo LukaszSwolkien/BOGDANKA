@@ -178,7 +178,7 @@ Przykład S1:
 - W1 przechodzi z PID → MAX
 - Uruchamia się W2 jako regulator
 
-📊 Zobacz [Algorytm 5 - Sekwencje](../../docs/02-algorytmy/algorytm-5-wybor-scenariusza.md#510-szczegółowe-sekwencje-zmian-scenariuszy)
+📊 Zobacz [Algorytm WS - Sekwencje](../../docs/02-algorytmy/algorytm-WS-wybor-scenariusza.md#510-szczegółowe-sekwencje-zmian-scenariuszy)
 
 ## 🎯 Jak Używać Tych Diagramów?
 
@@ -202,9 +202,9 @@ Przykład S1:
 
 ## 🔗 Powiązana Dokumentacja
 
-- [Algorytm 5](../../docs/02-algorytmy/algorytm-5-wybor-scenariusza.md) - automatyczny wybór scenariusza
+- [Algorytm WS](../../docs/02-algorytmy/algorytm-WS-wybor-scenariusza.md) - automatyczny wybór scenariusza
 - [Architektura](../../docs/01-system/architektura.md) - szczegóły scenariuszy
-- [Flowchart Algorytmu 5](../algorytmy/algorytm-5-wybor-scenariusza-flowchart.svg)
+- [Flowchart Algorytmu 5](../algorytmy/algorytm-WS-wybor-scenariusza-flowchart.svg)
 - [Rotacje](../rotacje/) - diagramy rotacji w scenariuszach
 
 ## 🎨 Konwencje Wizualne

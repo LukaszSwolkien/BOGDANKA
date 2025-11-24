@@ -1,8 +1,8 @@
-# Algorytm 5B: Cykliczna Rotacja Nagrzewnic w Obrębie Ciągu
+# Algorytm RN: Cykliczna Rotacja Nagrzewnic w Obrębie Ciągu
 
 > **Część dokumentacji:** Algorytmy Sterowania  
-> **Powiązane algorytmy:** [Algorytm 5](./algorytm-5-wybor-scenariusza.md), [Algorytm 5A](./algorytm-5A-rotacja-ukladow.md)  
-> **Wizualizacja:** [Flowchart](../../visualization/algorytmy/algorytm-5B-rotacja-nagrzewnic-flowchart.svg), [Koordynacja z 5A](../../visualization/algorytmy/koordynacja-5A-5B-timeline.svg), [Przykłady rotacji](../../visualization/rotacje/)
+> **Powiązane algorytmy:** [Algorytm WS](./algorytm-WS-wybor-scenariusza.md), [Algorytm RC](./algorytm-RC-rotacja-ciagow.md)  
+> **Wizualizacja:** [Flowchart](../../visualization/algorytmy/algorytm-RN-rotacja-nagrzewnic-flowchart.svg), [Koordynacja z 5A](../../visualization/algorytmy/koordynacja-RC-RN-timeline.svg), [Przykłady rotacji](../../visualization/rotacje/)
 
 ## 1. Cel Algorytmu
 
@@ -83,24 +83,24 @@ Rotacja nagrzewnic jest możliwa **TYLKO** gdy spełnione są **WSZYSTKIE** waru
 
 ## 5. Algorytm Rotacji Nagrzewnic Krok po Kroku
 
-**WAŻNE - Algorytm 5B jako serwis dla innych algorytmów:**
+**WAŻNE - Algorytm RN jako serwis dla innych algorytmów:**
 
-Algorytm 5B pełni **podwójną funkcję**:
+Algorytm RN pełni **podwójną funkcję**:
 
 1. **Funkcja aktywna** - Wykonuje cykliczną rotację nagrzewnic (wymiana najdłużej pracującej → najdłużej w postoju)
 2. **Funkcja serwisowa** - Dostarcza funkcje wyboru nagrzewnic wywoływane przez:
-   - **Algorytm 5** (wybór scenariusza) - wywołuje `Algorytm_5B_Pobierz_Nagrzewnice_Do_Pracy(ciąg, ilość)`
-   - **Algorytm 5A** (rotacja układów) - wywołuje `Algorytm_5B_Pobierz_Nagrzewnice_Do_Pracy(ciąg, ilość)`
-   - **Sekwencje zmian scenariuszy** - wywołują `Algorytm_5B_Wybierz_Nagrzewnicę(ciąg, ilość)`
+   - **Algorytm WS** (wybór scenariusza) - wywołuje `Algorytm_RN_Pobierz_Nagrzewnice_Do_Pracy(ciąg, ilość)`
+   - **Algorytm RC** (rotacja układów) - wywołuje `Algorytm_RN_Pobierz_Nagrzewnice_Do_Pracy(ciąg, ilość)`
+   - **Sekwencje zmian scenariuszy** - wywołują `Algorytm_RN_Wybierz_Nagrzewnicę(ciąg, ilość)`
 
-**Zasada:** NIGDY nie zakładamy sekwencyjnego wyboru nagrzewnic (N1→N2→N3...). Zawsze delegujemy wybór do Algorytmu 5B, który:
+**Zasada:** NIGDY nie zakładamy sekwencyjnego wyboru nagrzewnic (N1→N2→N3...). Zawsze delegujemy wybór do Algorytmu RC, który:
 - Śledzi czasy pracy i postoju każdej nagrzewnicy
 - Wybiera nagrzewnice na podstawie historii eksploatacji
 - Zapewnia równomierne zużycie wszystkich nagrzewnic N1-N8
 
 **Diagram wizualizujący algorytm:**
 
-![Algorytm 5B Flowchart](../../visualization/algorytmy/algorytm-5B-rotacja-nagrzewnic-flowchart.svg)
+![Algorytm RN Flowchart](../../visualization/algorytmy/algorytm-RN-rotacja-nagrzewnic-flowchart.svg)
 
 ```
 ZMIENNE GLOBALNE (współdzielone z Algorytmem 5A):
@@ -164,7 +164,7 @@ GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
       KONIEC JEŻELI
       
       // Sprawdź czy upłynęła 1h od ostatniej zmiany układu (5A)
-      // (dotyczy tylko S1-S4, bo tylko tam działa Algorytm 5A)
+      // (dotyczy tylko S1-S4, bo tylko tam działa Algorytm RC)
       JEŻELI aktualny_scenariusz ∈ {S1, S2, S3, S4} WTEDY
         czas_od_zmiany_układu = czas_systemowy - czas_ostatniej_zmiany_układu
         JEŻELI czas_od_zmiany_układu < 3600 WTEDY  // 1 godzina
@@ -244,7 +244,7 @@ GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
       JEŻELI nagrzewnica_do_wyłączenia ≠ NULL ORAZ 
              nagrzewnica_do_załączenia ≠ NULL WTEDY
         
-        // Ustaw blokadę dla Algorytmu 5A
+        // Ustaw blokadę dla Algorytmu RC
         rotacja_nagrzewnic_w_toku = PRAWDA
         
         Rejestruj_Zdarzenie("Rotacja w " + ciąg + ": " + 
@@ -387,11 +387,11 @@ FUNKCJA Warunki_Stabilności_Spełnione(ciąg):
 KONIEC FUNKCJI
 
 //=============================================================================
-// FUNKCJE SERWISOWE - Wywoływane przez Algorytmy 5 i 5A
+// FUNKCJE SERWISOWE - Wywoływane przez Algorytmy WS i RC
 //=============================================================================
 
-FUNKCJA Algorytm_5B_Pobierz_Nagrzewnice_Do_Pracy(ciąg, ilość):
-  // Ta funkcja jest wywoływana przez Algorytm 5 i 5A
+FUNKCJA Algorytm_RN_Pobierz_Nagrzewnice_Do_Pracy(ciąg, ilość):
+  // Ta funkcja jest wywoływana przez Algorytm WS i 5A
   // aby uzyskać listę nagrzewnic do załączenia
   //
   // LOGIKA:
@@ -415,7 +415,7 @@ FUNKCJA Algorytm_5B_Pobierz_Nagrzewnice_Do_Pracy(ciąg, ilość):
 
 KONIEC FUNKCJI
 
-FUNKCJA Algorytm_5B_Wybierz_Nagrzewnicę(ciąg, ilość_docelowa):
+FUNKCJA Algorytm_RN_Wybierz_Nagrzewnicę(ciąg, ilość_docelowa):
   // Ta funkcja jest wywoływana przez sekwencje zmian scenariuszy
   // aby wybrać JEDNĄ nagrzewnicę do załączenia
   //
@@ -423,7 +423,7 @@ FUNKCJA Algorytm_5B_Wybierz_Nagrzewnicę(ciąg, ilość_docelowa):
   //
   // LOGIKA: Wybiera nagrzewnicę z najdłuższym czasem postoju
   
-  wszystkie = Algorytm_5B_Pobierz_Nagrzewnice_Do_Pracy(ciąg, ilość_docelowa)
+  wszystkie = Algorytm_RN_Pobierz_Nagrzewnice_Do_Pracy(ciąg, ilość_docelowa)
   aktywne = Pobierz_Aktywne_Nagrzewnice(ciąg)
   
   // Znajdź nagrzewnicę która jest w 'wszystkie' ale NIE jest w 'aktywne'
@@ -434,7 +434,7 @@ FUNKCJA Algorytm_5B_Wybierz_Nagrzewnicę(ciąg, ilość_docelowa):
   KONIEC DLA
   
   // Nie powinno się zdarzyć (oznacza błąd logiczny)
-  Rejestruj_Alarm("BŁĄD: Algorytm_5B_Wybierz_Nagrzewnicę nie znalazł kandydata")
+  Rejestruj_Alarm("BŁĄD: Algorytm_RN_Wybierz_Nagrzewnicę nie znalazł kandydata")
   ZWRÓĆ NULL
 
 KONIEC FUNKCJI
@@ -446,7 +446,7 @@ KONIEC FUNKCJI
 
 | Scenariusz | Aktywne ciągi | Układ | Uwaga |
 |------------|---------------|-------|-------|
-| **S1-S4** | **TYLKO JEDEN ciąg** na raz | Układ Podstawowy: **C1** (W1 PID)<br>Układ Ograniczony: **C2** (W2 PID) | Algorytm 5A przełącza między układami → rotacja 5B dotyczy ciągu który **aktualnie pracuje** |
+| **S1-S4** | **TYLKO JEDEN ciąg** na raz | Układ Podstawowy: **C1** (W1 PID)<br>Układ Ograniczony: **C2** (W2 PID) | Algorytm RC przełącza między układami → rotacja RN dotyczy ciągu który **aktualnie pracuje** |
 | **S5-S8** | **OBA ciągi** jednocześnie | C1 MAX + C2 PID/MAX | Oba ciągi aktywne, ale tylko C2 może rotować (C1 niemożliwa - brak rezerwowej) |
 
 Gdy wiele ciągów wymaga rotacji jednocześnie, stosuje się następujące priorytety:
@@ -458,16 +458,16 @@ Gdy wiele ciągów wymaga rotacji jednocześnie, stosuje się następujące prio
 | 3 | Ciąg 1 (S5-S8) | C1 MAX + C2 PID/MAX | C1 pracuje na MAX - rotacja **NIEMOŻLIWA*** (wszystkie N1-N4 pracują, brak rezerwowej) |
 
 **Ograniczenia rotacji:**
-- *W **S5-S8**: rotacja 5B w **C1 jest NIEMOŻLIWA** - wszystkie nagrzewnice N1-N4 muszą pracować (brak nagrzewnicy rezerwowej)
-- W **S5-S7**: rotacja 5B w **C2 jest MOŻLIWA** - są nagrzewnice rezerwowe (N8 w S7, N7-N8 w S6, N6-N8 w S5)
-- W **S8**: rotacja 5B w **C2 jest NIEMOŻLIWA** - wszystkie nagrzewnice N5-N8 muszą pracować (brak nagrzewnicy rezerwowej)
+- *W **S5-S8**: rotacja RN w **C1 jest NIEMOŻLIWA** - wszystkie nagrzewnice N1-N4 muszą pracować (brak nagrzewnicy rezerwowej)
+- W **S5-S7**: rotacja RN w **C2 jest MOŻLIWA** - są nagrzewnice rezerwowe (N8 w S7, N7-N8 w S6, N6-N8 w S5)
+- W **S8**: rotacja RN w **C2 jest NIEMOŻLIWA** - wszystkie nagrzewnice N5-N8 muszą pracować (brak nagrzewnicy rezerwowej)
 
 **Koordynacja z Algorytmem 5A (Rotacja Układów):**
 
 ⚠️ **WAŻNE - W S1-S4 pracuje TYLKO JEDEN ciąg na raz (nie oba jednocześnie!):**
-- Gdy aktywny jest **Układ Podstawowy**: pracuje **TYLKO C1**, rotacja 5B dotyczy **C1** (priorytet 1)
-- Gdy aktywny jest **Układ Ograniczony**: pracuje **TYLKO C2**, rotacja 5B dotyczy **C2** (priorytet 1)
-- Algorytm 5A przełącza między układami → zmiana który ciąg pracuje
+- Gdy aktywny jest **Układ Podstawowy**: pracuje **TYLKO C1**, rotacja RN dotyczy **C1** (priorytet 1)
+- Gdy aktywny jest **Układ Ograniczony**: pracuje **TYLKO C2**, rotacja RN dotyczy **C2** (priorytet 1)
+- Algorytm RC przełącza między układami → zmiana który ciąg pracuje
 
 **Zasady koordynacji:**
 - Po zmianie układu (5A) poczekaj min. **1 godzinę** przed rotacją nagrzewnic (5B)
@@ -683,19 +683,19 @@ Dzień 28: Rotacja układów (5A) → Układ Podstawowy, C1: N2, N3, N4
 
 UWAGA: Powyzsze wyliczenia trzeba potwierdzic w symulacji z roznymi scenariuszami i okresami rotacji
 
-## 5B.11 Wizualizacja Koordynacji Algorytmów 5A i 5B
+## 5B.11 Wizualizacja Koordynacji Algorytmów RC i RN
 
 **Diagram Timeline - Przykładowy Scenariusz S3:**
 
-![Koordynacja 5A ↔ 5B](../../visualization/algorytmy/koordynacja-5A-5B-timeline.svg)
+![Koordynacja RC ↔ RN](../../visualization/algorytmy/koordynacja-RC-RN-timeline.svg)
 
 Diagram timeline pokazuje praktyczny przykład koordynacji między algorytmami w scenariuszu S3:
 
 **Kluczowe elementy wizualizacji:**
 1. **Timeline zdarzeń** (0h → 410h):
    - T=0h: System w układzie Podstawowym, C1 aktywny
-   - T=168h: Algorytm 5B rotuje nagrzewnice w C1 (N1 → N4)
-   - T=168h+2min: Algorytm 5A próbuje zmienić układ → **BLOKADA** (5B rotuje)
+   - T=168h: Algorytm RN rotuje nagrzewnice w C1 (N1 → N4)
+   - T=168h+2min: Algorytm RC próbuje zmienić układ → **BLOKADA** (5B rotuje)
    - T=168h+5min: 5B kończy, 5A wykonuje zmianę układu
    - T=169h: Układ Ograniczony, C2 aktywny
    - T=169h+15min: 5B próbuje rotować w C2 → **ODROCZONE** (odstęp 1h)
@@ -710,13 +710,13 @@ Diagram timeline pokazuje praktyczny przykład koordynacji między algorytmami w
    - **15 minut**: między rotacjami w różnych ciągach
 
 4. **Kolorystyka**:
-   - 🟨 Żółty: Algorytm 5A (rotacja układów)
-   - 🟩 Zielony: Algorytm 5B (rotacja nagrzewnic)
+   - 🟨 Żółty: Algorytm RC (rotacja układów)
+   - 🟩 Zielony: Algorytm RN (rotacja nagrzewnic)
    - 🟥 Czerwony: Blokada / Odroczone
 
 **Wnioski z diagramu:**
 - System **NIGDY** nie wykonuje dwóch operacji jednocześnie
-- Wszystkie blokady są dwukierunkowe (5A ↔ 5B)
+- Wszystkie blokady są dwukierunkowe (RC ↔ RN)
 - Odstępy czasowe zapewniają stabilność temperatury
 - Mechanizmy są zaimplementowane w pseudokodzie (KROK 0, KROK 2, KROK 4)
 
