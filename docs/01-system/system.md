@@ -170,6 +170,43 @@ System wykorzystuje trzy współpracujące algorytmy:
 
 📖 **[Szczegóły algorytmu RN](../03-algorytmy/algorytmy.md#algorytm-rn-cykliczna-rotacja-nagrzewnic-w-obrębie-ciągu)**
 
+### 5.4 Implementacja Algorytmów - Zasady
+
+**⚠️ KLUCZOWA ZASADA IMPLEMENTACJI:**
+
+Wszystkie algorytmy (WS, RC, RN) muszą być zaimplementowane **DOKŁADNIE** według pseudokodu zawartego w [algorytmy.md](../03-algorytmy/algorytmy.md).
+
+**Pseudokod = Źródło Prawdy (Single Source of Truth)**
+
+- ✅ Implementacja w PLC/symulacji musi **1:1** odzwierciedlać pseudokod
+- ✅ Każda linia pseudokodu ma swoją implementację w kodzie
+- ✅ Testy jednostkowe weryfikują zgodność z pseudokodem
+- ❌ **NIE wolno** wprowadzać zmian w implementacji bez aktualizacji pseudokodu
+
+**Proces wykrywania problemów:**
+
+1. **Podczas testów jednostkowych** - jeśli test wykryje problem:
+   - Analiza: czy błąd jest w implementacji czy w logice pseudokodu?
+   - Jeśli w pseudokodzie → aktualizacja [algorytmy.md](../03-algorytmy/algorytmy.md)
+   - Jeśli w implementacji → poprawka kodu do zgodności z pseudokodem
+
+2. **Podczas symulacji** - jeśli symulacja wykryje problem:
+   - Analiza wyników w Splunk Observability
+   - Identyfikacja błędnej logiki w pseudokodzie
+   - Aktualizacja [algorytmy.md](../03-algorytmy/algorytmy.md) + re-implementacja
+
+**Uzasadnienie:**
+
+- Dokumentacja (pseudokod) jest **specyfikacją** - musi być zawsze aktualna
+- Implementacja jest **realizacją** specyfikacji
+- Synchronizacja: kod ↔ dokumentacja zapewnia spójność projektu
+- Łatwiejsza weryfikacja i audyt systemu
+
+**Narzędzia weryfikacji:**
+
+- Testy jednostkowe algorytmów (simulation))
+- Symulacja 30-dniowa z metrykami Splunk
+
 ---
 
 ## 6. Parametry Systemowe

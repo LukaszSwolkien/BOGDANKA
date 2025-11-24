@@ -153,9 +153,14 @@ Both services support **time acceleration** for fast testing:
 ### Service 2: Algo Service
 
 **Algorithm Implementation:**
-- Read algorithm pseudocode from [../../docs/03-algorytmy/algorytmy.md](../../docs/03-algorytmy/algorytmy.md)
-- Implement WS, RC, RN exactly as documented
-- Use all coordination mechanisms (locks, time gaps)
+
+**⚠️ CRITICAL: Implement algorithms EXACTLY as pseudocode in [../../docs/03-algorytmy/algorytmy.md](../../docs/03-algorytmy/algorytmy.md)**
+
+- Pseudocode = Single Source of Truth
+- Every line of pseudocode must have corresponding implementation
+- **DO NOT** modify algorithm logic without updating pseudocode first
+- If you find issues during testing → update pseudocode in `algorytmy.md`, then re-implement
+- Use all coordination mechanisms (locks, time gaps, hierarchies) exactly as specified
 
 **Weather Integration:**
 - Poll `GET {weather_endpoint}/temperature` every `services.algo.algorithms.ws.temp_monitoring_cycle_s`
@@ -447,15 +452,18 @@ After running simulation for 30 days, verify in Splunk Observability:
 
 **⚠️ IMPORTANT:** This file contains ONLY simulation specifications.
 
-**For algorithm logic, read:**
+**For algorithm logic (PSEUDOCODE = SOURCE OF TRUTH):**
 - **Complete algorithms:** [../../docs/03-algorytmy/algorytmy.md](../../docs/03-algorytmy/algorytmy.md)
   - Algorithm WS: Scenario selection with hysteresis
   - Algorithm RC: Configuration rotation (Primary ↔ Limited)
   - Algorithm RN: Heater rotation within lines
   - Coordination: locks, time gaps, hierarchy
+  - **Implementation must match pseudocode 1:1**
+  - **If issues found → update pseudocode first, then re-implement**
 
 **For system context:**
 - **System architecture:** [../../docs/01-system/system.md](../../docs/01-system/system.md)
+  - Section 5.4: Implementation principles
 - **Installation project:** [../../docs/02-projekt-instalacji/projekt-instalacji.md](../../docs/02-projekt-instalacji/projekt-instalacji.md)
 
 ---
