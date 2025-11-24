@@ -43,13 +43,13 @@ The simulation consists of **two independent microservices** that communicate vi
            │ OTLP Metrics/Logs                               │ OTLP Metrics/Logs
            │ bogdanka.weather.*                              │ bogdanka.algo.*
            │                                                 │
-           └────────────────────┬────────────────────────────┘
-                                │
-                                ▼
-                    ┌───────────────────────┐
-                    │  Splunk Observability │
-                    │  (OTLP Endpoint)      │
-                    └───────────────────────┘
+           └─────────────────────────┬───────────────────────┘
+                                     │
+                                     ▼
+                         ┌───────────────────────┐
+                         │  Splunk Observability │
+                         │  (OTLP Endpoint)      │
+                         └───────────────────────┘
 ```
 
 ### Service 1: Weather Service
