@@ -197,7 +197,7 @@ System automatycznie przełącza się między scenariuszami pracy w zależności
 ### 5.0 Scenariusz S0: Brak Ogrzewania
 **Warunki:** t ≥ 3°C | **Nagrzewnice:** Brak | **Wentylatory:** Brak
 
-![Scenariusz S0](./scenariusze/S0-brak-ogrzewania.svg)
+![Scenariusz S0](./schematy/S0-brak-ogrzewania.svg)
 
 **Stan systemu:**
 - Wszystkie nagrzewnice wyłączone
@@ -211,7 +211,7 @@ System automatycznie przełącza się między scenariuszami pracy w zależności
 ### 5.1 Scenariusz S1: Minimalne Ogrzewanie
 **Warunki:** -1°C < t ≤ 2°C | **Nagrzewnice:** N1 | **Wentylatory:** W1 (PID)
 
-![Scenariusz S1](./scenariusze/S1-minimalne-ogrzewanie.svg)
+![Scenariusz S1](./schematy/S1-minimalne-ogrzewanie.svg)
 
 **Stan systemu:**
 - Nagrzewnica N1 aktywna (zielona)
@@ -224,7 +224,7 @@ System automatycznie przełącza się między scenariuszami pracy w zależności
 ### 5.2 Scenariusz S2: Dwie Nagrzewnice
 **Warunki:** -4°C < t ≤ -1°C | **Nagrzewnice:** N1-N2 | **Wentylatory:** W1 (PID)
 
-![Scenariusz S2](./scenariusze/S2-dwie-nagrzewnice.svg)
+![Scenariusz S2](./schematy/S2-dwie-nagrzewnice.svg)
 
 **Stan systemu:**
 - Nagrzewnice N1, N2 aktywne
@@ -237,7 +237,7 @@ System automatycznie przełącza się między scenariuszami pracy w zależności
 ### 5.3 Scenariusz S3: Trzy Nagrzewnice
 **Warunki:** -8°C < t ≤ -4°C | **Nagrzewnice:** N1-N3 | **Wentylatory:** W1 (PID)
 
-![Scenariusz S3](./scenariusze/S3-trzy-nagrzewnice.svg)
+![Scenariusz S3](./schematy/S3-trzy-nagrzewnice.svg)
 
 **Stan systemu:**
 - Nagrzewnice N1, N2, N3 aktywne
@@ -250,7 +250,7 @@ System automatycznie przełącza się między scenariuszami pracy w zależności
 ### 5.4 Scenariusz S4: Pełny Górny Ciąg
 **Warunki:** -11°C < t ≤ -8°C | **Nagrzewnice:** N1-N4 | **Wentylatory:** W1 (PID lub MAX)
 
-![Scenariusz S4](./scenariusze/S4-pelny-gorny-ciag.svg)
+![Scenariusz S4](./schematy/S4-pelny-gorny-ciag.svg)
 
 **Stan systemu:**
 - Wszystkie nagrzewnice górnego ciągu (N1-N4) aktywne
@@ -263,7 +263,7 @@ System automatycznie przełącza się między scenariuszami pracy w zależności
 ### 5.5 Scenariusz S5: Uruchomienie Dolnego Ciągu
 **Warunki:** -15°C < t ≤ -11°C | **Nagrzewnice:** N1-N5 | **Wentylatory:** W1 (MAX), W2 (PID)
 
-![Scenariusz S5](./scenariusze/S5-uruchomienie-dolnego-ciagu.svg)
+![Scenariusz S5](./schematy/S5-uruchomienie-dolnego-ciagu.svg)
 
 **Stan systemu:**
 - Nagrzewnice N1-N5 aktywne (wszystkie z ciągu 1 + jedna z ciągu 2)
@@ -278,7 +278,7 @@ System automatycznie przełącza się między scenariuszami pracy w zależności
 ### 5.6 Scenariusz S6: Sześć Nagrzewnic
 **Warunki:** -18°C < t ≤ -15°C | **Nagrzewnice:** N1-N6 | **Wentylatory:** W1 (MAX), W2 (PID)
 
-![Scenariusz S6](./scenariusze/S6-szesc-nagrzewnic.svg)
+![Scenariusz S6](./schematy/S6-szesc-nagrzewnic.svg)
 
 **Stan systemu:**
 - Nagrzewnice N1-N6 aktywne (cały ciąg 1 + dwie z ciągu 2)
@@ -292,7 +292,7 @@ System automatycznie przełącza się między scenariuszami pracy w zależności
 ### 5.7 Scenariusz S7: Siedem Nagrzewnic
 **Warunki:** -21°C < t ≤ -18°C | **Nagrzewnice:** N1-N7 | **Wentylatory:** W1 (MAX), W2 (PID)
 
-![Scenariusz S7](./scenariusze/S7-siedem-nagrzewnic.svg)
+![Scenariusz S7](./schematy/S7-siedem-nagrzewnic.svg)
 
 **Stan systemu:**
 - Nagrzewnice N1-N7 aktywne (cały ciąg 1 + trzy z ciągu 2)
@@ -306,7 +306,7 @@ System automatycznie przełącza się między scenariuszami pracy w zależności
 ### 5.8 Scenariusz S8: Maksymalne Obciążenie
 **Warunki:** t ≤ -21°C | **Nagrzewnice:** N1-N8 | **Wentylatory:** W1 (MAX), W2 (PID)
 
-![Scenariusz S8](./scenariusze/S8-maksymalne-obciazenie.svg)
+![Scenariusz S8](./schematy/S8-maksymalne-obciazenie.svg)
 
 **Stan systemu:**
 - WSZYSTKIE nagrzewnice N1-N8 aktywne (wszystkie z obu ciągów)
@@ -388,7 +388,7 @@ System wykorzystuje **trzy współpracujące algorytmy** zapewniające automatyc
 
 | Układ | Nagrzewnice | Wentylator | Wizualizacja |
 |-------|-------------|------------|--------------|
-| **Podstawowy** | N1 | W1 PID | ![S1 Podstawowy](./scenariusze/S1-minimalne-ogrzewanie.svg) |
+| **Podstawowy** | N1 | W1 PID | ![S1 Podstawowy](./schematy/S1-minimalne-ogrzewanie.svg) |
 | **Ograniczony** | N5 | W2 PID | ![S1 Ograniczony](../02-algorytmy/schematy/RC-uklad-ograniczony-S1.svg) |
 
 ---
@@ -399,7 +399,7 @@ System wykorzystuje **trzy współpracujące algorytmy** zapewniające automatyc
 
 | Układ | Nagrzewnice | Wentylator | Wizualizacja |
 |-------|-------------|------------|--------------|
-| **Podstawowy** | N1, N2 | W1 PID | ![S2 Podstawowy](./scenariusze/S2-dwie-nagrzewnice.svg) |
+| **Podstawowy** | N1, N2 | W1 PID | ![S2 Podstawowy](./schematy/S2-dwie-nagrzewnice.svg) |
 | **Ograniczony** | N5, N6 | W2 PID | ![S2 Ograniczony](../02-algorytmy/schematy/RC-uklad-ograniczony-S2.svg) |
 
 ---
@@ -410,7 +410,7 @@ System wykorzystuje **trzy współpracujące algorytmy** zapewniające automatyc
 
 | Układ | Nagrzewnice | Wentylator | Wizualizacja |
 |-------|-------------|------------|--------------|
-| **Podstawowy** | N1, N2, N3 | W1 PID | ![S3 Podstawowy](./scenariusze/S3-trzy-nagrzewnice.svg) |
+| **Podstawowy** | N1, N2, N3 | W1 PID | ![S3 Podstawowy](./schematy/S3-trzy-nagrzewnice.svg) |
 | **Ograniczony** | N5, N6, N7 | W2 PID | ![S3 Ograniczony](../02-algorytmy/schematy/RC-uklad-ograniczony-S3.svg) |
 
 ---
@@ -421,7 +421,7 @@ System wykorzystuje **trzy współpracujące algorytmy** zapewniające automatyc
 
 | Układ | Nagrzewnice | Wentylator | Wizualizacja |
 |-------|-------------|------------|--------------|
-| **Podstawowy** | N1-N4 | W1 PID | ![S4 Podstawowy](./scenariusze/S4-pelny-gorny-ciag.svg) |
+| **Podstawowy** | N1-N4 | W1 PID | ![S4 Podstawowy](./schematy/S4-pelny-gorny-ciag.svg) |
 | **Ograniczony** | N5-N8 | W2 PID | ![S4 Ograniczony](../02-algorytmy/schematy/RC-uklad-ograniczony-S4.svg) |
 
 **Uwagi:**
@@ -447,7 +447,7 @@ System wykorzystuje **trzy współpracujące algorytmy** zapewniające automatyc
 
 **Tydzień 1: N1, N2, N3**
 
-![S3 Rotacja - Tydzień 1](./scenariusze/S3-trzy-nagrzewnice.svg)
+![S3 Rotacja - Tydzień 1](./schematy/S3-trzy-nagrzewnice.svg)
 
 **Pracują:** N1 (najstarsza), N2, N3  
 **Postój:** N4
