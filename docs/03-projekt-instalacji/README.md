@@ -7,7 +7,7 @@
 Zawiera szczegółowe schematy instalacji grzewczej:
 
 #### 📄 Dokumentacja
-- `Projekt instalacji ogrzewania szybu.md` - szczegółowy opis instalacji
+- [Projekt instalacji ogrzewania szybu](../01-system/dokumentacja-wejsciowa/Projekt%20instalacji%20ogrzewania%20szybu.md) - szczegółowy opis instalacji (przeniesiony do dokumentacji systemu)
 
 #### 🎨 Schematy SVG
 - `nawiew_z_dolnego_ciagu_wentylacyjnego.svg` - schemat nawiewu z jednego ciągu

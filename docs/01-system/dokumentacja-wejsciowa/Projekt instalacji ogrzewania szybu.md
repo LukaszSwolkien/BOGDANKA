@@ -195,19 +195,19 @@ Td – stała członu różniczkującego (czas wyprzedzenia).
 
 W układzie podstawowym pracy ciągów grzewczych, przy pracy wentylatorów dwóch ciągów, wentylator W1 pierwszego ciągu grzewczego pracuje ze swoją maksymalną prędkością. W tym przypadku wentylatorem regulacyjnym (na którym dokonuje się zmiana prędkości obrotowej) jest wentylator W2.
 
-![Schemat ideowy UAR temperatury powietrza na wylocie z nagrzewnicy](schemat_uar_nagrzewnica.svg)
+![Schemat ideowy UAR temperatury powietrza na wylocie z nagrzewnicy](../../03-projekt-instalacji/schematy/schemat_uar_nagrzewnica.svg)
 
 Rys. 1. Schemat ideowy UAR temperatury powietrza na wylocie z nagrzewnicy.
 
-![Schemat ideowy UAR temperatury w szybie](schemat_uar_predkosc_wentylatora.svg)
+![Schemat ideowy UAR temperatury w szybie](../../03-projekt-instalacji/schematy/schemat_uar_predkosc_wentylatora.svg)
 
 Rys. 2. Schemat ideowy UAR temperatury w szybie.
 
-![Nawiew z dwóch ciągów wentylacyjnych](nawiew_z_dwoch_ciagow_wentylacyjnych.svg)
+![Nawiew z dwóch ciągów wentylacyjnych](../../03-projekt-instalacji/schematy/nawiew_z_dwoch_ciagow_wentylacyjnych.svg)
 
 Rys. 3. Nawiew powietrza ogrzanego z wykorzystaniem dwóch ciągów wentylacyjnych.
 
-![Nawiew z dolnego ciągu wentylacyjnego](nawiew_z_dolnego_ciagu_wentylacyjnego.svg)
+![Nawiew z dolnego ciągu wentylacyjnego](../../03-projekt-instalacji/schematy/nawiew_z_dolnego_ciagu_wentylacyjnego.svg)
 
 Rys. 4. Nawiew powietrza ogrzanego do wyrzutni poziomu 4,30 m z wykorzystaniem drugiego ciągu wentylacyjnego.
 

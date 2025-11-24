@@ -8,7 +8,7 @@ Dokument otrzymany 19 listopad 2025:
 
 [Projekt instalacji ogrzewania szybu - skan dokumentacji](./dokumentacja-wejsciowa/Projekt%20instalacji%20ogrzewania%20szybu.pdf)
 
-[Projekt instalacji ogrzewania szybu - dokumentacja](../03-projekt-instalacji/schematy/Projekt%20instalacji%20ogrzewania%20szybu.md)
+[Projekt instalacji ogrzewania szybu - dokumentacja](./dokumentacja-wejsciowa/Projekt%20instalacji%20ogrzewania%20szybu.md)
 
 # Opracowanie specyfikacji
 
