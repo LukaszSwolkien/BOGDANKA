@@ -121,14 +121,9 @@ System automatycznej regulacji (SAR) ma **dwuwarstwową architekturę**:
 **Ten dokument** opisuje szczegółowo **warstwę zarządzania** (algorytmy WS, RC, RN).  
 **Warstwa regulacji** (UAR, PID) jest opisana w [system.md](../01-system/system.md) i [projekt-instalacji.md](../02-projekt-instalacji/projekt-instalacji.md).
 
-
-
-# ═════════════════════════════════════
 # Algorytm WS: Automatyczny Wybór Scenariusza Pracy
-# ═════════════════════════════════════
 
-
-> **Powiązane algorytmy:** Algorytm RC, Algorytm RN
+**Powiązane algorytmy:** Algorytm RC, Algorytm RN
 
 ## 1. Cel Algorytmu
 
@@ -1357,9 +1352,7 @@ Czas sekwencji: ~45 sekund
 | **RUNNING** | 20-100% PID | AUTO | Praca normalna |
 | **STOPPING** | AUTO → 20% | AUTO → MANUAL | Przejście do postoju |
 
-# ═════════════════════════════════════
 # Algorytm RC: Cykliczna Rotacja Układów Pracy Ciągów
-# ═════════════════════════════════════
 
 
 > **Powiązane algorytmy:** Algorytm WS, Algorytm RN
@@ -1692,12 +1685,9 @@ System rejestruje następujące dane dla analizy:
 - Ciąg 2: ~360h pracy (50%)
 - Stosunek eksploatacji: 1.0 ✅ Idealne wyrównanie
 
-# ═════════════════════════════════════
 # Algorytm RN: Cykliczna Rotacja Nagrzewnic w Obrębie Ciągu
-# ═════════════════════════════════════
 
-
-> **Powiązane algorytmy:** Algorytm WS, Algorytm RC
+**Powiązane algorytmy:** Algorytm WS, Algorytm RC
 
 ## 1. Cel Algorytmu
 
