@@ -81,39 +81,39 @@ System automatycznej regulacji (SAR) temperatury szybu ma **dwuwarstwową archit
 *Rys. Dwuwarstwowa architektura systemu SAR z podziałem na warstwy regulacji i zarządzania.*
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│ PARTS - Podsystem Automatycznej Regulacji Temperatury Szybu │
-│                                                             │
-│ ┌──────────────────────────────────────────────────────────┐│
-│ │ WARSTWA REGULACJI (podstawowa funkcja systemu)           ││
-│ │ • 2 × UAR (regulatory PID wentylatorów W1, W2)           ││
-│ │ • Utrzymanie Ts = 2°C w szybie (-30m)                    ││
-│ │ • Sterowanie częstotliwością (25-50 Hz)                  ││
-│ └──────────────────────────────────────────────────────────┘│
-│                                                             │
-│ ┌──────────────────────────────────────────────────────────┐│
-│ │ WARSTWA ZARZĄDZANIA (optymalizacja użycia urządzeń)      ││
-│ │ • Algorytm 5:  Automatyczny dobór scenariusza (S0-S8)    ││
-│ │ • Algorytm 5A: Rotacja układów pracy ciągów (C1 ↔ C2)    ││
-│ └──────────────────────────────────────────────────────────┘│
-└─────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│ PARTS - Podsystem Automatycznej Regulacji Temperatury Szybu  │
+│                                                              │
+│ ┌──────────────────────────────────────────────────────────┐ │
+│ │ WARSTWA REGULACJI (podstawowa funkcja systemu)           │ │
+│ │ • 2 × UAR (regulatory PID wentylatorów W1, W2)           │ │
+│ │ • Utrzymanie Ts = 2°C w szybie (-30m)                    │ │
+│ │ • Sterowanie częstotliwością (25-50 Hz)                  │ │
+│ └──────────────────────────────────────────────────────────┘ │
+│                                                              │
+│ ┌──────────────────────────────────────────────────────────┐ │
+│ │ WARSTWA ZARZĄDZANIA (optymalizacja użycia urządzeń)      │ │
+│ │ • Algorytm 5:  Automatyczny dobór scenariusza (S0-S8)    │ │
+│ │ • Algorytm 5A: Rotacja układów pracy ciągów (C1 ↔ C2)    │ │
+│ └──────────────────────────────────────────────────────────┘ │
+└──────────────────────────────────────────────────────────────┘
 
-┌─────────────────────────────────────────────────────────────┐
-│ PARTPG - Podsystem Automatycznej Regulacji Temp. Pow. Grz.  │
-│                                                             │
-│ ┌──────────────────────────────────────────────────────────┐│
-│ │ WARSTWA REGULACJI (podstawowa funkcja systemu)           ││
-│ │ • 8 × UAR (regulatory PID zaworów N1-N8)                 ││
-│ │ • Utrzymanie Tz = 50°C na wylocie z nagrzewnicy          ││
-│ │ • Sterowanie zaworem wody grzewczej (20-100%)            ││
-│ │ • Załączanie/wyłączanie nagrzewnic                       ││
-│ └──────────────────────────────────────────────────────────┘│
-│                                                             │
-│ ┌──────────────────────────────────────────────────────────┐│
-│ │ WARSTWA ZARZĄDZANIA (optymalizacja użycia urządzeń)      ││
-│ │ • Algorytm 5B: Rotacja nagrzewnic w ciągach (N1-N8)      ││
-│ └──────────────────────────────────────────────────────────┘│
-└─────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│ PARTPG - Podsystem Automatycznej Regulacji Temp. Pow. Grz.   │
+│                                                              │
+│ ┌──────────────────────────────────────────────────────────┐ │
+│ │ WARSTWA REGULACJI (podstawowa funkcja systemu)           │ │
+│ │ • 8 × UAR (regulatory PID zaworów N1-N8)                 │ │
+│ │ • Utrzymanie Tz = 50°C na wylocie z nagrzewnicy          │ │
+│ │ • Sterowanie zaworem wody grzewczej (20-100%)            │ │
+│ │ • Załączanie/wyłączanie nagrzewnic                       │ │
+│ └──────────────────────────────────────────────────────────┘ │
+│                                                              │
+│ ┌──────────────────────────────────────────────────────────┐ │
+│ │ WARSTWA ZARZĄDZANIA (optymalizacja użycia urządzeń)      │ │
+│ │ • Algorytm 5B: Rotacja nagrzewnic w ciągach (N1-N8)      │ │
+│ └──────────────────────────────────────────────────────────┘ │
+└──────────────────────────────────────────────────────────────┘
 ```
 
 ### Kluczowe Zasady Relacji
@@ -145,20 +145,20 @@ System automatycznej regulacji (SAR) temperatury szybu ma **dwuwarstwową archit
 │ PARTS - WARSTWA ZARZĄDZANIA                             │
 │ Algorytm 5: t_zewn = -6°C → Scenariusz S3 (3 nagr.)     │
 │ Algorytm 5A: Aktualny układ = "Podstawowy" → Ciąg C1    │
-└──────────────────┬──────────────────────────────────────┘
-                   ▼
+└────────────────────────────┬────────────────────────────┘
+                             ▼
 ┌─────────────────────────────────────────────────────────┐
 │ PARTPG - WARSTWA ZARZĄDZANIA                            │
 │ Algorytm 5B: Wybiera N2, N3, N4 (na podstawie rotacji)  │
-└──────────────────┬──────────────────────────────────────┘
-                   ▼
+└────────────────────────────┬────────────────────────────┘
+                             ▼
 ┌─────────────────────────────────────────────────────────┐
 │ PARTPG - WARSTWA REGULACJI                              │
 │ • PID nagrzewnicy N2: reguluje zawór → Tz = 50°C        │
 │ • PID nagrzewnicy N3: reguluje zawór → Tz = 50°C        │
 │ • PID nagrzewnicy N4: reguluje zawór → Tz = 50°C        │
-└──────────────────┬──────────────────────────────────────┘
-                   ▼
+└────────────────────────────┬────────────────────────────┘
+                             ▼
 ┌─────────────────────────────────────────────────────────┐
 │ PARTS - WARSTWA REGULACJI                               │
 │ • PID wentylatora W1: reguluje częstotliwość → Ts = 2°C │
