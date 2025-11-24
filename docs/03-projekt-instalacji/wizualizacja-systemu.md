@@ -12,11 +12,11 @@ Ten dokument przedstawia symulację interfejsu operatorskiego (HMI) dla systemu 
 
 ### Schemat Bazowy Instalacji
 
-![Nawiew z dwóch ciągów wentylacyjnych](../03-projekt-instalacji/schematy/nawiew_z_dwoch_ciagow_wentylacyjnych.svg)
+![Nawiew z dwóch ciągów wentylacyjnych](./schematy/nawiew_z_dwoch_ciagow_wentylacyjnych.svg)
 
 Rys. Nawiew powietrza ogrzanego z wykorzystaniem dwóch ciągów wentylacyjnych.
 
-![Nawiew z dolnego ciągu wentylacyjnego](../03-projekt-instalacji/schematy/nawiew_z_dolnego_ciagu_wentylacyjnego.svg)
+![Nawiew z dolnego ciągu wentylacyjnego](./schematy/nawiew_z_dolnego_ciagu_wentylacyjnego.svg)
 
 Rys. Nawiew powietrza ogrzanego do wyrzutni poziomu 4,30 m z wykorzystaniem drugiego ciągu wentylacyjnego.
 
@@ -373,7 +373,7 @@ System okresowo zmienia układ pracy między **Podstawowym** a **Ograniczonym** 
 
 ### 1. UAR Temperatury Powietrza - Schemat Ogólny
 
-![Schemat UAR temperatury](../03-projekt-instalacji/schematy/uar-nagrzewnica.svg)
+![Schemat UAR temperatury](./schematy/uar-nagrzewnica.svg)
 
 **Opis działania:**
 - **Regulator PID** porównuje temperaturę zadaną (Tz=50°C) z temperaturą mierzoną
@@ -434,7 +434,7 @@ System okresowo zmienia układ pracy między **Podstawowym** a **Ograniczonym** 
 
 ### 4. UAR Prędkości Wentylatora
 
-![UAR Prędkość Wentylatora](../03-projekt-instalacji/schematy/uar-wentylator.svg)
+![UAR Prędkość Wentylatora](./schematy/uar-wentylator.svg)
 
 **Opis działania:**
 - **Regulator PID** utrzymuje temperaturę w szybie (Ts=2°C na poziomie -30m)

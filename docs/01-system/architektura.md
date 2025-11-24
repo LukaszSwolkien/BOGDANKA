@@ -377,4 +377,4 @@ System sterowania realizowany na sterowniku PLC z regulatorami PID.
 
 ## 11. Wizualizacja
 
-[Wizualizacje systemu](../00-start/wizualizacja-systemu.md)
+[Wizualizacje systemu](../03-projekt-instalacji/wizualizacja-systemu.md)
