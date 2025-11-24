@@ -873,7 +873,7 @@ KONIEC FUNKCJI
 
 **Hierarchia działania:**
 
-1. **Algorytm 5** (ten) - określa **ILE** nagrzewnic potrzeba (S0-S8)
+1. **Algorytm 5**  - określa **ILE** nagrzewnic potrzeba (S0-S8)
 2. **Algorytm 5A** - określa **KTÓRY CIĄG** w S1-S4 (Podstawowy: C1, Ograniczony: C2)
 3. **Algorytm 5B** - określa **KTÓRE KONKRETNIE** nagrzewnice w ciągu (rotacja)
 
