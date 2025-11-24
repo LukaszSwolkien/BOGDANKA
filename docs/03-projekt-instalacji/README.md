@@ -92,12 +92,12 @@ Regulator PID steruje częstotliwością wentylatora:
 
 - [Architektura Systemu](../01-system/architektura.md) - opis podsystemów
 - [Algorytmy](../02-algorytmy/README.md) - logika sterowania
-- [Wizualizacje UAR](../../visualization/uar/) - diagramy regulacji
-- [Wizualizacje Scenariuszy](../../visualization/scenariusze/) - konfiguracje nawiewu
+- [Wizualizacje UAR](../visualization/uar/) - diagramy regulacji
+- [Wizualizacje Scenariuszy](../visualization/scenariusze/) - konfiguracje nawiewu
 
 ## 📖 Dalsze Kroki
 
 1. Przejrzyj [schematy instalacji](./schematy/)
 2. Zapoznaj się z [algorytmami sterowania](../02-algorytmy/)
-3. Zobacz [wizualizacje układów pracy](../../visualization/scenariusze/)
+3. Zobacz [wizualizacje układów pracy](../visualization/scenariusze/)
 

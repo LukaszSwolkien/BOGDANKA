@@ -68,7 +68,7 @@ System automatycznie dobiera konfigurację w zależności od temperatury zewnęt
 | S1-S4 | 2°C do -11°C | 1-4 | Jeden (C1 lub C2) |
 | S5-S8 | < -11°C | 5-8 | Dwa (C1 + C2) |
 
-📊 [Wizualizacje scenariuszy](../../visualization/scenariusze/)
+📊 [Wizualizacje scenariuszy](../visualization/scenariusze/)
 
 ### Układy Pracy
 
@@ -84,11 +84,11 @@ System automatycznie dobiera konfigurację w zależności od temperatury zewnęt
 
 - [Algorytmy](../02-algorytmy/README.md) - szczegóły algorytmów WS, RC, RN
 - [Projekt Instalacji](../03-projekt-instalacji/) - schematy instalacji
-- [Wizualizacje UAR](../../visualization/uar/) - schematy regulacji
+- [Wizualizacje UAR](../visualization/uar/) - schematy regulacji
 
 ## 📖 Dalsze Kroki
 
 1. Przeczytaj [architektura.md](./architektura.md) - pełny opis systemu
 2. Zapoznaj się z [algorytmami](../02-algorytmy/README.md)
-3. Zobacz [wizualizacje scenariuszy](../../visualization/scenariusze/)
+3. Zobacz [wizualizacje scenariuszy](../visualization/scenariusze/)
 

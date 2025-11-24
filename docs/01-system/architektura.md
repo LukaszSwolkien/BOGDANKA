@@ -198,7 +198,7 @@ System wykorzystuje **Algorytm WS** do automatycznego doboru scenariusza pracy (
 
 📖 **[Szczegółowy algorytm → Algorytm WS: Automatyczny Wybór Scenariusza](../02-algorytmy/algorytm-WS-wybor-scenariusza.md)**
 
-📖 **[Wizualizacja → Flowchart Algorytmu 5](../../visualization/algorytmy/algorytm-WS-wybor-scenariusza-flowchart.svg)**
+📖 **[Wizualizacja → Flowchart Algorytmu 5](../visualization/algorytmy/algorytm-WS-wybor-scenariusza-flowchart.svg)**
 
 ### 5.1 Tabela Scenariuszy
 
@@ -287,7 +287,7 @@ System wykorzystuje **trzy współpracujące algorytmy** do sterowania:
 - Okresowa zmiana układu po upłynięciu okresu rotacji
 - Zapewnia równomierne czasy pracy C1 i C2
 
-📖 **[Szczegółowy algorytm → Algorytm RC: Rotacja Układów](../02-algorytmy/algorytm-RC-rotacja-ciagow.md)** | [Flowchart](../../visualization/algorytmy/algorytm-RC-rotacja-ciagow-flowchart.svg)
+📖 **[Szczegółowy algorytm → Algorytm RC: Rotacja Układów](../02-algorytmy/algorytm-RC-rotacja-ciagow.md)** | [Flowchart](../visualization/algorytmy/algorytm-RC-rotacja-ciagow-flowchart.svg)
 
 ---
 
@@ -302,7 +302,7 @@ System wykorzystuje **trzy współpracujące algorytmy** do sterowania:
 - Wymiana jednej nagrzewnicy po upłynięciu okresu rotacji
 - Zapewnia równomierne czasy pracy wszystkich N1-N8
 
-📖 **[Szczegółowy algorytm → Algorytm RN: Rotacja Nagrzewnic](../02-algorytmy/algorytm-RN-rotacja-nagrzewnic.md)** | [Flowchart](../../visualization/algorytmy/algorytm-RN-rotacja-nagrzewnic-flowchart.svg)
+📖 **[Szczegółowy algorytm → Algorytm RN: Rotacja Nagrzewnic](../02-algorytmy/algorytm-RN-rotacja-nagrzewnic.md)** | [Flowchart](../visualization/algorytmy/algorytm-RN-rotacja-nagrzewnic-flowchart.svg)
 
 ---
 
@@ -380,4 +380,4 @@ System sterowania realizowany na sterowniku PLC z regulatorami PID.
 
 ## 11. Wizualizacja
 
-[Wizualizacje systemu](../../visualization/README.md)
+[Wizualizacje systemu](../visualization/README.md)

@@ -56,7 +56,7 @@ Ten katalog zawiera diagramy przedstawiające układy automatycznej regulacji (r
 - Tz = 45°C (za nisko) → PID otwiera zawór → więcej gorącej wody → Tz rośnie
 - Tz = 55°C (za wysoko) → PID przymyka zawór → mniej wody → Tz spada
 
-📖 [Dokumentacja UAR Nagrzewnic](../../docs/01-system/architektura.md#6-uar-nagrzewnic)
+📖 [Dokumentacja UAR Nagrzewnic](../../01-system/architektura.md#6-uar-nagrzewnic)
 
 ---
 
@@ -111,7 +111,7 @@ Ten katalog zawiera diagramy przedstawiające układy automatycznej regulacji (r
 - Ts = 0°C (za zimno) → PID zwiększa prędkość → więcej powietrza → Ts rośnie
 - Ts = 4°C (za ciepło) → PID zmniejsza prędkość → mniej powietrza → Ts spada
 
-📖 [Dokumentacja UAR Wentylatorów](../../docs/01-system/architektura.md#7-uar-wentylatorów)
+📖 [Dokumentacja UAR Wentylatorów](../../01-system/architektura.md#7-uar-wentylatorów)
 
 ---
 
@@ -162,7 +162,7 @@ Ten katalog zawiera diagramy przedstawiające układy automatycznej regulacji (r
 - Maksymalny przepływ przez C1
 - W2 "dokłada" tyle ile potrzeba
 
-📖 [Scenariusze S5-S8](../../docs/01-system/architektura.md#5-scenariusze)
+📖 [Scenariusze S5-S8](../../01-system/architektura.md#5-scenariusze)
 
 ---
 
@@ -221,9 +221,9 @@ Parametry Kp, Ki, Kd muszą być **dostrojone** dla każdego układu:
 
 ## 🔗 Powiązana Dokumentacja
 
-- [Architektura - UAR Nagrzewnic](../../docs/01-system/architektura.md#6-uar-nagrzewnic)
-- [Architektura - UAR Wentylatorów](../../docs/01-system/architektura.md#7-uar-wentylatorów)
-- [Scenariusze S0-S8](../../docs/01-system/architektura.md#5-scenariusze)
+- [Architektura - UAR Nagrzewnic](../../01-system/architektura.md#6-uar-nagrzewnic)
+- [Architektura - UAR Wentylatorów](../../01-system/architektura.md#7-uar-wentylatorów)
+- [Scenariusze S0-S8](../../01-system/architektura.md#5-scenariusze)
 - [Wizualizacje Scenariuszy](../scenariusze/)
 
 ## 🛠️ Dla Programistów PLC

@@ -38,14 +38,14 @@ Wszystkie martwe linki zostały naprawione.
 [...](../assets/images/assets/...)
 [...](../03-projekt-instalacji/schematy/...)
 [...](../03-projekt-instalacji/schematy/nawiew_z_dolnego_ciagu_wentylacyjnego.svg)
-[Wizualizacje systemu](../../visualization/README.md)
+[Wizualizacje systemu](docs/visualization/README.md)
 ```
 
 **Zmienione linki:**
-- `../Symulacja/` → `../assets/images/` lub `../../visualization/`
+- `../Symulacja/` → `../assets/images/` lub `docs/visualization/`
 - `Algorytmy_rotacji.md` → `../02-algorytmy/algorytm-5*.md` (6 wystąpień)
 - `assets/` → `../03-projekt-instalacji/schematy/` lub `../assets/images/assets/`
-- `../symulacja.md` → `../../visualization/README.md`
+- `../symulacja.md` → `docs/visualization/README.md`
 
 ---
 
@@ -74,7 +74,7 @@ Wszystkie martwe linki zostały naprawione.
 
 #### ✅ Po:
 ```markdown
-4. [Wizualizacja Koordynacji 5A↔5B](../../visualization/algorytmy/koordynacja-5A-5B-timeline.svg)
+4. [Wizualizacja Koordynacji 5A↔5B](docs/visualization/algorytmy/koordynacja-5A-5B-timeline.svg)
 ```
 
 **Powód:** Plik `koordynacja.md` nigdy nie został utworzony. Zastąpiono bezpośrednim linkiem do diagramu.

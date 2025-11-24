@@ -129,8 +129,8 @@ Postój: N3
 
 ## 🔗 Powiązana Dokumentacja
 
-- [Algorytm RC](../../docs/02-algorytmy/algorytm-RC-rotacja-ciagow.md) - rotacja układów
-- [Algorytm RN](../../docs/02-algorytmy/algorytm-RN-rotacja-nagrzewnic.md) - rotacja nagrzewnic
+- [Algorytm RC](../../02-algorytmy/algorytm-RC-rotacja-ciagow.md) - rotacja układów
+- [Algorytm RN](../../02-algorytmy/algorytm-RN-rotacja-nagrzewnic.md) - rotacja nagrzewnic
 - [Koordynacja RC↔RN](../algorytmy/koordynacja-RC-RN-timeline.svg) - timeline
 - [Scenariusze](../scenariusze/) - konfiguracje scenariuszy S0-S8
 

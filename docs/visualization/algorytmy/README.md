@@ -23,7 +23,7 @@ Diagram przedstawia:
 - Wykonanie zmiany scenariusza
 - Weryfikacja stanu końcowego
 
-📖 [Dokumentacja Algorytmu 5](../../docs/02-algorytmy/algorytm-WS-wybor-scenariusza.md)
+📖 [Dokumentacja Algorytmu 5](../../02-algorytmy/algorytm-WS-wybor-scenariusza.md)
 
 ---
 
@@ -44,7 +44,7 @@ Diagram przedstawia:
 - Sekwencja: zatrzymaj C1 → otwórz spinę → uruchom C2
 - Aktualizacja liczników
 
-📖 [Dokumentacja Algorytmu RC](../../docs/02-algorytmy/algorytm-RC-rotacja-ciagow.md)
+📖 [Dokumentacja Algorytmu RC](../../02-algorytmy/algorytm-RC-rotacja-ciagow.md)
 
 ---
 
@@ -65,7 +65,7 @@ Diagram przedstawia:
 - Zasada bezpieczeństwa: najpierw załącz, potem wyłącz
 - Weryfikacja MIN_DELTA_CZASU
 
-📖 [Dokumentacja Algorytmu RC](../../docs/02-algorytmy/algorytm-RN-rotacja-nagrzewnic.md)
+📖 [Dokumentacja Algorytmu RC](../../02-algorytmy/algorytm-RN-rotacja-nagrzewnic.md)
 
 ---
 
@@ -86,7 +86,7 @@ Diagram przedstawia:
 - Odstęp 15 min między rotacjami w różnych ciągach
 - Praktyczny przykład koordynacji
 
-📖 [Koordynacja RC↔RN](../../docs/02-algorytmy/README.md#koordynacja-algorytmów-5a-i-5b)
+📖 [Koordynacja RC↔RN](../../02-algorytmy/README.md#koordynacja-algorytmów-5a-i-5b)
 
 ---
 
@@ -136,11 +136,11 @@ Diagram przedstawia:
 
 ## 📖 Powiązana Dokumentacja
 
-- [Przegląd Algorytmów](../../docs/02-algorytmy/README.md) - wprowadzenie
-- [Algorytm WS](../../docs/02-algorytmy/algorytm-WS-wybor-scenariusza.md) - szczegóły
-- [Algorytm RC](../../docs/02-algorytmy/algorytm-RC-rotacja-ciagow.md) - szczegóły
-- [Algorytm RN](../../docs/02-algorytmy/algorytm-RN-rotacja-nagrzewnic.md) - szczegóły
-- [Architektura](../../docs/01-system/architektura.md) - kontekst systemowy
+- [Przegląd Algorytmów](../../02-algorytmy/README.md) - wprowadzenie
+- [Algorytm WS](../../02-algorytmy/algorytm-WS-wybor-scenariusza.md) - szczegóły
+- [Algorytm RC](../../02-algorytmy/algorytm-RC-rotacja-ciagow.md) - szczegóły
+- [Algorytm RN](../../02-algorytmy/algorytm-RN-rotacja-nagrzewnic.md) - szczegóły
+- [Architektura](../../01-system/architektura.md) - kontekst systemowy
 
 ## 🎨 Format Diagramów
 
