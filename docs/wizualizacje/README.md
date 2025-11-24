@@ -4,7 +4,7 @@
 
 Ten dokument przedstawia symulację interfejsu operatorskiego (HMI) dla systemu sterowania nagrzewnicami i wentylatorami w szybie kopalnianym. System wizualizuje działanie układów automatycznej regulacji (UAR) w zależności od temperatury zewnętrznej.
 
-[Wymagania dla systemu sterowania](Doc/System%20Sterowania%20BOGDANKA%20szyb%202.md)
+[Wymagania dla systemu sterowania](../01-system/architektura.md)
 
 ---
 
@@ -12,11 +12,11 @@ Ten dokument przedstawia symulację interfejsu operatorskiego (HMI) dla systemu 
 
 ### Schemat Bazowy Instalacji
 
-![Nawiew z dwóch ciągów wentylacyjnych](Doc/Projekt%20instalacji%20ogrzewania%20szybu/nawiew_z_dwoch_ciagow_wentylacyjnych.svg)
+![Nawiew z dwóch ciągów wentylacyjnych](../../03-projekt-instalacji/schematy/nawiew_z_dwoch_ciagow_wentylacyjnych.svg)
 
 Rys. Nawiew powietrza ogrzanego z wykorzystaniem dwóch ciągów wentylacyjnych.
 
-![Nawiew z dolnego ciągu wentylacyjnego](Doc/Projekt%20instalacji%20ogrzewania%20szybu/nawiew_z_dolnego_ciagu_wentylacyjnego.svg)
+![Nawiew z dolnego ciągu wentylacyjnego](../../03-projekt-instalacji/schematy/nawiew_z_dolnego_ciagu_wentylacyjnego.svg)
 
 Rys. Nawiew powietrza ogrzanego do wyrzutni poziomu 4,30 m z wykorzystaniem drugiego ciągu wentylacyjnego.
 
@@ -41,7 +41,7 @@ System automatycznie przełącza się między scenariuszami pracy w zależności
 ### Scenariusz S0: Brak Ogrzewania
 **Warunki:** t ≥ 3°C | **Nagrzewnice:** Brak | **Wentylatory:** Brak
 
-![Scenariusz S0](scenariusze/S0-brak-ogrzewania.svg)
+![Scenariusz S0](./scenariusze/S0-brak-ogrzewania.svg)
 
 **Stan systemu:**
 - Wszystkie nagrzewnice wyłączone
@@ -55,7 +55,7 @@ System automatycznie przełącza się między scenariuszami pracy w zależności
 ### Scenariusz S1: Minimalne Ogrzewanie
 **Warunki:** -1°C < t ≤ 2°C | **Nagrzewnice:** N1 | **Wentylatory:** W1
 
-![Scenariusz S1](scenariusze/S1-minimalne-ogrzewanie.svg)
+![Scenariusz S1](./scenariusze/S1-minimalne-ogrzewanie.svg)
 
 **Stan systemu:**
 - Nagrzewnica N1 aktywna (zielona)
@@ -68,7 +68,7 @@ System automatycznie przełącza się między scenariuszami pracy w zależności
 ### Scenariusz S2: Dwie Nagrzewnice
 **Warunki:** -4°C < t ≤ -1°C | **Nagrzewnice:** N1-N2 | **Wentylatory:** W1
 
-![Scenariusz S2](scenariusze/S2-dwie-nagrzewnice.svg)
+![Scenariusz S2](./scenariusze/S2-dwie-nagrzewnice.svg)
 
 **Stan systemu:**
 - Nagrzewnice N1, N2 aktywne
@@ -81,7 +81,7 @@ System automatycznie przełącza się między scenariuszami pracy w zależności
 ### Scenariusz S3: Trzy Nagrzewnice
 **Warunki:** -8°C < t ≤ -4°C | **Nagrzewnice:** N1-N3 | **Wentylatory:** W1
 
-![Scenariusz S3](scenariusze/S3-trzy-nagrzewnice.svg)
+![Scenariusz S3](./scenariusze/S3-trzy-nagrzewnice.svg)
 
 **Stan systemu:**
 - Nagrzewnice N1, N2, N3 aktywne
@@ -94,7 +94,7 @@ System automatycznie przełącza się między scenariuszami pracy w zależności
 ### Scenariusz S4: Pełny Górny Ciąg
 **Warunki:** -11°C < t ≤ -8°C | **Nagrzewnice:** N1-N4 | **Wentylatory:** W1
 
-![Scenariusz S4](scenariusze/S4-pelny-gorny-ciag.svg)
+![Scenariusz S4](./scenariusze/S4-pelny-gorny-ciag.svg)
 
 **Stan systemu:**
 - Wszystkie nagrzewnice górnego ciągu (N1-N4) aktywne
@@ -107,7 +107,7 @@ System automatycznie przełącza się między scenariuszami pracy w zależności
 ### Scenariusz S5: Uruchomienie Dolnego Ciągu
 **Warunki:** -15°C < t ≤ -11°C | **Nagrzewnice:** N1-N5 | **Wentylatory:** W1 (MAX), W2 (PID)
 
-![Scenariusz S5](scenariusze/S5-uruchomienie-dolnego-ciagu.svg)
+![Scenariusz S5](./scenariusze/S5-uruchomienie-dolnego-ciagu.svg)
 
 **Stan systemu:**
 - Nagrzewnice N1-N5 aktywne (wszystkie z ciągu 1 + jedna z ciągu 2)
@@ -122,7 +122,7 @@ System automatycznie przełącza się między scenariuszami pracy w zależności
 ### Scenariusz S6: Sześć Nagrzewnic
 **Warunki:** -18°C < t ≤ -15°C | **Nagrzewnice:** N1-N6 | **Wentylatory:** W1 (MAX), W2 (PID)
 
-![Scenariusz S6](scenariusze/S6-szesc-nagrzewnic.svg)
+![Scenariusz S6](./scenariusze/S6-szesc-nagrzewnic.svg)
 
 **Stan systemu:**
 - Nagrzewnice N1-N6 aktywne (cały ciąg 1 + dwie z ciągu 2)
@@ -136,7 +136,7 @@ System automatycznie przełącza się między scenariuszami pracy w zależności
 ### Scenariusz S7: Siedem Nagrzewnic
 **Warunki:** -21°C < t ≤ -18°C | **Nagrzewnice:** N1-N7 | **Wentylatory:** W1 (MAX), W2 (PID)
 
-![Scenariusz S7](scenariusze/S7-siedem-nagrzewnic.svg)
+![Scenariusz S7](./scenariusze/S7-siedem-nagrzewnic.svg)
 
 **Stan systemu:**
 - Nagrzewnice N1-N7 aktywne (cały ciąg 1 + trzy z ciągu 2)
@@ -150,7 +150,7 @@ System automatycznie przełącza się między scenariuszami pracy w zależności
 ### Scenariusz S8: Maksymalne Obciążenie
 **Warunki:** t ≤ -21°C | **Nagrzewnice:** N1-N8 | **Wentylatory:** W1 (MAX), W2 (PID)
 
-![Scenariusz S8](scenariusze/S8-maksymalne-obciazenie.svg)
+![Scenariusz S8](./scenariusze/S8-maksymalne-obciazenie.svg)
 
 **Stan systemu:**
 - WSZYSTKIE nagrzewnice N1-N8 aktywne (wszystkie z obu ciągów)
@@ -163,31 +163,10 @@ System automatycznie przełącza się między scenariuszami pracy w zależności
 
 ## Algorytmy Sterowania - Wizualizacje
 
-### Relacja z Podsystemami PARTPG i PARTS
-
-System SAR (System Automatycznej Regulacji) składa się z dwóch podsystemów, z których każdy ma **dwuwarstwową architekturę**:
-
-**PARTS (Podsystem Automatycznej Regulacji Temperatury Szybu):**
-- **Warstwa Regulacji:** 2 × PID wentylatorów (utrzymanie Ts=2°C)
-- **Warstwa Zarządzania:** Algorytmy WS i RC (optymalizacja użycia urządzeń)
-
-**PARTPG (Podsystem Automatycznej Regulacji Temp. Powietrza Grzewczego):**
-- **Warstwa Regulacji:** 8 × PID nagrzewnic (utrzymanie Tz=50°C)
-- **Warstwa Zarządzania:** Algorytm RN (optymalizacja użycia urządzeń)
-
-#### Diagram Architektury Systemu SAR
-
-![Architektura SAR](./architektura_SAR_system.svg)
-
-Diagram pokazuje dwuwarstwową strukturę systemu SAR, relacje między podsystemami PARTS i PARTPG oraz umiejscowienie algorytmów 5, RC i RN w architekturze systemu.
-
-### Trzy Współpracujące Algorytmy
-
-System wykorzystuje **trzy współpracujące algorytmy zarządzania** zapewniające automatyczne sterowanie i równomierne rozłożenie eksploatacji urządzeń:
-- **Algorytm WS** (część PARTS): Automatyczny Wybór Scenariusza Pracy (S0-S8) - fundament sterowania
-- **Algorytm RC** (część PARTS): Rotacja Układów Pracy Ciągów (C1 ↔ C2)
-- **Algorytm RN** (część PARTPG): Rotacja Nagrzewnic w Obrębie Ciągu
-
+System wykorzystuje **trzy współpracujące algorytmy** zapewniające automatyczne sterowanie i równomierne rozłożenie eksploatacji urządzeń:
+- **Algorytm WS:** Automatyczny Wybór Scenariusza Pracy (S0-S8) - fundament sterowania
+- **Algorytm RC:** Rotacja Układów Pracy Ciągów (C1 ↔ C2)
+- **Algorytm RN:** Rotacja Nagrzewnic w Obrębie Ciągu
 
 ### Algorytm WS: Automatyczny Wybór Scenariusza
 
@@ -202,11 +181,11 @@ System wykorzystuje **trzy współpracujące algorytmy zarządzania** zapewniaj�
 - Drzewo decyzyjne wyboru scenariusza (z histerezami)
 - Sprawdzenie warunków stabilności i trybu pracy (AUTO/MANUAL)
 - Wykonanie sekwencji zmiany scenariusza
-- Koordynacja z algorytmami RC i RN
+- Koordynacja z algorytmami 5A i 5B
 
 #### Diagram Przepływu Algorytmu 5
 
-![Algorytm WS - Wybór Scenariusza](algorytmy/algorytm-WS-wybor-scenariusza-flowchart.svg)
+![Algorytm 5 - Wybór Scenariusza](./algorytmy/algorytm-WS-wybor-scenariusza-flowchart.svg)
 
 **Opis flowchartu:**
 - **KROK 1:** Odczyt czujnika t_zewn z filtrem uśredniania (3 próbki)
@@ -243,11 +222,11 @@ System wykorzystuje **trzy współpracujące algorytmy zarządzania** zapewniaj�
 
 ---
 
-### Rotacja RC: Układ Podstawowy vs Układ Ograniczony
+### Rotacja 5A: Układ Podstawowy vs Układ Ograniczony
 
 System okresowo zmienia układ pracy między **Podstawowym** a **Ograniczonym** w scenariuszach S1-S4 w celu wyrównania eksploatacji ciągów.
 
-**Cel rotacji RC:**
+**Cel rotacji 5A:**
 - Wyrównanie eksploatacji W1 i W2
 - Okres rotacji: definiowany przez technologa (np. 168h / 7 dni)
 - Po upływie okresu system przełącza się: Podstawowy → Ograniczony → Podstawowy
@@ -256,9 +235,9 @@ System okresowo zmienia układ pracy między **Podstawowym** a **Ograniczonym** 
 - **Układ Podstawowy:** Ciąg 1 (N1-N4) + W1 → nawiew na +4,30m
 - **Układ Ograniczony:** Ciąg 2 (N5-N8) + W2 → nawiew przez **spinę ciągów** na +4,30m
 
-#### Diagram Przepływu Algorytmu RC
+#### Diagram Przepływu Algorytmu 5A
 
-![Algorytm RC - Flowchart](algorytmy/algorytm-RC-rotacja-ciagow-flowchart.svg)
+![Algorytm RC - Flowchart](./algorytmy/algorytm-RC-rotacja-ciagow-flowchart.svg)
 
 **Opis algorytmu:**
 - **Główna pętla:** Wykonywana co CYKL_PĘTLI_ALGORYTMÓW (domyślnie 60s = 1 minuta, zakres 10-600s)
@@ -276,8 +255,8 @@ System okresowo zmienia układ pracy między **Podstawowym** a **Ograniczonym** 
 
 | Układ | Nagrzewnice | Wentylator | Wizualizacja |
 |-------|-------------|------------|--------------|
-| **Podstawowy** | N1 | W1 PID | ![S1 Podstawowy](scenariusze/S1-minimalne-ogrzewanie.svg) |
-| **Ograniczony** | N5 | W2 PID | ![S1 Ograniczony](rotacje/RC-uklad-ograniczony-S1.svg) |
+| **Podstawowy** | N1 | W1 PID | ![S1 Podstawowy](./scenariusze/S1-minimalne-ogrzewanie.svg) |
+| **Ograniczony** | N5 | W2 PID | ![S1 Ograniczony](./rotacje/RC-uklad-ograniczony-S1.svg) |
 
 **Charakterystyka układu ograniczonego:**
 - Spinka ciągów: **OTWARTA**
@@ -292,8 +271,8 @@ System okresowo zmienia układ pracy między **Podstawowym** a **Ograniczonym** 
 
 | Układ | Nagrzewnice | Wentylator | Wizualizacja |
 |-------|-------------|------------|--------------|
-| **Podstawowy** | N1, N2 | W1 PID | ![S2 Podstawowy](scenariusze/S2-dwie-nagrzewnice.svg) |
-| **Ograniczony** | N5, N6 | W2 PID | ![S2 Ograniczony](rotacje/RC-uklad-ograniczony-S2.svg) |
+| **Podstawowy** | N1, N2 | W1 PID | ![S2 Podstawowy](./scenariusze/S2-dwie-nagrzewnice.svg) |
+| **Ograniczony** | N5, N6 | W2 PID | ![S2 Ograniczony](./rotacje/RC-uklad-ograniczony-S2.svg) |
 
 **Charakterystyka układu ograniczonego:**
 - Spinka ciągów: **OTWARTA**
@@ -308,8 +287,8 @@ System okresowo zmienia układ pracy między **Podstawowym** a **Ograniczonym** 
 
 | Układ | Nagrzewnice | Wentylator | Wizualizacja |
 |-------|-------------|------------|--------------|
-| **Podstawowy** | N1, N2, N3 | W1 PID | ![S3 Podstawowy](scenariusze/S3-trzy-nagrzewnice.svg) |
-| **Ograniczony** | N5, N6, N7 | W2 PID | ![S3 Ograniczony](rotacje/RC-uklad-ograniczony-S3.svg) |
+| **Podstawowy** | N1, N2, N3 | W1 PID | ![S3 Podstawowy](./scenariusze/S3-trzy-nagrzewnice.svg) |
+| **Ograniczony** | N5, N6, N7 | W2 PID | ![S3 Ograniczony](./rotacje/RC-uklad-ograniczony-S3.svg) |
 
 **Charakterystyka układu ograniczonego:**
 - Spinka ciągów: **OTWARTA**
@@ -324,8 +303,8 @@ System okresowo zmienia układ pracy między **Podstawowym** a **Ograniczonym** 
 
 | Układ | Nagrzewnice | Wentylator | Wizualizacja |
 |-------|-------------|------------|--------------|
-| **Podstawowy** | N1-N4 | W1 PID | ![S4 Podstawowy](scenariusze/S4-pelny-gorny-ciag.svg) |
-| **Ograniczony** | N5-N8 | W2 PID | ![S4 Ograniczony](rotacje/RC-uklad-ograniczony-S4.svg) |
+| **Podstawowy** | N1-N4 | W1 PID | ![S4 Podstawowy](./scenariusze/S4-pelny-gorny-ciag.svg) |
+| **Ograniczony** | N5-N8 | W2 PID | ![S4 Ograniczony](./rotacje/RC-uklad-ograniczony-S4.svg) |
 
 **Charakterystyka układu ograniczonego:**
 - Spinka ciągów: **OTWARTA**
@@ -335,7 +314,7 @@ System okresowo zmienia układ pracy między **Podstawowym** a **Ograniczonym** 
 
 ---
 
-**Uwagi do rotacji RC:**
+**Uwagi do rotacji 5A:**
 - Rotacja działa **tylko** w scenariuszach S1-S4 (temperatury umiarkowane)
 - W scenariuszach S5-S8 rotacja **nie jest stosowana** - system zawsze pracuje w układzie Podstawowym z możliwością dogrz ewania przez ciąg 2
 - Przełączenie między układami odbywa się **automatycznie** po upływie `OKRES_ROTACJI_UKŁADÓW`
@@ -343,23 +322,23 @@ System okresowo zmienia układ pracy między **Podstawowym** a **Ograniczonym** 
 
 ---
 
-### Rotacja RN: Wymiana Nagrzewnic w Ciągu
+### Rotacja 5B: Wymiana Nagrzewnic w Ciągu
 
 **Diagram algorytmu rotacji nagrzewnic:**
 
-![Algorytm RN Flowchart](algorytmy/algorytm-RN-rotacja-nagrzewnic-flowchart.svg)
+![Algorytm RN Flowchart](./algorytmy/algorytm-RN-rotacja-nagrzewnic-flowchart.svg)
 
 **Przykład zastosowania algorytmu dla S3 (3 nagrzewnice w ciągu):**
 
 #### Tydzień 1: N1, N2, N3
-![S3 Rotacja - Tydzień 1](scenariusze/S3-trzy-nagrzewnice.svg)
+![S3 Rotacja - Tydzień 1](./scenariusze/S3-trzy-nagrzewnice.svg)
 
 **Pracują:** N1 (najstarsza), N2, N3  
 **Postój:** N4
 
 #### Tydzień 2: N2, N3, N4
 
-![Rotacja RN - Tydzień 2](rotacje/RN-rotacja-tydzien2-S3.svg)
+![Rotacja 5B - Tydzień 2](./rotacje/RN-rotacja-tydzien2-S3.svg)
 
 **Pracują:** N2, N3, N4 (najnowsza)  
 **Postój:** N1 (odpoczynek po najdłuższym czasie pracy)  
@@ -367,7 +346,7 @@ System okresowo zmienia układ pracy między **Podstawowym** a **Ograniczonym** 
 
 #### Tydzień 3: N3, N4, N1
 
-![Rotacja RN - Tydzień 3](rotacje/RN-rotacja-tydzien3-S3.svg)
+![Rotacja 5B - Tydzień 3](./rotacje/RN-rotacja-tydzien3-S3.svg)
 
 **Pracują:** N3, N4, N1  
 **Postój:** N2 (odpoczynek)  
@@ -375,13 +354,13 @@ System okresowo zmienia układ pracy między **Podstawowym** a **Ograniczonym** 
 
 #### Tydzień 4: N4, N1, N2
 
-![Rotacja RN - Tydzień 4](rotacje/RN-rotacja-tydzien4-S3.svg)
+![Rotacja 5B - Tydzień 4](./rotacje/RN-rotacja-tydzien4-S3.svg)
 
 **Pracują:** N4, N1, N2  
 **Postój:** N3 (odpoczynek)  
 **Akcja:** Wyłączono N3, załączono N2
 
-**Cel rotacji RN:**
+**Cel rotacji 5B:**
 - Równomierne zużycie wszystkich nagrzewnic w ciągu
 - Okres rotacji: definiowany przez technologa (np. 168h / 7 dni)
 - Po 3 miesiącach: > 90% wyrównania czasu pracy wszystkich nagrzewnic
@@ -394,7 +373,7 @@ System okresowo zmienia układ pracy między **Podstawowym** a **Ograniczonym** 
 
 ### 1. UAR Temperatury Powietrza - Schemat Ogólny
 
-![Schemat UAR temperatury](uar/uar-nagrzewnica.svg)
+![Schemat UAR temperatury](./uar/uar-nagrzewnica.svg)
 
 **Opis działania:**
 - **Regulator PID** porównuje temperaturę zadaną (Tz=50°C) z temperaturą mierzoną
@@ -455,7 +434,7 @@ System okresowo zmienia układ pracy między **Podstawowym** a **Ograniczonym** 
 
 ### 4. UAR Prędkości Wentylatora
 
-![UAR Prędkość Wentylatora](uar/uar-wentylator.svg)
+![UAR Prędkość Wentylatora](./uar/uar-wentylator.svg)
 
 **Opis działania:**
 - **Regulator PID** utrzymuje temperaturę w szybie (Ts=2°C na poziomie -30m)
@@ -528,7 +507,7 @@ System okresowo zmienia układ pracy między **Podstawowym** a **Ograniczonym** 
 - **Tryb** - AUTO / MANUAL
 - **Alarmy** - Lista aktywnych alarmów
 
-### Rotacje (Algorytmy RC i RN):
+### Rotacje (Algorytmy 5A i 5B):
 - **Czas do rotacji układów (5A)** - Pozostały czas do zmiany układu [h]
 - **Aktualny układ** - Podstawowy / Ograniczony
 - **Czas pracy C1** - Łączny czas pracy ciągu 1 [h]
@@ -626,8 +605,8 @@ f_max = 50 Hz (maksymalna prędkość)
 5. **Alarmy** - Historia i aktywne alarmy
 6. **Nastawy** - Parametry PID, temperatury zadane, okresy rotacji
 7. **Diagnostyka** - Stan urządzeń i statystyki
-8. **Rotacja RC** - Historia zmian układów, stosunek eksploatacji C1/C2
-9. **Rotacja RN** - Czasy pracy nagrzewnic, predykcja następnej rotacji
+8. **Rotacja 5A** - Historia zmian układów, stosunek eksploatacji C1/C2
+9. **Rotacja 5B** - Czasy pracy nagrzewnic, predykcja następnej rotacji
 
 ### Możliwości Operatora:
 - Monitoring wszystkich parametrów w czasie rzeczywistym
@@ -667,17 +646,17 @@ f_max = 50 Hz (maksymalna prędkość)
 - **Łącznie plików SVG:** 23
 - **Scenariusze podstawowe (S0-S8):** 9 plików
 - **Schematy UAR:** 3 pliki
-- **Rotacja RC (Układy Ograniczone S1-S4):** 4 pliki
-- **Rotacja RN (Cykl nagrzewnic):** 3 pliki
+- **Rotacja 5A (Układy Ograniczone S1-S4):** 4 pliki
+- **Rotacja 5B (Cykl nagrzewnic):** 3 pliki
 - **Diagramy algorytmów:** 4 pliki
   - `algorytm_wybor_scenariusza_flowchart.svg` flowchart algorytmu 5 (wybór scenariusza)
   - `algorytm_5A_flowchart.svg` - flowchart algorytmu 5A (rotacja układów, z koordynacją 5B)
   - `algorytm_5B_flowchart.svg` - flowchart algorytmu 5B (rotacja nagrzewnic, z koordynacją 5A)
-  - `algorytm_5A_5B_koordynacja.svg` - timeline diagram koordynacji RC ↔ RN
+  - `algorytm_5A_5B_koordynacja.svg` - timeline diagram koordynacji 5A ↔ 5B
 
-### Diagram Koordynacji Algorytmów RC i RN
+### Diagram Koordynacji Algorytmów 5A i 5B
 
-![Koordynacja RC ↔ RN](algorytmy/koordynacja-RC-RN-timeline.svg)
+![Koordynacja 5A ↔ 5B](./algorytmy/koordynacja-RC-RN-timeline.svg)
 
 **Diagram timeline** pokazuje przykładową sekwencję zdarzeń dla scenariusza S3:
 - Blokady (mutex) między algorytmami
@@ -686,9 +665,9 @@ f_max = 50 Hz (maksymalna prędkość)
 - 10 kluczowych wydarzeń w czasie (0h → 410h)
 
 **Uwaga:** 
-- Rotacja RC pokazana dla wszystkich scenariuszy S1-S4
-- Rotacja RN pokazana przykładowo dla S3
-- Flowcharty RC i RN zaktualizowane z pełną koordynacją (KROK 0, blokady, odstępy)
+- Rotacja 5A pokazana dla wszystkich scenariuszy S1-S4
+- Rotacja 5B pokazana przykładowo dla S3
+- Flowcharty 5A i 5B zaktualizowane z pełną koordynacją (KROK 0, blokady, odstępy)
 
 ---
 
