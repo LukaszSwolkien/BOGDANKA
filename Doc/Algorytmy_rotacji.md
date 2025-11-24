@@ -114,7 +114,7 @@ Szczegółowa tabela scenariuszy znajduje się w [dokumentacji głównej - Sekcj
 
 ### 5.4 Parametry Konfiguracyjne
 
-**⚙️ Parametry monitoringu temperatury:**
+**Parametry monitoringu temperatury:**
 
 | Parametr | Wartość domyślna | Jednostka | Zakres | Opis |
 |----------|-----------------|-----------|--------|------|
@@ -123,7 +123,7 @@ Szczegółowa tabela scenariuszy znajduje się w [dokumentacji głównej - Sekcj
 | **FILTR_UŚREDNIANIA** | 3 | próbki | 1-10 | Liczba próbek do uśrednienia (filtr antyfluktuacyjny) |
 | **CZAS_STABILIZACJI_SCENARIUSZA** | 60 | sekundy | 30-300 | Min. czas w scenariuszu przed kolejną zmianą |
 
-**⚙️ Parametry przejść między scenariuszami:**
+**Parametry przejść między scenariuszami:**
 
 | Parametr | Wartość domyślna | Jednostka | Opis |
 |----------|-----------------|-----------|------|
@@ -852,7 +852,7 @@ Dzień 2, godz. 16:00 - Temperatura: +4°C (ocieplenie)
 
 **Obserwacje:**
 - Histereza zapobiega częstym przełączeniom przy temperaturach granicznych
-- System reaguje szybko na spadki temperatury (ochrona szybu)
+- System reaguje szybko na spadki temperatury
 - System wolniej reaguje na wzrosty (oszczędzanie energii z bezpieczeństwem)
 
 ### 5.9 Monitoring i Statystyki
