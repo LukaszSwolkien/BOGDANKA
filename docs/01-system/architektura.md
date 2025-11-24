@@ -378,6 +378,6 @@ System sterowania realizowany na sterowniku PLC z regulatorami PID.
 - Okres rotacji nagrzewnic
 - Okres zmiany układów pracy ciągów
 
-## 11. Symulacja
+## 11. Wizualizacja
 
 [Wizualizacje systemu](../../visualization/README.md)
