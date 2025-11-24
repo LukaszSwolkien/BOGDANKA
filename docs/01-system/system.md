@@ -125,7 +125,7 @@ System automatycznej regulacji (SAR) temperatury szybu składa się z dwóch pod
 - Ustawienie zaworu regulacyjnego w pozycji minimalnego otwarcia (20%)
 - Zamknięcie przepustnicy dolotowej powietrza zimnego
 
-**⚠️ Każde awaryjne wyłączenie nagrzewnicy powoduje załączenie sygnalizacji alarmowej systemu, co wymaga dokonania operacji skwitowania przez obsługę.**
+**Każde awaryjne wyłączenie nagrzewnicy powoduje załączenie sygnalizacji alarmowej systemu, co wymaga dokonania operacji skwitowania przez obsługę.**
 
 ---
 
@@ -329,7 +329,7 @@ Wszystkie wejściowe sygnały pomiarowe systemu są testowane na poziomie sterow
 
 **Cel:** Wzrost bezpieczeństwa działania systemu.
 
-**⚠️ Uwaga:** Każde zakłócenie spowodowane niedotrzymaniem warunków (sprawność układów pomiarowych, sprawność sterowanych urządzeń, odpowiedni poziom mocy cieplnej czynnika grzewczego) może skutkować **utratą stabilności SAR i przełączeniem systemu na sterowanie ręczne.**
+**Uwaga:** Każde zakłócenie spowodowane niedotrzymaniem warunków (sprawność układów pomiarowych, sprawność sterowanych urządzeń, odpowiedni poziom mocy cieplnej czynnika grzewczego) może skutkować **utratą stabilności SAR i przełączeniem systemu na sterowanie ręczne.**
 
 ---
 
@@ -362,21 +362,7 @@ System sterowania realizowany na sterowniku PLC z regulatorami PID.
 - Okres rotacji nagrzewnic
 - Okres zmiany układów pracy ciągów
 
----
-
-## 10. Wizualizacja Systemu
-
-**[Pełna wizualizacja systemu z osadzonymi diagramami](../03-projekt-instalacji/projekt-instalacji.md)**
-
-Dokument zawiera:
-- Wszystkie scenariusze S0-S8 z diagramami
-- Przykłady rotacji układów i nagrzewnic
-- Schematy UAR
-- Monitoring i diagnostyka
-
----
-
-## 🔗 Powiązane Dokumenty
+## Powiązane Dokumenty
 
 - [Projekt instalacji](../02-projekt-instalacji/projekt-instalacji.md) - schematy instalacji grzewczej
 - [Algorytmy WS, RC, RN](../03-algorytmy/algorytmy.md) - szczegółowe opisy algorytmów sterowania

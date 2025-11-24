@@ -49,7 +49,7 @@ System sterowania BOGDANKA Szyb 2 wykorzystuje **trzy współpracujące algorytm
 
 ```
 ┌────────────────────────────────────────────┐
-│ Algorytm WS: Wybór Scenariusza (S0-S8)      │
+│ Algorytm WS: Wybór Scenariusza (S0-S8)     │
 │ └─ Decyduje: ile nagrzewnic, który układ   │
 └─────────────────────┬──────────────────────┘
                       │

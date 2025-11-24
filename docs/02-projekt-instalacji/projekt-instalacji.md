@@ -654,23 +654,8 @@ f_max = 50 Hz (maksymalna prędkość)
 - Logi wszystkich akcji operatora
 - Codzienne kopie bezpieczeństwa bazy danych
 
----
 
-## 8. Podsumowanie Wizualizacji
-
-### 8.1 Zestawienie Plików SVG
-
-- **Łącznie plików SVG:** 23
-- **Scenariusze podstawowe (S0-S8):** 9 plików
-- **Schematy instalacji:** 2 pliki (nawiew z dwóch ciągów, nawiew przez spinę)
-- **Schematy UAR:** 2 pliki (UAR nagrzewnica, UAR wentylator)
-- **Rotacja RC (Układy Ograniczone S1-S4):** 4 pliki
-- **Rotacja RN (Cykl nagrzewnic):** 3 pliki
-- **Diagramy algorytmów:** 4 pliki (flowchart WS, RC, RN, koordynacja RC-RN)
-
----
-
-## 🔗 Powiązane Dokumenty
+## Powiązane Dokumenty
 
 - [System Sterowania](../01-system/system.md) - kompletna architektura systemu SAR
 - [Algorytmy WS, RC, RN](../03-algorytmy/algorytmy.md) - szczegółowe opisy logiki sterowania
@@ -679,5 +664,4 @@ f_max = 50 Hz (maksymalna prędkość)
 ---
 
 **Ostatnia aktualizacja:** 24 Listopad 2025  
-**Wersja dokumentu:** 4.0  
-**Status:** Kompletna dokumentacja projektu instalacji z wizualizacjami systemu SCADA/HMI, scenariuszami pracy i algorytmami sterowania
+**Wersja dokumentu:** 1.4  
