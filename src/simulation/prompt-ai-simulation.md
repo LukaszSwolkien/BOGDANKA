@@ -15,6 +15,8 @@ You have access to **complete documentation of three cooperating control algorit
 
 📖 **Documentation:** [../../docs/03-algorytmy/algorytmy.md](../../docs/03-algorytmy/algorytmy.md)
 
+> Simulation-specific helper data (global variables, signals, config parameters) was intentionally removed from the general documentation. Use this prompt as the single source of truth for everything the simulator needs beyond the algorithm descriptions.
+
 ---
 
 ## 🎯 Task for AI
@@ -34,7 +36,7 @@ Generate **complete system simulation** in **Python** that:
 - **RN:** Heater rotation every ROTATION_PERIOD_HEATERS (e.g., 7 days)
 
 ### 3. Ensures coordination:
-- Shared global variables (see section in documentation)
+- Shared global variables (see **Simulation Global Variables** below)
 - Locks: `config_change_in_progress`, `heater_rotation_in_progress`
 - Time synchronization: 1h gap after RC, 15 min gap between RN rotations
 - Hierarchy: WS → RC → RN → PID
@@ -129,7 +131,7 @@ def plot_results(history):
 
 ## 🔍 Key Elements from Documentation
 
-### Global Variables (section in algorytmy.md):
+### Simulation Global Variables (moved from documentation):
 ```python
 # System state and scenario
 current_scenario = "S0"                      # S0-S8

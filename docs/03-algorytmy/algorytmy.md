@@ -19,7 +19,6 @@ _Plik ten jest częścią dokumentacji systemu sterowania nagrzewnicami BOGDANKA
 ### Przegląd
 - [Wprowadzenie](#wprowadzenie)
 - [Kontekst: Relacja PARTPG/PARTS ↔ Algorytmy](#kontekst-relacja-partpgparts--algorytmy)
-- [Zmienne Globalne dla Symulacji](#-zmienne-globalne-dla-symulacji) `[SYMULACJA]`
 
 ### Algorytmy (szczegółowe)
 - **[Algorytm WS - Automatyczny Wybór Scenariusza](#algorytm-ws-automatyczny-wybór-scenariusza-pracy)**
@@ -41,64 +40,6 @@ _Plik ten jest częścią dokumentacji systemu sterowania nagrzewnicami BOGDANKA
   - [Wizualizacja koordynacji RC↔RN](#rn11-wizualizacja-koordynacji-algorytmów-rc-i-rn)
 
 
----
-
-## ⚙️ Zmienne Globalne dla Symulacji
-
-**Tag:** `[SYMULACJA]` - sekcja kluczowa dla generowania kodu symulacyjnego
-
-### Współdzielone między algorytmami:
-
-```python
-# Stan układu i scenariusza
-aktualny_scenariusz = S0                     # S0-S8
-aktualny_układ = "Podstawowy"                # "Podstawowy" lub "Ograniczony"
-
-# Blokady koordynacji (mutexes)
-zmiana_układu_w_toku = False                 # Algorytm RC wykonuje rotację
-rotacja_nagrzewnic_w_toku = False            # Algorytm RN wykonuje rotację
-
-# Synchronizacja czasowa
-czas_ostatniej_zmiany_układu = 0             # timestamp [s] - dla RN
-czas_ostatniej_rotacji_globalny = 0          # timestamp [s] - odstęp 15 min między rotacjami
-
-# Stan nagrzewnic (8 elementów)
-czas_pracy = [0, 0, 0, 0, 0, 0, 0, 0]       # N1-N8 [sekundy]
-czas_postoju = [0, 0, 0, 0, 0, 0, 0, 0]     # N1-N8 [sekundy]
-timestamp_zalaczenia = [0, 0, 0, 0, 0, 0, 0, 0]  # N1-N8 [timestamp]
-nagrzewnice_aktywne = {CIĄG1: [], CIĄG2: []} # Listy aktywnych nagrzewnic
-
-# Stan ciągów
-czas_pracy_układu_podstawowego = 0           # [sekundy]
-czas_pracy_układu_ograniczonego = 0          # [sekundy]
-```
-
-### Parametry konfiguracyjne (definiowane przez technologa):
-
-```python
-# Algorytm WS
-CYKL_MONITORINGU_TEMP = 10                   # [s] częstotliwość odczytu T_zewn
-CZAS_STABILIZACJI_SCENARIUSZA = 60           # [s] min. czas w scenariuszu
-
-# Algorytm RC
-OKRES_ROTACJI_UKŁADÓW = 168 * 3600           # [s] np. 7 dni (168h)
-CYKL_PĘTLI_ALGORYTMÓW = 60                   # [s] częstość sprawdzania RC/RN
-
-# Algorytm RN
-OKRES_ROTACJI_NAGRZEWNIC = 168 * 3600        # [s] np. 7 dni
-MIN_DELTA_CZASU = 3600                       # [s] min. różnica dla rotacji
-```
-
-### Sygnały wejściowe dla symulacji:
-
-```python
-T_zewn = 0.0              # [°C] Temperatura zewnętrzna (-40 do +50)
-T_szyb = 2.0              # [°C] Temperatura w szybie (-30m)
-T_N = [50, 50, ...]       # [°C] Temperatury na wylotach N1-N8
-sprawne_N = [True] * 8    # Bool sprawność nagrzewnic
-sprawne_W = [True, True]  # Bool sprawność wentylatorów W1, W2
-tryb = "AUTO"             # "AUTO" lub "MANUAL"
-```
 ---
 
 ## Wprowadzenie
@@ -255,8 +196,6 @@ Szczegółowa tabela scenariuszy znajduje się w [dokumentacji głównej - Sekcj
 - **60s** dla stabilizacji - zapobiega oscylacjom przy temperaturach granicznych
 
 ## 5. Algorytm Krok po Kroku
-
-**Tag:** `[SYMULACJA]` - kompletny pseudokod do implementacji
 
 **Diagram przepływu algorytmu:**
 
@@ -1507,8 +1446,6 @@ Rotacja układów jest możliwa **TYLKO** gdy spełnione są **WSZYSTKIE** warun
 
 ## 5. Algorytm Rotacji Krok po Kroku
 
-**Tag:** `[SYMULACJA]` - kompletny pseudokod do implementacji
-
 **Diagram przepływu algorytmu:**
 
 ![Algorytm RC - Diagram przepływu](./schematy/algorytm-RC-rotacja-ciagow-flowchart.svg)
@@ -1840,8 +1777,6 @@ Rotacja nagrzewnic jest możliwa **TYLKO** gdy spełnione są **WSZYSTKIE** waru
    - Przepustnice sprawne
 
 ## 5. Algorytm Rotacji Nagrzewnic Krok po Kroku
-
-**Tag:** `[SYMULACJA]` - kompletny pseudokod do implementacji
 
 **WAŻNE - Algorytm RN jako serwis dla innych algorytmów:**
 
