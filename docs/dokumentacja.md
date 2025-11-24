@@ -9,7 +9,7 @@ Kompleksowa dokumentacja systemu automatycznego sterowania ogrzewaniem szybu wyd
 - Szybki start dla nowych użytkowników
 
 ### [01-system](./01-system/) - Architektura Systemu
-- `architektura.md` - Szczegółowy opis systemu sterowania
+- `system.md` - Szczegółowy opis systemu sterowania
 - Definicje podsystemów PARTPG i PARTS
 - Warunki załączania/wyłączania
 - Scenariusze pracy (S0-S8)
@@ -34,7 +34,7 @@ Kompleksowa dokumentacja systemu automatycznego sterowania ogrzewaniem szybu wyd
 
 **Dla nowych użytkowników:**
 1. Zacznij od [START](./00-start/start.md)
-2. Przeczytaj [Architekturę Systemu](./01-system/architektura.md)
+2. Przeczytaj [Architekturę Systemu](./01-system/system.md)
 3. Zapoznaj się z [Algorytmami](./02-algorytmy/algorytmy.md)
 
 **Dla programistów:**

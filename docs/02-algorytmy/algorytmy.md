@@ -4,7 +4,7 @@
 
 _Plik ten jest częścią dokumentacji systemu sterowania nagrzewnicami BOGDANKA Szyb 2._
 
-[← Powrót do dokumentacji głównej](../01-system/architektura.md)
+[← Powrót do dokumentacji głównej](../01-system/system.md)
 
 ---
 
@@ -179,7 +179,7 @@ System automatycznej regulacji (SAR) temperatury szybu ma **dwuwarstwową archit
 - Algorytm RC → część zarządzająca PARTS
 - Algorytm RN → część zarządzająca PARTPG
 
-**Dokument główny** ([`docs/01-system/architektura.md`](../01-system/architektura.md)) opisuje:
+**Dokument główny** ([`docs/01-system/system.md`](../01-system/system.md)) opisuje:
 - Punkt 2: Definicje PARTPG i PARTS (warstwa regulacji + zarządzania)
 - Punkt 3-4: Warunki załączania/wyłączania (warstwa regulacji)
 - Punkt 5: Scenariusze (warstwa zarządzania - Algorytm 5)

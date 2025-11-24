@@ -28,7 +28,7 @@ Algorytm realizuje **automatyczny dobór scenariusza pracy systemu (S0-S8)** w z
 
 ## 3. Tabela Scenariuszy - Referencja
 
-Szczegółowa tabela scenariuszy znajduje się w [dokumentacji głównej - Sekcja 5](../01-system/architektura.md#5-scenariusze).
+Szczegółowa tabela scenariuszy znajduje się w [dokumentacji głównej - Sekcja 5](../01-system/system.md#5-scenariusze).
 
 **Podsumowanie:**
 

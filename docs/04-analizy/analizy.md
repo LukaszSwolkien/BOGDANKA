@@ -49,7 +49,7 @@ Ta sekcja dokumentacji zawiera:
 
 ## 🔗 Powiązane Dokumenty
 
-- [Architektura Systemu](../01-system/architektura.md) - główny dokument techniczny
+- [Architektura Systemu](../01-system/system.md) - główny dokument techniczny
 - [Algorytmy](../02-algorytmy/algorytmy.md) - szczegóły implementacji
 - [Projekt Instalacji](../03-projekt-instalacji/) - aspekty instalacyjne
 
@@ -71,6 +71,6 @@ Jeśli identyfikujesz nowe pytania lub konieczność przeprowadzenia analizy:
 ## 📖 Dalsze Kroki
 
 1. Przeczytaj [pytania-wyjasnienia.md](./pytania-wyjasnienia.md)
-2. Zapoznaj się z [architekturą systemu](../01-system/architektura.md)
+2. Zapoznaj się z [architekturą systemu](../01-system/system.md)
 3. Zrozum [algorytmy sterowania](../02-algorytmy/algorytmy.md)
 

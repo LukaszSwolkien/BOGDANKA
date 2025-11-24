@@ -4,7 +4,7 @@
 
 Ten dokument przedstawia symulację interfejsu operatorskiego (HMI) dla systemu sterowania nagrzewnicami i wentylatorami w szybie kopalnianym. System wizualizuje działanie układów automatycznej regulacji (UAR) w zależności od temperatury zewnętrznej.
 
-[Wymagania dla systemu sterowania](../01-system/architektura.md)
+[Wymagania dla systemu sterowania](../01-system/system.md)
 
 ---
 
