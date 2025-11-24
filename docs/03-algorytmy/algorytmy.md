@@ -71,13 +71,13 @@ Algorytmy są **skoordynowane** i działają współbieżnie, zapewniając:
 
 ---
 
-## Relacja między PARTPG/PARTS a Algorytmami 5, 5A, 5B
+## Relacja między PARTPG/PARTS a Algorytmami WS, RC, RN
 
 ### Architektura Dwuwarstwowa Systemu SAR
 
 System automatycznej regulacji (SAR) temperatury szybu ma **dwuwarstwową architekturę**:
 
-![Architektura SAR](../01-system/architektura_SAR_system.svg)
+![Architektura SAR](../01-system/schematy/architektura_SAR_system.svg)
 
 *Rys. Dwuwarstwowa architektura systemu SAR z podziałem na warstwy regulacji i zarządzania.*
 
@@ -180,24 +180,12 @@ System automatycznej regulacji (SAR) temperatury szybu ma **dwuwarstwową archit
 - Algorytm RN → część zarządzająca PARTPG
 
 **Dokument główny** ([`docs/01-system/system.md`](../01-system/system.md)) opisuje:
-- Punkt 2: Definicje PARTPG i PARTS (warstwa regulacji + zarządzania)
-- Punkt 3-4: Warunki załączania/wyłączania (warstwa regulacji)
-- Punkt 5: Scenariusze (warstwa zarządzania - Algorytm 5)
-- Punkt 6-7: UAR nagrzewnic i wentylatorów (warstwa regulacji)
+- Definicje PARTPG i PARTS (warstwa regulacji + zarządzania)
+- Warunki załączania/wyłączania (warstwa regulacji)
+- Scenariusze (warstwa zarządzania - Algorytm WS)
+- UAR nagrzewnic i wentylatorów (warstwa regulacji)
 
 ---
-
-## 🎨 Wizualizacje
-
-Wszystkie diagramy flowchart dostępne są w katalogu [`visualization/algorytmy/`](./schematy/):
-
-- [Algorytm WS - Wybór Scenariusza](./schematy/algorytm-WS-wybor-scenariusza-flowchart.svg)
-- [Algorytm RC - Rotacja Układów](./schematy/algorytm-RC-rotacja-ciagow-flowchart.svg)
-- [Algorytm RN - Rotacja Nagrzewnic](./schematy/algorytm-RN-rotacja-nagrzewnic-flowchart.svg)
-- [Koordynacja RC ↔ RN - Timeline](./schematy/koordynacja-RC-RN-timeline.svg)
-
----
-
 **Wersja:** 2.0 (zreorganizowana struktura)  
 **Data:** 24 Listopad 2025  
 **Branch:** `refactor/docs-restructure`
@@ -208,9 +196,7 @@ Wszystkie diagramy flowchart dostępne są w katalogu [`visualization/algorytmy/
 # Algorytm WS: Automatyczny Wybór Scenariusza Pracy
 
 
-> **Część dokumentacji:** Algorytmy Sterowania  
-> **Powiązane algorytmy:** Algorytm RC, Algorytm RN  
-> **Wizualizacja:** [Flowchart](./schematy/algorytm-WS-wybor-scenariusza-flowchart.svg)
+> **Powiązane algorytmy:** Algorytm RC, Algorytm RN
 
 ## 1. Cel Algorytmu
 
@@ -748,7 +734,7 @@ FUNKCJA Pobierz_Nagrzewnice_Do_Załączenia(config, ilość):
       // Tylko C1 - Deleguj wybór do RN (śledzi czasy pracy dla statystyk)
       nagrzewnice = Algorytm_RN_Pobierz_Nagrzewnice_Do_Pracy(CIĄG1, ilość)
       // Uwaga: W S1-S4 wybór jest dynamiczny (rotacja RN aktywna)
-      // W praktyce przy braku awarii to będą N1-N4 w S4, ale 5B decyduje
+      // W praktyce przy braku awarii to będą N1-N4 w S4, ale RN decyduje
     W PRZECIWNYM RAZIE:
       // C1 cały + częściowo C2
       // W S5-S8 wszystkie N1-N4 MUSZĄ pracować (brak rezerwowej w C1)
@@ -907,7 +893,7 @@ KONIEC FUNKCJI
 - **S1-S4:** 
   - Algorytm RC wybiera układ (C1 lub C2)
   - Algorytm RN wybiera konkretne nagrzewnice w aktywnym ciągu
-  - Algorytm 5 wywołuje funkcje pomocnicze które respektują wybory RC i RN
+  - Algorytm WS wywołuje funkcje pomocnicze które respektują wybory RC i RN
 - **S5-S8:**
   - Algorytm RC nieaktywny (zawsze układ Podstawowy)
   - Algorytm RN aktywny tylko dla C2 (jeśli są nagrzewnice rezerwowe)
@@ -1030,7 +1016,7 @@ Każda zmiana scenariusza wymaga **skoordynowanej sekwencji** operacji na:
 
 System ma **trzy poziomy sterowania**:
 
-1. **Algorytm 5 (Nadzorca scenariuszy)** ← monitoruje **t_zewn**
+1. **Algorytm WS (Nadzorca scenariuszy)** ← monitoruje **t_zewn**
    - Decyduje ILE nagrzewnic potrzeba
    - WŁĄCZA i WYŁĄCZA nagrzewnice
    - Zarządza przejściami między scenariuszami
@@ -1077,7 +1063,7 @@ System rozróżnia 4 typy przejść między scenariuszami:
 ```
 SEKWENCJA S1→S0 (Wyłączenie systemu):
 
-UWAGA: Algorytm 5 decyduje o wyłączeniu na podstawie t_zewn ≥ 3°C
+UWAGA: Algorytm WS decyduje o wyłączeniu na podstawie t_zewn ≥ 3°C
 
 KROK 1: Przełącz PID nagrzewnicy w tryb MANUAL
   Ustaw_Regulator_PID(N_aktywna, tryb=MANUAL)
@@ -1128,7 +1114,7 @@ KROK 2: Uruchom wentylator W1
   Czekaj(10 sekund)  // Stabilizacja obrotów
   Sprawdź_Prąd_Silnika(W1)  // Weryfikacja pracy
 
-KROK 3: Przygotuj nagrzewnicę N (wybrana przez Algorytm RC/5B)
+KROK 3: Przygotuj nagrzewnicę N (wybrana przez Algorytm RC/RN)
   Ustaw_Zawór(N, 20%)  // Pozycja startowa
   Czekaj(5 sekund)
 
@@ -1292,7 +1278,7 @@ Czas sekwencji: ~100 sekund
 ```
 SEKWENCJA S5→S4 (Zatrzymanie drugiego ciągu):
 
-UWAGA: Algorytm 5 decyduje o zatrzymaniu C2 na podstawie t_zewn ≥ -10°C
+UWAGA: Algorytm WS decyduje o zatrzymaniu C2 na podstawie t_zewn ≥ -10°C
        Oba ciągi pracują (C1: N1-N4 + W1 MAX, C2: N5 + W2 PID)
 
 KROK 1: Przełącz PID nagrzewnicy N5 w tryb MANUAL
@@ -1444,9 +1430,7 @@ Czas sekwencji: ~45 sekund
 # Algorytm RC: Cykliczna Rotacja Układów Pracy Ciągów
 
 
-> **Część dokumentacji:** Algorytmy Sterowania  
-> **Powiązane algorytmy:** Algorytm WS, Algorytm RN  
-> **Wizualizacja:** [Flowchart](./schematy/algorytm-RC-rotacja-ciagow-flowchart.svg), [Diagramy rotacji](./schematy/)
+> **Powiązane algorytmy:** Algorytm WS, Algorytm RN
 
 ## 1. Cel Algorytmu
 
@@ -1481,7 +1465,7 @@ Algorytm realizuje **cykliczną zmianę układów pracy ciągów grzewczych** w 
 - **720h (30 dni)** - dla zmniejszenia częstotliwości przełączeń
 - **24h (1 dzień)** - dla testów i weryfikacji działania
 
-**CYKL_PĘTLI_ALGORYTMÓW** - parametr częstotliwości sprawdzania (wspólny dla 5A i 5B)
+**CYKL_PĘTLI_ALGORYTMÓW** - parametr częstotliwości sprawdzania (wspólny dla RC i RN)
 
 | Parametr | Wartość domyślna | Jednostka | Zakres | Opis |
 |----------|-----------------|-----------|--------|------|
@@ -1537,13 +1521,13 @@ Rotacja układów jest możliwa **TYLKO** gdy spełnione są **WSZYSTKIE** warun
 **Pseudokod:**
 
 ```
-ZMIENNE GLOBALNE (współdzielone z Algorytmem 5B):
+ZMIENNE GLOBALNE (współdzielone z Algorytmem RN):
   - aktualny_układ = "Podstawowy"               // aktualny układ pracy
-  - zmiana_układu_w_toku = FAŁSZ                // blokada dla koordynacji z 5B
-  - czas_ostatniej_zmiany_układu = 0            // timestamp dla 5B [sekundy]
-  - rotacja_nagrzewnic_w_toku = FAŁSZ           // blokada dla koordynacji z 5B
+  - zmiana_układu_w_toku = FAŁSZ                // blokada dla koordynacji z RN
+  - czas_ostatniej_zmiany_układu = 0            // timestamp dla RN [sekundy]
+  - rotacja_nagrzewnic_w_toku = FAŁSZ           // blokada dla koordynacji z RN
 
-ZMIENNE LOKALNE (tylko dla 5A):
+ZMIENNE LOKALNE (tylko dla RC):
   - czas_pracy_układu_podstawowego = 0          // [sekundy]
   - czas_pracy_układu_ograniczonego = 0         // [sekundy]
   - czas_ostatniej_zmiany = czas_systemowy      // timestamp ostatniej rotacji układu
@@ -1612,7 +1596,7 @@ GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
       // Aktualizacja zmiennych
       aktualny_układ = nowy_układ
       czas_ostatniej_zmiany = czas_systemowy
-      czas_ostatniej_zmiany_układu = czas_systemowy  // dla koordynacji z 5B
+      czas_ostatniej_zmiany_układu = czas_systemowy  // dla koordynacji z RN
       
       Rejestruj_Zdarzenie("Zakończono zmianę układu na " + nowy_układ)
       
@@ -1658,7 +1642,7 @@ FUNKCJA Wykonaj_Zmianę_Układu(docelowy_układ):
       Czekaj(10 sekund)
       
       // Deleguj wybór nagrzewnic do Algorytmu RC
-      nagrzewnice_do_załączenia = Algorytm_5B_Pobierz_Nagrzewnice_Do_Pracy(CIĄG2, wymagana_ilość_nagrzewnic)
+      nagrzewnice_do_załączenia = Algorytm_RN_Pobierz_Nagrzewnice_Do_Pracy(CIĄG2, wymagana_ilość_nagrzewnic)
       
       Dla KAŻDEJ N w nagrzewnice_do_załączenia:
         Załącz_Nagrzewnicę(N)
@@ -1695,7 +1679,7 @@ FUNKCJA Wykonaj_Zmianę_Układu(docelowy_układ):
       Czekaj(10 sekund)
       
       // Deleguj wybór nagrzewnic do Algorytmu RC
-      nagrzewnice_do_załączenia = Algorytm_5B_Pobierz_Nagrzewnice_Do_Pracy(CIĄG1, wymagana_ilość_nagrzewnic)
+      nagrzewnice_do_załączenia = Algorytm_RN_Pobierz_Nagrzewnice_Do_Pracy(CIĄG1, wymagana_ilość_nagrzewnic)
       
       Dla KAŻDEJ N w nagrzewnice_do_załączenia:
         Załącz_Nagrzewnicę(N)
@@ -1780,9 +1764,7 @@ System rejestruje następujące dane dla analizy:
 # Algorytm RN: Cykliczna Rotacja Nagrzewnic w Obrębie Ciągu
 
 
-> **Część dokumentacji:** Algorytmy Sterowania  
-> **Powiązane algorytmy:** Algorytm WS, Algorytm RC  
-> **Wizualizacja:** [Flowchart](./schematy/algorytm-RN-rotacja-nagrzewnic-flowchart.svg), [Koordynacja z 5A](./schematy/koordynacja-RC-RN-timeline.svg), [Przykłady rotacji](./schematy/)
+> **Powiązane algorytmy:** Algorytm WS, Algorytm RC
 
 ## 1. Cel Algorytmu
 
@@ -1817,7 +1799,7 @@ Parametry definiowane przez **technologa podczas rozruchu**:
 |----------|-----------------|-----------|--------|------|
 | **OKRES_ROTACJI_NAGRZEWNIC** | Do ustalenia* | godziny | 24h - 720h | Czas po którym następuje zmiana nagrzewnicy w ciągu |
 | **MIN_DELTA_CZASU** | 3600 | sekundy | 1800 - 7200 | Minimalna różnica czasu pracy dla wykonania rotacji |
-| **CYKL_PĘTLI_ALGORYTMÓW** | 60 | sekundy | 10 - 600 | Częstość wykonywania pętli głównej (współdzielony z 5A) |
+| **CYKL_PĘTLI_ALGORYTMÓW** | 60 | sekundy | 10 - 600 | Częstość wykonywania pętli głównej (współdzielony z RC) |
 
 *Wartości zostaną ustalone podczas testowania pracy układu na obiekcie (zgodnie z sekcją 1.4 projektu).
 
@@ -1833,8 +1815,8 @@ Parametry definiowane przez **technologa podczas rozruchu**:
 - Jeśli różnica czasu pracy jest mniejsza niż MIN_DELTA_CZASU, rotacja nie ma sensu (zmiana dla zmiany)
 
 **Uzasadnienie CYKL_PĘTLI_ALGORYTMÓW:**
-- Parametr **współdzielony** z Algorytmem 5A (wspólna wartość dla obu algorytmów)
-- Szczegółowe wyjaśnienie i przykładowe wartości: patrz sekcja 5A.3
+- Parametr **współdzielony** z Algorytmem RC (wspólna wartość dla obu algorytmów)
+- Szczegółowe wyjaśnienie i przykładowe wartości: patrz sekcja RC.3
 - Liczniki `czas_pracy[N]` i `czas_postoju[N]` aktualizują się co CYKL_PĘTLI_ALGORYTMÓW sekund
 
 ## 4. Warunki Aktywacji Rotacji Nagrzewnic
@@ -1883,11 +1865,11 @@ Algorytm RN pełni **podwójną funkcję**:
 ![Algorytm RN Flowchart](./schematy/algorytm-RN-rotacja-nagrzewnic-flowchart.svg)
 
 ```
-ZMIENNE GLOBALNE (współdzielone z Algorytmem 5A):
+ZMIENNE GLOBALNE (współdzielone z Algorytmem RC):
   - aktualny_układ                                       // Podstawowy lub Ograniczony
-  - zmiana_układu_w_toku                                 // blokada od 5A
-  - czas_ostatniej_zmiany_układu                         // timestamp od 5A
-  - rotacja_nagrzewnic_w_toku = FAŁSZ                    // blokada dla 5A
+  - zmiana_układu_w_toku                                 // blokada od RC
+  - czas_ostatniej_zmiany_układu                         // timestamp od RC
+  - rotacja_nagrzewnic_w_toku = FAŁSZ                    // blokada dla RC
   - czas_ostatniej_rotacji_globalny = 0                  // dla odstępu 15 min [sekundy]
 
 ZMIENNE LOKALNE (dla każdego ciągu osobno):
@@ -1901,7 +1883,7 @@ PARAMETRY:
   - OKRES_ROTACJI_NAGRZEWNIC[S1..S8]  // definiowany przez technologa [s]
   - MIN_DELTA_CZASU                   // definiowany przez technologa [s] (domyślnie 3600)
   - CZAS_STABILIZACJI = 30            // czas na stabilizację po zmianie [s]
-  - CYKL_PĘTLI_ALGORYTMÓW = 60        // częstość sprawdzania [s] (współdzielony z 5A)
+  - CYKL_PĘTLI_ALGORYTMÓW = 60        // częstość sprawdzania [s] (współdzielony z RC)
 
 GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
   
@@ -1938,12 +1920,12 @@ GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
     
     KROK 2: Sprawdź warunki rotacji
       
-      // Koordynacja z Algorytmem 5A - sprawdź czy 5A nie wykonuje zmiany układu
+      // Koordynacja z Algorytmem RC - sprawdź czy RC nie wykonuje zmiany układu
       JEŻELI zmiana_układu_w_toku = PRAWDA WTEDY
         POMIŃ ciąg  // odrocz rotację - trwa zmiana układu
       KONIEC JEŻELI
       
-      // Sprawdź czy upłynęła 1h od ostatniej zmiany układu (5A)
+      // Sprawdź czy upłynęła 1h od ostatniej zmiany układu (RC)
       // (dotyczy tylko S1-S4, bo tylko tam działa Algorytm RC)
       JEŻELI aktualny_scenariusz ∈ {S1, S2, S3, S4} WTEDY
         czas_od_zmiany_układu = czas_systemowy - czas_ostatniej_zmiany_układu
@@ -2171,7 +2153,7 @@ KONIEC FUNKCJI
 //=============================================================================
 
 FUNKCJA Algorytm_RN_Pobierz_Nagrzewnice_Do_Pracy(ciąg, ilość):
-  // Ta funkcja jest wywoływana przez Algorytm WS i 5A
+  // Ta funkcja jest wywoływana przez Algorytm WS i RC
   // aby uzyskać listę nagrzewnic do załączenia
   //
   // LOGIKA:
@@ -2242,7 +2224,7 @@ Gdy wiele ciągów wymaga rotacji jednocześnie, stosuje się następujące prio
 - W **S5-S7**: rotacja RN w **C2 jest MOŻLIWA** - są nagrzewnice rezerwowe (N8 w S7, N7-N8 w S6, N6-N8 w S5)
 - W **S8**: rotacja RN w **C2 jest NIEMOŻLIWA** - wszystkie nagrzewnice N5-N8 muszą pracować (brak nagrzewnicy rezerwowej)
 
-**Koordynacja z Algorytmem 5A (Rotacja Układów):**
+**Koordynacja z Algorytmem RC (Rotacja Układów):**
 
 ⚠️ **WAŻNE - W S1-S4 pracuje TYLKO JEDEN ciąg na raz (nie oba jednocześnie!):**
 - Gdy aktywny jest **Układ Podstawowy**: pracuje **TYLKO C1**, rotacja RN dotyczy **C1** (priorytet 1)
@@ -2250,7 +2232,7 @@ Gdy wiele ciągów wymaga rotacji jednocześnie, stosuje się następujące prio
 - Algorytm RC przełącza między układami → zmiana który ciąg pracuje
 
 **Zasady koordynacji:**
-- Po zmianie układu (5A) poczekaj min. **1 godzinę** przed rotacją nagrzewnic (5B)
+- Po zmianie układu (RC) poczekaj min. **1 godzinę** przed rotacją nagrzewnic (RN)
 - Priorytet ma zawsze **ciąg aktualnie pracujący** (w S1-S4 to jeden ciąg, w S5-S8 to oba ciągi, ale C2 ma priorytet rotacji bo C1 nie może rotować)
 
 **Zasada odstępu:** Nie wykonuj rotacji w dwóch ciągach jednocześnie - zachowaj min. 15 minut odstępu między rotacjami.
@@ -2418,41 +2400,41 @@ Dzień 6-7: S3 (N1, N2, N3) - 48h → N3 wraca do pracy
 - N4 cały czas w postoju: 168h
 - Po tygodniu: rotacja N1 → N4 (N1 ma najwięcej godzin)
 
-## 10. Integracja z Rotacją Układów (Sekcja 5A)
+## 10. Integracja z Rotacją Układów (Sekcja RC)
 
 **Koordynacja dwóch algorytmów rotacji:**
 
-1. **Rotacja układów** (5A) - zmienia CIĄG (C1 ↔ C2)
+1. **Rotacja układów** (RC) - zmienia CIĄG (C1 ↔ C2)
    - Okres: tygodnie/miesiące
    - Dotyczy wyboru: C1 vs C2
 
-2. **Rotacja nagrzewnic** (5B) - zmienia NAGRZEWNICĘ w ciągu
+2. **Rotacja nagrzewnic** (RN) - zmienia NAGRZEWNICĘ w ciągu
    - Okres: dni/tygodnie
    - Dotyczy wyboru: N1/N2/N3/N4 w C1 lub N5/N6/N7/N8 w C2
 
 **Zasady koordynacji:**
 - Nie wykonuj rotacji nagrzewnic w ciągu, który jest w trakcie zmiany układu
-- Po zmianie układu (5A) poczekaj min. 1h przed rotacją nagrzewnic (5B)
-- Jeśli zbiegły się oba okresy rotacji → najpierw rotacja układów (5A), potem nagrzewnic (5B) z odstępem min. 1h
+- Po zmianie układu (RC) poczekaj min. 1h przed rotacją nagrzewnic (RN)
+- Jeśli zbiegły się oba okresy rotacji → najpierw rotacja układów (RC), potem nagrzewnic (RN) z odstępem min. 1h
 
 **⚠️ WAŻNE - Przesunięcie faz rotacji:**
 
-Jeśli oba algorytmy (5A i 5B) mają ten sam okres (np. 168h), NIE MOGĄ wykonać rotacji w tym samym momencie. System musi zapewnić przesunięcie faz aby uniknąć:
+Jeśli oba algorytmy (RC i RN) mają ten sam okres (np. 168h), NIE MOGĄ wykonać rotacji w tym samym momencie. System musi zapewnić przesunięcie faz aby uniknąć:
 - Podwójnej perturbacji systemu (zmiana układu + zmiana nagrzewnicy)
 - Trudności w diagnostyce (niejednoznaczność przyczyny zmian temperatury)
 
 **Rozwiązania:**
-1. **Różne okresy rotacji** - np. 5A: 10 dni, 5B: 7 dni
-2. **Przesunięcie fazy startowej** - np. 5A start w dniu 0, 5B start w dniu 3
-3. **Logika zapobiegania kolizji** - jeśli obie rotacje przypadają tego samego dnia, wykonaj tylko 5A, a 5B przełóż o 1 dzień
+1. **Różne okresy rotacji** - np. RC: 10 dni, RN: 7 dni
+2. **Przesunięcie fazy startowej** - np. RC start w dniu 0, RN start w dniu 3
+3. **Logika zapobiegania kolizji** - jeśli obie rotacje przypadają tego samego dnia, wykonaj tylko RC, a RN przełóż o 1 dzień
 
 **Przykład (zakłada przesunięcie faz):**
 ```
 Dzień 0:  Układ Podstawowy, C1: N1, N2, N3
-Dzień 7:  Rotacja nagrzewnic (5B) → C1: N2, N3, N4
-Dzień 14: Rotacja układów (5A) → Układ Ograniczony, C2: N5, N6, N7
-Dzień 21: Rotacja nagrzewnic (5B) → C2: N6, N7, N8
-Dzień 28: Rotacja układów (5A) → Układ Podstawowy, C1: N2, N3, N4
+Dzień 7:  Rotacja nagrzewnic (RN) → C1: N2, N3, N4
+Dzień 14: Rotacja układów (RC) → Układ Ograniczony, C2: N5, N6, N7
+Dzień 21: Rotacja nagrzewnic (RN) → C2: N6, N7, N8
+Dzień 28: Rotacja układów (RC) → Układ Podstawowy, C1: N2, N3, N4
 ```
 *Uwaga: W tym przykładzie okresy są różne lub fazy przesunięte, więc rotacje nie kolidują.*
 
@@ -2463,7 +2445,7 @@ Dzień 28: Rotacja układów (5A) → Układ Podstawowy, C1: N2, N3, N4
 
 UWAGA: Powyzsze wyliczenia trzeba potwierdzic w symulacji z roznymi scenariuszami i okresami rotacji
 
-## 5B.11 Wizualizacja Koordynacji Algorytmów RC i RN
+## RN.11 Wizualizacja Koordynacji Algorytmów RC i RN
 
 **Diagram Timeline - Przykładowy Scenariusz S3:**
 
@@ -2475,18 +2457,18 @@ Diagram timeline pokazuje praktyczny przykład koordynacji między algorytmami w
 1. **Timeline zdarzeń** (0h → 410h):
    - T=0h: System w układzie Podstawowym, C1 aktywny
    - T=168h: Algorytm RN rotuje nagrzewnice w C1 (N1 → N4)
-   - T=168h+2min: Algorytm RC próbuje zmienić układ → **BLOKADA** (5B rotuje)
-   - T=168h+5min: 5B kończy, 5A wykonuje zmianę układu
+   - T=168h+2min: Algorytm RC próbuje zmienić układ → **BLOKADA** (RN rotuje)
+   - T=168h+5min: RN kończy, RC wykonuje zmianę układu
    - T=169h: Układ Ograniczony, C2 aktywny
-   - T=169h+15min: 5B próbuje rotować w C2 → **ODROCZONE** (odstęp 1h)
-   - T=170h: 5B może rotować w C2 ✅ (upłynęła 1h od zmiany układu)
+   - T=169h+15min: RN próbuje rotować w C2 → **ODROCZONE** (odstęp 1h)
+   - T=170h: RN może rotować w C2 ✅ (upłynęła 1h od zmiany układu)
 
 2. **Blokady (Mutex)**:
    - `zmiana_układu_w_toku`: chroni przed rotacją nagrzewnic podczas zmiany układu
    - `rotacja_nagrzewnic_w_toku`: chroni przed zmianą układu podczas rotacji nagrzewnic
 
 3. **Odstępy czasowe**:
-   - **1 godzina**: po zmianie układu (5A) przed rotacją nagrzewnic (5B)
+   - **1 godzina**: po zmianie układu (RC) przed rotacją nagrzewnic (RN)
    - **15 minut**: między rotacjami w różnych ciągach
 
 4. **Kolorystyka**:

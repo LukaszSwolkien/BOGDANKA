@@ -31,14 +31,14 @@
 </style>
   </defs>
   <rect width="1600" height="2720" fill="#ffffff" y="-1"/>
-  <text class="title" x="800" y="40" text-anchor="middle" style="white-space: pre;">Algorytm 5A: Rotacja Układów Pracy Ciągów</text>
-  <text class="subtitle" x="800" y="65" text-anchor="middle" style="white-space: pre;">Podstawowy ↔ Ograniczony (C1 ↔ C2) z koordynacją 5B</text>
+  <text class="title" x="800" y="40" text-anchor="middle" style="white-space: pre;">Algorytm RC: Rotacja Układów Pracy Ciągów</text>
+  <text class="subtitle" x="800" y="65" text-anchor="middle" style="white-space: pre;">Podstawowy ↔ Ograniczony (C1 ↔ C2) z koordynacją RN</text>
   <rect class="start-end" x="650" y="90" width="300" height="60"/>
   <text class="box-text" x="800" y="125" style="white-space: pre;">START - Główna pętla</text>
   <text class="box-text-small" x="800" y="142" style="white-space: pre;">(co CYKL_PĘTLI, domyślnie 60s)</text>
   <line class="arrow" x1="800" y1="150" x2="800" y2="186.672" style=""/>
   <rect class="warning" x="600" y="190" width="400" height="90"/>
-  <text class="box-text-small" x="800" y="210" style="white-space: pre;">⚙️ Zmienne globalne (koordynacja z 5B):</text>
+  <text class="box-text-small" x="800" y="210" style="white-space: pre;">⚙️ Zmienne globalne (koordynacja z RN):</text>
   <text class="box-text-small" x="800" y="227" style="white-space: pre;">aktualny_układ, zmiana_układu_w_toku,</text>
   <text class="box-text-small" x="800" y="244" style="white-space: pre;">czas_ostatniej_zmiany_układu,</text>
   <text class="box-text-small" x="800" y="261" style="white-space: pre;">rotacja_nagrzewnic_w_toku</text>
@@ -77,14 +77,14 @@
   <line class="arrow" x1="800" y1="790" x2="800" y2="848.896" style=""/>
   <text class="box-label" x="50" y="885" style="white-space: pre;">KROK 4</text>
   <polygon class="decision" points="800,850 1100,920 800,990 500,920"/>
-  <text class="box-text" x="800" y="905" style="white-space: pre;">Czy 5B wykonuje</text>
+  <text class="box-text" x="800" y="905" style="white-space: pre;">Czy RN wykonuje</text>
   <text class="box-text" x="800" y="925" style="white-space: pre;">rotację nagrzewnic?</text>
   <text class="box-text-small" x="800" y="945" style="white-space: pre;">(rotacja_nagrzewnic_w_toku)</text>
   <line class="arrow-yes" x1="1100" y1="920" x2="1365.16" y2="920" style=""/>
   <text class="label" x="1180" y="910" style="white-space: pre;">TAK</text>
   <rect class="warning" x="1368.83" y="890.368" width="180" height="60"/>
   <text class="box-text-small" x="1454.35" y="916.214" style="white-space: pre; font-size: 13px;">Odrocz zmianę</text>
-  <text class="box-text-small" x="1454.35" y="933.214" style="white-space: pre; font-size: 13px;">(5B rotuje)</text>
+  <text class="box-text-small" x="1454.35" y="933.214" style="white-space: pre; font-size: 13px;">(RN rotuje)</text>
   <line class="arrow" x1="1460.87" y1="952.843" x2="1460.87" y2="2516.87" style=""/>
   <line class="arrow" x1="1458.75" y1="2515.66" x2="952.158" y2="2515.66" style=""/>
   <line class="arrow-no" x1="800" y1="990" x2="800" y2="1050"/>
@@ -116,26 +116,26 @@
   <text class="box-text" x="400" y="1625" style="white-space: pre;">🔄 Podstawowy → Ograniczony</text>
   <line class="arrow" x1="400" y1="1641.19" x2="400" y2="1964.83" style=""/>
   <rect class="process" x="220" y="1670" width="360" height="30"/>
-  <text class="box-text-small" x="400" y="1690" style="white-space: pre;">1. Zatrzymaj ciąg 1 (W1, 5B wybiera)</text>
+  <text class="box-text-small" x="400" y="1690" style="white-space: pre;">1. Zatrzymaj ciąg 1 (W1, RN wybiera)</text>
   <rect class="process" x="220" y="1720" width="360" height="30"/>
   <text class="box-text-small" x="400" y="1740" style="white-space: pre;">2. Otwórz spinę ciągów</text>
   <rect class="process" x="220" y="1770" width="360" height="30"/>
   <text class="box-text-small" x="400" y="1790" style="white-space: pre;">3. Zamknij przepustnice C1</text>
   <rect class="process" x="220" y="1820" width="360" height="30"/>
-  <text class="box-text-small" x="400" y="1840" style="white-space: pre;">4. Uruchom ciąg 2 (W2, 5B wybiera)</text>
+  <text class="box-text-small" x="400" y="1840" style="white-space: pre;">4. Uruchom ciąg 2 (W2, RN wybiera)</text>
   <rect class="process" x="220" y="1870" width="360" height="30"/>
   <text class="box-text-small" x="400" y="1890" style="white-space: pre;">5. Aktywuj PID dla W2 (Ts=2°C)</text>
   <rect class="action" x="1000" y="1600" width="400" height="40"/>
   <text class="box-text" x="1200" y="1625" style="white-space: pre;">🔄 Ograniczony → Podstawowy</text>
   <line class="arrow" x1="1200" y1="1641.19" x2="1200" y2="1965.11" style=""/>
   <rect class="process" x="1020" y="1670" width="360" height="30"/>
-  <text class="box-text-small" x="1200" y="1690" style="white-space: pre;">1. Zatrzymaj ciąg 2 (W2, 5B wybiera)</text>
+  <text class="box-text-small" x="1200" y="1690" style="white-space: pre;">1. Zatrzymaj ciąg 2 (W2, RN wybiera)</text>
   <rect class="process" x="1020" y="1720" width="360" height="30"/>
   <text class="box-text-small" x="1200" y="1740" style="white-space: pre;">2. Zamknij spinę ciągów</text>
   <rect class="process" x="1020" y="1770" width="360" height="30"/>
   <text class="box-text-small" x="1200" y="1790" style="white-space: pre;">3. Otwórz przepustnice C1</text>
   <rect class="process" x="1020" y="1820" width="360" height="30"/>
-  <text class="box-text-small" x="1200" y="1840" style="white-space: pre;">4. Uruchom ciąg 1 (W1, 5B wybiera)</text>
+  <text class="box-text-small" x="1200" y="1840" style="white-space: pre;">4. Uruchom ciąg 1 (W1, RN wybiera)</text>
   <rect class="process" x="1020" y="1870" width="360" height="30"/>
   <text class="box-text-small" x="1200" y="1890" style="white-space: pre;">5. Aktywuj PID dla W1 (Ts=2°C)</text>
   <line class="arrow" x1="401.248" y1="1964.99" x2="796.753" y2="1964.99" style=""/>
@@ -145,7 +145,7 @@
   <text class="box-text-small" x="800" y="2045" style="white-space: pre;">Aktualizuj zmienne:</text>
   <text class="box-text-small" x="800" y="2062" style="white-space: pre;">aktualny_układ = nowy_układ</text>
   <text class="box-text-small" x="800" y="2079" style="white-space: pre;">czas_ostatniej_zmiany = teraz</text>
-  <text class="box-text-small" x="800" y="2096" style="white-space: pre;">czas_ostatniej_zmiany_układu = teraz (dla 5B)</text>
+  <text class="box-text-small" x="800" y="2096" style="white-space: pre;">czas_ostatniej_zmiany_układu = teraz (dla RN)</text>
   <line class="arrow" x1="800" y1="2110" x2="800" y2="2160"/>
   <rect class="data" x="650" y="2170" width="300" height="50"/>
   <text class="box-text-small" x="800" y="2195" style="white-space: pre;">📝 Rejestruj zdarzenie:</text>
@@ -194,5 +194,5 @@
   <text class="note" x="850" y="2573" style="white-space: pre;">Blokada/Sync</text>
   <text class="note" x="70" y="2600" style="white-space: pre;">⚙️ OKRES_ROTACJI_UKŁADÓW = parametr technologa (np. 168h = 7 dni)</text>
   <text class="note" x="70" y="2615" style="white-space: pre;">⏱️ CYKL_PĘTLI_ALGORYTMÓW = częstość sprawdzania (domyślnie 60s = 1 min, zakres: 10s-600s)</text>
-  <text class="note" x="70" y="2630" style="white-space: pre;">🔒 Koordynacja z Algorytmem 5B: blokady zapobiegają jednoczesnej rotacji układów i nagrzewnic</text>
+  <text class="note" x="70" y="2630" style="white-space: pre;">🔒 Koordynacja z Algorytmem RN: blokady zapobiegają jednoczesnej rotacji układów i nagrzewnic</text>
 </svg>

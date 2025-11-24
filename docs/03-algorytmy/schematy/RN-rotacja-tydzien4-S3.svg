@@ -35,12 +35,12 @@
   
   <!-- Status Box -->
   <rect class="status-box" x="850" y="20" width="520" height="100" rx="5"/>
-  <text class="status-text" x="1110" y="45" text-anchor="middle">ROTACJA 5B - TYDZIEŃ 3</text>
+  <text class="status-text" x="1110" y="45" text-anchor="middle">ROTACJA RN - TYDZIEŃ 4</text>
   <text class="status-text" x="1110" y="70" text-anchor="middle">S3: -8°C &lt; t ≤ -4°C | Układ Podstawowy</text>
-  <text class="status-text" x="1110" y="95" text-anchor="middle">Nagrzewnice: N3-N4-N1 | Wentylator: W1 PID</text>
-  <text class="status-text" x="1110" y="120" text-anchor="middle">N2 → POSTÓJ | N1 → PRACA (powrót)</text>
+  <text class="status-text" x="1110" y="95" text-anchor="middle">Nagrzewnice: N4-N1-N2 | Wentylator: W1 PID</text>
+  <text class="status-text" x="1110" y="120" text-anchor="middle">N3 → POSTÓJ | Cykl rotacji zamknięty</text>
   
-  <text class="label" font-size="18" font-weight="bold" id="svg_4" text-anchor="middle" x="566.36" y="923.96">Rotacja 5B Tydzień 3: N3-N4-N1 pracują | N2 odpoczynek</text>
+  <text class="label" font-size="18" font-weight="bold" id="svg_4" text-anchor="middle" x="566.36" y="923.96">Rotacja RN Tydzień 4: N4-N1-N2 pracują | N3 odpoczynek | Powrót do Tyg. 1</text>
   
   <!-- Main vertical duct - ACTIVE in upper section -->
   <line class="duct-active" id="svg_6a" x1="249.39" x2="249.39" y1="126.82" y2="450"/>
@@ -71,40 +71,39 @@
   <!-- Upper horizontal duct - ACTIVE -->
   <line class="duct-active" id="svg_24" x1="384.02" x2="1030.09" y1="353.99" y2="353.99"/>
   
-  <!-- N1 Module - ACTIVE (POWRÓT) -->
+  <!-- N1 Module - ACTIVE -->
   <line class="duct-active" id="svg_26" x1="385" x2="385" y1="126.13" y2="151.13"/>
   <rect class="component-active" height="35" id="svg_27" width="110" x="330" y="151.13"/>
   <text class="flow-label" fill="#155724" font-size="13" id="svg_28" x="385" y="171.13">Przep.</text>
   <rect class="component-active" height="85" id="svg_29" width="110" x="330" y="196.13"/>
   <line class="diag-active" id="svg_30" x1="331.32" x2="437.36" y1="275.95" y2="197.45"/>
   <text class="heater-label" fill="#28a745" font-size="20" id="svg_31" x="424.95" y="274.58">N1</text>
-  <text class="annotation" fill="#28a745" font-size="14" font-weight="bold" x="355" y="250">POWRÓT</text>
   <rect class="component-active" height="35" id="svg_32" width="110" x="330" y="291.13"/>
   <text class="flow-label" fill="#155724" font-size="13" id="svg_33" x="385" y="313.13">Przep.</text>
   <line class="duct-active" id="svg_134" x1="384.71" x2="384.71" y1="325.9" y2="356.05"/>
   
-  <!-- N2 Module - INACTIVE (POSTÓJ) -->
-  <line class="duct-inactive" id="svg_35" x1="555" x2="555" y1="126.13" y2="151.13"/>
-  <rect class="component-inactive" height="35" id="svg_36" width="110" x="500" y="151.13"/>
-  <text class="flow-label" fill="#888" font-size="13" id="svg_37" x="555" y="171.13">Przep.</text>
-  <rect class="component-inactive" height="85" id="svg_38" width="110" x="500" y="196.13"/>
-  <line class="diag-inactive" id="svg_39" x1="500.36" x2="608.32" y1="278.84" y2="198.41"/>
-  <text class="heater-label" fill="#888" font-size="20" id="svg_40" x="595.86" y="275.49">N2</text>
-  <text class="annotation" fill="#dc3545" font-size="14" font-weight="bold" x="530" y="250">POSTÓJ</text>
-  <rect class="component-inactive" height="35" id="svg_41" width="110" x="500" y="291.13"/>
-  <text class="flow-label" fill="#888" font-size="13" id="svg_42" x="555" y="313.13">Przep.</text>
-  <line class="duct-inactive" id="svg_135" x1="554.9" x2="554.9" y1="325.77" y2="355.93"/>
+  <!-- N2 Module - ACTIVE -->
+  <line class="duct-active" id="svg_35" x1="555" x2="555" y1="126.13" y2="151.13"/>
+  <rect class="component-active" height="35" id="svg_36" width="110" x="500" y="151.13"/>
+  <text class="flow-label" fill="#155724" font-size="13" id="svg_37" x="555" y="171.13">Przep.</text>
+  <rect class="component-active" height="85" id="svg_38" width="110" x="500" y="196.13"/>
+  <line class="diag-active" id="svg_39" x1="500.36" x2="608.32" y1="278.84" y2="198.41"/>
+  <text class="heater-label" fill="#28a745" font-size="20" id="svg_40" x="595.86" y="275.49">N2</text>
+  <rect class="component-active" height="35" id="svg_41" width="110" x="500" y="291.13"/>
+  <text class="flow-label" fill="#155724" font-size="13" id="svg_42" x="555" y="313.13">Przep.</text>
+  <line class="duct-active" id="svg_135" x1="554.9" x2="554.9" y1="325.77" y2="355.93"/>
   
-  <!-- N3 Module - ACTIVE -->
-  <line class="duct-active" id="svg_44" x1="725" x2="725" y1="126.13" y2="151.13"/>
-  <rect class="component-active" height="35" id="svg_45" width="110" x="670" y="151.13"/>
-  <text class="flow-label" fill="#155724" font-size="13" id="svg_46" x="725" y="171.13">Przep.</text>
-  <rect class="component-active" height="85" id="svg_47" width="110" x="670" y="196.13"/>
-  <line class="diag-active" id="svg_48" x1="669.39" x2="778.32" y1="279.81" y2="197.45"/>
-  <text class="heater-label" fill="#28a745" font-size="20" id="svg_49" x="765.86" y="276.09">N3</text>
-  <rect class="component-active" height="35" id="svg_50" width="110" x="670" y="291.13"/>
-  <text class="flow-label" fill="#155724" font-size="13" id="svg_51" x="725" y="313.13">Przep.</text>
-  <line class="duct-active" id="svg_136" x1="725" x2="725" y1="325.78" y2="355.94"/>
+  <!-- N3 Module - INACTIVE (POSTÓJ) -->
+  <line class="duct-inactive" id="svg_44" x1="725" x2="725" y1="126.13" y2="151.13"/>
+  <rect class="component-inactive" height="35" id="svg_45" width="110" x="670" y="151.13"/>
+  <text class="flow-label" fill="#888" font-size="13" id="svg_46" x="725" y="171.13">Przep.</text>
+  <rect class="component-inactive" height="85" id="svg_47" width="110" x="670" y="196.13"/>
+  <line class="diag-inactive" id="svg_48" x1="669.39" x2="778.32" y1="279.81" y2="197.45"/>
+  <text class="heater-label" fill="#888" font-size="20" id="svg_49" x="765.86" y="276.09">N3</text>
+  <text class="annotation" fill="#dc3545" font-size="14" font-weight="bold" x="700" y="250">POSTÓJ</text>
+  <rect class="component-inactive" height="35" id="svg_50" width="110" x="670" y="291.13"/>
+  <text class="flow-label" fill="#888" font-size="13" id="svg_51" x="725" y="313.13">Przep.</text>
+  <line class="duct-inactive" id="svg_136" x1="725" x2="725" y1="325.78" y2="355.94"/>
   
   <!-- N4 Module - ACTIVE -->
   <line class="duct-active" id="svg_53" x1="895" x2="895" y1="126.13" y2="151.13"/>

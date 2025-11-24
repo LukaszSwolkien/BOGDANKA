@@ -329,7 +329,7 @@ System wykorzystuje **trzy współpracujące algorytmy** zapewniające automatyc
 - Ciągły monitoring temperatury z histerezą przy wyłączaniu
 - Bezpieczne sekwencje przejść między scenariuszami
 
-![Algorytm WS - Flowchart](../02-algorytmy/schematy/algorytm-WS-wybor-scenariusza-flowchart.svg)
+![Algorytm WS - Flowchart](../03-algorytmy/schematy/algorytm-WS-wybor-scenariusza-flowchart.svg)
 
 **Kluczowe elementy:**
 - **KROK 1:** Odczyt czujnika t_zewn z filtrem uśredniania (3 próbki)
@@ -355,7 +355,7 @@ System wykorzystuje **trzy współpracujące algorytmy** zapewniające automatyc
 - Różne progi dla włączania i wyłączania (zapobiega oscylacjom)
 - Przykład S3: włączenie przy -4°C, wyłączenie dopiero przy -3°C (1°C histerezy)
 
-📖 **[Szczegółowy algorytm WS](../02-algorytmy/algorytmy.md#algorytm-ws-automatyczny-wybór-scenariusza-pracy)**
+📖 **[Szczegółowy algorytm WS](../03-algorytmy/algorytmy.md#algorytm-ws-automatyczny-wybór-scenariusza-pracy)**
 
 ---
 
@@ -366,7 +366,7 @@ System wykorzystuje **trzy współpracujące algorytmy** zapewniające automatyc
 - Wyrównanie eksploatacji W1 i W2
 - Okres rotacji: definiowany przez technologa (np. 168h / 7 dni)
 
-![Algorytm RC - Flowchart](../02-algorytmy/schematy/algorytm-RC-rotacja-ciagow-flowchart.svg)
+![Algorytm RC - Flowchart](../03-algorytmy/schematy/algorytm-RC-rotacja-ciagow-flowchart.svg)
 
 **Zasada działania:**
 - **Układ Podstawowy:** Ciąg 1 (N1-N4) + W1 → nawiew na +4,30m
@@ -389,7 +389,7 @@ System wykorzystuje **trzy współpracujące algorytmy** zapewniające automatyc
 | Układ | Nagrzewnice | Wentylator | Wizualizacja |
 |-------|-------------|------------|--------------|
 | **Podstawowy** | N1 | W1 PID | ![S1 Podstawowy](./schematy/S1-minimalne-ogrzewanie.svg) |
-| **Ograniczony** | N5 | W2 PID | ![S1 Ograniczony](../02-algorytmy/schematy/RC-uklad-ograniczony-S1.svg) |
+| **Ograniczony** | N5 | W2 PID | ![S1 Ograniczony](../03-algorytmy/schematy/RC-uklad-ograniczony-S1.svg) |
 
 ---
 
@@ -400,7 +400,7 @@ System wykorzystuje **trzy współpracujące algorytmy** zapewniające automatyc
 | Układ | Nagrzewnice | Wentylator | Wizualizacja |
 |-------|-------------|------------|--------------|
 | **Podstawowy** | N1, N2 | W1 PID | ![S2 Podstawowy](./schematy/S2-dwie-nagrzewnice.svg) |
-| **Ograniczony** | N5, N6 | W2 PID | ![S2 Ograniczony](../02-algorytmy/schematy/RC-uklad-ograniczony-S2.svg) |
+| **Ograniczony** | N5, N6 | W2 PID | ![S2 Ograniczony](../03-algorytmy/schematy/RC-uklad-ograniczony-S2.svg) |
 
 ---
 
@@ -411,7 +411,7 @@ System wykorzystuje **trzy współpracujące algorytmy** zapewniające automatyc
 | Układ | Nagrzewnice | Wentylator | Wizualizacja |
 |-------|-------------|------------|--------------|
 | **Podstawowy** | N1, N2, N3 | W1 PID | ![S3 Podstawowy](./schematy/S3-trzy-nagrzewnice.svg) |
-| **Ograniczony** | N5, N6, N7 | W2 PID | ![S3 Ograniczony](../02-algorytmy/schematy/RC-uklad-ograniczony-S3.svg) |
+| **Ograniczony** | N5, N6, N7 | W2 PID | ![S3 Ograniczony](../03-algorytmy/schematy/RC-uklad-ograniczony-S3.svg) |
 
 ---
 
@@ -422,13 +422,13 @@ System wykorzystuje **trzy współpracujące algorytmy** zapewniające automatyc
 | Układ | Nagrzewnice | Wentylator | Wizualizacja |
 |-------|-------------|------------|--------------|
 | **Podstawowy** | N1-N4 | W1 PID | ![S4 Podstawowy](./schematy/S4-pelny-gorny-ciag.svg) |
-| **Ograniczony** | N5-N8 | W2 PID | ![S4 Ograniczony](../02-algorytmy/schematy/RC-uklad-ograniczony-S4.svg) |
+| **Ograniczony** | N5-N8 | W2 PID | ![S4 Ograniczony](../03-algorytmy/schematy/RC-uklad-ograniczony-S4.svg) |
 
 **Uwagi:**
 - Rotacja działa **tylko** w scenariuszach S1-S4 (temperatury umiarkowane)
 - W scenariuszach S5-S8 rotacja **nie jest stosowana** - system zawsze pracuje w układzie Podstawowym
 
-📖 **[Szczegółowy algorytm RC](../02-algorytmy/algorytmy.md#algorytm-rc-cykliczna-rotacja-układów-pracy-ciągów)**
+📖 **[Szczegółowy algorytm RC](../03-algorytmy/algorytmy.md#algorytm-rc-cykliczna-rotacja-układów-pracy-ciągów)**
 
 ---
 
@@ -439,7 +439,7 @@ System wykorzystuje **trzy współpracujące algorytmy** zapewniające automatyc
 - Okres rotacji: definiowany przez technologa (np. 168h / 7 dni)
 - Po 3 miesiącach: > 90% wyrównania czasu pracy wszystkich nagrzewnic
 
-![Algorytm RN Flowchart](../02-algorytmy/schematy/algorytm-RN-rotacja-nagrzewnic-flowchart.svg)
+![Algorytm RN Flowchart](../03-algorytmy/schematy/algorytm-RN-rotacja-nagrzewnic-flowchart.svg)
 
 **Zasada:** Najdłużej pracująca → Postój, Najdłużej w postoju → Praca
 
@@ -456,7 +456,7 @@ System wykorzystuje **trzy współpracujące algorytmy** zapewniające automatyc
 
 **Tydzień 2: N2, N3, N4**
 
-![Rotacja RN - Tydzień 2](../02-algorytmy/schematy/RN-rotacja-tydzien2-S3.svg)
+![Rotacja RN - Tydzień 2](../03-algorytmy/schematy/RN-rotacja-tydzien2-S3.svg)
 
 **Pracują:** N2, N3, N4 (najnowsza)  
 **Postój:** N1 (odpoczynek po najdłuższym czasie pracy)  
@@ -466,7 +466,7 @@ System wykorzystuje **trzy współpracujące algorytmy** zapewniające automatyc
 
 **Tydzień 3: N3, N4, N1**
 
-![Rotacja RN - Tydzień 3](../02-algorytmy/schematy/RN-rotacja-tydzien3-S3.svg)
+![Rotacja RN - Tydzień 3](../03-algorytmy/schematy/RN-rotacja-tydzien3-S3.svg)
 
 **Pracują:** N3, N4, N1  
 **Postój:** N2 (odpoczynek)  
@@ -476,19 +476,19 @@ System wykorzystuje **trzy współpracujące algorytmy** zapewniające automatyc
 
 **Tydzień 4: N4, N1, N2**
 
-![Rotacja RN - Tydzień 4](../02-algorytmy/schematy/RN-rotacja-tydzien4-S3.svg)
+![Rotacja RN - Tydzień 4](../03-algorytmy/schematy/RN-rotacja-tydzien4-S3.svg)
 
 **Pracują:** N4, N1, N2  
 **Postój:** N3 (odpoczynek)  
 **Akcja:** Wyłączono N3, załączono N2
 
-📖 **[Szczegółowy algorytm RN](../02-algorytmy/algorytmy.md#algorytm-rn-cykliczna-rotacja-nagrzewnic-w-obrębie-ciągu)**
+📖 **[Szczegółowy algorytm RN](../03-algorytmy/algorytmy.md#algorytm-rn-cykliczna-rotacja-nagrzewnic-w-obrębie-ciągu)**
 
 ---
 
 ### 6.4 Koordynacja Algorytmów RC i RN
 
-![Koordynacja RC ↔ RN](../02-algorytmy/schematy/koordynacja-RC-RN-timeline.svg)
+![Koordynacja RC ↔ RN](../03-algorytmy/schematy/koordynacja-RC-RN-timeline.svg)
 
 **Diagram timeline** pokazuje przykładową sekwencję zdarzeń dla scenariusza S3:
 - Blokady (mutex) między algorytmami
@@ -673,8 +673,8 @@ f_max = 50 Hz (maksymalna prędkość)
 ## 🔗 Powiązane Dokumenty
 
 - [System Sterowania](../01-system/system.md) - kompletna architektura systemu SAR
-- [Algorytmy WS, RC, RN](../02-algorytmy/algorytmy.md) - szczegółowe opisy logiki sterowania
-- [Dokumentacja wejściowa](../01-system/dokumentacja-wejsciowa/) - pliki projektowe od zleceniodawcy
+- [Algorytmy WS, RC, RN](../03-algorytmy/algorytmy.md) - szczegółowe opisy logiki sterowania
+- [Dokumentacja wejściowa](../01-system/dokumentacja-wejsciowa/Projekt%20instalacji%20ogrzewania%20szybu.md) - pliki projektowe od zleceniodawcy
 
 ---
 

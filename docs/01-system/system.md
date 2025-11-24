@@ -9,7 +9,7 @@ Ostatnia aktualizacja: 24 Listopad 2025
 Dokumenty otrzymane 19 listopad 2025:
 
 - [Projekt instalacji ogrzewania szybu - skan PDF](./dokumentacja-wejsciowa/Projekt%20instalacji%20ogrzewania%20szybu.pdf)
-- [Projekt instalacji ogrzewania szybu - dokumentacja](./dokumentacja-wejsciowa/Projekt%20instalacji%20ogrzewania%20szybu.md)
+- [Projekt instalacji ogrzewania szybu - dokumentacja zmigrowana do formatu markdown (md)](./dokumentacja-wejsciowa/Projekt%20instalacji%20ogrzewania%20szybu.md)
 
 ---
 
@@ -19,7 +19,7 @@ System automatycznej regulacji (SAR) temperatury szybu składa się z dwóch pod
 - **Warstwa regulacji** - podstawowa funkcja utrzymania temperatury (PID)
 - **Warstwa zarządzania** - funkcja optymalizująca wykorzystanie urządzeń (algorytmy)
 
-![Architektura SAR](./architektura_SAR_system.svg)
+![Architektura SAR](./schematy/architektura_SAR_system.svg)
 
 *Rys. Dwuwarstwowa architektura systemu SAR pokazująca relacje między podsystemami PARTS i PARTPG oraz algorytmami WS, RC i RN.*
 
@@ -49,7 +49,7 @@ System automatycznej regulacji (SAR) temperatury szybu składa się z dwóch pod
 - Maksymalizacja niezawodności przez równomierne zużycie
 - Wybór nagrzewnic na podstawie historii pracy/postoju
 
-📖 **[Szczegółowy opis → Algorytm RN](../02-algorytmy/algorytmy.md#algorytm-rn-cykliczna-rotacja-nagrzewnic-w-obrębie-ciągu)**
+📖 **[Szczegółowy opis → Algorytm RN](../03-algorytmy/algorytmy.md#algorytm-rn-cykliczna-rotacja-nagrzewnic-w-obrębie-ciągu)**
 
 ### 1.2 PARTS - Podsystem Automatycznej Regulacji Temperatury Szybu
 
@@ -81,7 +81,7 @@ System automatycznej regulacji (SAR) temperatury szybu składa się z dwóch pod
 - Dotyczy scenariuszy S1-S4 (temperatura -11°C < t ≤ 2°C)
 - Maksymalizacja niezawodności przez równomierne zużycie
 
-📖 **[Szczegółowy opis algorytmów](../02-algorytmy/algorytmy.md)** | [Algorytm WS](../02-algorytmy/algorytmy.md#algorytm-ws-automatyczny-wybór-scenariusza-pracy) | [Algorytm RC](../02-algorytmy/algorytmy.md#algorytm-rc-cykliczna-rotacja-układów-pracy-ciągów)
+📖 **[Szczegółowy opis algorytmów](../03-algorytmy/algorytmy.md)** | [Algorytm WS](../03-algorytmy/algorytmy.md#algorytm-ws-automatyczny-wybór-scenariusza-pracy) | [Algorytm RC](../03-algorytmy/algorytmy.md#algorytm-rc-cykliczna-rotacja-układów-pracy-ciągów)
 
 ### 1.3 Zależności między Podsystemami
 
@@ -111,7 +111,7 @@ System automatycznej regulacji (SAR) temperatury szybu składa się z dwóch pod
 - Otwarcie przepustnicy na dolocie zimnego powietrza do nagrzewnicy
 - Rozpoczęcie procesu regulacji (AUTO lub MANUAL)
 
-📖 **[Szczegółowe sekwencje dla wszystkich przejść](../02-algorytmy/algorytmy.md#algorytm-ws-automatyczny-wybór-scenariusza-pracy)**
+📖 **[Automatyczny wybór scenariusza pracy](../03-algorytmy/algorytmy.md#algorytm-ws-automatyczny-wybór-scenariusza-pracy)**
 
 ### 2.2 Wyłączenie Nagrzewnicy z Ruchu
 
@@ -198,7 +198,7 @@ System wykorzystuje **Algorytm WS** do automatycznego doboru scenariusza pracy (
 - Bezpieczne sekwencje przejść między scenariuszami
 - Koordynacja z algorytmami rotacji RC i RN
 
-📖 **[Szczegółowy algorytm WS](../02-algorytmy/algorytmy.md#algorytm-ws-automatyczny-wybór-scenariusza-pracy)** | **[Flowchart](../02-algorytmy/schematy/algorytm-WS-wybor-scenariusza-flowchart.svg)**
+📖 **[Szczegółowy algorytm WS](../03-algorytmy/algorytmy.md#algorytm-ws-automatyczny-wybór-scenariusza-pracy)** | **[Flowchart](../03-algorytmy/schematy/algorytm-WS-wybor-scenariusza-flowchart.svg)**
 
 ### 4.2 Tabela Scenariuszy
 
@@ -260,12 +260,12 @@ System wykorzystuje **trzy współpracujące algorytmy** do sterowania:
 2. **Algorytm RC: Rotacja Układów Pracy Ciągów**
    - Określa **KTÓRY CIĄG** pracuje w S1-S4 (Podstawowy: C1, Ograniczony: C2)
    - Wyrównuje eksploatację W1 i W2
-   - 📖 [Szczegóły](../02-algorytmy/algorytmy.md#algorytm-rc-cykliczna-rotacja-układów-pracy-ciągów)
+   - 📖 [Szczegóły](../03-algorytmy/algorytmy.md#algorytm-rc-cykliczna-rotacja-układów-pracy-ciągów)
 
 3. **Algorytm RN: Rotacja Nagrzewnic w Ciągu**
    - Określa **KTÓRE KONKRETNIE** nagrzewnice pracują w ciągu
    - Wyrównuje eksploatację N1-N8
-   - 📖 [Szczegóły](../02-algorytmy/algorytmy.md#algorytm-rn-cykliczna-rotacja-nagrzewnic-w-obrębie-ciągu)
+   - 📖 [Szczegóły](../03-algorytmy/algorytmy.md#algorytm-rn-cykliczna-rotacja-nagrzewnic-w-obrębie-ciągu)
 
 **Tabela scenariuszy określa ILOŚĆ wymaganych nagrzewnic, ale nie konkretne numery.**
 **KTÓRE nagrzewnice** pracują jest określane dynamicznie przez algorytmy RC i RN.
@@ -310,9 +310,9 @@ Tabela 3: Zestawienie głównych parametrów technicznych
 
 ---
 
-## 7. Schematy
+## 7. Schemat ogrzewania
 
-![Schemat nawiewu powietrza](../03-projekt-instalacji/schematy/nawiew_z_dolnego_ciagu_wentylacyjnego.svg)
+![Schemat nawiewu powietrza](../02-projekt-instalacji/schematy/nawiew_z_dolnego_ciagu_wentylacyjnego.svg)
 
 📊 **Więcej schematów:** [Projekt instalacji](../03-projekt-instalacji/projekt-instalacji.md)
 
@@ -366,7 +366,7 @@ System sterowania realizowany na sterowniku PLC z regulatorami PID.
 
 ## 10. Wizualizacja Systemu
 
-📊 **[Pełna wizualizacja systemu z osadzonymi diagramami](../03-projekt-instalacji/projekt-instalacji.md)**
+**[Pełna wizualizacja systemu z osadzonymi diagramami](../03-projekt-instalacji/projekt-instalacji.md)**
 
 Dokument zawiera:
 - Wszystkie scenariusze S0-S8 z diagramami
@@ -378,11 +378,6 @@ Dokument zawiera:
 
 ## 🔗 Powiązane Dokumenty
 
-- [Algorytmy WS, RC, RN](../02-algorytmy/algorytmy.md) - szczegółowe opisy algorytmów sterowania
-- [Projekt instalacji](../03-projekt-instalacji/projekt-instalacji.md) - schematy instalacji grzewczej
-- [Dokumentacja wejściowa](./dokumentacja-wejsciowa/) - pliki otrzymane od zleceniodawcy
-
----
-
-**Czas czytania:** ~60-90 minut  
-**Dla kogo:** wszyscy użytkownicy systemu, technolodzy, programiści PLC, operatorzy
+- [Projekt instalacji](../02-projekt-instalacji/projekt-instalacji.md) - schematy instalacji grzewczej
+- [Algorytmy WS, RC, RN](../03-algorytmy/algorytmy.md) - szczegółowe opisy algorytmów sterowania
+- [Dokumentacja wejściowa](./dokumentacja-wejsciowa/Projekt%20instalacji%20ogrzewania%20szybu.md) - pliki otrzymane od zleceniodawcy

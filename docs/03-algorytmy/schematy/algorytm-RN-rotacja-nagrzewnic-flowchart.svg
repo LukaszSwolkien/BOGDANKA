@@ -32,14 +32,14 @@
 </style>
   </defs>
   <rect width="1400" height="3220" fill="#ffffff" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
-  <text class="title" x="700" y="40" text-anchor="middle" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">Algorytm 5B: Rotacja Nagrzewnic w Obrębie Ciągu</text>
-  <text class="subtitle" x="700" y="65" text-anchor="middle" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">Wyrównanie Czasu Pracy N1-N8 (z koordynacją 5A)</text>
+  <text class="title" x="700" y="40" text-anchor="middle" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">Algorytm RN: Rotacja Nagrzewnic w Obrębie Ciągu</text>
+  <text class="subtitle" x="700" y="65" text-anchor="middle" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">Wyrównanie Czasu Pracy N1-N8 (z koordynacją RC)</text>
   <rect class="start-end" x="550" y="90" width="300" height="60" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
   <text class="box-text" x="700" y="125" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">START - Główna pętla</text>
   <text class="box-text-small" x="700" y="142" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">(co CYKL_PĘTLI, domyślnie 60s)</text>
   <line class="arrow" x1="700" y1="150" x2="700" y2="180" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
   <rect class="warning" x="450" y="190" width="500" height="90" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
-  <text class="box-text-small" x="700" y="210" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">⚙️ Zmienne globalne (koordynacja z 5A):</text>
+  <text class="box-text-small" x="700" y="210" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">⚙️ Zmienne globalne (koordynacja z RC):</text>
   <text class="box-text-small" x="700" y="227" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">aktualny_układ, zmiana_układu_w_toku,</text>
   <text class="box-text-small" x="700" y="244" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">czas_ostatniej_zmiany_układu,</text>
   <text class="box-text-small" x="700" y="261" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">rotacja_nagrzewnic_w_toku,</text>
@@ -73,7 +73,7 @@
   <text class="box-label" x="50" y="865" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">KROK 2</text>
   <polygon class="decision" points="700,800 1050,920 700,1040 350,920" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)"/>
   <text class="box-text" x="700" y="885" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">Warunki rotacji spełnione?</text>
-  <text class="box-text-small" x="700" y="905" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">1. Czy 5A nie zmienia układu?</text>
+  <text class="box-text-small" x="700" y="905" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">1. Czy RC nie zmienia układu?</text>
   <text class="box-text-small" x="700" y="922" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">2. Upłynęła 1h od zmiany układu?</text>
   <text class="box-text-small" x="700" y="939" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">3. Upłynęło 15min od rotacji?</text>
   <text class="box-text-small" x="700" y="956" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">4. Sprawne, okres, stabilność OK?</text>
@@ -183,7 +183,7 @@
   <text class="note" x="70" y="3085" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">⚙️ Parametry technologa:</text>
   <text class="note" x="90" y="3105" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">• OKRES_ROTACJI_NAGRZEWNIC = 168h-720h (typowo 168h = 7 dni)</text>
   <text class="note" x="90" y="3125" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">• MIN_DELTA_CZASU = 1800-7200s (typowo 3600s = 1h)</text>
-  <text class="note" x="90" y="3145" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">• CYKL_PĘTLI_ALGORYTMÓW = 10-600s (domyślnie 60s = 1 min, współdzielony z 5A)</text>
-  <text class="note" x="70" y="3175" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">🔒 Koordynacja z Algorytmem 5A:</text>
+  <text class="note" x="90" y="3145" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">• CYKL_PĘTLI_ALGORYTMÓW = 10-600s (domyślnie 60s = 1 min, współdzielony z RC)</text>
+  <text class="note" x="70" y="3175" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">🔒 Koordynacja z Algorytmem RC:</text>
   <text class="note" x="90" y="3195" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.1368683772161603e-13, 0)">• KROK 0: Sprawdza czy ciąg aktywny (S1-S4: C1 lub C2, S5-S8: tylko C2)</text>
 </svg>

@@ -35,12 +35,12 @@
   
   <!-- Status Box -->
   <rect class="status-box" x="850" y="20" width="520" height="100" rx="5"/>
-  <text class="status-text" x="1110" y="45" text-anchor="middle">ROTACJA 5B - TYDZIEŃ 2</text>
+  <text class="status-text" x="1110" y="45" text-anchor="middle">ROTACJA RN - TYDZIEŃ 2</text>
   <text class="status-text" x="1110" y="70" text-anchor="middle">S3: -8°C &lt; t ≤ -4°C | Układ Podstawowy</text>
   <text class="status-text" x="1110" y="95" text-anchor="middle">Nagrzewnice: N2-N3-N4 | Wentylator: W1 PID</text>
   <text class="status-text" x="1110" y="120" text-anchor="middle">N1 → POSTÓJ | N4 → PRACA (wymiana)</text>
   
-  <text class="label" font-size="18" font-weight="bold" id="svg_4" text-anchor="middle" x="566.36" y="923.96">Rotacja 5B Tydzień 2: N2-N3-N4 pracują | N1 odpoczynek po najdłuższym czasie pracy</text>
+  <text class="label" font-size="18" font-weight="bold" id="svg_4" text-anchor="middle" x="566.36" y="923.96">Rotacja RN Tydzień 2: N2-N3-N4 pracują | N1 odpoczynek po najdłuższym czasie pracy</text>
   
   <!-- Main vertical duct - ACTIVE in upper section -->
   <line class="duct-active" id="svg_6a" x1="249.39" x2="249.39" y1="126.82" y2="450"/>

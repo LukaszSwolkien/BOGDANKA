@@ -31,7 +31,7 @@
     </style>
   </defs>
   <rect x="0" y="0" width="1400" height="3420" fill="white"/>
-  <text x="700" y="40" class="title" text-anchor="middle" style="white-space: pre;">Algorytm 5: Automatyczny Wybór Scenariusza Pracy</text>
+  <text x="700" y="40" class="title" text-anchor="middle" style="white-space: pre;">Algorytm WS: Automatyczny Wybór Scenariusza Pracy</text>
   <text x="700" y="70" class="subtitle" text-anchor="middle" style="white-space: pre;">System BOGDANKA Szyb 2 - Dobór S0-S8 na podstawie t_zewn</text>
   <rect x="550" y="100" width="300" height="60" class="start-end"/>
   <text x="700" y="125" class="box-text" style="white-space: pre;">START</text>

@@ -33,18 +33,18 @@
 </style>
   </defs>
   <rect width="1600" height="2200" fill="#ffffff" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)"/>
-  <text class="title" x="800" y="40" text-anchor="middle" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">Koordynacja Algorytmów 5A i 5B</text>
+  <text class="title" x="800" y="40" text-anchor="middle" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">Koordynacja Algorytmów RC i RN</text>
   <text class="subtitle" x="800" y="65" text-anchor="middle" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">Przykładowy Scenariusz: S3 - Diagram sekwencji z blokadami i odstępami czasowymi</text>
   <rect x="50" y="85" width="1500" height="70" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1" rx="3" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)"/>
   <text class="event-text" x="70" y="110" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)"><tspan font-weight="bold">Warunki początkowe:</tspan> S3 (temp: -8°C), Układ Podstawowy (C1 ON, C2 OFF)</text>
-  <text class="event-text-small" x="90" y="130" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">• OKRES_ROTACJI_UKŁADÓW (5A) = 240h (10 dni)</text>
-  <text class="event-text-small" x="90" y="145" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">• OKRES_ROTACJI_NAGRZEWNIC (5B) = 168h (7 dni)</text>
+  <text class="event-text-small" x="90" y="130" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">• OKRES_ROTACJI_UKŁADÓW (RC) = 240h (10 dni)</text>
+  <text class="event-text-small" x="90" y="145" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">• OKRES_ROTACJI_NAGRZEWNIC (RN) = 168h (7 dni)</text>
   <rect x="50" y="180" width="150" height="50" fill="#6c757d" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)"/>
   <text class="lane-title" x="125" y="210" text-anchor="middle" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">Czas [h]</text>
   <rect class="lane-header-5a" x="200" y="180" width="650" height="50" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)"/>
-  <text class="lane-title" x="525" y="210" text-anchor="middle" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">Algorytm 5A (Rotacja Układów)</text>
+  <text class="lane-title" x="525" y="210" text-anchor="middle" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">Algorytm RC (Rotacja Układów)</text>
   <rect class="lane-header-5b" x="850" y="180" width="700" height="50" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)"/>
-  <text class="lane-title" x="1200" y="210" text-anchor="middle" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">Algorytm 5B (Rotacja Nagrzewnic)</text>
+  <text class="lane-title" x="1200" y="210" text-anchor="middle" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">Algorytm RN (Rotacja Nagrzewnic)</text>
   <rect class="lane-5a" x="200" y="230" width="650" height="1500" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)"/>
   <rect class="lane-5b" x="850" y="230" width="700" height="1500" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)"/>
   <line class="timeline" x1="125" y1="230" x2="125" y2="1730" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)"/>
@@ -80,10 +80,10 @@
   <text class="time-label" x="125" y="540" text-anchor="middle" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">T=168h</text>
   <text class="time-label" x="125" y="575" text-anchor="middle" font-size="11" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">+2min</text>
   <rect class="event-blocked" x="220" y="510" width="350" height="100" rx="4" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)"/>
-  <text class="event-text" x="240" y="533" font-weight="bold" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">⛔ BLOKADA 5A</text>
+  <text class="event-text" x="240" y="533" font-weight="bold" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">⛔ BLOKADA RC</text>
   <text class="event-text-small" x="260" y="550" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">Warunek zminy układu spełniony</text>
   <text class="event-text-small" x="260" y="568" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">ALE: rotacja_nagrzewnic_w_toku = PRAWDA</text>
-  <text class="event-text-small" x="260" y="586" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">→ Algorytm 5A czeka!</text>
+  <text class="event-text-small" x="260" y="586" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">→ Algorytm RC czeka!</text>
   <text class="event-text-small" x="260" y="604" font-weight="bold" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">Zmiana odroczona</text>
   <line class="arrow-h" x1="870" y1="555" x2="575" y2="555" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)"/>
   <text class="note" x="680" y="545" text-anchor="middle" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">mutex</text>
@@ -111,11 +111,11 @@
   <text class="time-label" x="125" y="990" text-anchor="middle" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">T=169h</text>
   <text class="time-label" x="125" y="1025" text-anchor="middle" font-size="11" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">+15min</text>
   <rect class="event-blocked" x="870" y="960" width="660" height="100" rx="4" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)"/>
-  <text class="event-text" x="890" y="983" font-weight="bold" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">⛔ BLOKADA 5B (C2)</text>
+  <text class="event-text" x="890" y="983" font-weight="bold" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">⛔ BLOKADA RN (C2)</text>
   <text class="event-text-small" x="910" y="1000" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">Warunek rotacji C2 sprawdzony</text>
   <text class="event-text-small" x="910" y="1018" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">ALE: czas_od_zmiany_układu = 15min &lt; 1h</text>
-  <text class="event-text-small" x="910" y="1036" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">→ Algorytm 5B czeka!</text>
-  <text class="event-text-small" x="910" y="1054" font-weight="bold" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">Rotacja odroczona (zbyt wcześnie po 5A)</text>
+  <text class="event-text-small" x="910" y="1036" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">→ Algorytm RN czeka!</text>
+  <text class="event-text-small" x="910" y="1054" font-weight="bold" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">Rotacja odroczona (zbyt wcześnie po RC)</text>
   <line class="arrow-h" x1="575" y1="1005" x2="870" y2="1005" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)"/>
   <text class="note" x="680" y="995" text-anchor="middle" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">odstęp 1h</text>
   <circle class="timeline-marker" cx="125" cy="1155" r="6" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)"/>
@@ -163,24 +163,24 @@
   <rect x="50" y="1760" width="1500" height="177.175" fill="#e7f3ff" stroke="#007bff" stroke-width="2" rx="5" style="" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)"/>
   <text class="section-title" x="70" y="1790" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">Kluczowe Mechanizmy Koordynacji:</text>
   <text class="event-text" x="90" y="1820" font-weight="bold" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">1. Blokady wzajemne (Mutex):</text>
-  <text class="event-text-small" x="110" y="1840" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">• zmiana_układu_w_toku: gdy PRAWDA → 5B nie może rotować (musi poczekać)</text>
-  <text class="event-text-small" x="110" y="1858" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">• rotacja_nagrzewnic_w_toku: gdy PRAWDA → 5A nie może zmieniać układu (musi poczekać)</text>
+  <text class="event-text-small" x="110" y="1840" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">• zmiana_układu_w_toku: gdy PRAWDA → RN nie może rotować (musi poczekać)</text>
+  <text class="event-text-small" x="110" y="1858" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">• rotacja_nagrzewnic_w_toku: gdy PRAWDA → RC nie może zmieniać układu (musi poczekać)</text>
   <text class="event-text" x="90" y="1885" font-weight="bold" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">2. Odstępy czasowe:</text>
-  <text class="event-text-small" x="110" y="1905" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">• 1 godzina: po zmianie układu (5A) zanim 5B może rotować nagrzewnice (stabilizacja systemu)</text>
+  <text class="event-text-small" x="110" y="1905" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">• 1 godzina: po zmianie układu (RC) zanim RN może rotować nagrzewnice (stabilizacja systemu)</text>
   <text class="event-text-small" x="110" y="1923" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">• 15 minut: między rotacjami nagrzewnic w różnych ciągach (zapobiega przeciążeniu)</text>
   <rect x="50" y="1950" width="1500" height="80" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)"/>
   <text class="legend-text" x="70" y="1975" font-weight="bold" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">Legenda:</text>
   <rect class="event-5a" x="180" y="1960" width="100" height="30" rx="3" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)"/>
-  <text class="legend-text" x="290" y="1980" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">Algorytm 5A</text>
+  <text class="legend-text" x="290" y="1980" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">Algorytm RC</text>
   <rect class="event-5b" x="420" y="1960" width="100" height="30" rx="3" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)"/>
-  <text class="legend-text" x="530" y="1980" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">Algorytm 5B</text>
+  <text class="legend-text" x="530" y="1980" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">Algorytm RN</text>
   <rect class="event-blocked" x="660" y="1960" width="100" height="30" rx="3" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)"/>
   <text class="legend-text" x="770" y="1980" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">Blokada / Odroczone</text>
   <rect class="event-ok" x="930" y="1960" width="100" height="30" rx="3" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)"/>
   <text class="legend-text" x="1040" y="1980" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">Warunki OK</text>
   <line class="arrow-h" x1="1200" y1="1975" x2="1280" y2="1975" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)"/>
   <text class="legend-text" x="1300" y="1980" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">Blokada/Wpływ</text>
-  <text class="legend-text" x="70" y="2015" font-style="italic" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">📌 Wszystkie mechanizmy są zaimplementowane w pseudokodzie algorytmów 5A (sekcja 5A.5) i 5B (sekcja 5B.5).</text>
+  <text class="legend-text" x="70" y="2015" font-style="italic" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">📌 Wszystkie mechanizmy są zaimplementowane w pseudokodzie algorytmów RC (sekcja RC.5) i RN (sekcja RN.5).</text>
   <text class="note" x="792.664" y="2069.96" text-anchor="middle" style="white-space: pre; font-size: 12px;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">💡 Ten diagram pokazuje przykładową sekwencję zdarzeń dla celów demonstracyjnych. Okresy rotacji są konfigurowalne przez technologa.</text>
-  <text class="note" x="792.664" y="2090" text-anchor="middle" style="white-space: pre; font-size: 12px;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">⚠️ Konkretne nagrzewnice (N1,N2,N3... N5,N6,N7...) wybrane przez Algorytm 5B na podstawie czasu pracy/postoju - NIGDY nie sekwencyjnie.</text>
+  <text class="note" x="792.664" y="2090" text-anchor="middle" style="white-space: pre; font-size: 12px;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">⚠️ Konkretne nagrzewnice (N1,N2,N3... N5,N6,N7...) wybrane przez Algorytm RN na podstawie czasu pracy/postoju - NIGDY nie sekwencyjnie.</text>
 </svg>

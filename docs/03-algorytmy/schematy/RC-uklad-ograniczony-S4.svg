@@ -37,7 +37,7 @@
   
   <!-- Status Box -->
   <rect class="status-box" x="850" y="20" width="520" height="100" rx="5"/>
-  <text class="status-text" x="1110" y="45" text-anchor="middle">ROTACJA 5A - UKŁAD OGRANICZONY</text>
+  <text class="status-text" x="1110" y="45" text-anchor="middle">ROTACJA RC - UKŁAD OGRANICZONY</text>
   <text class="status-text" x="1110" y="70" text-anchor="middle">S4: -11°C &lt; t ≤ -8°C</text>
   <text class="status-text" x="1110" y="95" text-anchor="middle">Nagrzewnice: N5-N8 | Wentylator: W2 PID</text>
   <text class="status-text" x="1110" y="120" text-anchor="middle">Nawiew przez SPINĘ CIĄGU → +4,30m</text>
