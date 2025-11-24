@@ -4,7 +4,7 @@
 
 _Plik ten jest częścią dokumentacji systemu sterowania nagrzewnicami BOGDANKA Szyb 2._
 
-[← Powrót do dokumentacji głównej](../01-system/system.md)
+[← Powrót do dokumentacji głównej](../start.md)
 
 ---
 

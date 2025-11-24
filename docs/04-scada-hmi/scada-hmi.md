@@ -1,6 +1,12 @@
 # System SCADA/HMI - BOGDANKA Szyb 2
 
-Ostatnia aktualizacja: 24 Listopad 2025
+**Interfejs operatorski, wizualizacja i wymagania techniczne platformy SCADA**
+
+_Plik ten jest częścią dokumentacji systemu sterowania nagrzewnicami BOGDANKA Szyb 2._
+
+[← Powrót do dokumentacji głównej](../start.md)
+
+---
 
 ## 1. Wymagania Podstawowe
 

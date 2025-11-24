@@ -1,5 +1,12 @@
 # Projekt Instalacji Ogrzewania Szybu BOGDANKA Szyb 2
 
+**Szczegółowy opis układu fizycznego instalacji, schematy scenariuszy i przykłady rotacji**
+
+_Plik ten jest częścią dokumentacji systemu sterowania nagrzewnicami BOGDANKA Szyb 2._
+
+[← Powrót do dokumentacji głównej](../start.md)
+
+---
 
 ## 1. Układ Instalacji
 

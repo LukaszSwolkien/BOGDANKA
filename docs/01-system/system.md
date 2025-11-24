@@ -2,7 +2,11 @@
 
 **Dokument główny - przegląd systemu**
 
-Ostatnia aktualizacja: 24 Listopad 2025
+_Plik ten jest częścią dokumentacji systemu sterowania nagrzewnicami BOGDANKA Szyb 2._
+
+[← Powrót do dokumentacji głównej](../start.md)
+
+---
 
 ## Wprowadzenie
 

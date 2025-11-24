@@ -1,6 +1,8 @@
 # Dokumentacja Systemu Sterowania BOGDANKA Szyb 2
 
-Kompleksowa dokumentacja systemu automatycznego sterowania ogrzewaniem szybu.
+**Kompleksowa dokumentacja systemu automatycznego sterowania ogrzewaniem szybu**
+
+---
 
 ## 📁 Struktura Dokumentacji
 
@@ -35,5 +37,6 @@ Kompleksowa dokumentacja systemu automatycznego sterowania ogrzewaniem szybu.
 
 ---
 
-**Ostatnia aktualizacja:** 24 Listopad 2025
+**Ostatnia aktualizacja:** 24 Listopad 2025  
+**Wersja dokumentu:** 1.0
 
