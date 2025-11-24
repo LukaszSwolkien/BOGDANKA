@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1000" width="1400px" height="1000px">
+  <defs>
+    <style>
+    .title { font-family: "Arial", sans-serif; font-weight: 700; font-size: 32px; fill: #111; }
+    .subtitle { font-family: "Arial", sans-serif; font-weight: 600; font-size: 24px; fill: #111; }
+    .subsystem-title { font-family: "Arial", sans-serif; font-weight: 600; font-size: 20px; fill: #fff; }
+    .layer-title { font-family: "Arial", sans-serif; font-weight: 600; font-size: 18px; fill: #111; }
+    .component-text { font-family: "Arial", sans-serif; font-size: 16px; fill: #111; }
+    .note-text { font-family: "Arial", sans-serif; font-size: 14px; fill: #666; font-style: italic; }
+    .legend-text { font-family: "Arial", sans-serif; font-size: 15px; fill: #111; }
+    .subsystem-box { stroke: #111; stroke-width: 3px; }
+    .layer-box { stroke: #111; stroke-width: 2px; fill: #fff; rx: 8; }
+    .arrow { stroke: #111; stroke-width: 2.5px; fill: none; marker-end: url(#arrowhead); }
+    .arrow-bi { stroke: #555; stroke-width: 2px; fill: none; stroke-dasharray: 5 3; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#111"/>
+    </marker>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1400" height="1000" fill="#f8f9fa"/>
+  
+  <!-- Title -->
+  <text class="title" x="700" y="50" text-anchor="middle">Architektura Dwuwarstwowa Systemu SAR</text>
+  <text class="subtitle" x="700" y="85" text-anchor="middle">System Automatycznej Regulacji Temperatury Szybu</text>
+  
+  <!-- PARTS Subsystem -->
+  <g id="parts-subsystem">
+    <rect class="subsystem-box" x="50" y="130" width="620" height="420" fill="#3498db" opacity="0.15"/>
+    <rect x="60" y="140" width="300" height="45" fill="#3498db" rx="5"/>
+    <text class="subsystem-title" x="210" y="170" text-anchor="middle">PARTS</text>
+    
+    <!-- PARTS - Warstwa Regulacji -->
+    <rect class="layer-box" x="70" y="205" width="580" height="150"/>
+    <text class="layer-title" x="360" y="230" text-anchor="middle" font-weight="bold">WARSTWA REGULACJI</text>
+    <text class="layer-title" x="360" y="252" text-anchor="middle" font-style="italic">(podstawowa funkcja systemu)</text>
+    
+    <text class="component-text" x="90" y="285">• 2 × UAR (regulatory PID wentylatorów W1, W2)</text>
+    <text class="component-text" x="90" y="310">• Utrzymanie Ts = 2°C w szybie (-30m)</text>
+    <text class="component-text" x="90" y="335">• Sterowanie częstotliwością (25-50 Hz)</text>
+    
+    <!-- PARTS - Warstwa Zarządzania -->
+    <rect class="layer-box" x="70" y="375" width="580" height="160" fill="#e8f4f8"/>
+    <text class="layer-title" x="360" y="400" text-anchor="middle" font-weight="bold">WARSTWA ZARZĄDZANIA</text>
+    <text class="layer-title" x="360" y="422" text-anchor="middle" font-style="italic">(optymalizacja użycia urządzeń)</text>
+    
+    <text class="component-text" x="90" y="453" font-weight="600">Algorytm 5 - Automatyczny Wybór Scenariusza</text>
+    <text class="component-text" x="110" y="475">→ Monitoruje temperaturę zewnętrzną (co 10s)</text>
+    <text class="component-text" x="110" y="495">→ Dobiera ilość nagrzewnic (S0-S8)</text>
+    
+    <text class="component-text" x="370" y="453" font-weight="600">Algorytm 5A - Rotacja Układów</text>
+    <text class="component-text" x="390" y="475">→ Zmiana C1 ↔ C2</text>
+    <text class="component-text" x="390" y="495">→ Równomierne zużycie W1, W2</text>
+    <text class="component-text" x="390" y="515">→ Tylko dla S1-S4</text>
+  </g>
+  
+  <!-- PARTPG Subsystem -->
+  <g id="partpg-subsystem">
+    <rect class="subsystem-box" x="730" y="130" width="620" height="420" fill="#27ae60" opacity="0.15"/>
+    <rect x="740" y="140" width="300" height="45" fill="#27ae60" rx="5"/>
+    <text class="subsystem-title" x="890" y="170" text-anchor="middle">PARTPG</text>
+    
+    <!-- PARTPG - Warstwa Regulacji -->
+    <rect class="layer-box" x="750" y="205" width="580" height="150"/>
+    <text class="layer-title" x="1040" y="230" text-anchor="middle" font-weight="bold">WARSTWA REGULACJI</text>
+    <text class="layer-title" x="1040" y="252" text-anchor="middle" font-style="italic">(podstawowa funkcja systemu)</text>
+    
+    <text class="component-text" x="770" y="285">• 8 × UAR (regulatory PID zaworów N1-N8)</text>
+    <text class="component-text" x="770" y="310">• Utrzymanie Tz = 50°C na wylocie z nagrzewnicy</text>
+    <text class="component-text" x="770" y="335">• Sterowanie zaworem wody grzewczej (20-100%)</text>
+    
+    <!-- PARTPG - Warstwa Zarządzania -->
+    <rect class="layer-box" x="750" y="375" width="580" height="160" fill="#d5f4e6"/>
+    <text class="layer-title" x="1040" y="400" text-anchor="middle" font-weight="bold">WARSTWA ZARZĄDZANIA</text>
+    <text class="layer-title" x="1040" y="422" text-anchor="middle" font-style="italic">(optymalizacja użycia urządzeń)</text>
+    
+    <text class="component-text" x="770" y="453" font-weight="600">Algorytm 5B - Rotacja Nagrzewnic w Ciągu</text>
+    <text class="component-text" x="790" y="475">→ Cykliczna wymiana nagrzewnic</text>
+    <text class="component-text" x="790" y="495">→ Równomierne zużycie N1-N8</text>
+    <text class="component-text" x="790" y="515">→ Funkcja aktywna i serwisowa</text>
+  </g>
+  
+  <!-- Interaction Arrows -->
+  <!-- PARTS -> PARTPG -->
+  <path class="arrow" d="M 650 430 L 750 430" stroke-dasharray="8 4"/>
+  <text class="note-text" x="700" y="420" text-anchor="middle">Wybór nagrzewnic</text>
+  <text class="note-text" x="700" y="455" text-anchor="middle">ILE i KTÓRE</text>
+  
+  <!-- Bidirectional dependency -->
+  <path class="arrow-bi" d="M 650 300 L 750 300"/>
+  <path class="arrow-bi" d="M 750 320 L 650 320"/>
+  <text class="note-text" x="700" y="290" text-anchor="middle">Stabilne parametry</text>
+  <text class="note-text" x="700" y="340" text-anchor="middle">powietrza grzewczego</text>
+  
+  <!-- Legend -->
+  <rect x="50" y="600" width="1300" height="350" fill="#fff" stroke="#111" stroke-width="2" rx="10"/>
+  <text class="layer-title" x="70" y="635" font-weight="bold">Kluczowe Zasady Architektury:</text>
+  
+  <text class="legend-text" x="70" y="670" font-weight="600">1. Warstwa Regulacji = Funkcja Podstawowa</text>
+  <text class="component-text" x="90" y="695">• Utrzymuje zadane temperatury (50°C, 2°C)</text>
+  <text class="component-text" x="90" y="715">• Praca ciągła w czasie rzeczywistym (milisekundy)</text>
+  <text class="component-text" x="90" y="735">• Regulatory PID sterujące zaworami i wentylatorami</text>
+  <text class="component-text" x="90" y="755">• System nie działa bez tej warstwy</text>
+  
+  <text class="legend-text" x="70" y="790" font-weight="600">2. Warstwa Zarządzania = Funkcja Optymalizująca</text>
+  <text class="component-text" x="90" y="815">• Optymalizuje wykorzystanie urządzeń</text>
+  <text class="component-text" x="90" y="835">• Równomierne rozłożenie czasu pracy (nagrzewnice, wentylatory, ciągi)</text>
+  <text class="component-text" x="90" y="855">• Działanie cykliczne (sekundy, minuty, godziny, dni)</text>
+  <text class="component-text" x="90" y="875">• Maksymalizacja niezawodności i żywotności systemu</text>
+  <text class="component-text" x="90" y="895">• System działa bez tej warstwy, ale nieefektywnie i nierównomiernie</text>
+  
+  <text class="legend-text" x="800" y="670" font-weight="600">3. Algorytmy są Integralnymi Częściami</text>
+  <text class="component-text" x="820" y="695">• Algorytm 5 i 5A → część PARTS</text>
+  <text class="component-text" x="820" y="715">• Algorytm 5B → część PARTPG</text>
+  <text class="component-text" x="820" y="735">• NIE są osobnymi, zewnętrznymi systemami</text>
+  <text class="component-text" x="820" y="755">• NIE są opcjonalnymi dodatkami</text>
+  
+  <text class="legend-text" x="800" y="790" font-weight="600">4. Hierarchia Decyzji</text>
+  <text class="component-text" x="820" y="815">• Algorytm 5 → określa ILE nagrzewnic</text>
+  <text class="component-text" x="820" y="835">• Algorytm 5A → określa KTÓRY CIĄG (C1 lub C2)</text>
+  <text class="component-text" x="820" y="855">• Algorytm 5B → określa KTÓRE nagrzewnice</text>
+  <text class="component-text" x="820" y="875">• PID → utrzymuje temperatury (50°C, 2°C)</text>
+  
+  <!-- Footer -->
+  <text class="note-text" x="700" y="975" text-anchor="middle">System SAR = PARTS + PARTPG | Każdy podsystem = Warstwa Regulacji + Warstwa Zarządzania</text>
+</svg>
+

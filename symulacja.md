@@ -163,10 +163,31 @@ System automatycznie przełącza się między scenariuszami pracy w zależności
 
 ## Algorytmy Sterowania - Wizualizacje
 
-System wykorzystuje **trzy współpracujące algorytmy** zapewniające automatyczne sterowanie i równomierne rozłożenie eksploatacji urządzeń:
-- **Algorytm 5:** Automatyczny Wybór Scenariusza Pracy (S0-S8) - fundament sterowania
-- **Algorytm 5A:** Rotacja Układów Pracy Ciągów (C1 ↔ C2)
-- **Algorytm 5B:** Rotacja Nagrzewnic w Obrębie Ciągu
+### Relacja z Podsystemami PARTPG i PARTS
+
+System SAR (System Automatycznej Regulacji) składa się z dwóch podsystemów, z których każdy ma **dwuwarstwową architekturę**:
+
+**PARTS (Podsystem Automatycznej Regulacji Temperatury Szybu):**
+- **Warstwa Regulacji:** 2 × PID wentylatorów (utrzymanie Ts=2°C)
+- **Warstwa Zarządzania:** Algorytmy 5 i 5A (optymalizacja użycia urządzeń)
+
+**PARTPG (Podsystem Automatycznej Regulacji Temp. Powietrza Grzewczego):**
+- **Warstwa Regulacji:** 8 × PID nagrzewnic (utrzymanie Tz=50°C)
+- **Warstwa Zarządzania:** Algorytm 5B (optymalizacja użycia urządzeń)
+
+#### Diagram Architektury Systemu SAR
+
+![Architektura SAR](Symulacja/architektura_SAR_system.svg)
+
+Diagram pokazuje dwuwarstwową strukturę systemu SAR, relacje między podsystemami PARTS i PARTPG oraz umiejscowienie algorytmów 5, 5A i 5B w architekturze systemu.
+
+### Trzy Współpracujące Algorytmy
+
+System wykorzystuje **trzy współpracujące algorytmy zarządzania** zapewniające automatyczne sterowanie i równomierne rozłożenie eksploatacji urządzeń:
+- **Algorytm 5** (część PARTS): Automatyczny Wybór Scenariusza Pracy (S0-S8) - fundament sterowania
+- **Algorytm 5A** (część PARTS): Rotacja Układów Pracy Ciągów (C1 ↔ C2)
+- **Algorytm 5B** (część PARTPG): Rotacja Nagrzewnic w Obrębie Ciągu
+
 
 ### Algorytm 5: Automatyczny Wybór Scenariusza
 

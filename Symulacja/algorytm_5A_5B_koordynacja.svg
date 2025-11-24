@@ -182,4 +182,5 @@
   <text class="legend-text" x="1300" y="1980" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">Blokada/Wpływ</text>
   <text class="legend-text" x="70" y="2015" font-style="italic" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">📌 Wszystkie mechanizmy są zaimplementowane w pseudokodzie algorytmów 5A (sekcja 5A.5) i 5B (sekcja 5B.5).</text>
   <text class="note" x="792.664" y="2069.96" text-anchor="middle" style="white-space: pre; font-size: 12px;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">💡 Ten diagram pokazuje przykładową sekwencję zdarzeń dla celów demonstracyjnych. Okresy rotacji są konfigurowalne przez technologa.</text>
+  <text class="note" x="792.664" y="2090" text-anchor="middle" style="white-space: pre; font-size: 12px;" transform="matrix(1, 0, 0, 1, 0, -2.842170943040401e-14)">⚠️ Konkretne nagrzewnice (N1,N2,N3... N5,N6,N7...) wybrane przez Algorytm 5B na podstawie czasu pracy/postoju - NIGDY nie sekwencyjnie.</text>
 </svg>

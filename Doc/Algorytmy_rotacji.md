@@ -70,6 +70,123 @@ Algorytmy są **skoordynowane** i działają współbieżnie, zapewniając:
 
 ---
 
+## Relacja między PARTPG/PARTS a Algorytmami 5, 5A, 5B
+
+### Architektura Dwuwarstwowa Systemu SAR
+
+System automatycznej regulacji (SAR) temperatury szybu ma **dwuwarstwową architekturę**:
+
+![Architektura SAR](../Symulacja/architektura_SAR_system.svg)
+
+*Rys. Dwuwarstwowa architektura systemu SAR z podziałem na warstwy regulacji i zarządzania.*
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ PARTS - Podsystem Automatycznej Regulacji Temperatury Szybu │
+│                                                              │
+│ ┌──────────────────────────────────────────────────────────┐│
+│ │ WARSTWA REGULACJI (podstawowa funkcja systemu)           ││
+│ │ • 2 × UAR (regulatory PID wentylatorów W1, W2)          ││
+│ │ • Utrzymanie Ts = 2°C w szybie (-30m)                   ││
+│ │ • Sterowanie częstotliwością (25-50 Hz)                 ││
+│ └──────────────────────────────────────────────────────────┘│
+│                                                              │
+│ ┌──────────────────────────────────────────────────────────┐│
+│ │ WARSTWA ZARZĄDZANIA (optymalizacja użycia urządzeń)     ││
+│ │ • Algorytm 5:  Automatyczny dobór scenariusza (S0-S8)   ││
+│ │ • Algorytm 5A: Rotacja układów pracy ciągów (C1 ↔ C2)  ││
+│ └──────────────────────────────────────────────────────────┘│
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ PARTPG - Podsystem Automatycznej Regulacji Temp. Pow. Grz. │
+│                                                              │
+│ ┌──────────────────────────────────────────────────────────┐│
+│ │ WARSTWA REGULACJI (podstawowa funkcja systemu)           ││
+│ │ • 8 × UAR (regulatory PID zaworów N1-N8)                ││
+│ │ • Utrzymanie Tz = 50°C na wylocie z nagrzewnicy         ││
+│ │ • Sterowanie zaworem wody grzewczej (20-100%)           ││
+│ │ • Załączanie/wyłączanie nagrzewnic                      ││
+│ └──────────────────────────────────────────────────────────┘│
+│                                                              │
+│ ┌──────────────────────────────────────────────────────────┐│
+│ │ WARSTWA ZARZĄDZANIA (optymalizacja użycia urządzeń)     ││
+│ │ • Algorytm 5B: Rotacja nagrzewnic w ciągach (N1-N8)    ││
+│ └──────────────────────────────────────────────────────────┘│
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Kluczowe Zasady Relacji
+
+**1. PARTPG i PARTS to PODSYSTEMY zawierające warstwy regulacji i zarządzania**
+
+| Podsystem | Warstwa Regulacji | Warstwa Zarządzania (Optymalizacja) |
+|-----------|-------------------|-------------------------------------|
+| **PARTPG** | 8 × PID zaworów (Tz=50°C) | **Algorytm 5B** - rotacja nagrzewnic |
+| **PARTS** | 2 × PID wentylatorów (Ts=2°C) | **Algorytmy 5 i 5A** - wybór scenariusza i rotacja układów |
+
+**2. Warstwa Regulacji = Funkcja Podstawowa**
+- Utrzymanie zadanych temperatur (50°C, 2°C)
+- Praca ciągła, realizacja w czasie rzeczywistym
+- Niezbędna dla działania systemu
+
+**3. Warstwa Zarządzania = Funkcja Optymalizująca**
+- Równomierne wykorzystanie urządzeń
+- Minimalizacja zużycia pojedynczych komponentów
+- Maksymalizacja niezawodności i żywotności systemu
+- Automatyczna adaptacja do warunków zewnętrznych
+
+### Przykład Działania Warstw
+
+**Scenariusz: Temperatura zewnętrzna -6°C**
+
+```
+┌─────────────────────────────────────────────────────────┐
+│ PARTS - WARSTWA ZARZĄDZANIA                             │
+│ Algorytm 5: t_zewn = -6°C → Scenariusz S3 (3 nagr.)    │
+│ Algorytm 5A: Aktualny układ = "Podstawowy" → Ciąg C1   │
+└──────────────────┬──────────────────────────────────────┘
+                   ▼
+┌─────────────────────────────────────────────────────────┐
+│ PARTPG - WARSTWA ZARZĄDZANIA                            │
+│ Algorytm 5B: Wybiera N2, N3, N4 (na podstawie rotacji) │
+└──────────────────┬──────────────────────────────────────┘
+                   ▼
+┌─────────────────────────────────────────────────────────┐
+│ PARTPG - WARSTWA REGULACJI                              │
+│ • PID nagrzewnicy N2: reguluje zawór → Tz = 50°C       │
+│ • PID nagrzewnicy N3: reguluje zawór → Tz = 50°C       │
+│ • PID nagrzewnicy N4: reguluje zawór → Tz = 50°C       │
+└──────────────────┬──────────────────────────────────────┘
+                   ▼
+┌─────────────────────────────────────────────────────────┐
+│ PARTS - WARSTWA REGULACJI                               │
+│ • PID wentylatora W1: reguluje częstotliwość → Ts = 2°C│
+└─────────────────────────────────────────────────────────┘
+```
+
+**Kluczowa obserwacja:**
+- Bez **warstwy regulacji** (PID) - system nie utrzyma temperatury
+- Bez **warstwy zarządzania** (algorytmy) - system działa, ale:
+  - Zawsze te same nagrzewnice (np. N1, N2, N3)
+  - Nierównomierne zużycie → awarie, przestoje
+  - Brak automatycznej adaptacji do pogody → marnotrawstwo energii
+
+### Dokumentacja w Kontekście Projektu
+
+**Ten dokument** (`Algorytmy_rotacji.md`) szczegółowo opisuje **warstwę zarządzania**:
+- Algorytm 5 → część zarządzająca PARTS
+- Algorytm 5A → część zarządzająca PARTS
+- Algorytm 5B → część zarządzająca PARTPG
+
+**Dokument główny** (`System Sterowania BOGDANKA szyb 2.md`) opisuje:
+- Punkt 2: Definicje PARTPG i PARTS (warstwa regulacji + zarządzania)
+- Punkt 3-4: Warunki załączania/wyłączania (warstwa regulacji)
+- Punkt 5: Scenariusze (warstwa zarządzania - Algorytm 5)
+- Punkt 6-7: UAR nagrzewnic i wentylatorów (warstwa regulacji)
+
+---
+
 ## 5. Algorytm Automatycznego Wyboru Scenariusza Pracy
 
 ### 5.1 Cel Algorytmu
@@ -601,15 +718,18 @@ FUNKCJA Pobierz_Nagrzewnice_Do_Załączenia(config, ilość):
   
   W PRZECIWNYM RAZIE:  // Układ Podstawowy (S5-S8)
     // W S5-S8 zawsze:
-    // - C1 pracuje w całości (N1-N4)
+    // - C1 pracuje w całości (N1-N4) - WSZYSTKIE nagrzewnice C1 muszą pracować
     // - C2 pracuje z N5, N6, N7, N8 w zależności od scenariusza
     
     JEŻELI ilość ≤ 4 WTEDY
-      // Tylko C1
-      nagrzewnice = [N1, N2, N3, N4][0:ilość]
+      // Tylko C1 - Deleguj wybór do 5B (śledzi czasy pracy dla statystyk)
+      nagrzewnice = Algorytm_5B_Pobierz_Nagrzewnice_Do_Pracy(CIĄG1, ilość)
+      // Uwaga: W S1-S4 wybór jest dynamiczny (rotacja 5B aktywna)
+      // W praktyce przy braku awarii to będą N1-N4 w S4, ale 5B decyduje
     W PRZECIWNYM RAZIE:
       // C1 cały + częściowo C2
-      nagrzewnice_C1 = [N1, N2, N3, N4]
+      // W S5-S8 wszystkie N1-N4 MUSZĄ pracować (brak rezerwowej w C1)
+      nagrzewnice_C1 = Algorytm_5B_Pobierz_Nagrzewnice_Do_Pracy(CIĄG1, 4)
       ilość_C2 = ilość - 4
       
       // W C2 może działać Algorytm 5B (jeśli są nagrzewnice rezerwowe)
@@ -1025,7 +1145,7 @@ UWAGA: Wentylator W1 i nagrzewnice N1, N2 już pracują
 
 KROK 1: Wybierz nagrzewnicę do załączenia
   N_nowa = Algorytm_5B_Wybierz_Nagrzewnicę(CIĄG1, ilość=3)
-  // Np. N3 (jeśli N1, N2 już pracują)
+  // Algorytm 5B wybiera na podstawie czasu postoju (najdłużej nieużywana)
 
 KROK 2: Przygotuj nagrzewnicę N_nowa
   Ustaw_Zawór(N_nowa, 20%)
@@ -1065,8 +1185,10 @@ SEKWENCJA S4→S5 (Uruchomienie drugiego ciągu):
 UWAGA: Ciąg 1 (N1-N4 + W1) już pracuje w pełnej mocy
 
 KROK 0: Weryfikacja stanu początkowego
-  JEŻELI NIE (N1_aktywna ORAZ N2_aktywna ORAZ N3_aktywna ORAZ N4_aktywna) WTEDY
-    Alarm("S4→S5: Ciąg 1 niekompletny")
+  // Sprawdź czy C1 ma 4 aktywne nagrzewnice (wymagane w S4)
+  ilość_aktywnych_C1 = Policz_Aktywne_Nagrzewnice(CIĄG1)
+  JEŻELI ilość_aktywnych_C1 ≠ 4 WTEDY
+    Alarm("S4→S5: Ciąg 1 niekompletny (" + ilość_aktywnych_C1 + "/4)")
     PRZERWIJ
   KONIEC JEŻELI
 
@@ -1088,18 +1210,21 @@ KROK 3: Uruchom wentylator W2
   Czekaj(10 sekund)
   Sprawdź_Prąd_Silnika(W2)
 
-KROK 4: Przygotuj pierwszą nagrzewnicę ciągu 2 (N5)
-  N_nowa = N5  // Pierwsza z ciągu 2
-  Ustaw_Zawór(N5, 20%)
+KROK 4: Wybierz i przygotuj pierwszą nagrzewnicę ciągu 2
+  // Deleguj wybór do Algorytmu 5B (śledzi czasy pracy/postoju)
+  N_nowa = Algorytm_5B_Wybierz_Nagrzewnicę(CIĄG2, ilość=1)
+  // Może to być N5, N6, N7 lub N8 - zależy od historii pracy
+  
+  Ustaw_Zawór(N_nowa, 20%)
   Czekaj(5 sekund)
 
-KROK 5: Otwórz przepustnicę dolotową N5
-  Ustaw_Przepustnicę_Dolot(N5, OTWARTA)
+KROK 5: Otwórz przepustnicę dolotową N_nowa
+  Ustaw_Przepustnicę_Dolot(N_nowa, OTWARTA)
   Czekaj(5 sekund)
 
-KROK 6: Aktywuj regulację PID dla N5
-  Ustaw_Regulator_PID(N5, tryb=AUTO, setpoint=50°C)
-  Czekaj(30 sekund)  // Stabilizacja temperatury N5
+KROK 6: Aktywuj regulację PID dla N_nowa
+  Ustaw_Regulator_PID(N_nowa, tryb=AUTO, setpoint=50°C)
+  Czekaj(30 sekund)  // Stabilizacja temperatury N_nowa
 
 KROK 7: Aktywuj regulację PID dla W2
   // W2 teraz będzie regulacyjnym wentylatorem
@@ -1107,9 +1232,9 @@ KROK 7: Aktywuj regulację PID dla W2
   Czekaj(20 sekund)
 
 KROK 8: Weryfikacja systemu dwuciągowego
-  temp_N5 = Odczytaj_Temperaturę(N5)
-  JEŻELI temp_N5 < 30°C WTEDY
-    Alarm("N5 nie osiąga temperatury")
+  temp_N_nowa = Odczytaj_Temperaturę(N_nowa)
+  JEŻELI temp_N_nowa < 30°C WTEDY
+    Alarm(N_nowa + " nie osiąga temperatury")
     // Wycofaj zmianę - przywróć S4
     PRZERWIJ
   KONIEC JEŻELI
@@ -1206,7 +1331,7 @@ UWAGA: C1 (N1-N4) + W1 MAX, C2 (N5) + W2 PID już pracują
 
 KROK 1: Wybierz nagrzewnicę z ciągu 2
   N_nowa = Algorytm_5B_Wybierz_Nagrzewnicę(CIĄG2, ilość=2)
-  // Np. N6 (jeśli N5 już pracuje)
+  // Algorytm 5B wybiera na podstawie czasu postoju (najdłużej nieużywana)
 
 KROK 2: Przygotuj N_nowa
   Ustaw_Zawór(N_nowa, 20%)
@@ -1480,8 +1605,11 @@ FUNKCJA Wykonaj_Zmianę_Układu(docelowy_układ):
     // Przejście: Podstawowy → Ograniczony
     
     KROK 1: Zatrzymaj ciąg 1 (stopniowo)
-      Dla i = ilość_aktywnych_nagrzewnic_C1 DO 1:
-        Wyłącz_Nagrzewnicę(Ni)  // sekwencja normalna
+      // Pobierz listę aktualnie aktywnych nagrzewnic C1
+      aktywne_C1 = Pobierz_Listę_Aktywnych_Nagrzewnic(CIĄG1)
+      
+      Dla KAŻDEJ N w aktywne_C1:
+        Wyłącz_Nagrzewnicę(N)
         Czekaj(30 sekund)       // stabilizacja
       KONIEC DLA
       Zatrzymaj_Wentylator(W1)
@@ -1498,8 +1626,11 @@ FUNKCJA Wykonaj_Zmianę_Układu(docelowy_układ):
       Uruchom_Wentylator(W2, częstotliwość = 25Hz)
       Czekaj(10 sekund)
       
-      Dla i = 1 DO wymagana_ilość_nagrzewnic:
-        Załącz_Nagrzewnicę(N[4+i])  // N5, N6, N7, N8
+      // Deleguj wybór nagrzewnic do Algorytmu 5B
+      nagrzewnice_do_załączenia = Algorytm_5B_Pobierz_Nagrzewnice_Do_Pracy(CIĄG2, wymagana_ilość_nagrzewnic)
+      
+      Dla KAŻDEJ N w nagrzewnice_do_załączenia:
+        Załącz_Nagrzewnicę(N)
         Czekaj(30 sekund)            // stabilizacja
       KONIEC DLA
     
@@ -1511,8 +1642,11 @@ FUNKCJA Wykonaj_Zmianę_Układu(docelowy_układ):
     // Przejście: Ograniczony → Podstawowy
     
     KROK 1: Zatrzymaj ciąg 2 (stopniowo)
-      Dla i = ilość_aktywnych_nagrzewnic_C2 DO 1:
-        Wyłącz_Nagrzewnicę(N[4+i])  // od N8 do N5
+      // Pobierz listę aktualnie aktywnych nagrzewnic C2
+      aktywne_C2 = Pobierz_Listę_Aktywnych_Nagrzewnic(CIĄG2)
+      
+      Dla KAŻDEJ N w aktywne_C2:
+        Wyłącz_Nagrzewnicę(N)
         Czekaj(30 sekund)
       KONIEC DLA
       Zatrzymaj_Wentylator(W2)
@@ -1529,8 +1663,11 @@ FUNKCJA Wykonaj_Zmianę_Układu(docelowy_układ):
       Uruchom_Wentylator(W1, częstotliwość = 25Hz)
       Czekaj(10 sekund)
       
-      Dla i = 1 DO wymagana_ilość_nagrzewnic:
-        Załącz_Nagrzewnicę(Ni)  // N1, N2, N3, N4
+      // Deleguj wybór nagrzewnic do Algorytmu 5B
+      nagrzewnice_do_załączenia = Algorytm_5B_Pobierz_Nagrzewnice_Do_Pracy(CIĄG1, wymagana_ilość_nagrzewnic)
+      
+      Dla KAŻDEJ N w nagrzewnice_do_załączenia:
+        Załącz_Nagrzewnicę(N)
         Czekaj(30 sekund)
       KONIEC DLA
     
@@ -1686,6 +1823,21 @@ Rotacja nagrzewnic jest możliwa **TYLKO** gdy spełnione są **WSZYSTKIE** waru
    - Przepustnice sprawne
 
 ### 5B.5 Algorytm Rotacji Nagrzewnic Krok po Kroku
+
+**WAŻNE - Algorytm 5B jako serwis dla innych algorytmów:**
+
+Algorytm 5B pełni **podwójną funkcję**:
+
+1. **Funkcja aktywna** - Wykonuje cykliczną rotację nagrzewnic (wymiana najdłużej pracującej → najdłużej w postoju)
+2. **Funkcja serwisowa** - Dostarcza funkcje wyboru nagrzewnic wywoływane przez:
+   - **Algorytm 5** (wybór scenariusza) - wywołuje `Algorytm_5B_Pobierz_Nagrzewnice_Do_Pracy(ciąg, ilość)`
+   - **Algorytm 5A** (rotacja układów) - wywołuje `Algorytm_5B_Pobierz_Nagrzewnice_Do_Pracy(ciąg, ilość)`
+   - **Sekwencje zmian scenariuszy** - wywołują `Algorytm_5B_Wybierz_Nagrzewnicę(ciąg, ilość)`
+
+**Zasada:** NIGDY nie zakładamy sekwencyjnego wyboru nagrzewnic (N1→N2→N3...). Zawsze delegujemy wybór do Algorytmu 5B, który:
+- Śledzi czasy pracy i postoju każdej nagrzewnicy
+- Wybiera nagrzewnice na podstawie historii eksploatacji
+- Zapewnia równomierne zużycie wszystkich nagrzewnic N1-N8
 
 **Diagram wizualizujący algorytm:**
 
@@ -1972,6 +2124,59 @@ FUNKCJA Warunki_Stabilności_Spełnione(ciąg):
   KONIEC JEŻELI
   
   ZWRÓĆ PRAWDA
+
+KONIEC FUNKCJI
+
+//=============================================================================
+// FUNKCJE SERWISOWE - Wywoływane przez Algorytmy 5 i 5A
+//=============================================================================
+
+FUNKCJA Algorytm_5B_Pobierz_Nagrzewnice_Do_Pracy(ciąg, ilość):
+  // Ta funkcja jest wywoływana przez Algorytm 5 i 5A
+  // aby uzyskać listę nagrzewnic do załączenia
+  //
+  // LOGIKA:
+  // - Wybiera nagrzewnice na podstawie czasu postoju (najdłużej nieużywane mają priorytet)
+  // - Śledzi historię pracy i postoju
+  // - Zapewnia równomierne zużycie
+  
+  nagrzewnice_ciągu = Pobierz_Wszystkie_Nagrzewnice(ciąg)
+  sprawne = Filtruj_Sprawne(nagrzewnice_ciągu)
+  
+  // Sortuj według czasu postoju (malejąco) i czasu pracy (rosnąco)
+  // Priorytet: najdłużej w postoju, potem najmniej przepracowane
+  posortowane = Sortuj(sprawne, 
+                       klucz1=czas_postoju DESC, 
+                       klucz2=czas_pracy ASC,
+                       klucz3=timestamp_zalaczenia ASC)
+  
+  wybrane = posortowane[0:ilość]
+  
+  ZWRÓĆ wybrane
+
+KONIEC FUNKCJI
+
+FUNKCJA Algorytm_5B_Wybierz_Nagrzewnicę(ciąg, ilość_docelowa):
+  // Ta funkcja jest wywoływana przez sekwencje zmian scenariuszy
+  // aby wybrać JEDNĄ nagrzewnicę do załączenia
+  //
+  // PARAMETR ilość_docelowa: łączna ilość nagrzewnic która ma pracować po załączeniu
+  //
+  // LOGIKA: Wybiera nagrzewnicę z najdłuższym czasem postoju
+  
+  wszystkie = Algorytm_5B_Pobierz_Nagrzewnice_Do_Pracy(ciąg, ilość_docelowa)
+  aktywne = Pobierz_Aktywne_Nagrzewnice(ciąg)
+  
+  // Znajdź nagrzewnicę która jest w 'wszystkie' ale NIE jest w 'aktywne'
+  DLA KAŻDEJ N w wszystkie:
+    JEŻELI N NIE w aktywne WTEDY
+      ZWRÓĆ N  // To jest nowa nagrzewnica do załączenia
+    KONIEC JEŻELI
+  KONIEC DLA
+  
+  // Nie powinno się zdarzyć (oznacza błąd logiczny)
+  Rejestruj_Alarm("BŁĄD: Algorytm_5B_Wybierz_Nagrzewnicę nie znalazł kandydata")
+  ZWRÓĆ NULL
 
 KONIEC FUNKCJI
 ```

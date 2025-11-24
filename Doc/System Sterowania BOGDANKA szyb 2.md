@@ -19,18 +19,25 @@ Ostatnia aktualizacja: 23 Listopad 2025
 
 ## 2. Architektura Systemu Automatycznej Regulacji (SAR)
 
-System automatycznej regulacji (SAR) temperatury szybu składa się z dwóch podsystemów:
+System automatycznej regulacji (SAR) temperatury szybu składa się z dwóch podsystemów, z których każdy ma **dwuwarstwową architekturę**:
+- **Warstwa regulacji** - podstawowa funkcja utrzymania temperatury (PID)
+- **Warstwa zarządzania** - funkcja optymalizująca wykorzystanie urządzeń (algorytmy)
+
+![Architektura SAR](../Symulacja/architektura_SAR_system.svg)
+
+*Rys. Dwuwarstwowa architektura systemu SAR pokazująca relacje między podsystemami PARTS i PARTPG oraz algorytmami 5, 5A i 5B.*
 
 ### 2.1 PARTPG - Podsystem Automatycznej Regulacji Temperatur Powietrza Grzewczego
 
 **Zadanie:** Stabilizacja temperatury powietrza grzewczego używanego przez PARTS.
+
+#### Warstwa Regulacji (podstawowa funkcja systemu)
 
 **Składa się z:**
 - 8 układów automatycznej regulacji (UAR) temperatury powietrza - po jednym dla każdej nagrzewnicy
 - Każdy UAR kontroluje temperaturę na wylocie z nagrzewnicy (Tz = 50°C)
 - Realizuje załączanie/wyłączanie nagrzewnic do/z ruchu
 - Zabezpiecza nagrzewnice przed przemarzaniem (min. 20% otwarcia zaworu)
-- Umożliwia cykliczną rotację nagrzewnic w obrębie jednego ciągu
 
 **Struktura UAR nagrzewnicy:**
 - Regulator PID kontroluje zawór regulacyjny wody grzewczej
@@ -38,15 +45,25 @@ System automatycznej regulacji (SAR) temperatury szybu składa się z dwóch pod
 - Tryby pracy: AUTO (regulacja PID) i MANUAL (sterowanie ręczne)
 - Bezuderzeniowe (bumpless) przejście między trybami
 
+#### Warstwa Zarządzania (optymalizacja użycia urządzeń)
+
+**Algorytm 5B - Rotacja Nagrzewnic w Ciągu:**
+- Cykliczna wymiana pracujących nagrzewnic na rezerwowe w obrębie ciągu
+- Równomierne rozłożenie czasu pracy wszystkich 8 nagrzewnic (N1-N8)
+- Maksymalizacja niezawodności przez równomierne zużycie
+- Wybór nagrzewnic na podstawie historii pracy/postoju
+
+📖 **[Szczegółowy opis → Algorytmy_rotacji.md - Sekcja 5B](Algorytmy_rotacji.md#5b-algorytm-cyklicznej-rotacji-nagrzewnic-w-obrębie-ciągu)**
+
 ### 2.2 PARTS - Podsystem Automatycznej Regulacji Temperatury Szybu
 
 **Zadanie:** Utrzymanie temperatury szybu na zadanym poziomie (Ts = 2°C na poziomie -30m).
 
+#### Warstwa Regulacji (podstawowa funkcja systemu)
+
 **Składa się z:**
 - 2 układów automatycznej regulacji (UAR) prędkości wentylatorów W1 i W2
 - Regulatory PID kontrolują częstotliwość pracy wentylatorów (25-50 Hz)
-- Zarządza układami pracy ciągów grzewczych
-- Umożliwia cykliczną zmianę układów pracy ciągów
 
 **Struktura UAR wentylatorów:**
 - Regulator PID kontroluje przetwornicę częstotliwości (falownik)
@@ -54,9 +71,30 @@ System automatycznej regulacji (SAR) temperatury szybu składa się z dwóch pod
 - NWmax zależy od ilości nagrzewnic w gotowości operacyjnej (dla 4 nagrzewnic: 50 Hz)
 - Tryby pracy: AUTO i MANUAL
 
-**Zależności:**
+#### Warstwa Zarządzania (optymalizacja użycia urządzeń)
+
+**Algorytm 5 - Automatyczny Wybór Scenariusza Pracy:**
+- Automatyczny dobór ilości nagrzewnic (S0-S8) w zależności od temperatury zewnętrznej
+- Optymalne wykorzystanie mocy grzewczej (tylko tyle nagrzewnic ile potrzeba)
+- Automatyczna adaptacja do zmian warunków atmosferycznych
+- Histereza temperaturowa zapobiegająca częstym przełączeniom
+
+**Algorytm 5A - Rotacja Układów Pracy Ciągów:**
+- Cykliczna zmiana między układem Podstawowym (C1) a Ograniczonym (C2)
+- Równomierne rozłożenie czasu pracy ciągów wentylacyjnych i wentylatorów (W1, W2)
+- Dotyczy scenariuszy S1-S4 (temperatura -11°C < t ≤ 2°C)
+- Maksymalizacja niezawodności przez równomierne zużycie
+
+📖 **[Szczegółowy opis → Algorytmy_rotacji.md - Sekcja 5 i 5A](Algorytmy_rotacji.md#5-algorytm-automatycznego-wyboru-scenariusza-pracy)**
+
+### 2.3 Zależności między Podsystemami
+
+**Hierarchia działania:**
 - PARTS wymaga stabilnych parametrów powietrza grzewczego od PARTPG
 - Brak stabilnych parametrów → pogorszenie jakości regulacji lub wyłączenie SAR szybu
+- Warstwa zarządzania PARTS (Alg. 5, 5A) określa **ILE** i **KTÓRE CIĄGI** nagrzewnic
+- Warstwa zarządzania PARTPG (Alg. 5B) określa **KTÓRE KONKRETNIE** nagrzewnice w ciągu
+- Warstwa regulacji obu podsystemów utrzymuje zadane temperatury (50°C, 2°C)
 
 ## 3. Załączanie i Wyłączanie Nagrzewnic
 
