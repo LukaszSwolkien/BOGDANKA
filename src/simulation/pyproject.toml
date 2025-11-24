@@ -1,0 +1,18 @@
+[project]
+name = "bogdanka-simulation"
+version = "1.0.0"
+description = "Simulation services for BOGDANKA Shaft 2 heating control algorithms"
+requires-python = ">=3.10"
+dependencies = [
+    "pyyaml>=6.0",
+    "flask>=3.0.0",
+    "requests>=2.31.0",
+    "opentelemetry-api>=1.20.0",
+    "opentelemetry-sdk>=1.20.0",
+    "opentelemetry-exporter-otlp-proto-http>=1.20.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+

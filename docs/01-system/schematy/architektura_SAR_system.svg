@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1000" width="1400px" height="1000px">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#111"/>
+    </marker>
+    <style>
+    .title { font-family: "Arial", sans-serif; font-weight: 700; font-size: 32px; fill: #111; }
+    .subtitle { font-family: "Arial", sans-serif; font-weight: 600; font-size: 24px; fill: #111; }
+    .subsystem-title { font-family: "Arial", sans-serif; font-weight: 600; font-size: 20px; fill: #fff; }
+    .layer-title { font-family: "Arial", sans-serif; font-weight: 600; font-size: 18px; fill: #111; }
+    .component-text { font-family: "Arial", sans-serif; font-size: 16px; fill: #111; }
+    .note-text { font-family: "Arial", sans-serif; font-size: 14px; fill: #666; font-style: italic; }
+    .legend-text { font-family: "Arial", sans-serif; font-size: 15px; fill: #111; }
+    .subsystem-box { stroke: #111; stroke-width: 3px; }
+    .layer-box { stroke: #111; stroke-width: 2px; fill: #fff; rx: 8; }
+    .arrow { stroke: #111; stroke-width: 2.5px; fill: none; marker-end: url(#arrowhead); }
+    .arrow-bi { stroke: #555; stroke-width: 2px; fill: none; stroke-dasharray: 5 3; }
+    </style>
+  </defs>
+  <rect width="1400" height="1000" fill="#f8f9fa" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)"/>
+  <text class="title" x="700" y="50" text-anchor="middle" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">Architektura Dwuwarstwowa Systemu SAR</text>
+  <text class="subtitle" x="700" y="85" text-anchor="middle" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">System Automatycznej Regulacji Temperatury Szybu</text>
+  <rect class="subsystem-box" x="50" y="130" width="620" height="420" fill="#3498db" opacity="0.15" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)"/>
+  <rect x="60" y="140" width="300" height="45" fill="#3498db" rx="5" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)"/>
+  <text class="subsystem-title" x="210" y="170" text-anchor="middle" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">PARTS</text>
+  <rect class="layer-box" x="70" y="205" width="580" height="150" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)"/>
+  <text class="layer-title" x="360" y="230" text-anchor="middle" font-weight="bold" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">WARSTWA REGULACJI</text>
+  <text class="layer-title" x="360" y="252" text-anchor="middle" font-style="italic" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">(podstawowa funkcja systemu)</text>
+  <text class="component-text" x="90" y="285" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">• 2 × UAR (regulatory PID wentylatorów W1, W2)</text>
+  <text class="component-text" x="90" y="310" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">• Utrzymanie Ts = 2°C w szybie (-30m)</text>
+  <text class="component-text" x="90" y="335" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">• Sterowanie częstotliwością (25-50 Hz)</text>
+  <rect class="layer-box" x="70" y="362.045" width="580" height="182.476" fill="#e8f4f8" style="" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)"/>
+  <text class="layer-title" x="360.406" y="381.612" text-anchor="middle" font-weight="bold" style="white-space: pre; font-size: 18px;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">WARSTWA ZARZĄDZANIA</text>
+  <text class="layer-title" x="360.406" y="403.612" text-anchor="middle" font-style="italic" style="white-space: pre; font-size: 18px;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">(optymalizacja użycia urządzeń)</text>
+  <text class="component-text" x="91.652" y="479.553" font-weight="600" style="white-space: pre; font-size: 16px;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">Algorytm WS - Automatyczny Wybór Scenariusza</text>
+  <text class="component-text" x="110" y="497" style="white-space: pre; font-size: 16px;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">→ Monitoruje temperaturę zewnętrzną</text>
+  <text class="component-text" x="110" y="517" style="white-space: pre; font-size: 16px;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">→ Dobiera ilość nagrzewnic (S0-S8)</text>
+  <text class="component-text" x="93.753" y="424.029" font-weight="600" style="white-space: pre; font-size: 16px;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">Algorytm RC - Rotacja Ciągów</text>
+  <text class="component-text" x="111.643" y="441.319" style="white-space: pre; font-size: 16px;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">→ Zmiana C1 ↔ C2</text>
+  <text class="component-text" x="110.004" y="537.239" style="white-space: pre; font-size: 16px;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">→ Równomierne zużycie W1, W2</text>
+  <text class="component-text" x="111.479" y="459.914" style="white-space: pre; font-size: 16px;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">→ Tylko dla S1-S4</text>
+  <rect class="subsystem-box" x="730" y="130" width="620" height="420" fill="#27ae60" opacity="0.15" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)"/>
+  <rect x="740" y="140" width="300" height="45" fill="#27ae60" rx="5" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)"/>
+  <text class="subsystem-title" x="890" y="170" text-anchor="middle" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">PARTPG</text>
+  <rect class="layer-box" x="750" y="205" width="580" height="150" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)"/>
+  <text class="layer-title" x="1040" y="230" text-anchor="middle" font-weight="bold" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">WARSTWA REGULACJI</text>
+  <text class="layer-title" x="1040" y="252" text-anchor="middle" font-style="italic" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">(podstawowa funkcja systemu)</text>
+  <text class="component-text" x="770" y="285" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">• 8 × UAR (regulatory PID zaworów N1-N8)</text>
+  <text class="component-text" x="770" y="310" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">• Utrzymanie Tz = 50°C na wylocie z nagrzewnicy</text>
+  <text class="component-text" x="770" y="335" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">• Sterowanie zaworem wody grzewczej (20-100%)</text>
+  <rect class="layer-box" x="750" y="360.373" width="580" height="184.14" fill="#d5f4e6" style="" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)"/>
+  <text class="layer-title" x="1040" y="380" text-anchor="middle" font-weight="bold" style="white-space: pre; font-size: 18px;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">WARSTWA ZARZĄDZANIA</text>
+  <text class="layer-title" x="1040" y="402" text-anchor="middle" font-style="italic" style="white-space: pre; font-size: 18px;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">(optymalizacja użycia urządzeń)</text>
+  <text class="component-text" x="770" y="433" font-weight="600" style="white-space: pre; font-size: 16px;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">Algorytm RN - Rotacja Nagrzewnic w Ciągu</text>
+  <text class="component-text" x="790" y="455" style="white-space: pre; font-size: 16px;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">→ Cykliczna wymiana nagrzewnic</text>
+  <text class="component-text" x="790" y="475" style="white-space: pre; font-size: 16px;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">→ Równomierne zużycie N1-N8</text>
+  <text class="component-text" x="790" y="495" style="white-space: pre; font-size: 16px;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">→ Funkcja aktywna i serwisowa</text>
+  <path class="arrow" d="M 650 430 L 750 430" stroke-dasharray="8 4" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)"/>
+  <text class="note-text" x="700" y="420" text-anchor="middle" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">Wybór nagrzewnic</text>
+  <text class="note-text" x="700" y="455" text-anchor="middle" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">ILE i KTÓRE</text>
+  <path class="arrow-bi" d="M 653.833 281.592 L 748.36 281.592" style="" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)"/>
+  <text class="note-text" x="700.242" y="240.402" text-anchor="middle" style="white-space: pre; font-size: 14px;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">Stabilne parametry</text>
+  <text class="note-text" x="706.125" y="260.197" text-anchor="middle" style="white-space: pre; font-size: 14px;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">powietrza grzewczego</text>
+  <rect x="50" y="600" width="1300" height="350" fill="#fff" stroke="#111" stroke-width="2" rx="10" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)"/>
+  <text class="layer-title" x="70" y="635" font-weight="bold" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">Kluczowe Zasady Architektury:</text>
+  <text class="legend-text" x="70" y="670" font-weight="600" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">1. Warstwa Regulacji = Funkcja Podstawowa</text>
+  <text class="component-text" x="90" y="695" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">• Utrzymuje zadane temperatury (50°C, 2°C)</text>
+  <text class="component-text" x="90" y="715" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">• Praca ciągła w czasie rzeczywistym</text>
+  <text class="component-text" x="90" y="735" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">• Regulatory PID sterujące zaworami i wentylatorami</text>
+  <text class="component-text" x="90" y="755" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">• System nie działa bez tej warstwy</text>
+  <text class="legend-text" x="70" y="790" font-weight="600" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">2. Warstwa Zarządzania = Funkcja Optymalizująca</text>
+  <text class="component-text" x="90" y="815" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">• Optymalizuje wykorzystanie urządzeń</text>
+  <text class="component-text" x="90" y="835" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">• Równomierne rozłożenie czasu pracy (nagrzewnice, wentylatory, ciągi)</text>
+  <text class="component-text" x="90" y="855" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">• Działanie cykliczne</text>
+  <text class="component-text" x="90" y="875" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">• Maksymalizacja niezawodności i żywotności systemu</text>
+  <text class="component-text" x="90" y="895" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">• System działa bez tej warstwy, ale nieefektywnie i nierównomiernie</text>
+  <text class="legend-text" x="800" y="670" font-weight="600" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">3. Algorytmy są Integralnymi Częściami</text>
+  <text class="component-text" x="820" y="695" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">• Algorytm WS i RC → część PARTS</text>
+  <text class="component-text" x="820" y="715" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">• Algorytm RN → część PARTPG</text>
+  <text class="legend-text" x="800" y="790" font-weight="600" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">4. Hierarchia Decyzji</text>
+  <text class="component-text" x="820" y="815" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">• Algorytm WS → określa ILE nagrzewnic</text>
+  <text class="component-text" x="820" y="835" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">• Algorytm RC → określa KTÓRY CIĄG (C1 lub C2)</text>
+  <text class="component-text" x="820" y="855" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">• Algorytm RN → określa KTÓRE nagrzewnice</text>
+  <text class="component-text" x="820" y="875" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">• PID → utrzymuje temperatury (50°C, 2°C)</text>
+  <text class="note-text" x="700" y="975" text-anchor="middle" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 0, -1.4210854715202004e-14)">System SAR = PARTS + PARTPG | Każdy podsystem = Warstwa Regulacji + Warstwa Zarządzania</text>
+</svg>

@@ -1,0 +1,186 @@
+<?xml version="1.0"?>
+<svg width="1400" height="1050" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+ <defs>
+  <marker id="arrow-head" markerHeight="8" markerWidth="8" orient="auto-start-reverse" refX="9" refY="5" viewBox="0 0 10 10">
+   <path d="m0,0l10,5l-10,5l0,-10z" fill="#111" id="svg_1"/>
+  </marker>
+  <marker id="arrow-head-inactive" markerHeight="8" markerWidth="8" orient="auto-start-reverse" refX="9" refY="5" viewBox="0 0 10 10">
+   <path d="m0,0l10,5l-10,5l0,-10z" fill="#888" id="svg_1b"/>
+  </marker>
+ </defs>
+<style>.title { font-family: &quot;Arial&quot;, sans-serif; font-weight: 600; font-size: 26px; fill: #111; }
+    .label { font-family: &quot;Arial&quot;, sans-serif; font-size: 18px; fill: #111; }
+    .note { font-family: &quot;Arial&quot;, sans-serif; font-size: 18px; fill: #111; }
+    .flow-label { font-family: &quot;Arial&quot;, sans-serif; font-size: 13px; fill: #111; text-anchor: middle; }
+    .heater-label { font-family: &quot;Arial&quot;, sans-serif; font-size: 20px; font-weight: 600; fill: #111; text-anchor: middle; }
+    .component { stroke: #111; stroke-width: 2.2px; fill: #fff; }
+    .component-active { stroke: #28a745; stroke-width: 3px; fill: #d4edda; }
+    .component-inactive { stroke: #888; stroke-width: 2.2px; fill: #e0e0e0; }
+    .duct { stroke: #333; stroke-width: 4px; fill: none; }
+    .duct-active { stroke: #28a745; stroke-width: 5px; fill: none; }
+    .duct-inactive { stroke: #aaa; stroke-width: 4px; fill: none; stroke-dasharray: 12 8; }
+    .diag { stroke: #111; stroke-width: 2px; }
+    .diag-active { stroke: #28a745; stroke-width: 3px; }
+    .diag-inactive { stroke: #888; stroke-width: 2px; }
+    .fan-outline { stroke: #111; stroke-width: 3px; fill: #fff; }
+    .fan-outline-active { stroke: #28a745; stroke-width: 4px; fill: #d4edda; }
+    .fan-outline-inactive { stroke: #888; stroke-width: 3px; fill: #e0e0e0; }
+    .annotation { font-family: &quot;Arial&quot;, sans-serif; font-size: 16px; fill: #111; }
+    .valve { stroke: #111; stroke-width: 2px; fill: #f8f8f8; }
+    .valve-active { stroke: #28a745; stroke-width: 3px; fill: #d4edda; }
+    .status-box { fill: #fff3cd; stroke: #ffc107; stroke-width: 2px; }
+    .status-text { font-family: &quot;Arial&quot;, sans-serif; font-size: 18px; font-weight: 600; fill: #856404; }
+    .cross-connect { stroke: #28a745; stroke-width: 5px; fill: none; stroke-dasharray: 8 4; }</style>
+<rect width="1400" height="1050" fill="#fff"/>
+ <g class="layer">
+  <title>Layer 1</title>
+  
+  <!-- Status Box -->
+  <rect class="status-box" x="850" y="20" width="520" height="100" rx="5"/>
+  <text class="status-text" x="1110" y="45" text-anchor="middle">ROTACJA RC - UKŁAD OGRANICZONY</text>
+  <text class="status-text" x="1110" y="70" text-anchor="middle">S1: -1°C &lt; t ≤ 2°C</text>
+  <text class="status-text" x="1110" y="95" text-anchor="middle">Nagrzewnice: N5 | Wentylator: W2 PID</text>
+  <text class="status-text" x="1110" y="120" text-anchor="middle">Nawiew przez SPINĘ CIĄGU → -4,30m</text>
+  
+  <text class="label" font-size="18" font-weight="bold" id="svg_4" text-anchor="middle" x="566.36" y="923.96">Układ Ograniczony S1: Ciąg 2 (W2) nawiew na -4,30m przez spinę ciągu</text>
+  
+  <!-- Main vertical duct - ACTIVE full length (air flows from bottom through cross-connection to top) -->
+  <line class="duct-active" id="svg_6" x1="249.39" x2="249.39" y1="126.82" y2="775.49"/>
+  
+  <!-- Valve labels -->
+  <text class="label" font-size="18" id="svg_8" x="275" y="99.13">O</text>
+  <text class="label" font-size="18" id="svg_10" x="206.61" y="452.67">O</text>
+  <text class="label" font-size="18" id="svg_12" x="220.37" y="739.25">Z</text>
+  
+  <!-- Outlet to level 4.30m - ACTIVE -->
+  <line class="duct-active" id="svg_13" marker-end="url(#arrow-head)" x1="249.08" x2="90" y1="126.13" y2="126.13"/>
+  <text class="annotation" font-size="16" id="svg_14" x="77.24" y="80.71">Do wyrzutni</text>
+  <text class="annotation" font-size="16" id="svg_15" fill="#28a745" font-weight="bold" x="77" y="103.83">Poziom 4,30 m</text>
+  
+  <!-- Outlet to level 7.90m - INACTIVE -->
+  <line class="duct-inactive" id="svg_16" marker-end="url(#arrow-head-inactive)" x1="249.52" x2="89.82" y1="774.54" y2="774.54"/>
+  <text class="annotation" font-size="16" id="svg_17" x="86.53" y="816.22">Do wyrzutni</text>
+  <text class="annotation" font-size="16" id="svg_18" x="85.53" y="840.88">Poziom 7,90 m</text>
+  
+  <!-- Lower horizontal duct - ACTIVE -->
+  <line class="duct-active" id="svg_23" x1="383.49" x2="1033.16" y1="544.76" y2="544.76"/>
+  
+  <!-- Fan W1 - INACTIVE -->
+  <circle class="fan-outline-inactive" cx="1086.17" cy="353.26" id="svg_129" r="55"/>
+  <text class="label" font-size="18" id="svg_103" text-anchor="middle" x="1083.61" y="361.16" fill="#888">W1</text>
+  
+  <!-- Upper horizontal duct - INACTIVE -->
+  <line class="duct-inactive" id="svg_24" x1="384.02" x2="1030.09" y1="353.99" y2="353.99"/>
+  
+  <!-- Upper section - all INACTIVE (N1-N4) -->
+  <line class="duct-inactive" id="svg_26" x1="385" x2="385" y1="126.13" y2="151.13"/>
+  <rect class="component-inactive" height="35" id="svg_27" width="110" x="330" y="151.13"/>
+  <text class="flow-label" fill="#888" font-size="13" id="svg_28" x="385" y="171.13">Przep.</text>
+  <rect class="component-inactive" height="85" id="svg_29" width="110" x="330" y="196.13"/>
+  <line class="diag-inactive" id="svg_30" x1="331.32" x2="437.36" y1="275.95" y2="197.45"/>
+  <text class="heater-label" fill="#888" font-size="20" id="svg_31" x="424.95" y="274.58">N1</text>
+  <rect class="component-inactive" height="35" id="svg_32" width="110" x="330" y="291.13"/>
+  <text class="flow-label" fill="#888" font-size="13" id="svg_33" x="385" y="313.13">Przep.</text>
+  <line class="duct-inactive" id="svg_134" x1="384.71" x2="384.71" y1="325.9" y2="356.05"/>
+  
+  <line class="duct-inactive" id="svg_35" x1="555" x2="555" y1="126.13" y2="151.13"/>
+  <rect class="component-inactive" height="35" id="svg_36" width="110" x="500" y="151.13"/>
+  <text class="flow-label" fill="#888" font-size="13" id="svg_37" x="555" y="171.13">Przep.</text>
+  <rect class="component-inactive" height="85" id="svg_38" width="110" x="500" y="196.13"/>
+  <line class="diag-inactive" id="svg_39" x1="500.36" x2="608.32" y1="278.84" y2="198.41"/>
+  <text class="heater-label" fill="#888" font-size="20" id="svg_40" x="595.86" y="275.49">N2</text>
+  <rect class="component-inactive" height="35" id="svg_41" width="110" x="500" y="291.13"/>
+  <text class="flow-label" fill="#888" font-size="13" id="svg_42" x="555" y="313.13">Przep.</text>
+  <line class="duct-inactive" id="svg_135" x1="554.9" x2="554.9" y1="325.77" y2="355.93"/>
+  
+  <line class="duct-inactive" id="svg_44" x1="725" x2="725" y1="126.13" y2="151.13"/>
+  <rect class="component-inactive" height="35" id="svg_45" width="110" x="670" y="151.13"/>
+  <text class="flow-label" fill="#888" font-size="13" id="svg_46" x="725" y="171.13">Przep.</text>
+  <rect class="component-inactive" height="85" id="svg_47" width="110" x="670" y="196.13"/>
+  <line class="diag-inactive" id="svg_48" x1="669.39" x2="778.32" y1="279.81" y2="197.45"/>
+  <text class="heater-label" fill="#888" font-size="20" id="svg_49" x="765.86" y="276.09">N3</text>
+  <rect class="component-inactive" height="35" id="svg_50" width="110" x="670" y="291.13"/>
+  <text class="flow-label" fill="#888" font-size="13" id="svg_51" x="725" y="313.13">Przep.</text>
+  <line class="duct-inactive" id="svg_136" x1="725" x2="725" y1="325.78" y2="355.94"/>
+  
+  <line class="duct-inactive" id="svg_53" x1="895" x2="895" y1="126.13" y2="151.13"/>
+  <rect class="component-inactive" height="35" id="svg_54" width="110" x="840" y="151.13"/>
+  <text class="flow-label" fill="#888" font-size="13" id="svg_151" x="895.59" y="172.58">Przep.</text>
+  <rect class="component-inactive" height="85" id="svg_56" width="110" x="840" y="196.13"/>
+  <line class="diag-inactive" id="svg_57" x1="840.36" x2="948.32" y1="278.84" y2="197.45"/>
+  <text class="heater-label" fill="#888" font-size="20" id="svg_58" x="934.65" y="274.88">N4</text>
+  <rect class="component-inactive" height="35" id="svg_59" width="110" x="840" y="291.13"/>
+  <text class="flow-label" fill="#888" font-size="13" id="svg_60" x="895" y="313.13">Przep.</text>
+  <line class="duct-inactive" id="svg_137" x1="895.1" x2="895.1" y1="325.78" y2="355.94"/>
+  
+  <!-- Lower section - N5 ACTIVE, rest INACTIVE -->
+  <line class="duct-active" id="svg_62" x1="385" x2="385" y1="546.13" y2="571.13"/>
+  <rect class="component-active" height="35" id="svg_63" width="110" x="330" y="571.13"/>
+  <text class="flow-label" fill="#155724" font-size="13" id="svg_64" x="385" y="591.13">Przep.</text>
+  <rect class="component-active" height="85" id="svg_65" width="110" x="330" y="616.13"/>
+  <line class="diag-active" id="svg_138" x1="329.68" x2="439.31" y1="616.4" y2="700.02"/>
+  <text class="heater-label" fill="#28a745" font-size="20" id="svg_67" x="422.83" y="636.47">N5</text>
+  <rect class="component-active" height="35" id="svg_68" width="110" x="330" y="711.13"/>
+  <text class="flow-label" fill="#155724" font-size="13" id="svg_69" x="385" y="733.13">Przep.</text>
+  <line class="duct-active" id="svg_70" x1="385" x2="385" y1="746.13" y2="776.29"/>
+  
+  <line class="duct-inactive" id="svg_71" x1="555" x2="555" y1="546.13" y2="571.13"/>
+  <rect class="component-inactive" height="35" id="svg_72" width="110" x="500" y="571.13"/>
+  <text class="flow-label" fill="#888" font-size="13" id="svg_73" x="555" y="591.13">Przep.</text>
+  <rect class="component-inactive" height="85" id="svg_74" width="110" x="500" y="616.13"/>
+  <line class="diag-inactive" id="svg_139" x1="500.84" x2="610.48" y1="617.45" y2="701.07"/>
+  <text class="heater-label" fill="#888" font-size="20" id="svg_76" x="592.53" y="637.07">N6</text>
+  <rect class="component-inactive" height="35" id="svg_77" width="110" x="500" y="711.13"/>
+  <text class="flow-label" fill="#888" font-size="13" id="svg_78" x="555" y="733.13">Przep.</text>
+  <line class="duct-inactive" id="svg_131" x1="555.09" x2="555.09" y1="746.07" y2="776.23"/>
+  
+  <line class="duct-inactive" id="svg_80" x1="725" x2="725" y1="546.13" y2="571.13"/>
+  <rect class="component-inactive" height="35" id="svg_81" width="110" x="670" y="571.13"/>
+  <text class="flow-label" fill="#888" font-size="13" id="svg_82" x="725" y="590.83">Przep.</text>
+  <rect class="component-inactive" height="85" id="svg_83" width="110" x="669.09" y="617.64"/>
+  <line class="diag-inactive" id="svg_140" x1="669.42" x2="779.06" y1="618.05" y2="701.68"/>
+  <text class="heater-label" fill="#888" font-size="20" id="svg_85" x="762.23" y="637.68">N7</text>
+  <rect class="component-inactive" height="35" id="svg_86" width="110" x="670" y="711.13"/>
+  <text class="flow-label" fill="#888" font-size="13" id="svg_87" x="725" y="733.13">Przep.</text>
+  <line class="duct-inactive" id="svg_132" x1="725" x2="725" y1="746.07" y2="776.23"/>
+  
+  <line class="duct-inactive" id="svg_89" x1="895" x2="895" y1="546.13" y2="571.13"/>
+  <rect class="component-inactive" height="35" id="svg_90" width="110" x="840" y="571.13"/>
+  <text class="flow-label" fill="#888" font-size="13" id="svg_142" x="892.42" y="591.29">Przep.</text>
+  <rect class="component-inactive" height="85" id="svg_92" width="110" x="840" y="616.13"/>
+  <line class="diag-inactive" id="svg_141" x1="840.44" x2="950.07" y1="617.14" y2="700.76"/>
+  <text class="heater-label" fill="#888" font-size="20" id="svg_94" x="933.74" y="637.38">N8</text>
+  <rect class="component-inactive" height="35" id="svg_95" width="110" x="840" y="711.13"/>
+  <text class="flow-label" fill="#888" font-size="13" id="svg_96" x="895" y="733.13">Przep.</text>
+  <line class="duct-inactive" id="svg_133" x1="894.91" x2="894.91" y1="744.63" y2="774.79"/>
+  
+  <!-- Fan W2 - ACTIVE -->
+  <circle class="fan-outline-active" cx="1087.84" cy="544.65" id="svg_108" r="55"/>
+  <text class="label" font-size="18" id="svg_112" text-anchor="middle" x="1089.92" y="553.54" fill="#28a745">W2</text>
+  
+  <!-- Motors -->
+  <circle class="component-inactive" cx="1191.83" cy="353.71" id="svg_104" r="22"/>
+  <text class="heater-label" fill="#888" font-size="20" id="svg_105" x="1191.06" y="359.2">M</text>
+  <line class="duct-inactive" id="svg_106" x1="1143.92" x2="1170.58" y1="353.64" y2="353.64"/>
+  
+  <circle class="component-active" cx="1190.38" cy="544.23" id="svg_113" r="22"/>
+  <text class="heater-label" fill="#28a745" font-size="20" id="svg_114" x="1189.46" y="550.31">M</text>
+  <line class="duct-active" id="svg_143" x1="1143.13" x2="1169.78" y1="543.66" y2="543.66"/>
+  
+  <!-- Legend and valves -->
+  <text class="note" font-size="18" id="svg_118" x="301.54" y="449.88">Z - zamknięcie, O - otwarcie</text>
+  <rect class="valve-active" height="40" id="svg_11" width="20" x="214.53" y="753.78"/>
+  <rect class="valve-active" height="40" id="svg_121" width="20" x="210" y="105.63"/>
+  <rect class="valve-active" height="40" id="svg_123" transform="matrix(0.00938674 0.999956 -0.999956 0.00938674 679.134 177.461)" width="20" x="253.82" y="412.55"/>
+  <text class="label" fill="#28a745" font-size="18" font-weight="bold" id="svg_125" x="269.31" y="739.69">O</text>
+  <text class="label" fill="#28a745" font-size="18" font-weight="bold" id="svg_126" x="213.99" y="98.88">O</text>
+  
+  <!-- Horizontal ducts at top and bottom -->
+  <line class="duct-active" id="svg_150" x1="249.49" x2="896.53" y1="125.84" y2="125.84"/>
+  <line class="duct-active" id="svg_152" x1="249.3" x2="896.33" y1="774.43" y2="774.43"/>
+  
+  <rect class="valve-active" height="40" id="svg_120" width="20" x="270.5" y="104.63"/>
+  <rect class="valve-active" height="37" id="svg_122" width="20" x="266.31" y="755.36"/>
+ </g>
+</svg>
+
