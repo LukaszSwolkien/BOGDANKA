@@ -19,7 +19,7 @@ _Plik ten jest częścią dokumentacji systemu sterowania nagrzewnicami BOGDANKA
 1. [Algorytm WS: Wybór Scenariusza Pracy](algorytm-WS-wybor-scenariusza.md)
 2. [Algorytm RC: Rotacja Układów Pracy Ciągów](algorytm-RC-rotacja-ciagow.md)
 3. [Algorytm RN: Rotacja Nagrzewnic w Obrębie Ciągu](algorytm-RN-rotacja-nagrzewnic.md)
-4. [Wizualizacja Koordynacji RC↔RN](../visualization/algorytmy/koordynacja-RC-RN-timeline.svg)
+4. [Wizualizacja Koordynacji RC↔RN](../wizualizacje/algorytmy/koordynacja-RC-RN-timeline.svg)
 
 ---
 
@@ -77,7 +77,7 @@ Algorytmy są **skoordynowane** i działają współbieżnie, zapewniając:
 
 System automatycznej regulacji (SAR) temperatury szybu ma **dwuwarstwową architekturę**:
 
-![Architektura SAR](../01-system/images/architektura_SAR_system.svg)
+![Architektura SAR](../wizualizacje/architektura_SAR_system.svg)
 
 *Rys. Dwuwarstwowa architektura systemu SAR z podziałem na warstwy regulacji i zarządzania.*
 
@@ -189,12 +189,12 @@ System automatycznej regulacji (SAR) temperatury szybu ma **dwuwarstwową archit
 
 ## 🎨 Wizualizacje
 
-Wszystkie diagramy flowchart dostępne są w katalogu [`visualization/algorytmy/`](../visualization/algorytmy/):
+Wszystkie diagramy flowchart dostępne są w katalogu [`visualization/algorytmy/`](../wizualizacje/algorytmy/):
 
-- [Algorytm WS - Wybór Scenariusza](../visualization/algorytmy/algorytm-WS-wybor-scenariusza-flowchart.svg)
-- [Algorytm RC - Rotacja Układów](../visualization/algorytmy/algorytm-RC-rotacja-ciagow-flowchart.svg)
-- [Algorytm RN - Rotacja Nagrzewnic](../visualization/algorytmy/algorytm-RN-rotacja-nagrzewnic-flowchart.svg)
-- [Koordynacja RC ↔ RN - Timeline](../visualization/algorytmy/koordynacja-RC-RN-timeline.svg)
+- [Algorytm WS - Wybór Scenariusza](../wizualizacje/algorytmy/algorytm-WS-wybor-scenariusza-flowchart.svg)
+- [Algorytm RC - Rotacja Układów](../wizualizacje/algorytmy/algorytm-RC-rotacja-ciagow-flowchart.svg)
+- [Algorytm RN - Rotacja Nagrzewnic](../wizualizacje/algorytmy/algorytm-RN-rotacja-nagrzewnic-flowchart.svg)
+- [Koordynacja RC ↔ RN - Timeline](../wizualizacje/algorytmy/koordynacja-RC-RN-timeline.svg)
 
 ---
 

@@ -2,7 +2,7 @@
 
 > **Część dokumentacji:** Algorytmy Sterowania  
 > **Powiązane algorytmy:** [Algorytm WS](./algorytm-WS-wybor-scenariusza.md), [Algorytm RC](./algorytm-RC-rotacja-ciagow.md)  
-> **Wizualizacja:** [Flowchart](../visualization/algorytmy/algorytm-RN-rotacja-nagrzewnic-flowchart.svg), [Koordynacja z 5A](../visualization/algorytmy/koordynacja-RC-RN-timeline.svg), [Przykłady rotacji](../visualization/rotacje/)
+> **Wizualizacja:** [Flowchart](../wizualizacje/algorytmy/algorytm-RN-rotacja-nagrzewnic-flowchart.svg), [Koordynacja z 5A](../wizualizacje/algorytmy/koordynacja-RC-RN-timeline.svg), [Przykłady rotacji](../wizualizacje/rotacje/)
 
 ## 1. Cel Algorytmu
 
@@ -100,7 +100,7 @@ Algorytm RN pełni **podwójną funkcję**:
 
 **Diagram wizualizujący algorytm:**
 
-![Algorytm RN Flowchart](../visualization/algorytmy/algorytm-RN-rotacja-nagrzewnic-flowchart.svg)
+![Algorytm RN Flowchart](../wizualizacje/algorytmy/algorytm-RN-rotacja-nagrzewnic-flowchart.svg)
 
 ```
 ZMIENNE GLOBALNE (współdzielone z Algorytmem 5A):
@@ -687,7 +687,7 @@ UWAGA: Powyzsze wyliczenia trzeba potwierdzic w symulacji z roznymi scenariuszam
 
 **Diagram Timeline - Przykładowy Scenariusz S3:**
 
-![Koordynacja RC ↔ RN](../visualization/algorytmy/koordynacja-RC-RN-timeline.svg)
+![Koordynacja RC ↔ RN](../wizualizacje/algorytmy/koordynacja-RC-RN-timeline.svg)
 
 Diagram timeline pokazuje praktyczny przykład koordynacji między algorytmami w scenariuszu S3:
 

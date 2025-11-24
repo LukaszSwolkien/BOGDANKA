@@ -177,7 +177,7 @@ System SAR (System Automatycznej Regulacji) składa się z dwóch podsystemów, 
 
 #### Diagram Architektury Systemu SAR
 
-![Architektura SAR](../01-system/images/architektura_SAR_system.svg)
+![Architektura SAR](./architektura_SAR_system.svg)
 
 Diagram pokazuje dwuwarstwową strukturę systemu SAR, relacje między podsystemami PARTS i PARTPG oraz umiejscowienie algorytmów 5, RC i RN w architekturze systemu.
 
