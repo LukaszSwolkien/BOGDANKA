@@ -262,8 +262,8 @@ Szczegółowa tabela scenariuszy znajduje się w [dokumentacji głównej - Sekcj
 
 ![Algorytm WS - Wybór Scenariusza](./schematy/algorytm-WS-wybor-scenariusza-flowchart.svg)
 
-**Pseudokod:**
 <details>
+<summary>Pseudokod</summary>
 
 ```
 ZMIENNE GLOBALNE:
@@ -1513,8 +1513,8 @@ Rotacja układów jest możliwa **TYLKO** gdy spełnione są **WSZYSTKIE** warun
 
 ![Algorytm RC - Diagram przepływu](./schematy/algorytm-RC-rotacja-ciagow-flowchart.svg)
 
-**Pseudokod:**
 <details>
+<summary>Pseudokod</summary>
 
 ```
 ZMIENNE GLOBALNE (współdzielone z Algorytmem RN):
@@ -1862,8 +1862,8 @@ Algorytm RN pełni **podwójną funkcję**:
 
 ![Algorytm RN Flowchart](./schematy/algorytm-RN-rotacja-nagrzewnic-flowchart.svg)
 
-**Pseudokod:**
 <details>
+<summary>Pseudokod</summary>
 
 ```
 ZMIENNE GLOBALNE (współdzielone z Algorytmem RC):
