@@ -1,25 +1,35 @@
-# BOGDANKA System Simulation Implementation
+# BOGDANKA System Simulation
 
-**Goal:** Generate Python microservices for simulating BOGDANKA Shaft 2 heating control algorithms with Splunk Observability
+**Goal:** Create microservices for simulating BOGDANKA Shaft 2 heating control algorithms with Splunk Observability
+
+Algorithm logic is documented separately: [../../docs/03-algorytmy/algorytmy.md](../../docs/03-algorytmy/algorytmy.md)
 
 ---
 
-## 📋 Instructions for the implementation
+## This document structure
 
-### Context
+### **PART I: SIMULATION SPECIFICATION**
+*WHAT to simulate - defines functional requirements*
+- Service Architecture (weather + algo services)
+- Implementation Requirements (functional specs for each service)
+- Telemetry Specifications (metrics, logs, Splunk queries)
+- Realistic Temperature Profile (winter simulation)
+- Success Criteria (verification in Splunk)
+- Algorithm Documentation Reference (links to algorithm specs)
 
-This prompt provides **implementation specifications** for building a simulation system. 
+### **PART II: IMPLEMENTATION DETAILS**
+*HOW to implement - defines technical stack and execution*
+- Technology Stack (Python 3.10+, uv package manager)
+- Technical Requirements (libraries, file structure)
+- Coding Standards
+- Time Acceleration Implementation (synchronization)
+- Running the Simulation (setup, execution)
 
-**Algorithm logic is documented separately:**
-📖 **Complete algorithm documentation:** [../../docs/03-algorytmy/algorytmy.md](../../docs/03-algorytmy/algorytmy.md)
+---
 
-**This file contains ONLY:**
-- 🏗️ Service architecture (2 microservices)
-- 🔧 Tech stack and libraries
-- 📊 Telemetry specifications for Splunk Observability
-- ⚙️ Configuration structure
-- 📝 Coding standards
-- 🌡️ Temperature profile generator (simulation-specific)
+# PART I: SIMULATION SPECIFICATION
+
+*This section defines WHAT to simulate - architecture, requirements, telemetry, and success criteria.*
 
 ---
 
@@ -111,10 +121,10 @@ Both services support **time acceleration** for fast testing:
 
 ## 🎯 Implementation Requirements
 
-### Service 1: Weather Service (`weather_service.py`)
+### Service 1: Weather Service
 
 **HTTP Server:**
-- Flask/FastAPI server on configurable port (default: 8080)
+- HTTP server on configurable port (default: 8080)
 - Endpoint: `GET /temperature` returns JSON:
   ```json
   {
@@ -140,7 +150,7 @@ Both services support **time acceleration** for fast testing:
 - Emit metrics to Splunk Observability
 - Resource attributes: `service.name=bogdanka-weather`, `environment=dev`
 
-### Service 2: Algo Service (`algo_service.py`)
+### Service 2: Algo Service
 
 **Algorithm Implementation:**
 - Read algorithm pseudocode from [../../docs/03-algorytmy/algorytmy.md](../../docs/03-algorytmy/algorytmy.md)
@@ -181,9 +191,9 @@ telemetry:
 ```
 
 **Implementation:**
-- Use OpenTelemetry Python SDK
-- For `exporter_type: "otlp"`: configure `OTLPMetricExporter` with endpoints/headers
-- For `exporter_type: "console"`: use `ConsoleMetricExporter` for local testing
+- Use OpenTelemetry SDK
+- For `exporter_type: "otlp"`: configure OTLP exporter with endpoints/headers
+- For `exporter_type: "console"`: use console exporter for local testing
 - Apply `resource_attributes` to all telemetry
 - Add `default_dimensions` to all metrics
 
@@ -281,7 +291,9 @@ All logs should be JSON-formatted with these fields:
 
 ### Example Splunk Queries
 
-```python
+**SignalFlow Query Language:**
+
+```
 # Heater operating time (seconds) - bar chart
 data('bogdanka.algo.heater.operating_time_s', rollup='latest').sum(by=['heater']).publish(label='Operating Time')
 
@@ -329,10 +341,11 @@ The weather service **must generate a realistic winter temperature profile** tha
 
 ### Recommended Profile: 30-Day Winter Cycle
 
-```python
-# Realistic winter temperature profile (30 days)
-# Days 1-15: Autumn → Harsh Winter (cooling phase)
-# Days 16-30: Harsh Winter → Early Spring (warming phase)
+**Realistic winter temperature profile (30 days):**
+- Days 1-15: Autumn → Harsh Winter (cooling phase)
+- Days 16-30: Harsh Winter → Early Spring (warming phase)
+
+```
 
 Day  | Avg Temp | Scenarios Expected
 -----|----------|-------------------
@@ -353,54 +366,113 @@ Day  | Avg Temp | Scenarios Expected
 29-30| +2°C     | S0-S1 (warming up)
 ```
 
-### Implementation Formula
+### Temperature Calculation Algorithm
 
-```python
-def calculate_temperature(day, hour):
-    """
-    Generate realistic temperature that tests all scenarios.
-    
-    Args:
+**Pseudocode:**
+
+```
+FUNCTION calculate_temperature(day, hour):
+    INPUT:
         day: Simulation day (0-29)
         hour: Hour of day (0-23)
     
-    Returns:
+    OUTPUT:
         Temperature in °C
-    """
-    # Configuration from config.yaml
-    initial_temp = 5.0      # Starting temperature (autumn)
-    min_temp = -25.0        # Coldest point (harsh winter)
-    final_temp = 3.0        # Ending temperature (spring)
-    cooling_days = 15       # Days to reach minimum
-    warming_days = 15       # Days to warm up
-    daily_variation = 3.0   # Day/night temperature swing
-    noise_sigma = 0.5       # Random fluctuations
     
-    # Main trend: cooling then warming
-    if day <= cooling_days:
-        # Cooling phase: smooth transition from initial to minimum
-        progress = day / cooling_days
-        trend_temp = initial_temp - (initial_temp - min_temp) * progress
-    else:
-        # Warming phase: smooth transition from minimum to final
-        progress = (day - cooling_days) / warming_days
-        trend_temp = min_temp + (final_temp - min_temp) * progress
+    PARAMETERS (from config.yaml):
+        initial_temp = 5.0      // Starting temperature (autumn)
+        min_temp = -25.0        // Coldest point (harsh winter)
+        final_temp = 3.0        // Ending temperature (spring)
+        cooling_days = 15       // Days to reach minimum
+        warming_days = 15       // Days to warm up
+        daily_variation = 3.0   // Day/night temperature swing
+        noise_sigma = 0.5       // Random fluctuations
     
-    # Daily variation (day is warmer, night is colder)
-    daily_cycle = daily_variation * math.sin(2 * math.pi * hour / 24)
-    
-    # Random noise for realism
-    noise = random.gauss(0, noise_sigma)
-    
-    # Final temperature
-    T_zewn = trend_temp + daily_cycle + noise
-    
-    # Emit metrics:
-    # - bogdanka.weather.external_temperature = T_zewn
-    # - bogdanka.weather.simulation_day = day
-    
-    return T_zewn
+    ALGORITHM:
+        // Main trend: cooling then warming
+        IF day <= cooling_days THEN
+            // Cooling phase: smooth transition from initial to minimum
+            progress = day / cooling_days
+            trend_temp = initial_temp - (initial_temp - min_temp) * progress
+        ELSE
+            // Warming phase: smooth transition from minimum to final
+            progress = (day - cooling_days) / warming_days
+            trend_temp = min_temp + (final_temp - min_temp) * progress
+        
+        // Daily variation (day is warmer, night is colder)
+        daily_cycle = daily_variation * sin(2 * π * hour / 24)
+        
+        // Random noise for realism
+        noise = gaussian_random(0, noise_sigma)
+        
+        // Final temperature
+        T_zewn = trend_temp + daily_cycle + noise
+        
+        // Emit metrics:
+        // - bogdanka.weather.external_temperature = T_zewn
+        // - bogdanka.weather.simulation_day = day
+        
+        RETURN T_zewn
 ```
+
+---
+
+## ✅ Success Criteria
+
+After running simulation for 30 days, verify in Splunk Observability:
+
+1. **Heater balance:** 
+   - Query: `(max - min) / avg * 100` of `bogdanka.algo.heater.operating_time_s`
+   - Expected: < 10%
+
+2. **Line balance:** 
+   - Query: `Primary / Limited` ratio from `bogdanka.algo.rc.config_time_s`
+   - Expected: 0.95-1.05
+
+3. **All scenarios tested:**
+   - Query: `sum(bogdanka.algo.ws.scenario_time_s) by scenario`
+   - Expected: All S0-S8 have non-zero values
+
+4. **No coordination issues:**
+   - Query: `bogdanka.algo.locks.wait_events`
+   - Expected: < 10 total events
+
+5. **Metrics completeness:**
+   - All 15 algo metrics present and updating
+   - All 4 weather metrics present and updating
+
+---
+
+## 📄 Algorithm Documentation Reference
+
+**⚠️ IMPORTANT:** This file contains ONLY simulation specifications.
+
+**For algorithm logic, read:**
+- **Complete algorithms:** [../../docs/03-algorytmy/algorytmy.md](../../docs/03-algorytmy/algorytmy.md)
+  - Algorithm WS: Scenario selection with hysteresis
+  - Algorithm RC: Configuration rotation (Primary ↔ Limited)
+  - Algorithm RN: Heater rotation within lines
+  - Coordination: locks, time gaps, hierarchy
+
+**For system context:**
+- **System architecture:** [../../docs/01-system/system.md](../../docs/01-system/system.md)
+- **Installation project:** [../../docs/02-projekt-instalacji/projekt-instalacji.md](../../docs/02-projekt-instalacji/projekt-instalacji.md)
+
+---
+
+# PART II: IMPLEMENTATION DETAILS
+
+*This section defines HOW to implement - technology stack, code structure, and execution instructions.*
+
+## 🔧 Technology Stack
+
+**Programming Language:** Python 3.10+
+
+**Package Manager:** [uv](https://github.com/astral-sh/uv) - fast Python package installer and resolver
+
+**Why Python + uv:**
+- Python: Rich ecosystem for data processing, HTTP servers, and OpenTelemetry support
+- uv: 10-100x faster than pip, built-in dependency resolution, modern workflow
 
 ---
 
@@ -601,49 +673,6 @@ uv run algo_service.py --days 30
 
 ---
 
-## ✅ Success Criteria
-
-After running simulation for 30 days, verify in Splunk Observability:
-
-1. **Heater balance:** 
-   - Query: `(max - min) / avg * 100` of `bogdanka.algo.heater.operating_time_s`
-   - Expected: < 10%
-
-2. **Line balance:** 
-   - Query: `Primary / Limited` ratio from `bogdanka.algo.rc.config_time_s`
-   - Expected: 0.95-1.05
-
-3. **All scenarios tested:**
-   - Query: `sum(bogdanka.algo.ws.scenario_time_s) by scenario`
-   - Expected: All S0-S8 have non-zero values
-
-4. **No coordination issues:**
-   - Query: `bogdanka.algo.locks.wait_events`
-   - Expected: < 10 total events
-
-5. **Metrics completeness:**
-   - All 15 algo metrics present and updating
-   - All 4 weather metrics present and updating
-
----
-
-## 📄 Algorithm Documentation Reference
-
-**⚠️ IMPORTANT:** This file contains ONLY implementation specifications.
-
-**For algorithm logic, read:**
-- **Complete algorithms:** [../../docs/03-algorytmy/algorytmy.md](../../docs/03-algorytmy/algorytmy.md)
-  - Algorithm WS: Scenario selection with hysteresis
-  - Algorithm RC: Configuration rotation (Primary ↔ Limited)
-  - Algorithm RN: Heater rotation within lines
-  - Coordination: locks, time gaps, hierarchy
-
-**For system context:**
-- **System architecture:** [../../docs/01-system/system.md](../../docs/01-system/system.md)
-- **Installation project:** [../../docs/02-projekt-instalacji/projekt-instalacji.md](../../docs/02-projekt-instalacji/projekt-instalacji.md)
-
----
-
 **Last update:** November 24, 2025  
 **Version:** 1.0  
-**Focus:** Implementation specifications for simulation microservices
+**Focus:** Simulation specifications for BOGDANKA Shaft 2 heating control system
