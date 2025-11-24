@@ -5,7 +5,7 @@ Kompleksowa dokumentacja systemu automatycznego sterowania ogrzewaniem szybu wyd
 ## 📁 Struktura Dokumentacji
 
 ### [00-start](./00-start/) - START
-- `README.md` - Przewodnik po dokumentacji
+- `start.md` - Przewodnik po dokumentacji
 - Szybki start dla nowych użytkowników
 
 ### [01-system](./01-system/) - Architektura Systemu
@@ -16,7 +16,7 @@ Kompleksowa dokumentacja systemu automatycznego sterowania ogrzewaniem szybu wyd
 - Układy automatycznej regulacji (UAR)
 
 ### [02-algorytmy](./02-algorytmy/) - Algorytmy Sterowania
-- `README.md` - Przegląd algorytmów WS, RC, RN
+- `algorytmy.md` - Przegląd algorytmów WS, RC, RN
 - `algorytm-WS-wybor-scenariusza.md` - Automatyczny wybór scenariusza
 - `algorytm-RC-rotacja-ciagow.md` - Rotacja układów pracy ciągów
 - `algorytm-RN-rotacja-nagrzewnic.md` - Rotacja nagrzewnic w ciągu
@@ -33,9 +33,9 @@ Kompleksowa dokumentacja systemu automatycznego sterowania ogrzewaniem szybu wyd
 ## 🎯 Nawigacja
 
 **Dla nowych użytkowników:**
-1. Zacznij od [START](./00-start/README.md)
+1. Zacznij od [START](./00-start/start.md)
 2. Przeczytaj [Architekturę Systemu](./01-system/architektura.md)
-3. Zapoznaj się z [Algorytmami](./02-algorytmy/README.md)
+3. Zapoznaj się z [Algorytmami](./02-algorytmy/algorytmy.md)
 
 **Dla programistów:**
 - Algorytmy: `02-algorytmy/`

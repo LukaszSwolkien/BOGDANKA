@@ -8,7 +8,7 @@ To jest punkt startowy dla wszystkich użytkowników systemu automatycznego ster
 ### Programiści PLC/SCADA
 **Zacznij tutaj:**
 1. [Architektura Systemu](../01-system/architektura.md) - zrozum strukturę
-2. [Algorytmy Sterowania](../02-algorytmy/README.md) - poznaj logikę
+2. [Algorytmy Sterowania](../02-algorytmy/algorytmy.md) - poznaj logikę
 3. [Projekt Instalacji](../03-projekt-instalacji/) - schematy instalacji
 4. [Wizualizacje Algorytmów](../02-algorytmy/schematy/) - zobacz flowcharty
 5. [Wizualizacje Scenariuszy](../01-system/scenariusze/) - diagramy nawiewu
@@ -62,7 +62,7 @@ Trzy kluczowe algorytmy:
 | Dokument | Czas czytania | Opis |
 |----------|---------------|------|
 | [Architektura Systemu](../01-system/architektura.md) | 60 min | Kompletny opis systemu PARTPG i PARTS |
-| [Przegląd Algorytmów](../02-algorytmy/README.md) | 15 min | Wprowadzenie do algorytmów WS, RC, RN |
+| [Przegląd Algorytmów](../02-algorytmy/algorytmy.md) | 15 min | Wprowadzenie do algorytmów WS, RC, RN |
 | [Algorytm WS](../02-algorytmy/algorytm-WS-wybor-scenariusza.md) | 45 min | Wybór scenariusza pracy |
 | [Algorytm RC](../02-algorytmy/algorytm-RC-rotacja-ciagow.md) | 30 min | Rotacja układów ciągów |
 | [Algorytm RN](../02-algorytmy/algorytm-RN-rotacja-nagrzewnic.md) | 45 min | Rotacja nagrzewnic |

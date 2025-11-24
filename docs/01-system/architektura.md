@@ -82,7 +82,7 @@ System automatycznej regulacji (SAR) temperatury szybu składa się z dwóch pod
 - Dotyczy scenariuszy S1-S4 (temperatura -11°C < t ≤ 2°C)
 - Maksymalizacja niezawodności przez równomierne zużycie
 
-📖 **[Szczegółowy opis → Algorytmy WS i RC](../02-algorytmy/README.md)** | [Algorytm WS](../02-algorytmy/algorytm-WS-wybor-scenariusza.md) | [Algorytm RC](../02-algorytmy/algorytm-RC-rotacja-ciagow.md)
+📖 **[Szczegółowy opis → Algorytmy WS i RC](../02-algorytmy/algorytmy.md)** | [Algorytm WS](../02-algorytmy/algorytm-WS-wybor-scenariusza.md) | [Algorytm RC](../02-algorytmy/algorytm-RC-rotacja-ciagow.md)
 
 ### 2.3 Zależności między Podsystemami
 

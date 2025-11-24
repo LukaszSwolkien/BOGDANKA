@@ -50,7 +50,7 @@ Ta sekcja dokumentacji zawiera:
 ## 🔗 Powiązane Dokumenty
 
 - [Architektura Systemu](../01-system/architektura.md) - główny dokument techniczny
-- [Algorytmy](../02-algorytmy/README.md) - szczegóły implementacji
+- [Algorytmy](../02-algorytmy/algorytmy.md) - szczegóły implementacji
 - [Projekt Instalacji](../03-projekt-instalacji/) - aspekty instalacyjne
 
 ## 📊 Status Dokumentacji
@@ -65,12 +65,12 @@ Jeśli identyfikujesz nowe pytania lub konieczność przeprowadzenia analizy:
 
 1. Dodaj dokument w tym katalogu
 2. Użyj formatu kebab-case (np. `analiza-wydajnosci.md`)
-3. Zaktualizuj ten README
+3. Zaktualizuj ten dokument
 4. Powiąż z odpowiednimi sekcjami dokumentacji
 
 ## 📖 Dalsze Kroki
 
 1. Przeczytaj [pytania-wyjasnienia.md](./pytania-wyjasnienia.md)
 2. Zapoznaj się z [architekturą systemu](../01-system/architektura.md)
-3. Zrozum [algorytmy sterowania](../02-algorytmy/README.md)
+3. Zrozum [algorytmy sterowania](../02-algorytmy/algorytmy.md)
 

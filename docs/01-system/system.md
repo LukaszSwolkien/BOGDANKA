@@ -82,13 +82,13 @@ System automatycznie dobiera konfigurację w zależności od temperatury zewnęt
 
 ## 🔗 Powiązane Dokumenty
 
-- [Algorytmy](../02-algorytmy/README.md) - szczegóły algorytmów WS, RC, RN
+- [Algorytmy](../02-algorytmy/algorytmy.md) - szczegóły algorytmów WS, RC, RN
 - [Projekt Instalacji](../03-projekt-instalacji/) - schematy instalacji
 - [Wizualizacje UAR](../02-algorytmy/schematy/uar/) - schematy regulacji
 
 ## 📖 Dalsze Kroki
 
 1. Przeczytaj [architektura.md](./architektura.md) - pełny opis systemu
-2. Zapoznaj się z [algorytmami](../02-algorytmy/README.md)
+2. Zapoznaj się z [algorytmami](../02-algorytmy/algorytmy.md)
 3. Zobacz [wizualizacje scenariuszy](../02-algorytmy/schematy/scenariusze/)
 
