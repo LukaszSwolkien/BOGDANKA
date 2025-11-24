@@ -170,7 +170,6 @@ System automatycznej regulacji (SAR) temperatury szybu ma **dwuwarstwową archit
 - Bez **warstwy zarządzania** (algorytmy) - system działa, ale:
   - Zawsze te same nagrzewnice (np. N1, N2, N3)
   - Nierównomierne zużycie → awarie, przestoje
-  - Brak automatycznej adaptacji do pogody → marnotrawstwo energii
 
 ### Dokumentacja w Kontekście Projektu
 
