@@ -1,6 +1,6 @@
 # Projekt Instalacji Ogrzewania Szybu BOGDANKA Szyb 2
 
-**Szczegółowy opis układu fizycznego instalacji, schematy scenariuszy i przykłady rotacji**
+**Szczegółowy opis układu instalacji ogrzewania szybu, schematy scenariuszy i przykłady rotacji**
 
 _Plik ten jest częścią dokumentacji systemu sterowania nagrzewnicami BOGDANKA Szyb 2._
 
