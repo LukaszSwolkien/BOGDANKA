@@ -32,6 +32,13 @@ class AlgorithmWS:
     def __init__(self, config: WSConfig, state: AlgoState):
         self.config = config
         self.state = state
+        
+        # Track time spent in each scenario (for statistics)
+        self._scenario_time_s: dict[Scenario, float] = {
+            scenario: 0.0 for scenario in Scenario
+        }
+        self._last_time_update: float = 0.0
+        
         LOGGER.info(
             f"Algorithm WS initialized: stabilization={config.scenario_stabilization_time_s}s, "
             f"hysteresis={config.hysteresis_delta_c}°C"
@@ -47,6 +54,9 @@ class AlgorithmWS:
         Returns:
             (scenario_changed: bool, message: str)
         """
+        # Update time tracking for current scenario
+        self._update_scenario_time()
+        
         # Step 1: Validate temperature reading
         if not self._validate_temperature(t_zewn_raw):
             return self._handle_sensor_failure()
@@ -225,4 +235,39 @@ class AlgorithmWS:
             Scenario.S8: {"heaters": 8, "w1_mode": "MAX", "w2_mode": "PID", "config": "Primary"},
         }
         return configs.get(scenario, configs[Scenario.S0])
+    
+    def _update_scenario_time(self) -> None:
+        """Update time tracking for current scenario."""
+        current_time = self.state.simulation_time
+        
+        if self._last_time_update > 0.0:
+            # Calculate delta time since last update
+            delta_time = current_time - self._last_time_update
+            
+            # Add to current scenario's time
+            self._scenario_time_s[self.state.current_scenario] += delta_time
+        
+        # Update last time
+        self._last_time_update = current_time
+    
+    def get_scenario_time(self, scenario: Scenario) -> float:
+        """
+        Get total time spent in a scenario (seconds).
+        
+        Args:
+            scenario: Which scenario
+            
+        Returns:
+            Time in seconds
+        """
+        return self._scenario_time_s.get(scenario, 0.0)
+    
+    def get_all_scenario_times(self) -> dict[Scenario, float]:
+        """
+        Get time distribution across all scenarios.
+        
+        Returns:
+            Dictionary mapping scenario to time in seconds
+        """
+        return dict(self._scenario_time_s)
 

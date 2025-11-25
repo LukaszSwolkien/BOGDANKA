@@ -31,6 +31,8 @@ class TelemetryConfig:
     resource_attributes: Mapping[str, str]
     default_dimensions: Mapping[str, str]
     log_level: str = "INFO"
+    log_output: str = "console"  # "console", "file", or "both"
+    log_file: str = "logs/algo_service.log"
 
 
 @dataclass
@@ -64,6 +66,12 @@ class RNConfig:
 
 
 @dataclass
+class DisplayConfig:
+    enabled: bool = True
+    refresh_rate_s: float = 1.0
+
+
+@dataclass
 class AlgoAlgorithmsConfig:
     ws: WSConfig
     rc: RCConfig
@@ -76,6 +84,7 @@ class AlgoServiceConfig:
     metrics_prefix: str
     weather_endpoint: str
     otlp_timeout_ms: int
+    display: DisplayConfig
     algorithms: AlgoAlgorithmsConfig
 
 
@@ -135,6 +144,8 @@ def load_config(path: str | Path) -> AppConfig:
         resource_attributes=_require_mapping(telemetry_data, "resource_attributes"),
         default_dimensions=_require_mapping(telemetry_data, "default_dimensions"),
         log_level=str(telemetry_data.get("log_level", "INFO")),
+        log_output=str(telemetry_data.get("log_output", "console")),
+        log_file=str(telemetry_data.get("log_file", "logs/algo_service.log")),
     )
 
     services_data = data.get("services", {})
@@ -147,6 +158,7 @@ def load_config(path: str | Path) -> AppConfig:
 
 def _load_algo_service(data: Mapping[str, Any]) -> AlgoServiceConfig:
     algorithms = data.get("algorithms", {})
+    display_data = data.get("display", {})
 
     ws = algorithms.get("ws", {})
     rc = algorithms.get("rc", {})
@@ -157,6 +169,10 @@ def _load_algo_service(data: Mapping[str, Any]) -> AlgoServiceConfig:
         metrics_prefix=str(data.get("metrics_prefix", "bogdanka.algo")),
         weather_endpoint=str(data.get("weather_endpoint", "http://localhost:8080/temperature")),
         otlp_timeout_ms=int(data.get("otlp_timeout_ms", 1000)),
+        display=DisplayConfig(
+            enabled=bool(display_data.get("enabled", True)),
+            refresh_rate_s=float(display_data.get("refresh_rate_s", 1.0)),
+        ),
         algorithms=AlgoAlgorithmsConfig(
             ws=WSConfig(
                 temp_monitoring_cycle_s=int(ws.get("temp_monitoring_cycle_s", 10)),

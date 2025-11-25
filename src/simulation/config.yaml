@@ -30,6 +30,10 @@ telemetry:
   
   # Log level: DEBUG, INFO, WARNING, ERROR
   log_level: "INFO"
+  
+  # Log output: "console", "file", or "both"
+  log_output: "file"  # When display is enabled, logs go to file only
+  log_file: "logs/algo_service.log"  # Log file path (relative to project root)
 
 # Service Configuration
 services:
@@ -39,6 +43,11 @@ services:
     metrics_prefix: "bogdanka.algo"
     weather_endpoint: "http://localhost:8080/temperature"
     otlp_timeout_ms: 1000
+    
+    # Console Display Configuration
+    display:
+      enabled: true           # Enable/disable status header in console
+      refresh_rate_s: 1.0     # How often to refresh the header (real time seconds)
     
     # Algorithm Configuration (parameters for WS, RC, RN)
     algorithms:

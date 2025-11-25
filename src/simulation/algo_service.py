@@ -12,6 +12,7 @@ from pathlib import Path
 from algo.algorithm_rc import AlgorithmRC, RCConfig
 from algo.algorithm_rn import AlgorithmRN, RNConfig
 from algo.algorithm_ws import AlgorithmWS, WSConfig
+from algo.display import StatusDisplay
 from algo.metrics import AlgoMetrics
 from algo.state import AlgoState
 from algo.weather_client import WeatherClient
@@ -91,6 +92,19 @@ class AlgoService:
         )
         self.algorithm_rn = AlgorithmRN(config=rn_config, state=self.state)
         
+        # Initialize recent events buffer (for display)
+        self._recent_events: list[str] = []
+        self._max_recent_events = 4
+        
+        # Initialize status display
+        self.display = StatusDisplay(
+            state=self.state,
+            algorithm_rn=self.algorithm_rn,
+            algorithm_ws=self.algorithm_ws,
+            recent_events=self._recent_events,
+            enabled=self.config.services.algo.display.enabled,
+        )
+        
         # Control flags
         self._running = False
         self._stop_requested = False
@@ -99,15 +113,57 @@ class AlgoService:
         LOGGER.info(f"Weather endpoint: {self.config.services.algo.weather_endpoint}")
         LOGGER.info(f"Acceleration: {self.config.simulation.acceleration}x")
         LOGGER.info(f"Duration: {self.config.simulation.duration_days} days")
+        LOGGER.info(f"Display: {'enabled' if self.config.services.algo.display.enabled else 'disabled'}")
     
     def _configure_logging(self) -> None:
         """Configure logging based on config."""
         level = getattr(logging, self.config.telemetry.log_level.upper(), logging.INFO)
-        logging.basicConfig(
-            level=level,
-            format="%(asctime)s %(levelname)s %(name)s - %(message)s",
-            datefmt="%Y-%m-%d %H:%M:%S",
-        )
+        log_format = "%(asctime)s %(levelname)s %(name)s - %(message)s"
+        date_format = "%Y-%m-%d %H:%M:%S"
+        
+        # Determine output based on config and display setting
+        log_output = self.config.telemetry.log_output
+        display_enabled = self.config.services.algo.display.enabled
+        
+        # If display is enabled, force logs to file only (unless explicitly "both")
+        if display_enabled and log_output == "console":
+            log_output = "file"
+        
+        if log_output == "file":
+            # Log to file only
+            from pathlib import Path
+            log_file = Path(self.config.telemetry.log_file)
+            log_file.parent.mkdir(parents=True, exist_ok=True)
+            
+            logging.basicConfig(
+                level=level,
+                format=log_format,
+                datefmt=date_format,
+                filename=str(log_file),
+                filemode='a',
+            )
+        elif log_output == "both":
+            # Log to both file and console
+            from pathlib import Path
+            log_file = Path(self.config.telemetry.log_file)
+            log_file.parent.mkdir(parents=True, exist_ok=True)
+            
+            logging.basicConfig(
+                level=level,
+                format=log_format,
+                datefmt=date_format,
+                handlers=[
+                    logging.FileHandler(str(log_file), mode='a'),
+                    logging.StreamHandler(),
+                ],
+            )
+        else:
+            # Log to console only (default)
+            logging.basicConfig(
+                level=level,
+                format=log_format,
+                datefmt=date_format,
+            )
     
     def start(self) -> None:
         """Start the algo service main loop."""
@@ -139,6 +195,26 @@ class AlgoService:
         LOGGER.info(f"Received signal {signum} - initiating shutdown")
         self._stop_requested = True
     
+    def _add_event(self, event_text: str) -> None:
+        """
+        Add event to recent events buffer (for display).
+        
+        Args:
+            event_text: Short event description (e.g., "S3→S4", "RC: C1→C2")
+        """
+        # Format: [D5 12:34] event_text (day + HH:MM)
+        sim_day = int(self.state.simulation_time // 86400)
+        sim_time_h = int((self.state.simulation_time % 86400) // 3600)
+        sim_time_m = int((self.state.simulation_time % 3600) // 60)
+        timestamp = f"[D{sim_day} {sim_time_h:02d}:{sim_time_m:02d}]"
+        
+        event_with_timestamp = f"{timestamp} {event_text}"
+        self._recent_events.append(event_with_timestamp)
+        
+        # Keep only last N events (rolling buffer)
+        while len(self._recent_events) > self._max_recent_events:
+            self._recent_events.pop(0)  # Remove oldest
+    
     def _main_loop(self) -> None:
         """
         Main simulation loop.
@@ -164,6 +240,10 @@ class AlgoService:
         rn_check_count = 0
         rc_check_interval = self.config.services.algo.algorithms.rc.algorithm_loop_cycle_s
         rn_check_interval = self.config.services.algo.algorithms.rn.algorithm_loop_cycle_s
+        
+        # Display refresh tracking (in real time)
+        display_refresh_interval_real = self.config.services.algo.display.refresh_rate_s
+        last_display_refresh_real = 0.0
         
         while self._running and not self._stop_requested:
             loop_start_real = time.time()
@@ -195,6 +275,8 @@ class AlgoService:
             if scenario_changed:
                 # Record metric
                 self.metrics.record_scenario_change(old_scenario, self.state.current_scenario)
+                # Add event for display
+                self._add_event(f"WS: {old_scenario.name}→{self.state.current_scenario.name}")
             elif loop_count % 60 == 0:  # Every 10 minutes (60 * 10s cycles)
                 # Log current state periodically
                 LOGGER.debug(
@@ -215,6 +297,9 @@ class AlgoService:
                 if config_changed:
                     # Record metric
                     self.metrics.record_config_change(old_config, self.state.current_config)
+                    # Add event for display
+                    config_short = "C1" if self.state.current_config == "Primary" else "C2"
+                    self._add_event(f"RC: →{config_short}")
             
             # STEP 5: Run Algorithm RN (heater rotation)
             # RN runs at same frequency as RC (e.g., every 60s)
@@ -240,9 +325,23 @@ class AlgoService:
                             heater_off = parts[0].strip()
                             heater_on = parts[1].strip()
                             self.metrics.record_heater_rotation(line, heater_off, heater_on)
+                            # Add event for display
+                            self._add_event(f"RN.{line}: {heater_off}→{heater_on}")
+                elif "blocked" in rn_message.lower() or "cannot" in rn_message.lower():
+                    # RN blocked - add as event
+                    if "config change" in rn_message.lower():
+                        self._add_event("RN: ⊗RC lock")
+                    elif "too soon" in rn_message.lower():
+                        self._add_event("RN: ⊗wait")
             
             # STEP 6: Update metrics
             self.metrics.update()
+            
+            # STEP 6.5: Refresh status display (throttled by refresh_rate_s in real time)
+            current_real_time = time.time()
+            if current_real_time - last_display_refresh_real >= display_refresh_interval_real:
+                self.display.render(temperature_c=snapshot.temperature_c)
+                last_display_refresh_real = current_real_time
             
             # STEP 7: Check if simulation complete
             if self.state.simulation_time >= duration_sim:
@@ -273,12 +372,26 @@ class AlgoService:
         LOGGER.info("Shutting down algo service...")
         self._running = False
         
+        # Final update to capture last scenario's time
+        self.algorithm_ws._update_scenario_time()
+        
         # Final metrics flush
         LOGGER.info("Final metrics state:")
         LOGGER.info(f"  Simulation time: {self.state.simulation_time:.1f}s ({self.state.simulation_time/3600:.1f}h)")
         LOGGER.info(f"  Current scenario: {self.state.current_scenario.name}")
         LOGGER.info(f"  Current config: {self.state.current_config}")
         LOGGER.info(f"  Last temperature: {self.state.last_valid_reading:.1f}°C")
+        
+        # Scenario distribution
+        LOGGER.info("  Scenario distribution:")
+        scenario_times = self.algorithm_ws.get_all_scenario_times()
+        total_sim_time = self.state.simulation_time
+        
+        for scenario in Scenario:
+            time_s = scenario_times.get(scenario, 0.0)
+            time_h = time_s / 3600
+            percentage = (time_s / total_sim_time * 100) if total_sim_time > 0 else 0
+            LOGGER.info(f"    {scenario.name}: {time_h:.1f}h ({percentage:.1f}%)")
         
         # RC times in hours
         time_primary_h = self.algorithm_rc.get_time_in_primary() / 3600
