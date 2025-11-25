@@ -75,6 +75,19 @@ class AlgorithmRN:
         # Track total number of heater rotations
         self._rotation_count = 0
         
+        # Track number of times rotation was blocked
+        self._blocked_count = 0
+        
+        # Detailed blocking statistics
+        self._blocked_by_reason: dict[str, int] = {
+            "rc_rotation_in_progress": 0,     # RC config change blocking RN
+            "too_soon_after_rc": 0,           # Gap after RC not elapsed
+            "period_not_elapsed": 0,          # Rotation period for line not elapsed
+            "global_spacing_not_met": 0,      # 15min global spacing between any rotations
+            "no_suitable_heaters": 0,         # No heaters available for rotation
+            "line_not_active": 0,             # Line not active in current scenario
+        }
+        
         # Track previous scenario to detect transitions from S0
         self._previous_scenario: Optional[Scenario] = None
         
@@ -142,21 +155,29 @@ class AlgorithmRN:
                     )
             
             if not is_active:
+                # Track as blocked (line not active in this scenario)
+                self._blocked_count += 1
+                self._blocked_by_reason["line_not_active"] = self._blocked_by_reason.get("line_not_active", 0) + 1
                 continue
             
             # STEP 2: Check rotation conditions
-            can_rotate, reason = self._can_rotate(line)
+            can_rotate, reason_text, reason_key = self._can_rotate(line)
             if not can_rotate:
+                # Count this as a blocked rotation attempt
+                self._blocked_count += 1
+                if reason_key:
+                    self._blocked_by_reason[reason_key] = self._blocked_by_reason.get(reason_key, 0) + 1
+                
                 # Log blocking reasons at INFO level for visibility
                 # Log coordination blocks always
-                if "RC configuration change" in reason or "Too soon after config change" in reason:
-                    LOGGER.info(f"⏸️  RN: {line.name} rotation BLOCKED - {reason}")
+                if "RC configuration change" in reason_text or "Too soon after config change" in reason_text:
+                    LOGGER.info(f"⏸️  RN: {line.name} rotation BLOCKED - {reason_text}")
                 # Log other blocks periodically (every hour of sim time)
                 elif int(self.state.simulation_time % 3600) < 60:
-                    LOGGER.info(f"⏸️  RN: {line.name} rotation not ready - {reason}")
+                    LOGGER.info(f"⏸️  RN: {line.name} rotation not ready - {reason_text}")
                 # Also log for C2 in S5-S8 to diagnose the issue
                 elif line == Line.C2 and self.state.current_scenario in [Scenario.S5, Scenario.S6, Scenario.S7]:
-                    LOGGER.debug(f"RN: {line.name} cannot rotate in {self.state.current_scenario.name} - {reason}")
+                    LOGGER.debug(f"RN: {line.name} cannot rotate in {self.state.current_scenario.name} - {reason_text}")
                 continue
             
             # STEP 3: Select heaters to swap
@@ -239,39 +260,131 @@ class AlgorithmRN:
     
     def _adjust_heater_count(self) -> None:
         """
-        Adjust active heater count for minor scenario transitions (e.g., S6→S7).
+        Adjust active heater count for minor scenario transitions (e.g., S3→S2→S3).
         
         This method intelligently adds or removes heaters while preserving rotation state:
-        - When adding heaters: activates the next heater in sequence with least operating time
-        - When removing heaters: deactivates the heater with most operating time
+        - When adding heaters: activates heaters with LEAST operating time (fairness!)
+        - When removing heaters: deactivates heaters with MOST operating time
+        
+        Example: S3→S2→S3
+        - S3: N1, N2, N3 active
+        - S3→S2: Deactivate N3 (most used)
+        - S2→S3: Activate N4 (least used), NOT N3!
         
         This preserves rotation fairness unlike _sync_heater_states_with_scenario().
         """
-        required_heaters = self._get_active_heaters()
-        required_set = set(required_heaters)
-        
-        # Find currently active heaters
-        currently_active = set()
+        # Get currently active heaters from tracking (not from _get_active_heaters()!)
+        currently_active_c1 = []
+        currently_active_c2 = []
         for heater, tracking in self._heater_tracking.items():
             if tracking.state == HeaterState.ACTIVE:
-                currently_active.add(heater)
+                if heater in {Heater.N1, Heater.N2, Heater.N3, Heater.N4}:
+                    currently_active_c1.append(heater)
+                else:
+                    currently_active_c2.append(heater)
         
-        # Heaters to activate (in required but not currently active)
-        to_activate = required_set - currently_active
+        # Get all healthy heaters per line
+        healthy_c1 = self._get_healthy_heaters_for_line(Line.C1)
+        healthy_c2 = self._get_healthy_heaters_for_line(Line.C2)
         
-        # Heaters to deactivate (currently active but not required)
-        to_deactivate = currently_active - required_set
+        # Determine how many we SHOULD have based on scenario
+        scenario = self.state.current_scenario
         
-        # Activate needed heaters
-        for heater in to_activate:
-            LOGGER.info(f"RN: Adding heater {heater.name} for scenario {self.state.current_scenario.name}")
-            self._heater_tracking[heater].state = HeaterState.ACTIVE
-            self._heater_tracking[heater].first_activation_timestamp = self.state.simulation_time
+        if scenario == Scenario.S0:
+            required_c1, required_c2 = 0, 0
+        elif scenario in [Scenario.S1, Scenario.S2, Scenario.S3, Scenario.S4]:
+            # Single line operation - depends on config
+            heater_count = {
+                Scenario.S1: 1,
+                Scenario.S2: 2,
+                Scenario.S3: 3,
+                Scenario.S4: 4,
+            }[scenario]
+            
+            if self.state.current_config == "Primary":
+                required_c1 = heater_count
+                required_c2 = 0
+            else:  # Limited
+                required_c1 = 0
+                required_c2 = heater_count
+        else:  # S5-S8: dual line
+            heater_count_line2 = {
+                Scenario.S5: 1,
+                Scenario.S6: 2,
+                Scenario.S7: 3,
+                Scenario.S8: 4,
+            }[scenario]
+            required_c1 = 4  # Always all 4 for C1
+            required_c2 = heater_count_line2
         
-        # Deactivate excess heaters
-        for heater in to_deactivate:
-            LOGGER.info(f"RN: Removing heater {heater.name} for scenario {self.state.current_scenario.name}")
-            self._heater_tracking[heater].state = HeaterState.IDLE
+        # Adjust Line C1
+        self._adjust_line_heaters(Line.C1, currently_active_c1, healthy_c1, len(currently_active_c1), required_c1)
+        
+        # Adjust Line C2
+        self._adjust_line_heaters(Line.C2, currently_active_c2, healthy_c2, len(currently_active_c2), required_c2)
+    
+    def _adjust_line_heaters(
+        self, 
+        line: Line, 
+        active: list[Heater], 
+        healthy: list[Heater],
+        current_count: int,
+        required_count: int
+    ) -> None:
+        """
+        Adjust heater count for a specific line.
+        
+        Args:
+            line: Which line (C1 or C2)
+            active: Currently active heaters in this line
+            healthy: All healthy heaters in this line
+            current_count: How many are currently active
+            required_count: How many we need
+        """
+        delta = required_count - current_count
+        
+        if delta == 0:
+            return  # No change needed
+        
+        if delta > 0:
+            # Need to ADD heaters - choose ones with LEAST operating time
+            idle_heaters = [h for h in healthy if h not in active]
+            
+            # Sort by operating time (ascending)
+            idle_sorted = sorted(
+                idle_heaters,
+                key=lambda h: self._heater_tracking[h].operating_time_s
+            )
+            
+            # Activate the ones with least operating time
+            for i in range(min(delta, len(idle_sorted))):
+                heater = idle_sorted[i]
+                LOGGER.info(
+                    f"RN: Adding heater {heater.name} for scenario {self.state.current_scenario.name} "
+                    f"(operating_time={self._heater_tracking[heater].operating_time_s:.1f}s)"
+                )
+                self._heater_tracking[heater].state = HeaterState.ACTIVE
+                self._heater_tracking[heater].first_activation_timestamp = self.state.simulation_time
+        
+        else:  # delta < 0
+            # Need to REMOVE heaters - choose ones with MOST operating time
+            to_remove = abs(delta)
+            
+            # Sort by operating time (descending)
+            active_sorted = sorted(
+                active,
+                key=lambda h: self._heater_tracking[h].operating_time_s,
+                reverse=True
+            )
+            
+            # Deactivate the ones with most operating time
+            for i in range(min(to_remove, len(active_sorted))):
+                heater = active_sorted[i]
+                LOGGER.info(
+                    f"RN: Removing heater {heater.name} for scenario {self.state.current_scenario.name} "
+                    f"(operating_time={self._heater_tracking[heater].operating_time_s:.1f}s)"
+                )
+                self._heater_tracking[heater].state = HeaterState.IDLE
     
     def _sync_heater_states_with_scenario(self) -> None:
         """
@@ -362,41 +475,46 @@ class AlgorithmRN:
         
         return True
     
-    def _can_rotate(self, line: Line) -> tuple[bool, str]:
-        """Check if rotation is possible for given line."""
+    def _can_rotate(self, line: Line) -> tuple[bool, str, Optional[str]]:
+        """
+        Check if rotation is possible for given line.
+        
+        Returns:
+            (can_rotate, reason_text, reason_key) where reason_key is for statistics tracking
+        """
         # Check coordination with RC
         if self.state.config_change_in_progress:
-            return False, "RC configuration change in progress"
+            return False, "RC configuration change in progress", "rc_rotation_in_progress"
         
         # In S1-S4, check if enough time passed since RC config change
         if self.state.current_scenario in [Scenario.S1, Scenario.S2, Scenario.S3, Scenario.S4]:
             time_since_config_change = self.state.simulation_time - self.state.timestamp_last_config_change
             if time_since_config_change < self.config.min_time_since_config_change_s:
-                return False, f"Too soon after config change ({time_since_config_change:.0f}s < 1h)"
+                return False, f"Too soon after config change ({time_since_config_change:.0f}s < 1h)", "too_soon_after_rc"
         
         # Check global 15-minute spacing
         time_since_last_global = self.state.simulation_time - self._last_rotation_global
         if time_since_last_global < self.config.min_time_between_rotations_s:
-            return False, f"Too soon since last rotation ({time_since_last_global:.0f}s < 15min)"
+            return False, f"Too soon since last rotation ({time_since_last_global:.0f}s < 15min)", "global_spacing_not_met"
         
         # Check if enough heaters available (need reserve)
         active_heaters_in_line = self._get_active_heaters_for_line(line)
         healthy_heaters_in_line = self._get_healthy_heaters_for_line(line)
         
         if len(healthy_heaters_in_line) <= len(active_heaters_in_line):
-            return False, "No reserve heaters available"
+            return False, "No reserve heaters available", "no_suitable_heaters"
         
         # Check rotation period for this line
         time_since_last_rotation = self.state.simulation_time - self._last_rotation_per_line[line]
         rotation_period = self.config.rotation_period_s.get(self.state.current_scenario, float('inf'))
         
         if time_since_last_rotation < rotation_period:
-            return False, f"Rotation period not elapsed ({time_since_last_rotation:.0f}s / {rotation_period}s)"
+            return False, f"Rotation period not elapsed ({time_since_last_rotation:.0f}s / {rotation_period}s)", "period_not_elapsed"
         
         # In simulation, we don't check stability conditions (temperature, flow, etc.)
         # In real system, would check if system is stable
         
-        return True, "Can rotate"
+        return True, "Can rotate", None
     
     def _get_active_heaters_for_line(self, line: Line) -> list[Heater]:
         """Get active heaters for specific line."""
@@ -448,17 +566,20 @@ class AlgorithmRN:
                     heater_off = heater
                     earliest_activation = tracking.first_activation_timestamp
         
-        # Find heater with longest idle time (to turn on)
+        # Find heater with shortest operating time (to turn on)
+        # We want to balance operating times, not compare operating vs idle time
         heater_on = None
-        max_idle_time = 0.0
+        min_operating_time = float('inf')
         
         for heater in idle_heaters:
             tracking = self._heater_tracking[heater]
-            if tracking.idle_time_s > max_idle_time:
-                max_idle_time = tracking.idle_time_s
+            if tracking.operating_time_s < min_operating_time:
+                min_operating_time = tracking.operating_time_s
                 heater_on = heater
         
-        delta_time = max_operating_time - max_idle_time
+        # Delta is difference in OPERATING times (not operating vs idle)
+        # This ensures we rotate when there's significant imbalance in usage
+        delta_time = max_operating_time - min_operating_time
         
         return heater_off, heater_on, delta_time
     
@@ -523,4 +644,44 @@ class AlgorithmRN:
     def get_rotation_count(self) -> int:
         """Get total number of heater rotations performed."""
         return self._rotation_count
+    
+    def get_blocked_count(self) -> int:
+        """Get total number of times rotation was blocked."""
+        return self._blocked_count
+    
+    def get_blocked_by_reason(self) -> dict[str, int]:
+        """Get detailed blocking statistics by reason."""
+        return self._blocked_by_reason.copy()
+    
+    def get_time_to_next_rotation(self) -> dict[Line, float]:
+        """
+        Get time remaining until next rotation is possible for each line (seconds).
+        
+        Returns:
+            Dictionary mapping Line to time in seconds (0.0 if rotation already possible, -1.0 if not applicable).
+        """
+        result = {}
+        
+        for line in [Line.C1, Line.C2]:
+            # Check if line is active in current scenario
+            if not self._is_line_active(line):
+                # Return -1 to indicate rotation is not applicable for this line
+                result[line] = -1.0
+                continue
+            
+            # Get rotation period for current scenario
+            rotation_period_s = self.config.rotation_period_s.get(
+                self.state.current_scenario,
+                86400  # Default 24h
+            )
+            
+            # Time since last rotation for this line
+            time_since_last = self.state.simulation_time - self._last_rotation_per_line[line]
+            
+            # Time remaining
+            time_remaining = rotation_period_s - time_since_last
+            
+            result[line] = max(0.0, time_remaining)
+        
+        return result
 

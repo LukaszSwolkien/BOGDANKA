@@ -39,7 +39,16 @@ class AlgorithmRC:
         self._time_in_limited = 0.0
         self._last_update_time = None  # Use None to track if initialized
         self._rotation_count = 0  # Track number of configuration changes
+        self._blocked_count = 0  # Track number of times rotation was blocked
         self._previous_scenario: Optional[Scenario] = None  # Track scenario transitions
+        
+        # Detailed blocking statistics
+        self._blocked_by_reason: dict[str, int] = {
+            "rn_rotation_in_progress": 0,    # RN heater rotation blocking RC
+            "scenario_not_suitable": 0,       # Wrong scenario (S0, S5-S8)
+            "mode_not_auto": 0,               # Mode is not AUTO
+            "period_not_elapsed": 0,          # Rotation period not yet elapsed
+        }
         
         LOGGER.info(
             f"Algorithm RC initialized: rotation_period={config.rotation_period_hours}h, "
@@ -73,7 +82,13 @@ class AlgorithmRC:
         self._previous_scenario = self.state.current_scenario
         
         # Step 1: Check if rotation is possible
-        if not self._rotation_possible():
+        rotation_possible, block_reason = self._check_rotation_possible()
+        if not rotation_possible:
+            # Track the specific blocking reason
+            if block_reason:
+                self._blocked_by_reason[block_reason] = self._blocked_by_reason.get(block_reason, 0) + 1
+                self._blocked_count += 1
+            
             # If we're in scenario that requires Primary but we're in Limited,
             # force switch back to Primary
             if self._should_force_primary():
@@ -85,6 +100,9 @@ class AlgorithmRC:
         
         # Step 2: Check if rotation period has elapsed
         if not self._rotation_period_elapsed():
+            self._blocked_by_reason["period_not_elapsed"] += 1
+            self._blocked_count += 1
+            
             time_since = self.state.simulation_time - self.state.timestamp_last_config_change
             period_s = self.config.rotation_period_hours * 3600
             remaining_s = period_s - time_since
@@ -110,6 +128,8 @@ class AlgorithmRC:
         
         # Step 4: Check coordination with RN
         if self.state.heater_rotation_in_progress:
+            self._blocked_by_reason["rn_rotation_in_progress"] += 1
+            self._blocked_count += 1
             LOGGER.info(
                 f"⏸️  RC: Configuration rotation BLOCKED - RN heater rotation in progress "
                 f"(current={self.state.current_config}, sim_time={self.state.simulation_time:.1f}s)"
@@ -135,20 +155,23 @@ class AlgorithmRC:
             
             self._last_update_time = self.state.simulation_time
     
-    def _rotation_possible(self) -> bool:
+    def _check_rotation_possible(self) -> tuple[bool, Optional[str]]:
         """
         Check if rotation is possible based on scenario and system state.
         
         Rotation is only possible in scenarios S1-S4 (single line operation).
         In S5-S8, both lines work in parallel (Primary configuration by definition).
+        
+        Returns:
+            (is_possible, block_reason) where block_reason is the key for _blocked_by_reason dict
         """
         # Must be in AUTO mode
         if self.state.mode != "AUTO":
-            return False
+            return False, "mode_not_auto"
         
         # Only rotate in S1-S4 (single line scenarios)
         if self.state.current_scenario not in [Scenario.S1, Scenario.S2, Scenario.S3, Scenario.S4]:
-            return False
+            return False, "scenario_not_suitable"
         
         # In simulation, we don't check physical equipment health
         # In real system, would check:
@@ -156,7 +179,7 @@ class AlgorithmRC:
         # - W2 fan operational  
         # - No critical alarms
         
-        return True
+        return True, None
     
     def _should_force_primary(self) -> bool:
         """
@@ -265,4 +288,36 @@ class AlgorithmRC:
     def get_rotation_count(self) -> int:
         """Get total number of configuration rotations performed."""
         return self._rotation_count
+    
+    def get_blocked_count(self) -> int:
+        """Get total number of times rotation was blocked."""
+        return self._blocked_count
+    
+    def get_blocked_by_reason(self) -> dict[str, int]:
+        """Get detailed blocking statistics by reason."""
+        return self._blocked_by_reason.copy()
+    
+    def get_time_to_next_rotation(self) -> float:
+        """
+        Get time remaining until next rotation is possible (seconds).
+        
+        Returns:
+            Time in seconds, 0.0 if rotation is already possible, or -1.0 if not applicable.
+        """
+        # Check if rotation is possible in current scenario
+        is_possible, _ = self._check_rotation_possible()
+        if not is_possible:
+            # Return -1 to indicate rotation is not applicable in this scenario
+            return -1.0
+        
+        # Calculate time in current config
+        time_in_current = self.state.simulation_time - self.state.timestamp_last_config_change
+        
+        # Rotation period in seconds
+        rotation_period_s = self.config.rotation_period_hours * 3600
+        
+        # Time remaining
+        time_remaining = rotation_period_s - time_in_current
+        
+        return max(0.0, time_remaining)
 

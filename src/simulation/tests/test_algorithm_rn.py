@@ -139,9 +139,10 @@ def test_rotation_blocked_by_rc(algorithm_rn, state):
     state.current_config = "Primary"
     state.config_change_in_progress = True
     
-    can_rotate, reason = algorithm_rn._can_rotate(Line.C1)
+    can_rotate, reason, reason_key = algorithm_rn._can_rotate(Line.C1)
     assert not can_rotate
     assert "RC" in reason or "config" in reason.lower()
+    assert reason_key == "rc_rotation_in_progress"
 
 
 def test_rotation_blocked_too_soon_after_rc_change(algorithm_rn, state):
@@ -151,9 +152,10 @@ def test_rotation_blocked_too_soon_after_rc_change(algorithm_rn, state):
     state.simulation_time = 2000.0
     state.timestamp_last_config_change = 1000.0  # 1000s ago, need 3600s
     
-    can_rotate, reason = algorithm_rn._can_rotate(Line.C1)
+    can_rotate, reason, reason_key = algorithm_rn._can_rotate(Line.C1)
     assert not can_rotate
     assert "config change" in reason.lower()
+    assert reason_key == "too_soon_after_rc"
 
 
 def test_rotation_requires_reserve_heater(algorithm_rn, state):
@@ -163,9 +165,10 @@ def test_rotation_requires_reserve_heater(algorithm_rn, state):
     state.simulation_time = 4000.0
     
     # S4 Primary uses all 4 heaters in Line C1 (N1-N4), no reserve
-    can_rotate, reason = algorithm_rn._can_rotate(Line.C1)
+    can_rotate, reason, reason_key = algorithm_rn._can_rotate(Line.C1)
     assert not can_rotate
     assert "reserve" in reason.lower()
+    assert reason_key == "no_suitable_heaters"
 
 
 def test_rotation_period_not_elapsed(algorithm_rn, state):
@@ -179,9 +182,10 @@ def test_rotation_period_not_elapsed(algorithm_rn, state):
     algorithm_rn._last_rotation_per_line[Line.C1] = 3000.0  # 1000s ago, need 1800s
     algorithm_rn._last_rotation_global = 0.0  # Long ago
     
-    can_rotate, reason = algorithm_rn._can_rotate(Line.C1)
+    can_rotate, reason, reason_key = algorithm_rn._can_rotate(Line.C1)
     assert not can_rotate
     assert "period not elapsed" in reason.lower()
+    assert reason_key == "period_not_elapsed"
 
 
 def test_heater_selection_for_rotation(algorithm_rn, state):
@@ -196,13 +200,13 @@ def test_heater_selection_for_rotation(algorithm_rn, state):
     algorithm_rn._heater_tracking[Heater.N1].operating_time_s = 2000.0
     algorithm_rn._heater_tracking[Heater.N2].operating_time_s = 1500.0
     algorithm_rn._heater_tracking[Heater.N3].operating_time_s = 1500.0
-    algorithm_rn._heater_tracking[Heater.N4].idle_time_s = 500.0  # Much less idle time
+    algorithm_rn._heater_tracking[Heater.N4].operating_time_s = 0.0  # Idle heater, no operating time
     
     heater_off, heater_on, delta = algorithm_rn._select_heaters_for_rotation(Line.C1)
     
     assert heater_off == Heater.N1  # Longest operating
-    assert heater_on == Heater.N4   # Longest idle (among idle heaters)
-    assert delta == pytest.approx(2000.0 - 500.0)  # max_operating - max_idle
+    assert heater_on == Heater.N4   # Shortest operating time (among idle heaters)
+    assert delta == pytest.approx(2000.0 - 0.0)  # max_operating - min_operating
 
 
 def test_rotation_requires_min_delta_time(algorithm_rn, state):
@@ -216,14 +220,14 @@ def test_rotation_requires_min_delta_time(algorithm_rn, state):
     # Set all heaters to similar times (delta < min_delta_time_s)
     for heater in [Heater.N1, Heater.N2, Heater.N3]:
         algorithm_rn._heater_tracking[heater].operating_time_s = 500.0
-    algorithm_rn._heater_tracking[Heater.N4].idle_time_s = 400.0  # delta = 100s
+    algorithm_rn._heater_tracking[Heater.N4].operating_time_s = 0.0  # delta = 500s (500 - 0)
     
     algorithm_rn._last_rotation_per_line[Line.C1] = 0.0
     algorithm_rn._last_rotation_global = 0.0
     state.timestamp_last_config_change = 0.0
     
     rotated, message = algorithm_rn.process()
-    assert not rotated  # Delta is 100s, need 600s
+    assert not rotated  # Delta is 500s, need 600s
 
 
 def test_full_rotation_flow(algorithm_rn, state):
@@ -241,7 +245,7 @@ def test_full_rotation_flow(algorithm_rn, state):
     algorithm_rn._heater_tracking[Heater.N1].first_activation_timestamp = 0.0
     algorithm_rn._heater_tracking[Heater.N2].operating_time_s = 1000.0
     algorithm_rn._heater_tracking[Heater.N3].operating_time_s = 1000.0
-    algorithm_rn._heater_tracking[Heater.N4].idle_time_s = 1000.0  # Lower than operating times
+    algorithm_rn._heater_tracking[Heater.N4].operating_time_s = 0.0  # Idle heater, no operating time
     
     # Set timestamps to allow rotation
     algorithm_rn._last_rotation_per_line[Line.C1] = 0.0  # Last rotated long ago
@@ -262,7 +266,8 @@ def test_15min_global_spacing(algorithm_rn, state):
     state.simulation_time = 5000.0
     algorithm_rn._last_rotation_global = 4500.0  # 500s ago (< 900s)
     
-    can_rotate, reason = algorithm_rn._can_rotate(Line.C2)
+    can_rotate, reason, reason_key = algorithm_rn._can_rotate(Line.C2)
     assert not can_rotate
     assert "last rotation" in reason.lower()
+    assert reason_key == "global_spacing_not_met"
 

@@ -62,7 +62,9 @@ def test_rotation_possible_in_s1_s4(algorithm_rc, state):
     state.mode = "AUTO"
     
     # Rotation should be theoretically possible (but period not elapsed yet)
-    assert algorithm_rc._rotation_possible()
+    is_possible, reason = algorithm_rc._check_rotation_possible()
+    assert is_possible
+    assert reason is None
 
 
 def test_rotation_blocked_by_manual_mode(algorithm_rc, state):
@@ -70,7 +72,9 @@ def test_rotation_blocked_by_manual_mode(algorithm_rc, state):
     state.current_scenario = Scenario.S3
     state.mode = "MANUAL"
     
-    assert not algorithm_rc._rotation_possible()
+    is_possible, reason = algorithm_rc._check_rotation_possible()
+    assert not is_possible
+    assert reason == "mode_not_auto"
 
 
 def test_rotation_period_not_elapsed(algorithm_rc, state):

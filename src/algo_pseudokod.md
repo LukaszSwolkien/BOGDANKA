@@ -754,8 +754,8 @@ ZMIENNE LOKALNE (tylko dla RC):
   - czas_pracy_układu_podstawowego = 0          // [sekundy]
   - czas_pracy_układu_ograniczonego = 0         // [sekundy]
   - czas_ostatniej_zmiany = czas_systemowy      // timestamp ostatniej rotacji układu
-  - scenariusz = S0..S8                         // aktualny scenariusz
   - last_update_time = NULL                     // timestamp ostatniej aktualizacji liczników
+  - poprzedni_scenariusz = NULL                 // dla wykrywania przejścia z S0
 
 PARAMETRY:
   - OKRES_ROTACJI_UKŁADÓW                       // definiowany przez technologa [s]
@@ -764,14 +764,30 @@ PARAMETRY:
 
 GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
   
-  KROK 0: Inicjalizacja przy pierwszym uruchomieniu
+  KROK 0A: Inicjalizacja przy pierwszym uruchomieniu
     JEŻELI last_update_time = NULL WTEDY
       last_update_time = czas_systemowy
+      poprzedni_scenariusz = Pobierz_Scenariusz()
       PRZEJDŹ DO KROKU 5  // Pomiń rotację przy pierwszym uruchomieniu
     KONIEC JEŻELI
   
+  KROK 0B: Wykryj przejście z S0 do S1-S4 (rozruch systemu)
+    aktualny_scenariusz = Pobierz_Scenariusz()
+    
+    // Po przejściu z S0 (system wyłączony) do S1-S4 (ruch jednoliniowy):
+    // Resetujemy timestamp, aby nie wykonywać rotacji natychmiast po rozruchu
+    JEŻELI poprzedni_scenariusz = S0 ORAZ 
+           aktualny_scenariusz ∈ {S1, S2, S3, S4} WTEDY
+      Rejestruj_Zdarzenie("RC: Wykryto rozruch " + poprzedni_scenariusz + 
+                         " → " + aktualny_scenariusz + " - reset timestamp")
+      czas_ostatniej_zmiany = czas_systemowy
+    KONIEC JEŻELI
+    
+    // Zapamiętaj scenariusz dla następnej iteracji
+    poprzedni_scenariusz = aktualny_scenariusz
+  
   KROK 1: Sprawdź warunki rotacji
-    JEŻELI scenariusz ∈ {S1, S2, S3, S4} ORAZ
+    JEŻELI aktualny_scenariusz ∈ {S1, S2, S3, S4} ORAZ
            wszystkie_nagrzewnice_C2_sprawne ORAZ
            wentylator_W2_sprawny ORAZ
            tryb = AUTO ORAZ
@@ -782,7 +798,7 @@ GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
     W PRZECIWNYM RAZIE:
       rotacja_możliwa = FAŁSZ
       // Poza S1-S4 utrzymujemy definicyjnie układ podstawowy (oba ciągi pracują równolegle)
-      JEŻELI scenariusz ∈ {S1, S2, S3, S4} ORAZ aktualny_układ = "Ograniczony" WTEDY
+      JEŻELI aktualny_scenariusz ∈ {S1, S2, S3, S4} ORAZ aktualny_układ = "Ograniczony" WTEDY
         Wykonaj_Zmianę_Układu("Podstawowy")
       W PRZECIWNYM RAZIE:
         aktualny_układ = "Podstawowy"   // aktualizacja stanu logicznego bez ingerencji sprzętowej
@@ -1153,21 +1169,23 @@ GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
         KONIEC JEŻELI
       KONIEC DLA
       
-      // Znajdź nagrzewnicę najdłużej postoju (nieaktywną, sprawną)
+      // Znajdź nagrzewnicę z najkrótszym czasem pracy (nieaktywną, sprawną)
+      // UWAGA: Porównujemy czasy PRACY, nie postoju!
       nagrzewnica_do_załączenia = NULL
-      max_czas_postoju = 0
+      min_czas_pracy = nieskonczonosc
       
       DLA KAŻDEJ N w [nagrzewnice ciągu]:
         JEŻELI N NIE w nagrzewnice_aktywne[ciąg] ORAZ
                N_sprawna(N) ORAZ
-               czas_postoju[N] > max_czas_postoju WTEDY
-          max_czas_postoju = czas_postoju[N]
+               czas_pracy[N] < min_czas_pracy WTEDY
+          min_czas_pracy = czas_pracy[N]
           nagrzewnica_do_załączenia = N
         KONIEC JEŻELI
       KONIEC DLA
       
       // Sprawdź czy warto wykonać rotację
-      delta_czasu = max_czas_pracy - max_czas_postoju
+      // Porównujemy różnicę w czasach PRACY (nie pracy vs postoju)
+      delta_czasu = max_czas_pracy - min_czas_pracy
       JEŻELI delta_czasu < MIN_DELTA_CZASU WTEDY
         // Różnica czasu zbyt mała - nie ma sensu rotować
         POMIŃ ciąg
@@ -1391,25 +1409,61 @@ FUNKCJA Dostosuj_Ilość_Nagrzewnic():
   // - NIE resetuje stanów nagrzewnic które pozostają aktywne
   // - Zachowuje liczniki czasu pracy/postoju
   // - Dodaje/usuwa TYLKO różnicę
+  // 
+  // WAŻNE: Wybiera nagrzewnice według czasu pracy (sprawiedliwość rotacji)!
+  // Przykład: S3→S2→S3
+  //   S3: N1, N2, N3 aktywne
+  //   S3→S2: Wyłącz N3 (najwięcej czasu pracy)
+  //   S2→S3: Włącz N4 (najmniej czasu pracy), NIE N3!
   
-  wymagane_nagrzewnice = Pobierz_Wymagane_Nagrzewnice_Dla_Scenariusza()
-  aktualnie_aktywne = Pobierz_Aktualnie_Aktywne_Nagrzewnice()
+  // Określ ile nagrzewnic potrzebujemy na każdym ciągu
+  wymagana_liczba = Pobierz_Liczbę_Nagrzewnic_Dla_Scenariusza()
   
-  // Znajdź nagrzewnice do dodania
-  do_dodania = wymagane_nagrzewnice - aktualnie_aktywne
-  
-  DLA KAŻDEJ N w do_dodania:
-    Rejestruj_Zdarzenie("RN: Dodanie nagrzewnicy " + N + " dla scenariusza")
-    Ustaw_Stan(N, AKTYWNA)
-    timestamp_zalaczenia[N] = czas_systemowy
-  KONIEC DLA
-  
-  // Znajdź nagrzewnice do usunięcia
-  do_usuniecia = aktualnie_aktywne - wymagane_nagrzewnice
-  
-  DLA KAŻDEJ N w do_usuniecia:
-    Rejestruj_Zdarzenie("RN: Usunięcie nagrzewnicy " + N + " dla scenariusza")
-    Ustaw_Stan(N, POSTÓJ)
+  DLA KAŻDEGO ciągu w [CIĄG1, CIĄG2]:
+    nagrzewnice_ciągu = Pobierz_Nagrzewnice_Ciągu(ciąg)  // np. [N1, N2, N3, N4]
+    aktywne_ciągu = Pobierz_Aktywne_Nagrzewnice_Ciągu(ciąg)
+    sprawne_ciągu = Pobierz_Sprawne_Nagrzewnice_Ciągu(ciąg)
+    
+    aktualna_liczba = Liczba_Elementów(aktywne_ciągu)
+    wymagana_liczba_ciągu = Pobierz_Wymaganą_Liczbę_Dla_Ciągu(ciąg, wymagana_liczba)
+    delta = wymagana_liczba_ciągu - aktualna_liczba
+    
+    JEŻELI delta = 0 WTEDY
+      POMIŃ ciąg  // Bez zmian
+    KONIEC JEŻELI
+    
+    JEŻELI delta > 0 WTEDY
+      // Trzeba DODAĆ nagrzewnice - wybierz te z NAJMNIEJSZYM czasem pracy
+      nagrzewnice_postoju = sprawne_ciągu - aktywne_ciągu
+      
+      // Posortuj według czasu pracy (rosnąco)
+      posortowane = Sortuj_Według_Czasu_Pracy(nagrzewnice_postoju, ROSNĄCO)
+      
+      // Włącz `delta` nagrzewnic z najmniejszym czasem pracy
+      DLA i = 1 DO Min(delta, Liczba_Elementów(posortowane)):
+        N = posortowane[i]
+        Rejestruj_Zdarzenie("RN: Dodanie " + N + " dla " + aktualny_scenariusz + 
+                           " (czas_pracy=" + czas_pracy[N] + "s)")
+        Ustaw_Stan(N, AKTYWNA)
+        timestamp_zalaczenia[N] = czas_systemowy
+      KONIEC DLA
+    
+    W PRZECIWNYM RAZIE JEŻELI delta < 0 WTEDY
+      // Trzeba USUNĄĆ nagrzewnice - wybierz te z NAJWIĘKSZYM czasem pracy
+      liczba_do_usuniecia = Abs(delta)
+      
+      // Posortuj według czasu pracy (malejąco)
+      posortowane = Sortuj_Według_Czasu_Pracy(aktywne_ciągu, MALEJĄCO)
+      
+      // Wyłącz `liczba_do_usuniecia` nagrzewnic z największym czasem pracy
+      DLA i = 1 DO Min(liczba_do_usuniecia, Liczba_Elementów(posortowane)):
+        N = posortowane[i]
+        Rejestruj_Zdarzenie("RN: Usunięcie " + N + " dla " + aktualny_scenariusz + 
+                           " (czas_pracy=" + czas_pracy[N] + "s)")
+        Ustaw_Stan(N, POSTÓJ)
+      KONIEC DLA
+    
+    KONIEC JEŻELI
   KONIEC DLA
 
 KONIEC FUNKCJI

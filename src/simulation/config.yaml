@@ -59,7 +59,7 @@ services:
       
       # Algorithm RC - Configuration Rotation (Primary ↔ Limited)
       rc:
-        rotation_period_hours: 120           # [h] rotation period (7 days = 168h)
+        rotation_period_hours: 48           # [h] rotation period (7 days = 168h)
         algorithm_loop_cycle_s: 60           # [s] RC check frequency
         min_operating_time_s: 3600           # [s] minimum time before rotation allowed
       

@@ -92,8 +92,10 @@ class AlgoService:
         )
         self.algorithm_rn = AlgorithmRN(config=rn_config, state=self.state)
         
-        # Initialize recent events buffer (for display)
-        self._recent_events: list[str] = []
+        # Initialize recent events buffers (for display) - separate for WS, RC, RN
+        self._recent_ws_events: list[str] = []
+        self._recent_rc_events: list[str] = []
+        self._recent_rn_events: list[str] = []
         self._max_recent_events = 4
         
         # Initialize status display
@@ -101,7 +103,10 @@ class AlgoService:
             state=self.state,
             algorithm_rn=self.algorithm_rn,
             algorithm_ws=self.algorithm_ws,
-            recent_events=self._recent_events,
+            algorithm_rc=self.algorithm_rc,
+            recent_ws_events=self._recent_ws_events,
+            recent_rc_events=self._recent_rc_events,
+            recent_rn_events=self._recent_rn_events,
             enabled=self.config.services.algo.display.enabled,
         )
         
@@ -195,12 +200,13 @@ class AlgoService:
         LOGGER.info(f"Received signal {signum} - initiating shutdown")
         self._stop_requested = True
     
-    def _add_event(self, event_text: str) -> None:
+    def _add_event(self, event_type: str, event_text: str) -> None:
         """
         Add event to recent events buffer (for display).
         
         Args:
-            event_text: Short event description (e.g., "S3→S4", "RC: C1→C2")
+            event_type: Type of event ('ws', 'rc', or 'rn')
+            event_text: Short event description (e.g., "S3→S4", "C1→C2", "N1→N2")
         """
         # Format: [D5 12:34] event_text (day + HH:MM)
         sim_day = int(self.state.simulation_time // 86400)
@@ -209,11 +215,20 @@ class AlgoService:
         timestamp = f"[D{sim_day} {sim_time_h:02d}:{sim_time_m:02d}]"
         
         event_with_timestamp = f"{timestamp} {event_text}"
-        self._recent_events.append(event_with_timestamp)
         
-        # Keep only last N events (rolling buffer)
-        while len(self._recent_events) > self._max_recent_events:
-            self._recent_events.pop(0)  # Remove oldest
+        # Add to appropriate list
+        if event_type == 'ws':
+            self._recent_ws_events.append(event_with_timestamp)
+            while len(self._recent_ws_events) > self._max_recent_events:
+                self._recent_ws_events.pop(0)
+        elif event_type == 'rc':
+            self._recent_rc_events.append(event_with_timestamp)
+            while len(self._recent_rc_events) > self._max_recent_events:
+                self._recent_rc_events.pop(0)
+        elif event_type == 'rn':
+            self._recent_rn_events.append(event_with_timestamp)
+            while len(self._recent_rn_events) > self._max_recent_events:
+                self._recent_rn_events.pop(0)
     
     def _main_loop(self) -> None:
         """
@@ -276,7 +291,7 @@ class AlgoService:
                 # Record metric
                 self.metrics.record_scenario_change(old_scenario, self.state.current_scenario)
                 # Add event for display
-                self._add_event(f"WS: {old_scenario.name}→{self.state.current_scenario.name}")
+                self._add_event('ws', f"{old_scenario.name}→{self.state.current_scenario.name}")
             elif loop_count % 60 == 0:  # Every 10 minutes (60 * 10s cycles)
                 # Log current state periodically
                 LOGGER.debug(
@@ -298,8 +313,9 @@ class AlgoService:
                     # Record metric
                     self.metrics.record_config_change(old_config, self.state.current_config)
                     # Add event for display
-                    config_short = "C1" if self.state.current_config == "Primary" else "C2"
-                    self._add_event(f"RC: →{config_short}")
+                    old_config_short = "C1" if old_config == "Primary" else "C2"
+                    new_config_short = "C1" if self.state.current_config == "Primary" else "C2"
+                    self._add_event('rc', f"{old_config_short}→{new_config_short}")
             
             # STEP 5: Run Algorithm RN (heater rotation)
             # RN runs at same frequency as RC (e.g., every 60s)
@@ -326,7 +342,7 @@ class AlgoService:
                             heater_on = parts[1].strip()
                             self.metrics.record_heater_rotation(line, heater_off, heater_on)
                             # Add event for display
-                            self._add_event(f"RN.{line}: {heater_off}→{heater_on}")
+                            self._add_event('rn', f"{line}: {heater_off}→{heater_on}")
                 elif "blocked" in rn_message.lower() or "cannot" in rn_message.lower():
                     # RN blocked - add as event
                     if "config change" in rn_message.lower():
