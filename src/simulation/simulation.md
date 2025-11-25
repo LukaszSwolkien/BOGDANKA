@@ -16,6 +16,7 @@ Algorithm logic is documented separately: [../../docs/03-algorytmy/algorytmy.md]
 - Realistic Temperature Profile (winter simulation)
 - Success Criteria (verification in Splunk)
 - Algorithm Documentation Reference (links to algorithm specs)
+- Implementation Principles (pseudocode as source of truth)
 
 ### **PART II: IMPLEMENTATION DETAILS**
 *HOW to implement - defines technical stack and execution*
@@ -154,12 +155,12 @@ Both services support **time acceleration** for fast testing:
 
 **Algorithm Implementation:**
 
-**⚠️ CRITICAL: Implement algorithms EXACTLY as pseudocode in [../../docs/03-algorytmy/algorytmy.md](../../docs/03-algorytmy/algorytmy.md)**
+**⚠️ CRITICAL: Implement algorithms EXACTLY as pseudocode in [../algo_pseudokod.md](../algo_pseudokod.md)**
 
-- Pseudocode = Single Source of Truth
+- **Pseudocode = Single Source of Truth:** [../algo_pseudokod.md](../algo_pseudokod.md)
 - Every line of pseudocode must have corresponding implementation
 - **DO NOT** modify algorithm logic without updating pseudocode first
-- If you find issues during testing → update pseudocode in `algorytmy.md`, then re-implement
+- If you find issues during testing → update pseudocode in `algo_pseudokod.md`, then re-implement
 - Use all coordination mechanisms (locks, time gaps, hierarchies) exactly as specified
 
 **Weather Integration:**
@@ -374,7 +375,7 @@ Day  | Avg Temp | Scenarios Expected
 ### Temperature Calculation Algorithm
 
 **Pseudocode:**
-
+    
 ```
 FUNCTION calculate_temperature(day, hour):
     INPUT:
@@ -397,26 +398,26 @@ FUNCTION calculate_temperature(day, hour):
         // Main trend: cooling then warming
         IF day <= cooling_days THEN
             // Cooling phase: smooth transition from initial to minimum
-            progress = day / cooling_days
-            trend_temp = initial_temp - (initial_temp - min_temp) * progress
+        progress = day / cooling_days
+        trend_temp = initial_temp - (initial_temp - min_temp) * progress
         ELSE
             // Warming phase: smooth transition from minimum to final
-            progress = (day - cooling_days) / warming_days
-            trend_temp = min_temp + (final_temp - min_temp) * progress
-        
+        progress = (day - cooling_days) / warming_days
+        trend_temp = min_temp + (final_temp - min_temp) * progress
+    
         // Daily variation (day is warmer, night is colder)
         daily_cycle = daily_variation * sin(2 * π * hour / 24)
-        
+    
         // Random noise for realism
         noise = gaussian_random(0, noise_sigma)
-        
+    
         // Final temperature
-        T_zewn = trend_temp + daily_cycle + noise
-        
+    T_zewn = trend_temp + daily_cycle + noise
+    
         // Emit metrics:
         // - bogdanka.weather.external_temperature = T_zewn
         // - bogdanka.weather.simulation_day = day
-        
+    
         RETURN T_zewn
 ```
 
@@ -452,19 +453,52 @@ After running simulation for 30 days, verify in Splunk Observability:
 
 **⚠️ IMPORTANT:** This file contains ONLY simulation specifications.
 
-**For algorithm logic (PSEUDOCODE = SOURCE OF TRUTH):**
-- **Complete algorithms:** [../../docs/03-algorytmy/algorytmy.md](../../docs/03-algorytmy/algorytmy.md)
-  - Algorithm WS: Scenario selection with hysteresis
-  - Algorithm RC: Configuration rotation (Primary ↔ Limited)
-  - Algorithm RN: Heater rotation within lines
-  - Coordination: locks, time gaps, hierarchy
+**For algorithm implementation (PSEUDOCODE = SOURCE OF TRUTH):**
+- **📄 Pseudocode (implementation):** [../algo_pseudokod.md](../algo_pseudokod.md) ← **SINGLE SOURCE OF TRUTH**
+  - Algorithm WS: Complete pseudocode
+  - Algorithm RC: Complete pseudocode
+  - Algorithm RN: Complete pseudocode
+  - Global parameters (RC/RN)
   - **Implementation must match pseudocode 1:1**
   - **If issues found → update pseudocode first, then re-implement**
 
-**For system context:**
+**For algorithm theory and context:**
+- **Algorithm descriptions:** [../../docs/03-algorytmy/algorytmy.md](../../docs/03-algorytmy/algorytmy.md) - detailed descriptions, examples, diagrams
 - **System architecture:** [../../docs/01-system/system.md](../../docs/01-system/system.md)
-  - Section 5.4: Implementation principles
 - **Installation project:** [../../docs/02-projekt-instalacji/projekt-instalacji.md](../../docs/02-projekt-instalacji/projekt-instalacji.md)
+
+---
+
+## 🔧 Implementation Principles
+
+**⚠️ CRITICAL IMPLEMENTATION RULE:**
+
+All algorithms (WS, RC, RN) in simulation must be implemented **EXACTLY** according to the pseudocode contained in **[../algo_pseudokod.md](../algo_pseudokod.md)**.
+
+**Pseudocode = Single Source of Truth**
+
+- **Single source of pseudocode:** [algo_pseudokod.md](../algo_pseudokod.md)
+- Every line of pseudocode must have corresponding implementation
+- Changes in implementation require updating the pseudocode
+
+**Problem Detection Process:**
+
+1. **During tests/simulation** - if problem detected:
+   - Analysis: is the error in implementation or in pseudocode logic?
+   - If in pseudocode → update [algo_pseudokod.md](../algo_pseudokod.md)
+   - If in implementation → fix code to match pseudocode
+
+**Rationale:**
+
+- Pseudocode is **implementation specification** - must always be up-to-date
+- Implementation is **realization** of specification
+- Synchronization: code ↔ pseudocode ensures project consistency
+- Easier verification and system audit
+
+**Documentation:**
+
+- **Pseudocode (implementation):** [algo_pseudokod.md](../algo_pseudokod.md) ← SOURCE OF TRUTH
+- **Algorithm descriptions (theory):** [../../docs/03-algorytmy/algorytmy.md](../../docs/03-algorytmy/algorytmy.md) - detailed descriptions, examples, diagrams
 
 ---
 
