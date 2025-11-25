@@ -6,9 +6,9 @@ Ten dokument zawiera **jedyne obowiązujące źródło pseudokodu** dla algorytm
 
 ---
 
-## 📌 Zasady Użycia Tego Dokumentu
+## Zasady Użycia Tego Dokumentu
 
-**⚠️ KLUCZOWE ZASADY:**
+**KLUCZOWE ZASADY:**
 
 1. **Źródło Prawdy:** Ten plik jest **jedynym źródłem prawdy** dla pseudokodu algorytmów
 2. **Implementacja 1:1:** Każda implementacja (symulacja, PLC) musi **dokładnie** odzwierciedlać ten pseudokod
@@ -24,7 +24,7 @@ Ten dokument zawiera **jedyne obowiązujące źródło pseudokodu** dla algorytm
 
 ---
 
-## 📑 Zawartość
+## Zawartość
 
 1. [Globalne Parametry Rotacyjne (RC/RN)](#globalne-parametry-rotacyjne-rcn)
 2. [Algorytm WS: Automatyczny Wybór Scenariusza](#algorytm-ws-automatyczny-wybór-scenariusza)
@@ -679,6 +679,7 @@ ZMIENNE LOKALNE (tylko dla RC):
   - czas_pracy_układu_ograniczonego = 0         // [sekundy]
   - czas_ostatniej_zmiany = czas_systemowy      // timestamp ostatniej rotacji układu
   - scenariusz = S0..S8                         // aktualny scenariusz
+  - last_update_time = NULL                     // timestamp ostatniej aktualizacji liczników
 
 PARAMETRY:
   - OKRES_ROTACJI_UKŁADÓW                       // definiowany przez technologa [s]
@@ -686,6 +687,12 @@ PARAMETRY:
   - CYKL_PĘTLI_ALGORYTMÓW = 60                  // częstość sprawdzania [s] (domyślnie 1 min)
 
 GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
+  
+  KROK 0: Inicjalizacja przy pierwszym uruchomieniu
+    JEŻELI last_update_time = NULL WTEDY
+      last_update_time = czas_systemowy
+      PRZEJDŹ DO KROKU 5  // Pomiń rotację przy pierwszym uruchomieniu
+    KONIEC JEŻELI
   
   KROK 1: Sprawdź warunki rotacji
     JEŻELI scenariusz ∈ {S1, S2, S3, S4} ORAZ
@@ -755,10 +762,18 @@ GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
     KONIEC JEŻELI
   
   KROK 5: Aktualizuj liczniki czasu pracy
-    JEŻELI aktualny_układ = "Podstawowy" WTEDY
-      czas_pracy_układu_podstawowego += CYKL_PĘTLI_ALGORYTMÓW
-    W PRZECIWNYM RAZIE:
-      czas_pracy_układu_ograniczonego += CYKL_PĘTLI_ALGORYTMÓW
+    // Oblicz rzeczywisty czas który upłynął od ostatniej aktualizacji
+    // (uwzględnia przyspieszenie czasu w symulacji i ewentualne opóźnienia w PLC)
+    delta_time = czas_systemowy - last_update_time
+    
+    JEŻELI delta_time > 0 WTEDY
+      JEŻELI aktualny_układ = "Podstawowy" WTEDY
+        czas_pracy_układu_podstawowego += delta_time
+      W PRZECIWNYM RAZIE:
+        czas_pracy_układu_ograniczonego += delta_time
+      KONIEC JEŻELI
+      
+      last_update_time = czas_systemowy
     KONIEC JEŻELI
 
 KONIEC PĘTLI
@@ -864,6 +879,7 @@ ZMIENNE LOKALNE (dla każdego ciągu osobno):
   - timestamp_zalaczenia[N1..N8] = [0, 0, 0, 0, 0, 0, 0, 0] // [timestamp pierwszego załączenia]
   - czas_ostatniej_rotacji[CIĄG1, CIĄG2] = [0, 0]       // [timestamp]
   - nagrzewnice_aktywne[CIĄG] = []                       // lista aktywnych
+  - last_update_time = NULL                              // timestamp ostatniej aktualizacji liczników
 
 PARAMETRY:
   - OKRES_ROTACJI_NAGRZEWNIC[S1..S8]  // definiowany przez technologa [s]
@@ -873,9 +889,17 @@ PARAMETRY:
 
 GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
   
+  KROK 0A: Inicjalizacja przy pierwszym uruchomieniu
+    JEŻELI last_update_time = NULL WTEDY
+      last_update_time = czas_systemowy
+      // Zaktualizuj stany nagrzewnic na podstawie aktualnego scenariusza/układu
+      Aktualizuj_Stany_Nagrzewnic()
+      PRZEJDŹ DO KOŃCA PĘTLI  // Pomiń rotację przy pierwszym uruchomieniu
+    KONIEC JEŻELI
+  
   DLA KAŻDEGO ciągu w [CIĄG1, CIĄG2]:
     
-    KROK 0: Sprawdź czy ciąg jest aktywny w aktualnym układzie/scenariuszu
+    KROK 0B: Sprawdź czy ciąg jest aktywny w aktualnym układzie/scenariuszu
       aktualny_scenariusz = Pobierz_Scenariusz()
       aktualny_układ = Pobierz_Układ()  // Podstawowy lub Ograniczony
       
@@ -896,13 +920,21 @@ GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
       KONIEC JEŻELI
     
     KROK 1: Aktualizuj liczniki czasu pracy i postoju
-      DLA KAŻDEJ nagrzewnicy w ciągu:
-        JEŻELI nagrzewnica_aktywna(N) WTEDY
-          czas_pracy[N] += CYKL_PĘTLI_ALGORYTMÓW
-        W PRZECIWNYM RAZIE:
-          czas_postoju[N] += CYKL_PĘTLI_ALGORYTMÓW
-        KONIEC JEŻELI
-      KONIEC DLA
+      // Oblicz rzeczywisty czas który upłynął od ostatniej aktualizacji
+      // (uwzględnia przyspieszenie czasu w symulacji i ewentualne opóźnienia w PLC)
+      delta_time = czas_systemowy - last_update_time
+      
+      JEŻELI delta_time > 0 WTEDY
+        DLA KAŻDEJ nagrzewnicy w ciągu:
+          JEŻELI nagrzewnica_aktywna(N) WTEDY
+            czas_pracy[N] += delta_time
+          W PRZECIWNYM RAZIE:
+            czas_postoju[N] += delta_time
+          KONIEC JEŻELI
+        KONIEC DLA
+        
+        last_update_time = czas_systemowy
+      KONIEC JEŻELI
     
     KROK 2: Sprawdź warunki rotacji
       
@@ -1192,6 +1224,10 @@ KONIEC FUNKCJI
 
 **Koniec dokumentu pseudokodu**
 
+**Historia zmian:**
+- **v1.1** (2 Grudnia 2025): Dodano inicjalizację liczników czasu i obliczanie delta_time dla RC i RN (wynik testów w symulacji)
+- **v1.0** (24 Listopad 2025): Wersja początkowa
+
 **Ostatnia aktualizacja:** 25 Listopad 2025  
-**Wersja:** 1.0
+**Wersja:** 1.1
 

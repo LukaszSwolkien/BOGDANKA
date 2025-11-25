@@ -12,7 +12,19 @@ dependencies = [
     "opentelemetry-exporter-otlp-proto-http>=1.20.0",
 ]
 
+[project.optional-dependencies]
+test = [
+    "pytest>=7.4.0",
+]
+
+[project.scripts]
+weather-service = "weather_service:main"
+algo-service = "algo_service:main"
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.hatch.build.targets.wheel]
+packages = ["common", "weather", "algo", "tests"]
+include = ["weather_service.py", "algo_service.py", "config.yaml"]

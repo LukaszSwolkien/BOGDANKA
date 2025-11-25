@@ -3,6 +3,7 @@
 **Goal:** Create microservices for simulating BOGDANKA Shaft 2 heating control algorithms with Splunk Observability
 
 Algorithm logic is documented separately: [../../docs/03-algorytmy/algorytmy.md](../../docs/03-algorytmy/algorytmy.md)
+**MUST** use for implementation pseudo-code is documented here [../algo_pseudokod.md](../algo_pseudokod.md)
 
 ---
 
@@ -34,33 +35,33 @@ Algorithm logic is documented separately: [../../docs/03-algorytmy/algorytmy.md]
 
 ---
 
-## 🧱 Service Architecture
+## Service Architecture
 
 ### Overview
 
 The simulation consists of **two independent microservices** that communicate via HTTP and send telemetry to **Splunk Observability Cloud** via OTLP:
 
 ```
-┌─────────────────────┐         HTTP GET          ┌─────────────────────┐
-│                     │ /temperature              │                     │
-│  Weather Service    ├──────────────────────────►│   Algo Service      │
-│  (Port 8080)        │                           │                     │
-│                     │                           │                     │
-│ • T_zewn generator  │                           │ • Algorithm WS      │
-│ • Winter profile    │                           │ • Algorithm RC      │
-│ • Sine wave + noise │                           │ • Algorithm RN      │
-└──────────┬──────────┘                           └──────────┬──────────┘
-           │                                                 │
-           │ OTLP Metrics/Logs                               │ OTLP Metrics/Logs
-           │ bogdanka.weather.*                              │ bogdanka.algo.*
-           │                                                 │
-           └─────────────────────────┬───────────────────────┘
-                                     │
-                                     ▼
-                         ┌───────────────────────┐
-                         │  Splunk Observability │
-                         │  (OTLP Endpoint)      │
-                         └───────────────────────┘
+┌─────────────────────┐  HTTP GET     ┌─────────────────┐
+│                     │ /temperature  │                 │
+│  Weather Service    ├──────────────►│   Algo Service  │
+│  (Port 8080)        │               │                 │
+│                     │               │                 │
+│ • T_zewn generator  │               │ • Algorithm WS  │
+│ • Winter profile    │               │ • Algorithm RC  │
+│ • Sine wave + noise │               │ • Algorithm RN  │
+└──────┬──────────────┘               └──────────┬──────┘
+       │                                         │
+       │                                         │
+       │ OTLP Metrics               OTLP Metrics │ 
+       │ bogdanka.weather.*      bogdanka.algo.* │
+       └────────────────────┬────────────────────┘
+                            │
+                            ▼
+                ┌───────────────────────┐
+                │  Splunk Observability │
+                │  (OTLP Endpoint)      │
+                └───────────────────────┘
 ```
 
 ### Service 1: Weather Service
@@ -114,13 +115,37 @@ Key sections:
 
 Both services support **time acceleration** for fast testing:
 - **acceleration = 1000** means: 1 second of simulation = 1000 seconds (~16.7 minutes) of real time
-- 30 days of operation can be simulated in ~43 minutes
+- 90 days of operation can be simulated in ~2 hours
 - Read from `simulation.acceleration` in config
 - All timing parameters (rotation periods, gaps, cycles) are in simulation time
 
+### Time Coordination
+
+**Weather Service** is the **authoritative time source**:
+- Maintains `AcceleratedClock` starting on service launch
+- Returns `simulation_time` in every `/temperature` response
+- This is the single source of truth for simulation time
+
+**Algo Service** uses weather service's time:
+- Polls `/temperature` every `temp_monitoring_cycle_s` (default: 10s)
+- Uses `simulation_time` from response for all timing decisions
+- Maintains algorithm timers (scenario changes, rotations) relative to weather's `simulation_time`
+- **Does not maintain independent clock** - eliminates drift
+
+**Result:** Perfect synchronization without coordination protocol. Services do not need to start simultaneously - algo service can start at any point and will use current simulation time from weather service.
+
 ---
 
-## 🎯 Implementation Requirements
+## Implementation Requirements
+
+Before diving into each service, keep these shared simulation rules in mind:
+
+1. **Config coverage:** Initial implementation may support only a subset of `config.yaml`; any unsupported knobs must be documented for later follow-up.
+2. **Telemetry split:** Metrics are exported to Splunk from day one, but logs remain local (console/file) until we intentionally add a log exporter.
+3. **Telemetry credentials:** Use placeholder OTLP tokens/headers in `config.yaml`; operators will replace them with real secrets when deploying.
+4. **Time coordination:** Weather service maintains the authoritative `AcceleratedClock`. Algo service uses `simulation_time` from weather API responses as its time source. No independent algo clock needed—this eliminates drift.
+5. **Simulation duration:** Default runtime spans **90 simulated days** to cover the entire winter profile, but the duration must be configurable via `config.yaml`. Simulation will be accelerated via acceleration setting
+6. **Console dashboard:** The ANSI two-zone console view for `algo_service` (status header + event stream) is part of the MVP scope.
 
 ### Service 1: Weather Service
 
@@ -162,14 +187,18 @@ Both services support **time acceleration** for fast testing:
 - **DO NOT** modify algorithm logic without updating pseudocode first
 - If you find issues during testing → update pseudocode in `algo_pseudokod.md`, then re-implement
 - Use all coordination mechanisms (locks, time gaps, hierarchies) exactly as specified
+- **PID regulation scope:** The simulation **does not numerically model** the internal PID loops (nagrzewnice valves or fan speed controllers). We only assert/log that a given regulator operates in the requested mode (PID/MAX/OFF) per pseudocode so we can focus on execution of WS/RC/RN without solving continuous control equations.
 
 **Weather Integration:**
 - Poll `GET {weather_endpoint}/temperature` every `services.algo.algorithms.ws.temp_monitoring_cycle_s`
+- Extract `simulation_time` from response and use as current time for all algorithm decisions
+- Extract `t_zewn` (external temperature) for scenario selection
 - Handle connection errors (retry with backoff)
+- **Important:** Algo service does not maintain independent clock - uses `simulation_time` from weather service
 
 **Telemetry:**
 - Emit comprehensive metrics (see specifications below)
-- Structured JSON logs for all events
+- Structured JSON logs for all events (kept locally)
 - NO CSV exports, NO PNG charts - all analysis in Splunk
 
 ---
@@ -563,7 +592,7 @@ Note: No local output files - all results in Splunk Observability
 
 ---
 
-## 📝 Coding Standards
+## Coding Standards
 
 **Code Language:** All code (variables, functions, classes) must be written in **English**.
 
@@ -623,36 +652,61 @@ class WeatherService:
 ```python
 class AlgoService:
     def __init__(self, config):
+        self.config = config
+        self.weather_endpoint = config['services']['algo']['weather_endpoint']
         self.acceleration = config['simulation']['acceleration']
-        self.start_time_real = time.time()
         
-    def get_simulation_time(self):
-        """Calculate current simulation time"""
-        elapsed_real = time.time() - self.start_time_real
-        return elapsed_real * self.acceleration
+        # NO independent clock - use weather service's time
+        self.current_sim_time = 0.0
+        self.last_scenario_change_time = 0.0
+        self.last_rc_rotation_time = 0.0
+        
+    def poll_weather(self):
+        """Poll weather service and update simulation time."""
+        response = requests.get(self.weather_endpoint)
+        data = response.json()
+        
+        # Use weather service's time as authoritative
+        self.current_sim_time = data['simulation_time']
+        
+        return {
+            'simulation_time': data['simulation_time'],
+            't_zewn': data['t_zewn'],
+            'simulation_day': data['simulation_day']
+        }
     
-    def simulate(self, days=30):
+    def simulate(self, days=90):
         """Main simulation loop"""
         total_sim_seconds = days * 24 * 3600
         poll_interval_sim = self.config['services']['algo']['algorithms']['ws']['temp_monitoring_cycle_s']
         poll_interval_real = poll_interval_sim / self.acceleration
         
-        while self.get_simulation_time() < total_sim_seconds:
-            self.simulation_step()
+        while self.current_sim_time < total_sim_seconds:
+            # Get current state from weather service
+            weather_data = self.poll_weather()
+            
+            # Run algorithms using weather's simulation_time
+            self.run_algorithm_ws(weather_data)
+            self.run_algorithm_rc()
+            self.run_algorithm_rn()
+            
             time.sleep(poll_interval_real)  # Sleep in real time
 ```
 
 ### Key Points
 
-1. **Internal Clocks:** Both services maintain `start_time_real` and calculate `simulation_time`
-2. **Synchronization:** Weather service returns `simulation_time` in API response
-3. **Sleep Intervals:** Convert simulation time to real time for `time.sleep()`
-4. **Metric Timestamps:** Use real wall-clock time for OTLP (Splunk requirement)
-5. **Log Timestamps:** Include both real and simulation time for debugging
+1. **Single Clock:** Weather service maintains authoritative `AcceleratedClock`
+2. **Time Propagation:** Weather service returns `simulation_time` in every API response
+3. **Algo Time Source:** Algo service uses `simulation_time` from weather responses (no independent clock)
+4. **Sleep Intervals:** Convert simulation time to real time for `time.sleep()`
+5. **No Drift:** Single source of truth eliminates clock synchronization issues
+6. **Metric Timestamps:** Use real wall-clock time for OTLP (Splunk requirement)
+7. **Log Timestamps:** Include both real and simulation time for debugging
+8. **Startup Order:** Algo service can start at any time after weather service - will use current simulation time
 
 ---
 
-## 🚀 Running the Simulation
+## Running the Simulation
 
 ### Setup
 
@@ -687,6 +741,34 @@ uv run algo_service.py --days 30
 ```
 
 ### Expected Console Output
+
+#### Algo service console layout
+
+`algo_service` should present two console zones when running in a terminal:
+
+1. **Status header (refreshed every WS loop):** occupies the top of the screen and is redrawn with basic ANSI sequences (`\x1b[H`, `\x1b[2K`). Include:
+   - current scenario, external temperature, AUTO/MANUAL mode,
+   - active configuration (C1/C2/dual) plus lock flags (`zmiana_ukladu_w_toku`, `rotacja_nagrzewnic_w_toku`),
+   - fan modes (PID/MAX/OFF and frequency),
+   - list of heaters currently working in each line (`✔/✖` or color coding).
+
+   Example:
+   ```
+   ┌─ Scenario & Mode ─────────────┐
+   │ Scenario: S4   t_zewn: -9.6°C │
+   │ Mode: AUTO    Locks: none     │
+   ├─ Line Status ─────────────────┤
+   │ Active line: C1 (Primary)     │
+   │ W1: PID         W2: OFF       │
+   ├─ Heaters ─────────────────────┤
+   │ C1: N1✔ N2✔ N3✖ N4✖           │
+   │ C2: N5✖ N6✖ N7✖ N8✖           │
+   └───────────────────────────────┘
+   ```
+
+2. **Event stream:** immediately below the header, print `Rejestruj_Zdarzenie/Alarm` logs (JSON or text) so the history keeps growing downward exactly as today.
+
+The header renderer should read from the same state object that feeds Splunk metrics, so no extra computations are required. A single-threaded loop is enough—update the state and redraw the header in the same iteration to avoid race conditions.
 
 **Weather Service:**
 ```
