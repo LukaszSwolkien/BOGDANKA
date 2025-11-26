@@ -55,3 +55,4 @@ class TelemetryManager:
         if self._meter_provider:
             self._meter_provider.shutdown()
 
+

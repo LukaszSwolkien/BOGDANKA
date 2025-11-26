@@ -1,0 +1,63 @@
+services:
+  algo:
+    algorithms:
+      rc:
+        algorithm_loop_cycle_s: 60
+        min_operating_time_s: 3600
+        rotation_period_hours: 48
+      rn:
+        algorithm_loop_cycle_s: 60
+        min_delta_time_s: 3600
+        rotation_period_s1_s: 86400
+        rotation_period_s2_s: 86400
+        rotation_period_s3_s: 86400
+        rotation_period_s4_s: 86400
+        rotation_period_s5_s: 86400
+        rotation_period_s6_s: 86400
+        rotation_period_s7_s: 86400
+        rotation_period_s8_s: 86400
+      ws:
+        hysteresis_delta_c: 1.0
+        scenario_stabilization_time_s: 60
+        temp_monitoring_cycle_s: 10
+    display:
+      enabled: true
+      refresh_rate_s: 1.0
+    metrics_prefix: bogdanka.algo
+    otlp_timeout_ms: 1000
+    service_name: bogdanka-algo
+    weather_endpoint: http://localhost:8080/temperature
+  weather:
+    constant_profile:
+      temperature_c: -5.0
+    host: localhost
+    metrics_prefix: bogdanka.weather
+    port: 8080
+    profile_type: constant
+    service_name: bogdanka-weather
+    winter_profile:
+      cooling_days: 15
+      daily_variation_c: 3.0
+      final_temp_c: 3.0
+      initial_temp_c: 5.0
+      min_temp_c: -25.0
+      noise_sigma_c: 0.5
+      warming_days: 15
+simulation:
+  acceleration: 1000
+  duration_days: 30
+telemetry:
+  default_dimensions:
+    site: Szyb-2
+  endpoints:
+    metrics: https://ingest.signalfx.com/v2/datapoint/otlp
+  exporter_type: otlp
+  headers:
+    Content-Type: application/x-protobuf
+    X-SF-Token: <YOUR_SF_TOKEN>
+  log_file: logs/algo_service.log
+  log_level: INFO
+  log_output: file
+  resource_attributes:
+    environment: dev
+    project: bogdanka-simulation

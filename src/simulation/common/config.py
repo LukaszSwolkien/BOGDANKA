@@ -100,12 +100,25 @@ class WinterProfileConfig:
 
 
 @dataclass
+class ConstantProfileConfig:
+    temperature_c: float
+
+
+@dataclass
+class SteppedProfileConfig:
+    steps: list[dict[str, float]]
+
+
+@dataclass
 class WeatherServiceConfig:
     host: str
     port: int
     service_name: str
     metrics_prefix: str
+    profile_type: str  # "winter", "constant", or "stepped"
     winter_profile: WinterProfileConfig
+    constant_profile: ConstantProfileConfig | None = None
+    stepped_profile: SteppedProfileConfig | None = None
 
 
 @dataclass
@@ -201,21 +214,41 @@ def _load_algo_service(data: Mapping[str, Any]) -> AlgoServiceConfig:
 
 
 def _load_weather_service(data: Mapping[str, Any]) -> WeatherServiceConfig:
-    profile = data.get("winter_profile", {})
+    winter_profile = data.get("winter_profile", {})
+    constant_profile_data = data.get("constant_profile", {})
+    stepped_profile_data = data.get("stepped_profile", {})
+    
+    # Parse constant profile if present
+    constant_profile = None
+    if constant_profile_data:
+        constant_profile = ConstantProfileConfig(
+            temperature_c=float(constant_profile_data.get("temperature_c", -5.0)),
+        )
+    
+    # Parse stepped profile if present
+    stepped_profile = None
+    if stepped_profile_data and "steps" in stepped_profile_data:
+        stepped_profile = SteppedProfileConfig(
+            steps=list(stepped_profile_data["steps"]),
+        )
+    
     return WeatherServiceConfig(
         host=str(data.get("host", "localhost")),
         port=int(data.get("port", 8080)),
         service_name=str(data.get("service_name", "bogdanka-weather")),
         metrics_prefix=str(data.get("metrics_prefix", "bogdanka.weather")),
+        profile_type=str(data.get("profile_type", "winter")),
         winter_profile=WinterProfileConfig(
-            initial_temp_c=float(profile.get("initial_temp_c", 5.0)),
-            min_temp_c=float(profile.get("min_temp_c", -25.0)),
-            final_temp_c=float(profile.get("final_temp_c", 3.0)),
-            cooling_days=int(profile.get("cooling_days", 15)),
-            warming_days=int(profile.get("warming_days", 15)),
-            daily_variation_c=float(profile.get("daily_variation_c", 3.0)),
-            noise_sigma_c=float(profile.get("noise_sigma_c", 0.5)),
+            initial_temp_c=float(winter_profile.get("initial_temp_c", 5.0)),
+            min_temp_c=float(winter_profile.get("min_temp_c", -25.0)),
+            final_temp_c=float(winter_profile.get("final_temp_c", 3.0)),
+            cooling_days=int(winter_profile.get("cooling_days", 15)),
+            warming_days=int(winter_profile.get("warming_days", 15)),
+            daily_variation_c=float(winter_profile.get("daily_variation_c", 3.0)),
+            noise_sigma_c=float(winter_profile.get("noise_sigma_c", 0.5)),
         ),
+        constant_profile=constant_profile,
+        stepped_profile=stepped_profile,
     )
 
 

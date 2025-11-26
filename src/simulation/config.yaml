@@ -4,7 +4,7 @@
 # Simulation Configuration
 simulation:
   acceleration: 1000       # time acceleration: 1s simulation = 1000s real time (common for both services)
-  duration_days: 90        # default simulated period (can be overridden)
+  duration_days: 30        # default simulated period (can be overridden) - PROFIL TESTOWY
 
 # Telemetry Configuration
 telemetry:
@@ -84,7 +84,12 @@ services:
     port: 8080
     service_name: "bogdanka-weather"
     metrics_prefix: "bogdanka.weather"
-    # Realistic winter temperature profile that tests ALL scenarios S0-S8
+    
+    # Temperature Profile Selection
+    # Choose which profile to use: "winter" or "constant"
+    profile_type: "constant"  # Options: "winter", "constant"
+    
+    # Profile: WINTER - Realistic winter temperature profile that tests ALL scenarios S0-S8
     winter_profile:
       # Profile simulates realistic winter with gradual cooling and warming cycles
       # Temperature range: +5°C (autumn) → -25°C (harsh winter) → +3°C (spring)
@@ -97,4 +102,19 @@ services:
       warming_days: 15                # days to warm back up
       daily_variation_c: 3.0          # daily temperature swing (day/night)
       noise_sigma_c: 0.5              # random variation for realism
+    
+    # Profile: CONSTANT - Fixed temperature for testing algorithms in controlled conditions
+    # Use this to verify that rotation algorithms work correctly without temperature changes
+    constant_profile:
+      temperature_c: -5.0             # Constant temperature (e.g., -5°C = scenario S3)
+                                      # Suggested values:
+                                      #   +4°C = S0 (no heating)
+                                      #    0°C = S1 (1 heater)
+                                      #   -3°C = S2 (2 heaters)
+                                      #   -5°C = S3 (3 heaters)
+                                      #   -9°C = S4 (4 heaters)
+                                      #  -12°C = S5 (5 heaters, dual line)
+                                      #  -16°C = S6 (6 heaters, dual line)
+                                      #  -19°C = S7 (7 heaters, dual line)
+                                      #  -22°C = S8 (8 heaters, dual line)
       

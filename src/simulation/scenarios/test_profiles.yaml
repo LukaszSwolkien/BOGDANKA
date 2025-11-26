@@ -1,0 +1,142 @@
+# Test Profiles for BOGDANKA Simulation
+# Defines 7 controlled test scenarios with expected results
+
+test_profiles:
+  # Profile 1: Baseline test for RC and RN in simplest conditions
+  - id: profile_1_s3_baseline
+    name: TEST_S3_BASELINE
+    priority: HIGH
+    description: Podstawowy test RC i RN w najprostszych warunkach
+    duration_days: 30
+    profile_type: constant
+    temperature_c: -5.0
+    expected_scenario: S3
+    expected_results:
+      rc_rotations: {min: 14, max: 16, target: 15}
+      rn_rotations: {min: 26, max: 29, target: 27}
+      primary_limited_balance: {min: 0.9, max: 1.1, target: 1.0}
+      heater_balance_ratio: {max: 1.5}
+      heater_usage_percent: {min: 10.0, max: 15.0, target: 12.5}
+      dominant_scenario: S3
+      dominant_scenario_percent_min: 95.0
+
+  # Profile 2: Dual-line mode with asymmetry
+  - id: profile_2_s6_dual_line
+    name: TEST_S6_DUAL_LINE
+    priority: HIGH
+    description: Test trybu dwuliniowego z asymetrią
+    duration_days: 30
+    profile_type: constant
+    temperature_c: -16.0
+    expected_scenario: S6
+    expected_results:
+      rc_rotations: {min: 0, max: 0, target: 0}
+      rn_rotations_c1: {min: 0, max: 0, target: 0}
+      rn_rotations_c2: {min: 27, max: 29, target: 28}
+      n1_n4_operating_hours: {min: 700, max: 720}
+      n5_n8_operating_hours: {min: 350, max: 370}
+      heater_balance_ratio_c2: {max: 1.2}
+      dominant_scenario: S6
+      dominant_scenario_percent_min: 95.0
+
+  # Profile 3: Minimal configuration (1 heater)
+  - id: profile_3_s1_minimal
+    name: TEST_S1_MINIMAL
+    priority: MEDIUM
+    description: Test RC przy minimalnej konfiguracji
+    duration_days: 30
+    profile_type: constant
+    temperature_c: 0.0
+    expected_scenario: S1
+    expected_results:
+      rc_rotations: {min: 14, max: 16, target: 15}
+      rn_rotations: {min: 0, max: 0, target: 0}
+      n1_operating_hours: {min: 350, max: 370}
+      n5_operating_hours: {min: 350, max: 370}
+      dominant_scenario: S1
+      dominant_scenario_percent_min: 95.0
+
+  # Profile 4: Maximal single-line configuration (4 heaters)
+  - id: profile_4_s4_maximal
+    name: TEST_S4_MAXIMAL
+    priority: MEDIUM
+    description: Test przy maksymalnej konfiguracji jednoliniowej
+    duration_days: 30
+    profile_type: constant
+    temperature_c: -9.0
+    expected_scenario: S4
+    expected_results:
+      rc_rotations: {min: 14, max: 16, target: 15}
+      rn_rotations: {min: 0, max: 0, target: 0}
+      heater_usage_percent: {min: 10.0, max: 15.0, target: 12.5}
+      heater_balance_ratio: {max: 1.3}
+      dominant_scenario: S4
+      dominant_scenario_percent_min: 95.0
+
+  # Profile 5: Scenario transitions and synchronization
+  - id: profile_5_transitions
+    name: TEST_SCENARIO_TRANSITIONS
+    priority: HIGH
+    description: Test przejść scenariuszowych i synchronizacji
+    duration_days: 20
+    profile_type: stepped
+    steps:
+      - {day_start: 0, day_end: 5, temperature_c: 0.0}
+      - {day_start: 5, day_end: 10, temperature_c: -5.0}
+      - {day_start: 10, day_end: 15, temperature_c: -16.0}
+      - {day_start: 15, day_end: 20, temperature_c: -5.0}
+    expected_results:
+      scenario_changes: {min: 3, max: 3, target: 3}
+      structural_changes: {min: 2, max: 2, target: 2}
+      rc_rotations: {min: 7, max: 9, target: 8}
+      rn_rotations_total: {min: 11, max: 13, target: 12}
+      scenarios_visited: [S1, S3, S6]
+
+  # Profile 6: System warmup from S0
+  - id: profile_6_s0_warmup
+    name: TEST_S0_WARMUP
+    priority: MEDIUM
+    description: Test rozruchu systemu z S0
+    duration_days: 10
+    profile_type: stepped
+    steps:
+      - {day_start: 0, day_end: 1, temperature_c: 5.0}
+      - {day_start: 1, day_end: 10, temperature_c: -5.0}
+    expected_results:
+      scenario_changes: {min: 1, max: 1, target: 1}
+      rc_rotations: {min: 4, max: 5, target: 4}
+      rn_rotations: {min: 8, max: 9, target: 8}
+      s0_detection: true
+      timestamp_reset_after_s0: true
+
+  # Profile 7: Complex unstable winter scenario
+  - id: profile_7_unstable_winter
+    name: UNSTABLE_WINTER
+    priority: MEDIUM
+    description: Scenariusz 'Niestabilna Zima z Przejściem przez S5'
+    duration_days: 14
+    profile_type: stepped
+    steps:
+      - {day_start: 0, day_end: 1, temperature_c: 0.0}
+      - {day_start: 1, day_end: 2, temperature_c: -3.0}
+      - {day_start: 2, day_end: 3, temperature_c: -5.0}
+      - {day_start: 3, day_end: 4, temperature_c: -8.0}
+      - {day_start: 4, day_end: 5, temperature_c: -10.0}
+      - {day_start: 5, day_end: 6, temperature_c: -13.0}
+      - {day_start: 6, day_end: 7, temperature_c: -11.0}
+      - {day_start: 7, day_end: 8, temperature_c: -9.0}
+      - {day_start: 8, day_end: 9, temperature_c: -6.0}
+      - {day_start: 9, day_end: 10, temperature_c: -4.0}
+      - {day_start: 10, day_end: 11, temperature_c: -2.0}
+      - {day_start: 11, day_end: 12, temperature_c: -5.0}
+      - {day_start: 12, day_end: 13, temperature_c: -3.0}
+      - {day_start: 13, day_end: 14, temperature_c: 1.0}
+    expected_results:
+      scenario_changes: {min: 10, max: 12, target: 11}
+      structural_changes: {min: 2, max: 2, target: 2}
+      rc_rotations: {min: 5, max: 7, target: 6}
+      rn_rotations_total: {min: 8, max: 10, target: 9}
+      scenarios_visited: [S1, S2, S3, S4, S5]
+      no_rc_rn_conflicts: true
+      history_preserved_through_s5: true
+

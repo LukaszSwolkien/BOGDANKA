@@ -316,6 +316,11 @@ class AlgoService:
                     old_config_short = "C1" if old_config == "Primary" else "C2"
                     new_config_short = "C1" if self.state.current_config == "Primary" else "C2"
                     self._add_event('rc', f"{old_config_short}→{new_config_short}")
+                    
+                    # CRITICAL: Immediately run RN to synchronize heater states after RC change
+                    # Without this, display shows old heaters until next RN cycle (~60s)
+                    LOGGER.debug("RC config changed - triggering immediate RN sync")
+                    self.algorithm_rn.process()  # Sync heaters immediately
             
             # STEP 5: Run Algorithm RN (heater rotation)
             # RN runs at same frequency as RC (e.g., every 60s)

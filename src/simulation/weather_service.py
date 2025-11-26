@@ -16,7 +16,12 @@ from common.config import AppConfig, SimulationSettings, WeatherServiceConfig, l
 from common.domain import WeatherSnapshot
 from common.telemetry import TelemetryManager
 from common.time_utils import AcceleratedClock, Clock
-from weather.profile import SECONDS_PER_DAY, WinterProfileCalculator
+from weather.profile import (
+    SECONDS_PER_DAY,
+    ConstantProfileCalculator,
+    SteppedProfileCalculator,
+    WinterProfileCalculator,
+)
 
 LOGGER = logging.getLogger("weather-service")
 
@@ -68,7 +73,7 @@ class WeatherSimulator:
         config: WeatherServiceConfig,
         metrics: WeatherMetrics,
         clock: Optional[Clock] = None,
-        profile: Optional[WinterProfileCalculator] = None,
+        profile = None,  # Can be WinterProfileCalculator or ConstantProfileCalculator
         poll_interval_sim_s: float = 60.0,
         enable_background: bool = True,
     ) -> None:
@@ -76,10 +81,36 @@ class WeatherSimulator:
         self._config = config
         self._metrics = metrics
         self._clock = clock or AcceleratedClock(simulation.acceleration)
-        self._profile = profile or WinterProfileCalculator(
-            config.winter_profile,
-            simulation_days=simulation.duration_days,  # Pass duration from top-level config
-        )
+        
+        # Select profile based on configuration
+        if profile is not None:
+            self._profile = profile
+        elif config.profile_type == "constant":
+            if config.constant_profile is None:
+                raise ValueError("Constant profile configuration is missing")
+            self._profile = ConstantProfileCalculator(
+                temperature_c=config.constant_profile.temperature_c,
+                simulation_days=simulation.duration_days,
+            )
+            LOGGER.info(f"Using CONSTANT temperature profile: {config.constant_profile.temperature_c}°C")
+        elif config.profile_type == "stepped":
+            if config.stepped_profile is None:
+                raise ValueError("Stepped profile configuration is missing")
+            self._profile = SteppedProfileCalculator(
+                steps=config.stepped_profile.steps,
+                simulation_days=simulation.duration_days,
+            )
+            LOGGER.info(f"Using STEPPED temperature profile: {len(config.stepped_profile.steps)} steps")
+        else:  # "winter" or default
+            self._profile = WinterProfileCalculator(
+                config.winter_profile,
+                simulation_days=simulation.duration_days,
+            )
+            LOGGER.info(
+                f"Using WINTER temperature profile: "
+                f"{config.winter_profile.initial_temp_c}°C → {config.winter_profile.min_temp_c}°C → {config.winter_profile.final_temp_c}°C"
+            )
+        
         self._poll_interval = poll_interval_sim_s
         self._latest = self._build_snapshot(0.0)
         self._lock = threading.Lock()

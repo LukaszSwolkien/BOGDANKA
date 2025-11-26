@@ -91,6 +91,10 @@ class AlgorithmRN:
         # Track previous scenario to detect transitions from S0
         self._previous_scenario: Optional[Scenario] = None
         
+        # Track previous configuration to detect RC changes (C1↔C2)
+        # Initialize to current config to detect changes from the start
+        self._previous_config: str = state.current_config
+        
         LOGGER.info(
             f"Algorithm RN initialized: rotation_periods={config.rotation_period_s}, "
             f"min_delta_time={config.min_delta_time_s}s"
@@ -107,6 +111,23 @@ class AlgorithmRN:
         """
         # Update time counters (ALWAYS)
         self._update_time_counters()
+        
+        # Check if configuration changed (RC rotation C1↔C2)
+        # This must be handled BEFORE scenario transitions to ensure correct heater states
+        if self._previous_config != self.state.current_config:
+            LOGGER.info(
+                f"RN: Configuration change detected: {self._previous_config} → {self.state.current_config}, "
+                f"syncing heater states for scenario {self.state.current_scenario.name}"
+            )
+            self._sync_heater_states_with_scenario()
+            
+            # Reset rotation timestamps to allow warm-up period in new configuration
+            self._last_rotation_per_line[Line.C1] = self.state.simulation_time
+            self._last_rotation_per_line[Line.C2] = self.state.simulation_time
+            self._last_rotation_global = self.state.simulation_time
+        
+        # Update previous config for next iteration
+        self._previous_config = self.state.current_config
         
         # Check if we need to adjust heater states due to scenario change
         # Use different strategies based on the type of transition
@@ -414,7 +435,18 @@ class AlgorithmRN:
                 tracking.state = HeaterState.IDLE
     
     def _get_active_heaters(self) -> list[Heater]:
-        """Get list of currently active heaters based on scenario and configuration."""
+        """
+        Get list of heaters that SHOULD BE active based on scenario and configuration.
+        
+        IMPORTANT: This uses INTELLIGENT SELECTION based on operating/idle times,
+        not just a simple slice [N1, N2, N3].
+        
+        This implements the pseudocode function:
+            Algorytm_RN_Pobierz_Nagrzewnice_Do_Pracy(ciąg, ilość)
+        
+        Returns:
+            List of heaters sorted by priority (longest idle time, shortest operating time)
+        """
         scenario = self.state.current_scenario
         config = self.state.current_config
         
@@ -422,7 +454,7 @@ class AlgorithmRN:
         if scenario == Scenario.S0:
             return []
         
-        # S1-S4: Single line operation (depends on Primary/Limited config)
+        # Determine how many heaters we need
         if scenario in [Scenario.S1, Scenario.S2, Scenario.S3, Scenario.S4]:
             heater_count = {
                 Scenario.S1: 1,
@@ -432,15 +464,15 @@ class AlgorithmRN:
             }[scenario]
             
             if config == "Primary":
-                # Line 1 (upper) - N1, N2, N3, N4
-                return [Heater.N1, Heater.N2, Heater.N3, Heater.N4][:heater_count]
+                # Line C1 (N1-N4) - select by operating time
+                return self._select_heaters_by_usage(Line.C1, heater_count)
             else:  # Limited
-                # Line 2 (lower) - N5, N6, N7, N8
-                return [Heater.N5, Heater.N6, Heater.N7, Heater.N8][:heater_count]
+                # Line C2 (N5-N8) - select by operating time
+                return self._select_heaters_by_usage(Line.C2, heater_count)
         
         # S5-S8: Both lines active
-        # Line 1: all 4 heaters (N1-N4)
-        # Line 2: variable count (N5-N8)
+        # Line 1: all 4 heaters (N1-N4) - no choice, all must work
+        # Line 2: variable count (N5-N8) - select by operating time
         heater_count_line2 = {
             Scenario.S5: 1,  # 4+1=5 total
             Scenario.S6: 2,  # 4+2=6 total
@@ -448,10 +480,45 @@ class AlgorithmRN:
             Scenario.S8: 4,  # 4+4=8 total
         }[scenario]
         
-        active = [Heater.N1, Heater.N2, Heater.N3, Heater.N4]  # Line 1: all
-        active.extend([Heater.N5, Heater.N6, Heater.N7, Heater.N8][:heater_count_line2])
+        # C1: all 4 (no selection needed)
+        active = [Heater.N1, Heater.N2, Heater.N3, Heater.N4]
+        
+        # C2: select by usage
+        active.extend(self._select_heaters_by_usage(Line.C2, heater_count_line2))
         
         return active
+    
+    def _select_heaters_by_usage(self, line: Line, count: int) -> list[Heater]:
+        """
+        Select heaters for a line based on operating/idle time.
+        
+        Implements pseudocode: Algorytm_RN_Pobierz_Nagrzewnice_Do_Pracy()
+        
+        Sorting priority:
+        1. Longest idle time (DESC) - heaters that have been off longest
+        2. Shortest operating time (ASC) - least used heaters
+        3. Earliest first_activation_timestamp (ASC) - tiebreaker
+        
+        Args:
+            line: Which line (C1 or C2)
+            count: How many heaters to select
+        
+        Returns:
+            List of selected heaters (sorted by priority)
+        """
+        healthy_heaters = self._get_healthy_heaters_for_line(line)
+        
+        # Sort by: idle_time DESC, operating_time ASC, first_activation ASC
+        sorted_heaters = sorted(
+            healthy_heaters,
+            key=lambda h: (
+                -self._heater_tracking[h].idle_time_s,  # Longest idle first (negative for DESC)
+                self._heater_tracking[h].operating_time_s,  # Shortest operating first
+                self._heater_tracking[h].first_activation_timestamp or float('inf'),  # Earliest activation
+            )
+        )
+        
+        return sorted_heaters[:count]
     
     def _is_line_active(self, line: Line) -> bool:
         """Check if given line is active in current scenario/configuration."""
@@ -498,10 +565,19 @@ class AlgorithmRN:
             return False, f"Too soon since last rotation ({time_since_last_global:.0f}s < 15min)", "global_spacing_not_met"
         
         # Check if enough heaters available (need reserve)
-        active_heaters_in_line = self._get_active_heaters_for_line(line)
+        # Use theoretical active count from scenario (not actual tracking state)
+        # because we want to know if rotation is POSSIBLE given the scenario requirements
+        all_active_heaters = self._get_active_heaters()  # Theoretical from scenario
+        line_c1_heaters = {Heater.N1, Heater.N2, Heater.N3, Heater.N4}
+        
+        if line == Line.C1:
+            required_active_count = len([h for h in all_active_heaters if h in line_c1_heaters])
+        else:
+            required_active_count = len([h for h in all_active_heaters if h not in line_c1_heaters])
+        
         healthy_heaters_in_line = self._get_healthy_heaters_for_line(line)
         
-        if len(healthy_heaters_in_line) <= len(active_heaters_in_line):
+        if len(healthy_heaters_in_line) <= required_active_count:
             return False, "No reserve heaters available", "no_suitable_heaters"
         
         # Check rotation period for this line
@@ -517,13 +593,28 @@ class AlgorithmRN:
         return True, "Can rotate", None
     
     def _get_active_heaters_for_line(self, line: Line) -> list[Heater]:
-        """Get active heaters for specific line."""
-        active_heaters = self._get_active_heaters()
+        """
+        Get ACTUALLY ACTIVE heaters for specific line based on current tracking state.
+        
+        IMPORTANT: Returns heaters that are ACTUALLY active in _heater_tracking,
+        not the theoretical list from _get_active_heaters() which is based on scenario.
+        
+        This is critical for rotation selection - we must know which heaters are
+        really running NOW, not which should be running according to scenario.
+        """
         line_c1_heaters = {Heater.N1, Heater.N2, Heater.N3, Heater.N4}
+        
+        # Get heaters for this line
         if line == Line.C1:
-            return [h for h in active_heaters if h in line_c1_heaters]  # N1-N4
+            line_heaters = line_c1_heaters
         else:
-            return [h for h in active_heaters if h not in line_c1_heaters]   # N5-N8
+            line_heaters = {Heater.N5, Heater.N6, Heater.N7, Heater.N8}
+        
+        # Return only those that are ACTUALLY ACTIVE in tracking state
+        return [
+            heater for heater in line_heaters
+            if self._heater_tracking[heater].state == HeaterState.ACTIVE
+        ]
     
     def _get_healthy_heaters_for_line(self, line: Line) -> list[Heater]:
         """Get all healthy heaters for specific line."""

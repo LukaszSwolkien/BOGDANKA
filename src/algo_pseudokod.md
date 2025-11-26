@@ -764,14 +764,14 @@ PARAMETRY:
 
 GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
   
-  KROK 0A: Inicjalizacja przy pierwszym uruchomieniu
+  KROK 1: Inicjalizacja przy pierwszym uruchomieniu
     JEŻELI last_update_time = NULL WTEDY
       last_update_time = czas_systemowy
       poprzedni_scenariusz = Pobierz_Scenariusz()
-      PRZEJDŹ DO KROKU 5  // Pomiń rotację przy pierwszym uruchomieniu
+      PRZEJDŹ DO KROKU 7  // Pomiń rotację przy pierwszym uruchomieniu
     KONIEC JEŻELI
   
-  KROK 0B: Wykryj przejście z S0 do S1-S4 (rozruch systemu)
+  KROK 2: Wykryj przejście z S0 do S1-S4 (rozruch systemu)
     aktualny_scenariusz = Pobierz_Scenariusz()
     
     // Po przejściu z S0 (system wyłączony) do S1-S4 (ruch jednoliniowy):
@@ -786,7 +786,7 @@ GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
     // Zapamiętaj scenariusz dla następnej iteracji
     poprzedni_scenariusz = aktualny_scenariusz
   
-  KROK 1: Sprawdź warunki rotacji
+  KROK 3: Sprawdź warunki rotacji
     JEŻELI aktualny_scenariusz ∈ {S1, S2, S3, S4} ORAZ
            wszystkie_nagrzewnice_C2_sprawne ORAZ
            wentylator_W2_sprawny ORAZ
@@ -803,34 +803,34 @@ GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
       W PRZECIWNYM RAZIE:
         aktualny_układ = "Podstawowy"   // aktualizacja stanu logicznego bez ingerencji sprzętowej
       KONIEC JEŻELI
-      PRZEJDŹ DO KROKU 5
+      PRZEJDŹ DO KROKU 7
     
     KONIEC JEŻELI
   
-  KROK 2: Sprawdź czy upłynął okres rotacji
+  KROK 4: Sprawdź czy upłynął okres rotacji
     czas_od_ostatniej_zmiany = czas_systemowy - czas_ostatniej_zmiany
     
     JEŻELI czas_od_ostatniej_zmiany ≥ (OKRES_ROTACJI_UKŁADÓW - HISTEREZA_CZASOWA) WTEDY
       rotacja_wymagana = PRAWDA
     W PRZECIWNYM RAZIE:
       rotacja_wymagana = FAŁSZ
-      PRZEJDŹ DO KROKU 5
+      PRZEJDŹ DO KROKU 7
     KONIEC JEŻELI
   
-  KROK 3: Określ nowy układ
+  KROK 5: Określ nowy układ
     JEŻELI aktualny_układ = "Podstawowy" WTEDY
       nowy_układ = "Ograniczony"
     W PRZECIWNYM RAZIE:
       nowy_układ = "Podstawowy"
     KONIEC JEŻELI
   
-  KROK 4: Wykonaj zmianę układu
+  KROK 6: Wykonaj zmianę układu
     JEŻELI rotacja_możliwa = PRAWDA ORAZ rotacja_wymagana = PRAWDA WTEDY
       
       // Sprawdź czy Algorytm RN nie wykonuje rotacji nagrzewnic
       JEŻELI rotacja_nagrzewnic_w_toku = PRAWDA WTEDY
         Rejestruj_Zdarzenie("Zmiana układu odroczona - trwa rotacja nagrzewnic")
-        PRZEJDŹ DO KROKU 5
+        PRZEJDŹ DO KROKU 7
       KONIEC JEŻELI
       
       // Ustaw blokadę dla Algorytmu RC
@@ -853,7 +853,7 @@ GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
     
     KONIEC JEŻELI
   
-  KROK 5: Aktualizuj liczniki czasu pracy
+  KROK 7: Aktualizuj liczniki czasu pracy
     // Oblicz rzeczywisty czas który upłynął od ostatniej aktualizacji
     // (uwzględnia przyspieszenie czasu w symulacji i ewentualne opóźnienia w PLC)
     delta_time = czas_systemowy - last_update_time
@@ -995,6 +995,7 @@ ZMIENNE LOKALNE (dla każdego ciągu osobno):
   - nagrzewnice_aktywne[CIĄG] = []                       // lista aktywnych
   - last_update_time = NULL                              // timestamp ostatniej aktualizacji liczników
   - poprzedni_scenariusz = NULL                          // dla wykrywania zmiany scenariusza
+  - poprzedni_układ = NULL                               // dla wykrywania zmiany układu (C1↔C2)
 
 PARAMETRY:
   - OKRES_ROTACJI_NAGRZEWNIC[S1..S8]  // definiowany przez technologa [s]
@@ -1006,16 +1007,43 @@ PARAMETRY:
 
 GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
   
-  KROK 0A: Inicjalizacja przy pierwszym uruchomieniu
+  KROK 1: Inicjalizacja przy pierwszym uruchomieniu
     JEŻELI last_update_time = NULL WTEDY
       last_update_time = czas_systemowy
       poprzedni_scenariusz = Pobierz_Scenariusz()
+      poprzedni_układ = Pobierz_Układ()
       // Zaktualizuj stany nagrzewnic na podstawie aktualnego scenariusza/układu
       Aktualizuj_Stany_Nagrzewnic()
       PRZEJDŹ DO KOŃCA PĘTLI  // Pomiń rotację przy pierwszym uruchomieniu
     KONIEC JEŻELI
   
-  KROK 0B: Obsługa zmiany scenariusza (KRYTYCZNE dla stabilności)
+  KROK 2: Obsługa zmiany układu (RC rotation C1↔C2)
+    // WAŻNE: Ten krok musi być wykonany PRZED krokiem 3 (zmiana scenariusza)
+    // aby zapewnić poprawne stany nagrzewnic przy zmianie konfiguracji
+    
+    aktualny_układ = Pobierz_Układ()
+    
+    JEŻELI poprzedni_układ ≠ NULL ORAZ 
+           poprzedni_układ ≠ aktualny_układ WTEDY
+      
+      // Wykryto zmianę układu (Podstawowy↔Ograniczony)
+      Rejestruj_Zdarzenie("RN: Zmiana układu " + poprzedni_układ + 
+                         " → " + aktualny_układ + " - synchronizacja nagrzewnic")
+      
+      // Pełna synchronizacja stanów nagrzewnic dla nowego układu
+      Aktualizuj_Stany_Nagrzewnic()
+      
+      // Reset timestampów rotacji - okres stabilizacji w nowej konfiguracji
+      czas_ostatniej_rotacji[CIĄG1] = czas_systemowy
+      czas_ostatniej_rotacji[CIĄG2] = czas_systemowy
+      czas_ostatniej_rotacji_globalny = czas_systemowy
+    
+    KONIEC JEŻELI
+    
+    // Zapamiętaj układ dla następnej iteracji
+    poprzedni_układ = aktualny_układ
+  
+  KROK 3: Obsługa zmiany scenariusza (KRYTYCZNE dla stabilności)
     // WAŻNE: Ten krok zapobiega utracie stanu rotacji podczas oscylacji temperatury
     // Problem: Temperatura blisko progu (np. -18°C) powoduje częste przełączenia S6↔S7
     // Rozwiązanie: Różnicuj zmiany STRUKTURALNE od zmian ILOŚCIOWYCH
@@ -1069,7 +1097,7 @@ GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
   
   DLA KAŻDEGO ciągu w [CIĄG1, CIĄG2]:
     
-    KROK 0C: Sprawdź czy ciąg jest aktywny w aktualnym układzie/scenariuszu
+    KROK 4: Sprawdź czy ciąg jest aktywny w aktualnym układzie/scenariuszu
       aktualny_układ = Pobierz_Układ()  // Podstawowy lub Ograniczony
       
       // W S1-S4: tylko JEDEN ciąg jest aktywny (w zależności od układu)
@@ -1088,7 +1116,7 @@ GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
         POMIŃ ciąg  // C1 niemożliwa - wszystkie nagrzewnice N1-N4 pracują
       KONIEC JEŻELI
     
-    KROK 1: Aktualizuj liczniki czasu pracy i postoju
+    KROK 5: Aktualizuj liczniki czasu pracy i postoju
       // Oblicz rzeczywisty czas który upłynął od ostatniej aktualizacji
       // (uwzględnia przyspieszenie czasu w symulacji i ewentualne opóźnienia w PLC)
       delta_time = czas_systemowy - last_update_time
@@ -1105,7 +1133,7 @@ GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
         last_update_time = czas_systemowy
       KONIEC JEŻELI
     
-    KROK 2: Sprawdź warunki rotacji
+    KROK 6: Sprawdź warunki rotacji
       
       // Koordynacja z Algorytmem RC - sprawdź czy RC nie wykonuje zmiany układu
       JEŻELI zmiana_układu_w_toku = PRAWDA WTEDY
@@ -1149,7 +1177,7 @@ GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
         POMIŃ ciąg
       KONIEC JEŻELI
     
-    KROK 3: Wybierz nagrzewnicę do wyłączenia i załączenia
+    KROK 7: Wybierz nagrzewnicę do wyłączenia i załączenia
       // Znajdź nagrzewnicę najdłużej pracującą (aktywną)
       nagrzewnica_do_wyłączenia = NULL
       max_czas_pracy = 0
@@ -1191,7 +1219,7 @@ GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
         POMIŃ ciąg
       KONIEC JEŻELI
     
-    KROK 4: Wykonaj rotację
+    KROK 8: Wykonaj rotację
       JEŻELI nagrzewnica_do_wyłączenia ≠ NULL ORAZ 
              nagrzewnica_do_załączenia ≠ NULL WTEDY
         
@@ -1527,12 +1555,13 @@ KONIEC FUNKCJI
 **Koniec dokumentu pseudokodu**
 
 **Historia zmian:**
+- **v1.4** (26 Listopad 2025): **KRYTYCZNE:** Dodano obsługę zmiany układu (RC rotation C1↔C2) w Algorytmie RN - wykrywanie zmiany konfiguracji Primary↔Limited, synchronizacja stanów nagrzewnic i reset timestampów rotacji (naprawa błędu: nagrzewnice nie przełączały się przy zmianie C1→C2)
 - **v1.3** (25 Listopad 2025): Parametryzacja czasów operacji sprzętu - zamiana hardcoded wartości na nazwane parametry z Equipment Timing (dla zgodności z konfiguracją i dokumentacją)
 - **v1.2.1** (25 Listopad 2025): Dodano uwagę o liczeniu czasu w S5-S8 jako czas układu Podstawowego w Algorytmie RC (wyjaśnienie zachowania liczników podczas przejść przez scenariusze dwulinijne)
 - **v1.2** (25 Listopad 2025): **KRYTYCZNE:** Dodano obsługę zmiany scenariuszy w RN - rozróżnienie zmian strukturalnych vs ilościowych, zapobieganie utracie stanu rotacji podczas oscylacji temperatury (wynik testów symulacji)
 - **v1.1** (25 Listopad 2025): Dodano inicjalizację liczników czasu i obliczanie delta_time dla RC i RN (wynik testów w symulacji)
 - **v1.0** (24 Listopad 2025): Wersja początkowa
 
-**Ostatnia aktualizacja:** 25 Listopad 2025  
-**Wersja:** 1.3
+**Ostatnia aktualizacja:** 26 Listopad 2025  
+**Wersja:** 1.4
 

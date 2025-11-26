@@ -55,3 +55,4 @@ class WeatherSnapshot:
             "profile": self.profile,
         }
 
+
