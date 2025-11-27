@@ -119,6 +119,8 @@ ZMIENNE GLOBALNE:
   - timestamp_ostatniej_zmiany = 0              // Timestamp ostatniej zmiany scenariusza
   - timestamp_ostatniego_odczytu = 0            // Dla wykrywania awarii czujnika
   - alarm_czujnik_temp = FAŁSZ                  // Flaga awarii czujnika
+  - czas_w_scenariuszu = {}                     // Mapa: scenariusz → czas_pracy [sekundy]
+  - ostatni_czas_aktualizacji = 0               // Timestamp ostatniej aktualizacji statystyk
 
 PARAMETRY:
   - CYKL_MONITORINGU_TEMP = 10                  // [sekundy]
@@ -133,7 +135,34 @@ PARAMETRY:
 
 GŁÓWNA PĘTLA (co CYKL_MONITORINGU_TEMP sekund):
   
-  KROK 1: Odczyt i walidacja temperatury zewnętrznej
+  KROK 0: Aktualizuj statystyki bieżącego scenariusza
+    // Ten krok wykonywany jest ZAWSZE na początku każdego cyklu,
+    // niezależnie od późniejszych decyzji algorytmu
+    
+    JEŻELI ostatni_czas_aktualizacji > 0 WTEDY
+      // Oblicz czas od ostatniej aktualizacji
+      delta_czasu = czas_systemowy - ostatni_czas_aktualizacji
+      
+      // Dodaj do czasu obecnego scenariusza
+      JEŻELI czas_w_scenariuszu[aktualny_scenariusz] = NULL WTEDY
+        czas_w_scenariuszu[aktualny_scenariusz] = 0
+      KONIEC JEŻELI
+      
+      czas_w_scenariuszu[aktualny_scenariusz] += delta_czasu
+    KONIEC JEŻELI
+    
+    // Zaktualizuj timestamp dla następnego cyklu
+    ostatni_czas_aktualizacji = czas_systemowy
+  
+  KROK 1: Sprawdź tryb pracy
+    // W trybie MANUAL algorytm nie wykonuje żadnych automatycznych zmian.
+    // Operator kontroluje system ręcznie.
+    JEŻELI tryb_pracy ≠ AUTO WTEDY
+      Rejestruj_Zdarzenie("WS: Tryb MANUAL - algorytm nieaktywny")
+      PRZEJDŹ DO KOŃCA PĘTLI  // Czekamy na zmianę trybu na AUTO
+    KONIEC JEŻELI
+  
+  KROK 2: Odczyt i walidacja temperatury zewnętrznej
     T_zewn_raw = Odczytaj_Czujnik_Temperatury_Zewnętrznej()
     
     // Walidacja odczytu
@@ -171,10 +200,10 @@ GŁÓWNA PĘTLA (co CYKL_MONITORINGU_TEMP sekund):
     
     KONIEC JEŻELI
   
-  KROK 2: Określ wymagany scenariusz na podstawie temperatury
+  KROK 3: Określ wymagany scenariusz na podstawie temperatury
     wymagany_scenariusz = Określ_Scenariusz_Dla_Temperatury(T_zewn, aktualny_scenariusz)
   
-  KROK 3: Sprawdź czy wymagana zmiana scenariusza
+  KROK 4: Sprawdź czy wymagana zmiana scenariusza
     JEŻELI wymagany_scenariusz = aktualny_scenariusz WTEDY
       // Brak zmiany - kontynuuj w aktualnym scenariuszu
       PRZEJDŹ DO KOŃCA PĘTLI
@@ -189,21 +218,13 @@ GŁÓWNA PĘTLA (co CYKL_MONITORINGU_TEMP sekund):
       PRZEJDŹ DO KOŃCA PĘTLI
     KONIEC JEŻELI
   
-  KROK 4: Sprawdź tryb pracy
-    JEŻELI tryb_pracy ≠ AUTO WTEDY
-      // W trybie MANUAL operator kontroluje system
-      Rejestruj_Zdarzenie("Scenariusz " + wymagany_scenariusz + 
-                         " wymagany, ale tryb=MANUAL")
-      PRZEJDŹ DO KOŃCA PĘTLI
-    KONIEC JEŻELI
-  
-  KROK 4A: Sprawdź blokady RC/RN
+  KROK 5: Sprawdź blokady RC/RN
     JEŻELI zmiana_układu_w_toku = PRAWDA LUB rotacja_nagrzewnic_w_toku = PRAWDA WTEDY
       Rejestruj_Zdarzenie("Zmiana scenariusza odroczona (koordynacja RC/RN)")
       PRZEJDŹ DO KOŃCA PĘTLI
     KONIEC JEŻELI
   
-  KROK 5: Wykonaj zmianę scenariusza
+  KROK 6: Wykonaj zmianę scenariusza
     Rejestruj_Zdarzenie("Zmiana scenariusza: " + aktualny_scenariusz + 
                        " → " + wymagany_scenariusz + " (t=" + T_zewn + "°C)")
     
@@ -757,14 +778,56 @@ PARAMETRY:
 
 GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
   
-  KROK 1: Inicjalizacja przy pierwszym uruchomieniu
+  KROK 0: Aktualizuj liczniki czasu pracy
+    // Ten krok wykonywany jest ZAWSZE na początku każdego cyklu,
+    // niezależnie od późniejszych decyzji algorytmu
+    
+    JEŻELI last_update_time ≠ NULL WTEDY
+      // Oblicz rzeczywisty czas który upłynął od ostatniej aktualizacji
+      // (uwzględnia przyspieszenie czasu w symulacji i ewentualne opóźnienia w PLC)
+      delta_time = czas_systemowy - last_update_time
+      
+      JEŻELI delta_time > 0 WTEDY
+        JEŻELI aktualny_układ = "Podstawowy" WTEDY
+          czas_pracy_układu_podstawowego += delta_time
+        W PRZECIWNYM RAZIE:
+          czas_pracy_układu_ograniczonego += delta_time
+        KONIEC JEŻELI
+        
+        last_update_time = czas_systemowy
+      KONIEC JEŻELI
+    KONIEC JEŻELI
+    
+    // UWAGA WAŻNA: Czas w S5-S8 liczy się jako czas układu "Podstawowy"
+    // 
+    // W scenariuszach S5-S8 oba ciągi pracują równolegle (układ "Podstawowy"),
+    // więc czas ten jest liczony jako czas_pracy_układu_podstawowego.
+    // 
+    // KONSEKWENCJA dla rotacji RC:
+    // Jeśli system pracuje np. 2 dni w S3 (Podstawowy), potem przechodzi na kilka
+    // godzin do S5, a następnie wraca do S3 (Podstawowy), to licznik 
+    // czas_ostatniej_zmiany NIE jest resetowany. Rotacja ciągów nastąpi zgodnie
+    // z harmonogramem (np. po 5 dniach), niezależnie od przejścia przez S5.
+    // 
+    // Jest to zamierzone zachowanie: ciąg C1 faktycznie pracuje w S5, więc jego
+    // czas pracy jest prawidłowo liczony, a równowaga między ciągami nie jest zaburzona.
+  
+  KROK 1: Sprawdź tryb pracy
+    // W trybie MANUAL algorytm nie wykonuje żadnych automatycznych zmian.
+    // Operator kontroluje system ręcznie.
+    JEŻELI tryb = MANUAL WTEDY
+      Rejestruj_Zdarzenie("RC: Tryb MANUAL - algorytm nieaktywny")
+      PRZEJDŹ DO KOŃCA PĘTLI  // Czekamy na zmianę trybu na AUTO
+    KONIEC JEŻELI
+  
+  KROK 2: Inicjalizacja przy pierwszym uruchomieniu
     JEŻELI last_update_time = NULL WTEDY
       last_update_time = czas_systemowy
       poprzedni_scenariusz = Pobierz_Scenariusz()
-      PRZEJDŹ DO KROKU 7  // Pomiń rotację przy pierwszym uruchomieniu
+      PRZEJDŹ DO KOŃCA PĘTLI  // Pomiń rotację przy pierwszym uruchomieniu
     KONIEC JEŻELI
   
-  KROK 2: Wykryj przejście z S0 do S1-S4 (rozruch systemu)
+  KROK 3: Wykryj przejście z S0 do S1-S4 (rozruch systemu)
     aktualny_scenariusz = Pobierz_Scenariusz()
     
     // Po przejściu z S0 (system wyłączony) do S1-S4 (ruch jednoliniowy):
@@ -779,7 +842,7 @@ GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
     // Zapamiętaj scenariusz dla następnej iteracji
     poprzedni_scenariusz = aktualny_scenariusz
   
-  KROK 3: Sprawdź warunki rotacji
+  KROK 4: Sprawdź warunki rotacji
     JEŻELI aktualny_scenariusz ∈ {S1, S2, S3, S4} ORAZ
            wszystkie_nagrzewnice_C2_sprawne ORAZ
            wentylator_W2_sprawny ORAZ
@@ -791,39 +854,51 @@ GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
     W PRZECIWNYM RAZIE:
       rotacja_możliwa = FAŁSZ
       // Poza S1-S4 utrzymujemy definicyjnie układ podstawowy (oba ciągi pracują równolegle)
+      
       JEŻELI aktualny_scenariusz ∈ {S1, S2, S3, S4} ORAZ aktualny_układ = "Ograniczony" WTEDY
-        Wykonaj_Zmianę_Układu("Podstawowy")
+        // Awaryjne wykrycie problemu z C2 podczas pracy w układzie ograniczonym
+        // (np. awaria nagrzewnicy, wentylatora, alarm krytyczny)
+        // 
+        // REAKCJA: Przejście na tryb MANUAL - operator musi podjąć decyzję
+        // NIE wykonujemy automatycznego przełączenia C2→C1, ponieważ:
+        // - Operator musi być świadomy awarii C2
+        // - Automatyczne przełączenie może maskować poważny problem
+        // - C1 może już pracować z pełnym obciążeniem
+        Rejestruj_Alarm("KRYTYCZNE: Awaria C2 w układzie ograniczonym - przejście na tryb MANUAL")
+        Przełącz_Na_Tryb_Manual()
+        PRZEJDŹ DO KOŃCA PĘTLI
       W PRZECIWNYM RAZIE:
-        aktualny_układ = "Podstawowy"   // aktualizacja stanu logicznego bez ingerencji sprzętowej
+        // S5-S8, S0, lub już Podstawowy - utrzymaj aktualny układ logiczny
+        aktualny_układ = "Podstawowy"
+        PRZEJDŹ DO KOŃCA PĘTLI
       KONIEC JEŻELI
-      PRZEJDŹ DO KROKU 7
     
     KONIEC JEŻELI
   
-  KROK 4: Sprawdź czy upłynął okres rotacji
+  KROK 5: Sprawdź czy upłynął okres rotacji
     czas_od_ostatniej_zmiany = czas_systemowy - czas_ostatniej_zmiany
     
     JEŻELI czas_od_ostatniej_zmiany ≥ (OKRES_ROTACJI_UKŁADÓW - HISTEREZA_CZASOWA) WTEDY
       rotacja_wymagana = PRAWDA
     W PRZECIWNYM RAZIE:
       rotacja_wymagana = FAŁSZ
-      PRZEJDŹ DO KROKU 7
+      PRZEJDŹ DO KOŃCA PĘTLI
     KONIEC JEŻELI
   
-  KROK 5: Określ nowy układ
+  KROK 6: Określ nowy układ
     JEŻELI aktualny_układ = "Podstawowy" WTEDY
       nowy_układ = "Ograniczony"
     W PRZECIWNYM RAZIE:
       nowy_układ = "Podstawowy"
     KONIEC JEŻELI
   
-  KROK 6: Wykonaj zmianę układu
+  KROK 7: Wykonaj zmianę układu
     JEŻELI rotacja_możliwa = PRAWDA ORAZ rotacja_wymagana = PRAWDA WTEDY
       
       // Sprawdź czy Algorytm RN nie wykonuje rotacji nagrzewnic
       JEŻELI rotacja_nagrzewnic_w_toku = PRAWDA WTEDY
         Rejestruj_Zdarzenie("Zmiana układu odroczona - trwa rotacja nagrzewnic")
-        PRZEJDŹ DO KROKU 7
+        PRZEJDŹ DO KOŃCA PĘTLI
       KONIEC JEŻELI
       
       // Ustaw blokadę dla Algorytmu RC
@@ -846,35 +921,6 @@ GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
     
     KONIEC JEŻELI
   
-  KROK 7: Aktualizuj liczniki czasu pracy
-    // Oblicz rzeczywisty czas który upłynął od ostatniej aktualizacji
-    // (uwzględnia przyspieszenie czasu w symulacji i ewentualne opóźnienia w PLC)
-    delta_time = czas_systemowy - last_update_time
-    
-    JEŻELI delta_time > 0 WTEDY
-      JEŻELI aktualny_układ = "Podstawowy" WTEDY
-        czas_pracy_układu_podstawowego += delta_time
-      W PRZECIWNYM RAZIE:
-        czas_pracy_układu_ograniczonego += delta_time
-      KONIEC JEŻELI
-      
-      last_update_time = czas_systemowy
-    KONIEC JEŻELI
-    
-    // UWAGA WAŻNA: Czas w S5-S8 liczy się jako czas układu "Podstawowy"
-    // 
-    // W scenariuszach S5-S8 oba ciągi pracują równolegle (układ "Podstawowy"),
-    // więc czas ten jest liczony jako czas_pracy_układu_podstawowego.
-    // 
-    // KONSEKWENCJA dla rotacji RC:
-    // Jeśli system pracuje np. 2 dni w S3 (Podstawowy), potem przechodzi na kilka
-    // godzin do S5, a następnie wraca do S3 (Podstawowy), to licznik 
-    // czas_ostatniej_zmiany NIE jest resetowany. Rotacja ciągów nastąpi zgodnie
-    // z harmonogramem (np. po 5 dniach), niezależnie od przejścia przez S5.
-    // 
-    // Jest to zamierzone zachowanie: ciąg C1 faktycznie pracuje w S5, więc jego
-    // czas pracy jest prawidłowo liczony, a równowaga między ciągami nie jest zaburzona.
-
 KONIEC PĘTLI
 
 FUNKCJA Wykonaj_Zmianę_Układu(docelowy_układ):
@@ -1548,6 +1594,9 @@ KONIEC FUNKCJI
 **Koniec dokumentu pseudokodu**
 
 **Historia zmian:**
+- **v1.6** (27 Listopad 2025): **STRUKTURA:** Dodano KROK 0 w Algorytmie RC - aktualizacja liczników czasu pracy układu na początku każdego cyklu (dla spójności z WS i zgodności z flowchart). Przeniesiono logikę z KROKU 7 do KROKU 0. Pełna synchronizacja pseudokodu RC z flowchart v2.0 (uproszczone sekwencje zmian układu)
+- **v1.5** (27 Listopad 2025): **KRYTYCZNE:** Dodano KROK 0 w Algorytmie WS - aktualizacja statystyk czasu w scenariuszu na początku każdego cyklu (przed decyzjami algorytmu). Zapewnia spójne śledzenie czasu niezależnie od ścieżki wykonania (zgodność z implementacją i schematem blokowym)
+- **v1.4.1** (26 Listopad 2025): Usunięto nieużywane parametry z sekcji Equipment Timing (oczyszczenie dokumentacji)
 - **v1.4** (26 Listopad 2025): **KRYTYCZNE:** Dodano obsługę zmiany układu (RC rotation C1↔C2) w Algorytmie RN - wykrywanie zmiany konfiguracji Primary↔Limited, synchronizacja stanów nagrzewnic i reset timestampów rotacji (naprawa błędu: nagrzewnice nie przełączały się przy zmianie C1→C2)
 - **v1.3** (25 Listopad 2025): Parametryzacja czasów operacji sprzętu - zamiana hardcoded wartości na nazwane parametry z Equipment Timing (dla zgodności z konfiguracją i dokumentacją)
 - **v1.2.1** (25 Listopad 2025): Dodano uwagę o liczeniu czasu w S5-S8 jako czas układu Podstawowego w Algorytmie RC (wyjaśnienie zachowania liczników podczas przejść przez scenariusze dwulinijne)
@@ -1556,5 +1605,5 @@ KONIEC FUNKCJI
 - **v1.0** (24 Listopad 2025): Wersja początkowa
 
 **Ostatnia aktualizacja:** 27 Listopad 2025  
-**Wersja:** 1.4.1
+**Wersja:** 1.6
 
