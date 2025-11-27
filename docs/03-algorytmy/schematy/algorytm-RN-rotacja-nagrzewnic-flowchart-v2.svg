@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 2550" width="1400px" height="2550px">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#333"/>
+    </marker>
+    <marker id="arrowhead-no" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#dc3545"/>
+    </marker>
+    <marker id="arrowhead-yes" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#28a745"/>
+    </marker>
+    <style>
+  .title { font-family: Arial, sans-serif; font-size: 28px; font-weight: bold; fill: #1a1a1a; }
+  .subtitle { font-family: Arial, sans-serif; font-size: 18px; fill: #555; }
+  .box-text { font-family: Arial, sans-serif; font-size: 15px; fill: #1a1a1a; text-anchor: middle; }
+  .box-text-small { font-family: Arial, sans-serif; font-size: 13px; fill: #1a1a1a; text-anchor: middle; }
+  .box-label { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #1a1a1a; }
+  .decision { fill: #fff3cd; stroke: #ffc107; stroke-width: 2; }
+  .process { fill: #d4edda; stroke: #28a745; stroke-width: 2; }
+  .start-end { fill: #cce5ff; stroke: #0066cc; stroke-width: 3; rx: 25; }
+  .action { fill: #f8d7da; stroke: #dc3545; stroke-width: 2; }
+  .data { fill: #e7f3ff; stroke: #007bff; stroke-width: 2; }
+  .warning { fill: #fff3cd; stroke: #ff8800; stroke-width: 2; }
+  .arrow { stroke: #333; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+  .arrow-yes { stroke: #28a745; stroke-width: 2.5; fill: none; marker-end: url(#arrowhead-yes); }
+  .arrow-no { stroke: #dc3545; stroke-width: 2.5; fill: none; marker-end: url(#arrowhead-no); }
+  .label { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #28a745; }
+  .label-no { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #dc3545; }
+  .note { font-family: Arial, sans-serif; font-size: 12px; fill: #666; font-style: italic; }
+  .loop { font-family: Arial, sans-serif; font-size: 13px; fill: #0066cc; font-style: italic; }
+</style>
+  </defs>
+  
+  <!-- Tło -->
+  <rect width="1400" height="2550" fill="#ffffff"/>
+  
+  <!-- Tytuł -->
+  <text class="title" x="700" y="40" text-anchor="middle">Algorytm RN: Rotacja Nagrzewnic w Obrębie Ciągu</text>
+  <text class="subtitle" x="700" y="65" text-anchor="middle">Wyrównanie Czasu Pracy N1-N8 (Struktura Uproszczona, v2.0)</text>
+  
+  <!-- START -->
+  <rect class="start-end" x="550" y="90" width="300" height="60"/>
+  <text class="box-text" x="700" y="115">START - Główna pętla</text>
+  <text class="box-text-small" x="700" y="135">(co CYKL_PĘTLI_ALGORYTMÓW)</text>
+  <path d="M 700 150 L 700 190" class="arrow"/>
+  
+  <!-- Zmienne (koordynacja z RC) -->
+  <rect class="warning" x="450" y="190" width="500" height="140"/>
+  <text class="box-text-small" x="700" y="210">Zmienne (koordynacja z RC):</text>
+  <text class="box-text-small" x="700" y="227">Globalne: aktualny_układ, zmiana_układu_w_toku,</text>
+  <text class="box-text-small" x="700" y="244">czas_ostatniej_zmiany_układu,</text>
+  <text class="box-text-small" x="700" y="261">rotacja_nagrzewnic_w_toku,</text>
+  <text class="box-text-small" x="700" y="278">czas_ostatniej_rotacji_globalny</text>
+  <text class="box-text-small" x="700" y="295">Lokalne: czas_pracy[N1..N8], czas_postoju[N1..N8],</text>
+  <text class="box-text-small" x="700" y="312">czas_ostatniej_rotacji[CIĄG1,CIĄG2], poprzedni_scenariusz</text>
+  <path d="M 700 330 L 700 370" class="arrow"/>
+  
+  <!-- KROK 0: Aktualizuj liczniki -->
+  <rect class="process" x="500" y="370" width="400" height="80"/>
+  <text class="box-text" x="700" y="395">KROK 0: Aktualizuj liczniki</text>
+  <text class="box-text-small" x="700" y="415">DLA KAŻDEJ aktywnej nagrzewnicy:</text>
+  <text class="box-text-small" x="700" y="435">czas_pracy[N] += 1 (lub czas_postoju[N])</text>
+  <path d="M 700 450 L 700 500" class="arrow"/>
+  
+  <!-- KROK 1: Tryb AUTO? -->
+  <path d="M 700 500 L 830 560 L 700 620 L 570 560 Z" class="decision"/>
+  <text class="box-text" x="700" y="550">KROK 1:</text>
+  <text class="box-text-small" x="700" y="570">Tryb AUTO?</text>
+  
+  <!-- NIE - Tryb MANUAL -->
+  <path d="M 570 560 L 100 560 L 100 2390 L 545 2390" class="arrow-no"/>
+  <text class="label-no" x="450" y="550">NIE</text>
+  <text class="note" x="250" y="580">Tryb MANUAL - algorytm nieaktywny</text>
+  
+  <!-- TAK - Kontynuuj -->
+  <path d="M 700 620 L 700 670" class="arrow-yes"/>
+  <text class="label" x="720" y="640">TAK</text>
+  
+  <!-- KROK 2: DLA KAŻDEGO ciągu -->
+  <rect class="process" x="550" y="670" width="300" height="60"/>
+  <text class="box-text" x="700" y="695">KROK 2: DLA KAŻDEGO ciągu</text>
+  <text class="box-text-small" x="700" y="715">w [CIĄG1, CIĄG2]</text>
+  <path d="M 700 730 L 700 780" class="arrow"/>
+  
+  <!-- KROK 3: Ciąg aktywny? -->
+  <path d="M 700 780 L 900 860 L 700 940 L 500 860 Z" class="decision"/>
+  <text class="box-text" x="700" y="840">KROK 3: Ciąg aktywny</text>
+  <text class="box-text" x="700" y="860">w układzie/scenariuszu?</text>
+  <text class="box-text-small" x="700" y="880">(S1-S4: C1/C2, S5-S8: C2)</text>
+  
+  <!-- NIE - Pomiń ciąg -->
+  <path d="M 500 860 L 200 860 L 200 2370 L 548 2370" class="arrow-no"/>
+  <text class="label-no" x="300" y="850">NIE</text>
+  <text class="note" x="250" y="880">Ciąg wyłączony</text>
+  
+  <!-- TAK -->
+  <path d="M 700 940 L 700 990" class="arrow-yes"/>
+  <text class="label" x="720" y="960">TAK</text>
+  
+  <!-- KROK 4: Warunki rotacji spełnione? -->
+  <path d="M 700 990 L 950 1080 L 700 1170 L 450 1080 Z" class="decision"/>
+  <text class="box-text" x="700" y="1055">KROK 4:</text>
+  <text class="box-text-small" x="700" y="1075">Warunki rotacji spełnione?</text>
+  <text class="box-text-small" x="700" y="1095">(RC nie zmienia, okres OK,</text>
+  <text class="box-text-small" x="700" y="1115">stabilność, rezerwowe)</text>
+  
+  <!-- NIE - Pomiń -->
+  <path d="M 450 1080 L 300 1080 L 300 2350 L 550 2350" class="arrow-no"/>
+  <text class="label-no" x="350" y="1070">NIE</text>
+  
+  <!-- TAK -->
+  <path d="M 700 1170 L 700 1220" class="arrow-yes"/>
+  <text class="label" x="720" y="1190">TAK</text>
+  
+  <!-- KROK 5: Sprawdź delta_czasu -->
+  <path d="M 700 1220 L 870 1290 L 700 1360 L 530 1290 Z" class="decision"/>
+  <text class="box-text" x="700" y="1275">KROK 5:</text>
+  <text class="box-text-small" x="700" y="1295">delta_czasu ≥</text>
+  <text class="box-text-small" x="700" y="1315">MIN_DELTA_CZASU?</text>
+  
+  <!-- NIE - Pomiń -->
+  <path d="M 870 1290 L 1050 1290 L 1050 2330 L 851 2330" class="arrow-no"/>
+  <text class="label-no" x="920" y="1280">NIE</text>
+  <text class="note" x="950" y="1310">Różnica czasu zbyt mała</text>
+  
+  <!-- TAK -->
+  <path d="M 700 1360 L 700 1410" class="arrow-yes"/>
+  <text class="label" x="720" y="1380">TAK</text>
+  
+  <!-- KROK 6A: Ustaw blokadę -->
+  <rect class="warning" x="550" y="1410" width="300" height="50"/>
+  <text class="box-text-small" x="700" y="1430">🔒 Ustaw blokadę:</text>
+  <text class="box-text-small" x="700" y="1447">rotacja_nagrzewnic_w_toku = PRAWDA</text>
+  <path d="M 700 1460 L 700 1510" class="arrow"/>
+  
+  <!-- KROK 6B: Rejestruj zdarzenie -->
+  <rect class="data" x="550" y="1510" width="300" height="50"/>
+  <text class="box-text-small" x="700" y="1535">📝 Rejestruj zdarzenie:</text>
+  <text class="box-text-small" x="700" y="1552">"Rotacja N_stara → N_nowa"</text>
+  <path d="M 700 1560 L 700 1610" class="arrow"/>
+  
+  <!-- KROK 6C: Wykonaj rotację -->
+  <rect class="action" x="500" y="1610" width="400" height="80"/>
+  <text class="box-text" x="700" y="1635">KROK 6: Wykonaj rotację</text>
+  <text class="box-text-small" x="700" y="1655">⚙️ Wykonaj_Rotację_Nagrzewnicy()</text>
+  <text class="box-text-small" x="700" y="1675">(Najpierw załącz N_nowa, potem wyłącz N_stara)</text>
+  <path d="M 700 1690 L 700 1740" class="arrow"/>
+  
+  <!-- KROK 7A: Aktualizuj stany -->
+  <rect class="data" x="520" y="1740" width="360" height="90"/>
+  <text class="box-text-small" x="700" y="1765">KROK 7: Aktualizuj stany:</text>
+  <text class="box-text-small" x="700" y="1785">• nagrzewnice_aktywne[ciąg]</text>
+  <text class="box-text-small" x="700" y="1805">• czas_ostatniej_rotacji[ciąg]</text>
+  <text class="box-text-small" x="700" y="1825">• czas_ostatniej_rotacji_globalny</text>
+  <path d="M 700 1830 L 700 1880" class="arrow"/>
+  
+  <!-- KROK 7B: Rejestruj zakończenie -->
+  <rect class="data" x="550" y="1880" width="300" height="50"/>
+  <text class="box-text-small" x="700" y="1905">📝 Rejestruj zdarzenie:</text>
+  <text class="box-text-small" x="700" y="1922">"Rotacja zakończona pomyślnie"</text>
+  <path d="M 700 1930 L 700 1980" class="arrow"/>
+  
+  <!-- KROK 7C: Zwolnij blokadę -->
+  <rect class="warning" x="550" y="1980" width="300" height="50"/>
+  <text class="box-text-small" x="700" y="2000">🔓 Zwolnij blokadę:</text>
+  <text class="box-text-small" x="700" y="2017">rotacja_nagrzewnic_w_toku = FAŁSZ</text>
+  <path d="M 700 2030 L 700 2080" class="arrow"/>
+  
+  <!-- KROK 8: Więcej ciągów? -->
+  <path d="M 700 2080 L 870 2150 L 700 2220 L 530 2150 Z" class="decision"/>
+  <text class="box-text" x="700" y="2140">KROK 8:</text>
+  <text class="box-text" x="700" y="2160">Więcej ciągów?</text>
+  
+  <!-- TAK - Wróć do KROK 2 -->
+  <path d="M 530 2150 L 350 2150 L 350 700 L 550 700" class="arrow-yes"/>
+  <text class="label" x="400" y="2140">TAK</text>
+  
+  <!-- NIE - Czekaj CYKL -->
+  <path d="M 700 2220 L 700 2290" class="arrow-no"/>
+  <text class="label-no" x="720" y="2270">NIE</text>
+  
+  <!-- Czekaj CYKL_PĘTLI_ALGORYTMÓW -->
+  <rect class="process" x="550" y="2290" width="300" height="60"/>
+  <text class="box-text" x="700" y="2325">Czekaj CYKL_PĘTLI_ALGORYTMÓW</text>
+  
+  <!-- Powrót do START -->
+  <path d="M 550 2320 L 50 2320 L 50 120 L 550 120" class="arrow"/>
+  
+  <!-- PARAMETRY -->
+  <rect x="20" y="100" width="420" height="280" fill="#f9f9f9" stroke="#999" stroke-width="1"/>
+  <text x="30" y="125" class="box-label">PARAMETRY:</text>
+  <text x="40" y="150" class="box-text-small" text-anchor="start" style="font-size: 13px;">• CYKL_PĘTLI_ALGORYTMÓW = 60s</text>
+  <text x="40" y="170" class="box-text-small" text-anchor="start" style="font-size: 13px;">• OKRES_ROTACJI_NAGRZEWNIC</text>
+  <text x="50" y="190" class="box-text-small" text-anchor="start" style="font-size: 12px;">  (168h-720h, typowo 168h = 7 dni)</text>
+  <text x="40" y="210" class="box-text-small" text-anchor="start" style="font-size: 13px;">• MIN_DELTA_CZASU</text>
+  <text x="50" y="230" class="box-text-small" text-anchor="start" style="font-size: 12px;">  (1800-7200s, typowo 3600s = 1h)</text>
+  <text x="40" y="250" class="box-text-small" text-anchor="start" style="font-size: 13px;">• CZAS_STABILIZACJI_NAGRZEWNICY</text>
+  <text x="40" y="270" class="box-text-small" text-anchor="start" style="font-size: 13px;">• ODSTĘP_ROTACJI_GLOBALNY = 900s</text>
+  <text x="50" y="290" class="box-text-small" text-anchor="start" style="font-size: 12px;">  (15 min między rotacjami w systemie)</text>
+  
+  <text x="30" y="315" class="note" style="font-size: 12px;">🔒 Koordynacja z RC:</text>
+  <text x="40" y="335" class="note" style="font-size: 11px;">• Blokady zapobiegają jednoczesnej</text>
+  <text x="50" y="350" class="note" style="font-size: 11px;">rotacji układów (RC) i nagrzewnic (RN)</text>
+  <text x="40" y="365" class="note" style="font-size: 11px;">• KROK 4: RN sprawdza zmiana_układu_w_toku</text>
+  
+  <!-- LEGENDA -->
+  <rect x="50" y="2410" width="1300" height="120" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1"/>
+  <text class="note" x="70" y="2435">LEGENDA:</text>
+  
+  <rect class="start-end" x="170" y="2420" width="100" height="35"/>
+  <text class="box-text-small" x="220" y="2442">START/KONIEC</text>
+  
+  <rect class="decision" x="290" y="2420" width="60" height="35"/>
+  <text class="box-text-small" x="320" y="2442">Decyzja</text>
+  
+  <rect class="process" x="370" y="2420" width="60" height="35"/>
+  <text class="box-text-small" x="400" y="2442">Proces</text>
+  
+  <rect class="action" x="450" y="2420" width="80" height="35"/>
+  <text class="box-text-small" x="490" y="2442">Akcja rotacji</text>
+  
+  <rect class="data" x="550" y="2420" width="60" height="35"/>
+  <text class="box-text-small" x="580" y="2442">Dane/Log</text>
+  
+  <rect class="warning" x="630" y="2420" width="80" height="35"/>
+  <text class="box-text-small" x="670" y="2442">Blokada/Sync</text>
+  
+  <text class="note" x="70" y="2475">UWAGA: Algorytm RN współpracuje z RC poprzez blokady (zmiana_układu_w_toku, rotacja_nagrzewnic_w_toku).</text>
+  <text class="note" x="70" y="2495">KRYTYCZNE: RN ustala blokadę PRZED rotacją i zwalnia PO zakończeniu - zapobiega konfliktom z RC.</text>
+  <text class="note" x="70" y="2515">Zgodność z pseudokodem v1.7 (src/algo_pseudokod.md, KROK 0-7)</text>
+</svg>
