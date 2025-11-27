@@ -11,6 +11,7 @@ import sys
 import threading
 import time
 import yaml
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -19,12 +20,13 @@ from common.config import load_config
 from algo_service import AlgoService
 from weather_service import WeatherApplication
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s %(levelname)s %(name)s - %(message)s",
-)
-LOGGER = logging.getLogger("test-suite")
+# Configure logging for test-suite logger only (not root)
+test_suite_logger = logging.getLogger("test-suite")
+test_suite_logger.setLevel(logging.INFO)
+handler = logging.StreamHandler()
+handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(name)s - %(message)s"))
+test_suite_logger.addHandler(handler)
+LOGGER = test_suite_logger
 
 
 class TestResult:
@@ -79,6 +81,7 @@ class TestRunner:
         duration_override: int | None = None,
         acceleration_override: float | None = None,
         profile_filter: list[str] | None = None,
+        parallel_workers: int = 1,
     ):
         self.profiles_path = profiles_path
         self.config_path = config_path
@@ -87,6 +90,7 @@ class TestRunner:
         self.duration_override = duration_override
         self.acceleration_override = acceleration_override
         self.profile_filter = profile_filter
+        self.parallel_workers = parallel_workers
         
         # Load test profiles
         with profiles_path.open("r") as f:
@@ -101,6 +105,10 @@ class TestRunner:
                 self.profiles = all_profiles
         
         self.results: list[TestResult] = []
+        
+        # Progress tracking for parallel runs
+        self._completed_tests = 0
+        self._progress_lock = threading.Lock()
     
     def _calculate_total_estimated_time(self) -> float:
         """Calculate total estimated time for all test profiles in seconds."""
@@ -118,8 +126,13 @@ class TestRunner:
             # Get duration (apply override if set)
             duration_days = self.duration_override if self.duration_override is not None else profile.get("duration_days", 1)
             
-            # Get acceleration (apply override if set, or use default from config)
-            acceleration = self.acceleration_override if self.acceleration_override is not None else default_acceleration
+            # Get acceleration (priority: command-line > profile > config default)
+            if self.acceleration_override is not None:
+                acceleration = self.acceleration_override
+            elif "acceleration" in profile:
+                acceleration = profile["acceleration"]
+            else:
+                acceleration = default_acceleration
             
             # Calculate simulation time in seconds (days * 86400)
             sim_duration_s = duration_days * 86400
@@ -136,12 +149,25 @@ class TestRunner:
         LOGGER.info(f"Starting test suite with {len(self.profiles)} profiles")
         LOGGER.info(f"Output directory: {self.output_dir}")
         
+        # Display parallel mode info
+        if self.parallel_workers > 1:
+            actual_workers = min(self.parallel_workers, len(self.profiles))
+            LOGGER.info(f"🚀 PARALLEL MODE: Running {actual_workers} tests simultaneously")
+            LOGGER.info(f"   (Display disabled for parallel runs - logs in logs/test_{{profile_id}}.log)")
+        
         # Calculate and display estimated completion time
         total_estimated_time_s = self._calculate_total_estimated_time()
         if total_estimated_time_s > 0:
             from datetime import datetime, timedelta
             
             now = datetime.now()
+            
+            # Adjust for parallel execution
+            if self.parallel_workers > 1:
+                # Parallel: time = max(test_times) not sum
+                # Rough estimate: total_time / parallel_workers
+                total_estimated_time_s = total_estimated_time_s / min(self.parallel_workers, len(self.profiles))
+            
             completion_time = now + timedelta(seconds=total_estimated_time_s)
             
             # Format estimated duration
@@ -163,21 +189,73 @@ class TestRunner:
         
         LOGGER.info("")  # Empty line for readability
         
+        # Run tests (sequential or parallel)
+        if self.parallel_workers > 1:
+            self._run_tests_parallel()
+        else:
+            self._run_tests_sequential()
+        
+        return self.results
+    
+    def _run_tests_sequential(self) -> None:
+        """Run tests sequentially (original behavior)."""
         for i, profile in enumerate(self.profiles, 1):
             LOGGER.info(f"\n{'='*80}")
             LOGGER.info(f"Test {i}/{len(self.profiles)}: {profile['name']} ({profile['priority']} priority)")
             LOGGER.info(f"{'='*80}")
             
-            result = self.run_single_test(profile)
+            result = self.run_single_test(profile, test_index=i-1)
             self.results.append(result)
             
             # Log result
             status_symbol = "✅" if result.passed else "❌"
             LOGGER.info(f"{status_symbol} Test {profile['name']}: {result.status} ({result.duration_s:.1f}s)")
-        
-        return self.results
     
-    def run_single_test(self, profile: dict[str, Any]) -> TestResult:
+    def _run_tests_parallel(self) -> None:
+        """Run tests in parallel using ThreadPoolExecutor."""
+        total_tests = len(self.profiles)
+        
+        with ThreadPoolExecutor(max_workers=self.parallel_workers) as executor:
+            # Submit all tests
+            future_to_profile = {
+                executor.submit(self._run_test_wrapper, profile, idx): (profile, idx)
+                for idx, profile in enumerate(self.profiles)
+            }
+            
+            # Collect results as they complete
+            for future in as_completed(future_to_profile):
+                profile, idx = future_to_profile[future]
+                
+                try:
+                    result = future.result()
+                    self.results.append(result)
+                    
+                    # Update progress
+                    with self._progress_lock:
+                        self._completed_tests += 1
+                        completed = self._completed_tests
+                    
+                    # Log completion
+                    status_symbol = "✅" if result.passed else "❌"
+                    LOGGER.info(
+                        f"{status_symbol} [{completed}/{total_tests}] {result.profile_name}: "
+                        f"{result.status} ({result.duration_s:.1f}s)"
+                    )
+                    
+                except Exception as e:
+                    LOGGER.error(f"Exception in test {profile['name']}: {e}", exc_info=True)
+        
+        # Sort results by original order (futures complete out-of-order)
+        profile_order = {p["id"]: i for i, p in enumerate(self.profiles)}
+        self.results.sort(key=lambda r: profile_order.get(r.profile_id, 999))
+    
+    def _run_test_wrapper(self, profile: dict[str, Any], test_index: int) -> TestResult:
+        """Wrapper for parallel execution - logs test start."""
+        LOGGER.info(f"▶️  Starting: {profile['name']} (port {8080 + test_index})")
+        result = self.run_single_test(profile, test_index=test_index)
+        return result
+    
+    def run_single_test(self, profile: dict[str, Any], test_index: int = 0) -> TestResult:
         """Run a single test profile."""
         result = TestResult(profile)
         result.status = "RUNNING"
@@ -185,7 +263,7 @@ class TestRunner:
         
         try:
             # Configure simulation for this profile
-            temp_config_path = self._configure_for_profile(profile)
+            temp_config_path = self._configure_for_profile(profile, test_index=test_index)
             
             # Run simulation
             actual_metrics = self._run_simulation(temp_config_path, profile)
@@ -209,10 +287,14 @@ class TestRunner:
         
         return result
     
-    def _configure_for_profile(self, profile: dict[str, Any]) -> Path:
+    def _configure_for_profile(self, profile: dict[str, Any], test_index: int = 0) -> Path:
         """
         Configure simulation for the given test profile.
         Creates a temporary config YAML file.
+        
+        Args:
+            profile: Test profile configuration
+            test_index: Index of test (0-based) - used for unique ports in parallel mode
         
         Returns:
             Path to temporary config file
@@ -229,18 +311,53 @@ class TestRunner:
         duration_days = self.duration_override if self.duration_override is not None else profile["duration_days"]
         config_data["simulation"]["duration_days"] = duration_days
         
-        # Apply acceleration override if provided
+        # Apply acceleration (priority: command-line > profile > config default)
         if self.acceleration_override is not None:
+            # Command-line override has highest priority
             config_data["simulation"]["acceleration"] = self.acceleration_override
-            LOGGER.info(f"  Overriding acceleration to {self.acceleration_override}x")
+            if self.parallel_workers <= 1:  # Only log in sequential mode to avoid spam
+                LOGGER.info(f"  Overriding acceleration to {self.acceleration_override}x (command-line)")
+        elif "acceleration" in profile:
+            # Use profile-specific acceleration
+            config_data["simulation"]["acceleration"] = profile["acceleration"]
+            if self.parallel_workers <= 1:
+                LOGGER.info(f"  Using profile acceleration: {profile['acceleration']}x")
+        # Otherwise keep default from config.yaml
         
-        # Configure weather profile
-        profile_type = profile["profile_type"]
+        # Configure unique ports for parallel execution
         if "services" not in config_data:
             config_data["services"] = {}
         if "weather" not in config_data["services"]:
             config_data["services"]["weather"] = {}
+        if "algo" not in config_data["services"]:
+            config_data["services"]["algo"] = {}
         
+        # Set unique port for weather service (8080, 8081, 8082, ...)
+        base_port = 8080
+        weather_port = base_port + test_index
+        config_data["services"]["weather"]["port"] = weather_port
+        config_data["services"]["algo"]["weather_endpoint"] = f"http://localhost:{weather_port}/temperature"
+        
+        # Configure display and logging
+        if "telemetry" not in config_data:
+            config_data["telemetry"] = {}
+        
+        # Set unique log file per test (always to file)
+        config_data["telemetry"]["log_file"] = f"logs/test_{profile['id']}.log"
+        config_data["telemetry"]["log_output"] = "file"  # Logs always to file in test mode
+        
+        if self.parallel_workers > 1:
+            # Parallel mode: disable display (would overlap)
+            if "display" not in config_data["services"]["algo"]:
+                config_data["services"]["algo"]["display"] = {}
+            config_data["services"]["algo"]["display"]["enabled"] = False
+        else:
+            # Sequential mode: keep display enabled (from base config)
+            # Display will show header, logs go to file
+            pass
+        
+        # Configure weather profile
+        profile_type = profile["profile_type"]
         config_data["services"]["weather"]["profile_type"] = profile_type
         
         if profile_type == "constant":
@@ -261,8 +378,6 @@ class TestRunner:
     
     def _run_simulation(self, config_path: Path, profile: dict[str, Any]) -> dict[str, Any]:
         """Run simulation and collect metrics."""
-        LOGGER.info(f"  Profile type: {profile['profile_type']}")
-        
         # Load config to get simulation parameters
         app_config = load_config(config_path)
         
@@ -272,35 +387,52 @@ class TestRunner:
         acceleration = app_config.simulation.acceleration
         real_duration_s = sim_duration_s / acceleration
         
-        # Format duration nicely
-        if real_duration_s < 60:
-            duration_str = f"{real_duration_s:.1f}s"
-        elif real_duration_s < 3600:
-            duration_str = f"{real_duration_s/60:.1f}m"
-        else:
-            duration_str = f"{real_duration_s/3600:.1f}h"
-        
-        LOGGER.info(f"  Duration: {duration_days} days @ {acceleration:.0f}x acceleration")
-        LOGGER.info(f"  ⏱️  Estimated real time: ~{duration_str}")
+        # Only log details in sequential mode (avoid spam in parallel)
+        if self.parallel_workers <= 1:
+            # Format duration nicely
+            if real_duration_s < 60:
+                duration_str = f"{real_duration_s:.1f}s"
+            elif real_duration_s < 3600:
+                duration_str = f"{real_duration_s/60:.1f}m"
+            else:
+                duration_str = f"{real_duration_s/3600:.1f}h"
+            
+            LOGGER.info(f"  Profile type: {profile['profile_type']}")
+            LOGGER.info(f"  Duration: {duration_days} days @ {acceleration:.0f}x acceleration")
+            LOGGER.info(f"  ⏱️  Estimated real time: ~{duration_str}")
         
         # Initialize services
         weather_app = WeatherApplication(app_config, enable_background=True)
         algo_app = AlgoService(config_path)
+        
+        # Start weather service Flask server in background thread
+        weather_host = app_config.services.weather.host
+        weather_port = app_config.services.weather.port
+        weather_thread = threading.Thread(
+            target=lambda: weather_app.app.run(host=weather_host, port=weather_port, use_reloader=False),
+            daemon=True
+        )
+        weather_thread.start()
         
         # Start algo service in background thread
         algo_thread = threading.Thread(target=algo_app.start, daemon=True)
         algo_thread.start()
         
         try:
-            # Wait for services to initialize
+            # Wait for services to initialize (weather Flask + algo startup)
             time.sleep(2.0)
             
             # Monitor progress
-            LOGGER.info(f"  🚀 Simulation running...")
-            self._monitor_progress(algo_app, sim_duration_s, real_duration_s)
+            if self.parallel_workers <= 1:
+                LOGGER.info(f"  🚀 Simulation running...")
+                self._monitor_progress(algo_app, sim_duration_s, real_duration_s)
+            else:
+                # In parallel mode, use lightweight monitoring (no progress bar)
+                self._wait_for_completion(algo_app, sim_duration_s, real_duration_s)
             
             # Collect metrics
-            LOGGER.info(f"  ✅ Simulation complete, collecting metrics...")
+            if self.parallel_workers <= 1:
+                LOGGER.info(f"  ✅ Simulation complete, collecting metrics...")
             metrics = self._collect_metrics(algo_app)
             
             return metrics
@@ -316,6 +448,32 @@ class TestRunner:
             # Clean up temp config
             if config_path.exists() and config_path.name.startswith("temp_config_"):
                 config_path.unlink()
+    
+    def _wait_for_completion(self, algo_app: Any, sim_duration_s: float, real_duration_s: float) -> None:
+        """
+        Wait for simulation to complete (parallel mode - no progress bar).
+        Similar to _monitor_progress but without logging.
+        """
+        start_time = time.time()
+        check_interval = 0.5
+        timeout = real_duration_s + 5.0
+        
+        while True:
+            elapsed_real = time.time() - start_time
+            
+            # Check if timed out
+            if elapsed_real >= timeout:
+                break
+            
+            # Check if simulation completed
+            try:
+                sim_time = algo_app.state.simulation_time
+                if sim_time >= sim_duration_s:
+                    break
+            except (AttributeError, ZeroDivisionError):
+                pass
+            
+            time.sleep(check_interval)
     
     def _monitor_progress(self, algo_app: Any, sim_duration_s: float, real_duration_s: float) -> None:
         """Monitor simulation progress and display updates."""
@@ -408,6 +566,10 @@ class TestRunner:
                 "percentage": percentage,
             }
         
+        # Collect WS metrics (scenario changes)
+        scenario_changes = algo_app.algorithm_ws.get_scenario_changes_count()
+        structural_changes = algo_app.algorithm_ws.get_structural_changes_count()
+        
         # Collect RC metrics
         time_primary_h = algo_app.algorithm_rc.get_time_in_primary() / 3600
         time_limited_h = algo_app.algorithm_rc.get_time_in_limited() / 3600
@@ -438,6 +600,8 @@ class TestRunner:
             "simulation_time_s": total_sim_time,
             "simulation_time_h": total_sim_time / 3600,
             "scenario_distribution": scenario_distribution,
+            "scenario_changes": scenario_changes,
+            "structural_changes": structural_changes,
             "time_in_primary_h": time_primary_h,
             "time_in_limited_h": time_limited_h,
             "rc_line_changes": rc_rotation_count,
@@ -556,12 +720,12 @@ class TestRunner:
                 return max_scenario[1]["percentage"]
             return 0.0
         
-        # Scenario changes (TODO: need to track this)
+        # Scenario changes
         if key == "scenario_changes":
-            return 0  # Placeholder
+            return data.get("scenario_changes", 0)
         
         if key == "structural_changes":
-            return 0  # Placeholder
+            return data.get("structural_changes", 0)
         
         # Other boolean checks
         if key in ["s0_detection", "timestamp_reset_after_s0", "no_rc_rn_conflicts", 
@@ -688,11 +852,14 @@ Examples:
   # Smoke test: Run all tests with 1 day duration and 10000x acceleration (~30 seconds)
   uv run python run_test_scenarios.py --smoke
   
+  # FAST: Smoke test with parallel execution (~10 seconds for 7 tests!)
+  uv run python run_test_scenarios.py --smoke --parallel 7
+  
   # Quick test: Run specific profile with custom settings
   uv run python run_test_scenarios.py --profiles profile_1_s3_baseline --days 2 --acceleration 5000
   
-  # Run only HIGH priority tests with reduced duration
-  uv run python run_test_scenarios.py --profiles profile_1_s3_baseline profile_5_transitions --days 5
+  # Run all tests in parallel (4 workers, ~1.5 minutes instead of 5 minutes)
+  uv run python run_test_scenarios.py --parallel 4
         """
     )
     
@@ -723,6 +890,14 @@ Examples:
         nargs="+",
         default=None,
         help="Run only specific profiles (by id or name, e.g., --profiles profile_1_s3_baseline TEST_S6_DUAL_LINE)"
+    )
+    
+    parser.add_argument(
+        "--parallel",
+        type=int,
+        default=1,
+        metavar="N",
+        help="Run N tests in parallel (default: 1, sequential). Use --parallel 4 or --parallel 7 for max speed."
     )
     
     args = parser.parse_args()
@@ -756,6 +931,7 @@ Examples:
         duration_override=args.days,
         acceleration_override=args.acceleration,
         profile_filter=args.profiles,
+        parallel_workers=args.parallel,
     )
     results = runner.run_all_tests()
     

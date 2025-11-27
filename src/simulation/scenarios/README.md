@@ -3,13 +3,21 @@
 ## Przegląd
 
 System testowy składa się z:
-- **7 profili testowych** (scenarios/test_profiles.yaml)
+- **profili testowych** (scenarios/test_profiles.yaml)
 - **Test runner** (run_test_scenarios.py) - uruchamia wszystkie testy automatycznie z opcją `--smoke`
 - **Report generator** (scenarios/generate_report.py) - generuje raporty markdown
 
-## Szybki Start - Smoke Test
+## Równoległe Wykonywanie Testów
 
-### Single Profile Test (S3 Baseline) - ~8 sekund
+```bash
+cd src/simulation
+
+# Wszystkie 7 profili równolegle @ 10000x acceleration
+uv run python run_test_scenarios.py --smoke --parallel 7
+```
+
+## Szybki Start - Smoke Test (Sekwencyjny)
+
 
 ```bash
 cd src/simulation
@@ -18,18 +26,8 @@ cd src/simulation
 uv run python run_test_scenarios.py --smoke --profiles profile_1_s3_baseline
 ```
 
-### Wszystkie Profile Smoke Test - ~60 sekund
-
-```bash
-cd src/simulation
-
-# Smoke test: wszystkie 7 profili @ 10000x acceleration
-uv run python run_test_scenarios.py --smoke
-```
-
 ## Pełny Test Suite - Wszystkie 7 Profili
 
-### Uruchomienie (~10-15 minut)
 
 ```bash
 cd src/simulation
@@ -50,50 +48,6 @@ Wyniki zapisywane są w `test_results/`:
 # Wygeneruj raport z istniejących wyników (z katalogu src/simulation)
 uv run python scenarios/generate_report.py scenarios/test_results/test_results_20251126_120000.yaml
 ```
-
-## Profile Testowe
-
-### Profil 1: TEST_S3_BASELINE ⭐ (HIGH)
-- Temp: -5°C (stała)
-- Czas: 30 dni
-- Test: RC + RN, balansowanie
-
-### Profil 2: TEST_S6_DUAL_LINE ⭐ (HIGH)
-- Temp: -16°C (stała)
-- Czas: 30 dni
-- Test: Tryb dwuliniowy, asymetria
-
-### Profil 3: TEST_S1_MINIMAL (MEDIUM)
-- Temp: 0°C (stała)
-- Czas: 30 dni
-- Test: RC minimalny, brak RN
-
-### Profil 4: TEST_S4_MAXIMAL (MEDIUM)
-- Temp: -9°C (stała)
-- Czas: 30 dni
-- Test: RC maksymalny jednoliniowy
-
-### Profil 5: TEST_SCENARIO_TRANSITIONS ⭐ (HIGH)
-- Temp: Kroki (0°C → -5°C → -16°C → -5°C)
-- Czas: 20 dni
-- Test: Przejścia scenariuszowe, synchronizacja
-
-### Profil 6: TEST_S0_WARMUP (MEDIUM)
-- Temp: Kroki (5°C → -5°C)
-- Czas: 10 dni
-- Test: Rozruch z S0
-
-### Profil 7: UNSTABLE_WINTER (MEDIUM)
-- Temp: 14 kroków (symulacja niestabilnej zimy)
-- Czas: 14 dni
-- Test: Złożony scenariusz z przejściem przez S5
-
-## Interpretacja Wyników
-
-### Status testów:
-- ✅ **PASSED** - wszystkie warunki spełnione
-- ❌ **FAILED** - niektóre warunki nie spełnione
-- ⚠️ **ERROR** - błąd wykonania testu
 
 ### Kluczowe metryki:
 - **RC Rotations** - liczba rotacji ciągów Primary↔Limited
@@ -197,7 +151,6 @@ Po udanych testach:
 - `run_test_scenarios.py` - główny runner testów z opcją `--smoke` (w głównym katalogu simulation)
 - `scenarios/generate_report.py` - generator raportów markdown
 - `../algo_pseudokod.md` - pseudokod algorytmów (SOURCE OF TRUTH dla PLC)
-- `scenarios/README.md` - ten dokument (instrukcje testowania)
 
 ## Pomoc
 

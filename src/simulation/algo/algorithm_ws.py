@@ -39,6 +39,10 @@ class AlgorithmWS:
         }
         self._last_time_update: float = 0.0
         
+        # Track scenario changes for metrics
+        self._total_scenario_changes: int = 0
+        self._structural_changes: int = 0  # S4↔S5, S8↔S1
+        
         LOGGER.info(
             f"Algorithm WS initialized: stabilization={config.scenario_stabilization_time_s}s, "
             f"hysteresis={config.hysteresis_delta_c}°C"
@@ -210,11 +214,43 @@ class AlgorithmWS:
             f"(T_zewn={t_zewn:.1f}°C, sim_time={self.state.simulation_time:.1f}s)"
         )
         
+        # Track scenario changes for metrics
+        self._total_scenario_changes += 1
+        
+        # Track structural changes (S4↔S5, S8↔S1)
+        if self._is_structural_change(old_scenario, new_scenario):
+            self._structural_changes += 1
+            LOGGER.info(f"Structural change detected: {old_scenario.name} → {new_scenario.name}")
+        
         # Update state
         self.state.current_scenario = new_scenario
         self.state.timestamp_last_scenario_change = self.state.simulation_time
         
         return True, f"Scenario changed: {old_scenario.name} → {new_scenario.name} (T={t_zewn:.1f}°C)"
+    
+    def _is_structural_change(self, old: Scenario, new: Scenario) -> bool:
+        """
+        Check if scenario change is structural (changes line configuration).
+        
+        Structural changes (per algo_pseudokod.md):
+        - S4 ↔ S5, S5 ↔ S6, S6 ↔ S7, S7 ↔ S8 (single-line ↔ dual-line)
+        - S8 ↔ S1 (dual-line ↔ single-line wraparound)
+        """
+        # Define structural transitions
+        structural_pairs = [
+            (Scenario.S4, Scenario.S5),
+            (Scenario.S5, Scenario.S6),
+            (Scenario.S6, Scenario.S7),
+            (Scenario.S7, Scenario.S8),
+            (Scenario.S8, Scenario.S1),
+        ]
+        
+        # Check if transition matches any structural pair (bidirectional)
+        for s1, s2 in structural_pairs:
+            if (old == s1 and new == s2) or (old == s2 and new == s1):
+                return True
+        
+        return False
     
     def get_scenario_config(self, scenario: Scenario) -> dict:
         """
@@ -270,4 +306,12 @@ class AlgorithmWS:
             Dictionary mapping scenario to time in seconds
         """
         return dict(self._scenario_time_s)
+    
+    def get_scenario_changes_count(self) -> int:
+        """Get total number of scenario changes."""
+        return self._total_scenario_changes
+    
+    def get_structural_changes_count(self) -> int:
+        """Get total number of structural changes (single-line ↔ dual-line)."""
+        return self._structural_changes
 
