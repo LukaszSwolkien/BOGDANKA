@@ -51,17 +51,17 @@
   <text class="box-text-small" x="800" y="412" style="white-space: pre;">czas_pracy_[aktualny_układ] += delta_time</text>
   <line class="arrow" x1="800" y1="420" x2="800" y2="465"/>
   <polygon class="decision" points="800,465 1050,515 800,565 550,515"/>
-  <text class="box-text" x="800" y="505" style="white-space: pre;">KROK 1: Tryb MANUAL?</text>
-  <line class="arrow-yes" x1="1050" y1="515" x2="1260.21" y2="515" style=""/>
-  <text class="label" x="1100" y="505" style="white-space: pre;">TAK</text>
+  <text class="box-text" x="800" y="505" style="white-space: pre;">KROK 1: Tryb AUTO?</text>
+  <line class="arrow-no" x1="1050" y1="515" x2="1260.21" y2="515" style=""/>
+  <text class="label-no" x="1100" y="505" style="white-space: pre;">NIE</text>
   <g transform="matrix(1, 0, 0, 1, -52.49139404296875, -0.6343879103660583)">
     <rect class="data" x="1314.54" y="485" width="235.461" height="60" style=""/>
     <text class="box-text-small" x="1429.36" y="500.864" style="white-space: pre; font-size: 13px;" transform="matrix(1, 0, 0, 1, 0.714462, 12.175124)">Rejestruj zdarzenie: <tspan x="1429.3599853515625" dy="1em">​</tspan>"Tryb MANUAL - operator kontroluje"</text>
   </g>
   <text class="box-text-small" x="1640.92" y="610.831" style="white-space: pre; font-size: 13px;">Czekaj na AUTO</text>
   <path class="arrow" d="M 1497.47 515 L 1587.05 515 L 1587.05 2290 L 950 2290" style=""/>
-  <line class="arrow-no" x1="800" y1="565" x2="800" y2="625"/>
-  <text class="label-no" x="820" y="595" style="white-space: pre;">NIE (AUTO)</text>
+  <line class="arrow-yes" x1="800" y1="565" x2="800" y2="625"/>
+  <text class="label" x="820" y="595" style="white-space: pre;">TAK</text>
   <polygon class="decision" points="800,625 1050,675 800,725 550,675"/>
   <text class="box-text" x="800" y="665" style="white-space: pre;">KROK 2: Pierwsze uruchomienie?</text>
   <text class="box-text-small" x="800" y="682" style="white-space: pre;">(last_update_time = NULL)</text>
