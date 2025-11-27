@@ -66,22 +66,7 @@ System sterowania BOGDANKA Szyb 2 wykorzystuje **trzy współpracujące algorytm
 
 ### **Hierarchia i Koordynacja Algorytmów**
 
-```
-┌────────────────────────────────────────────┐
-│ Algorytm WS: Wybór Scenariusza (S0-S8)     │
-│ └─ Decyduje: ile nagrzewnic, który układ   │
-└─────────────────────┬──────────────────────┘
-                      │
-            ┌─────────┴─────────┐
-            │                   │
-            ▼                   ▼
-     ┌──────────────┐    ┌──────────────┐
-     │ Algorytm RC  │    │ Algorytm RN  │
-     │ Rotacja      │◄───┤ Rotacja      │
-     │ Układów      │───►│ Nagrzewnic   │
-     │ (C1 ↔ C2)    │    │ (N1-N8)      │
-     └──────────────┘    └──────────────┘
-```
+![Hierarchia i Koordynacja Algorytmów](./schematy/hierarchia-algorytmow.svg)
 
 Algorytmy są **skoordynowane** i działają współbieżnie, zapewniając:
 - Automatyczną adaptację do warunków atmosferycznych (Alg. WS)
