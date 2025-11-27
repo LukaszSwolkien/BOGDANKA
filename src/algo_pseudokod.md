@@ -1046,6 +1046,14 @@ PARAMETRY:
 
 GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
   
+  KROK 0: Sprawdź tryb pracy
+    JEŻELI tryb_pracy = AUTO WTEDY
+      // Kontynuuj automatyczne działanie algorytmu
+    W PRZECIWNYM RAZIE:
+      Rejestruj_Zdarzenie("RN: Tryb MANUAL - algorytm nieaktywny")
+      PRZEJDŹ DO KOŃCA PĘTLI
+    KONIEC JEŻELI
+  
   KROK 1: Inicjalizacja przy pierwszym uruchomieniu
     JEŻELI last_update_time = NULL WTEDY
       last_update_time = czas_systemowy
@@ -1136,129 +1144,129 @@ GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
   
   DLA KAŻDEGO ciągu w [CIĄG1, CIĄG2]:
     
-    KROK 4: Sprawdź czy ciąg jest aktywny w aktualnym układzie/scenariuszu
-      aktualny_układ = Pobierz_Układ()  // Podstawowy lub Ograniczony
-      
-      // W S1-S4: tylko JEDEN ciąg jest aktywny (w zależności od układu)
-      JEŻELI aktualny_scenariusz ∈ {S1, S2, S3, S4} WTEDY
-        JEŻELI aktualny_układ = "Podstawowy" ORAZ ciąg = CIĄG2 WTEDY
-          POMIŃ ciąg  // C2 wyłączony w układzie podstawowym
-        KONIEC JEŻELI
-        
-        JEŻELI aktualny_układ = "Ograniczony" ORAZ ciąg = CIĄG1 WTEDY
-          POMIŃ ciąg  // C1 wyłączony w układzie ograniczonym
-        KONIEC JEŻELI
-      KONIEC JEŻELI
-      
-      // W S5-S8: oba ciągi aktywne, ale C1 nie może rotować (brak rezerwowej)
-      JEŻELI aktualny_scenariusz ∈ {S5, S6, S7, S8} ORAZ ciąg = CIĄG1 WTEDY
-        POMIŃ ciąg  // C1 niemożliwa - wszystkie nagrzewnice N1-N4 pracują
-      KONIEC JEŻELI
+    // Sprawdź czy ciąg jest aktywny w aktualnym układzie/scenariuszu
+    aktualny_układ = Pobierz_Układ()  // Podstawowy lub Ograniczony
     
-    KROK 5: Aktualizuj liczniki czasu pracy i postoju
-      // Oblicz rzeczywisty czas który upłynął od ostatniej aktualizacji
-      // (uwzględnia przyspieszenie czasu w symulacji i ewentualne opóźnienia w PLC)
-      delta_time = czas_systemowy - last_update_time
-      
-      JEŻELI delta_time > 0 WTEDY
-        DLA KAŻDEJ nagrzewnicy w ciągu:
-          JEŻELI nagrzewnica_aktywna(N) WTEDY
-            czas_pracy[N] += delta_time
-          W PRZECIWNYM RAZIE:
-            czas_postoju[N] += delta_time
-          KONIEC JEŻELI
-        KONIEC DLA
-        
-        last_update_time = czas_systemowy
+    // W S1-S4: tylko JEDEN ciąg jest aktywny (w zależności od układu)
+    JEŻELI aktualny_scenariusz ∈ {S1, S2, S3, S4} WTEDY
+      JEŻELI aktualny_układ = "Podstawowy" ORAZ ciąg = CIĄG2 WTEDY
+        POMIŃ ciąg  // C2 wyłączony w układzie podstawowym
       KONIEC JEŻELI
+      
+      JEŻELI aktualny_układ = "Ograniczony" ORAZ ciąg = CIĄG1 WTEDY
+        POMIŃ ciąg  // C1 wyłączony w układzie ograniczonym
+      KONIEC JEŻELI
+    KONIEC JEŻELI
     
-    KROK 6: Sprawdź warunki rotacji
-      
-      // Koordynacja z Algorytmem RC - sprawdź czy RC nie wykonuje zmiany układu
-      JEŻELI zmiana_układu_w_toku = PRAWDA WTEDY
-        POMIŃ ciąg  // odrocz rotację - trwa zmiana układu
-      KONIEC JEŻELI
-      
-      // Sprawdź czy upłynęła 1h od ostatniej zmiany układu (RC)
-      // (dotyczy tylko S1-S4, bo tylko tam działa Algorytm RC)
-      JEŻELI aktualny_scenariusz ∈ {S1, S2, S3, S4} WTEDY
-        czas_od_zmiany_układu = czas_systemowy - czas_ostatniej_zmiany_układu
-        JEŻELI czas_od_zmiany_układu < 3600 WTEDY  // 1 godzina
-          POMIŃ ciąg  // za wcześnie po zmianie układu
+    // W S5-S8: oba ciągi aktywne, ale C1 nie może rotować (brak rezerwowej)
+    JEŻELI aktualny_scenariusz ∈ {S5, S6, S7, S8} ORAZ ciąg = CIĄG1 WTEDY
+      POMIŃ ciąg  // C1 niemożliwa - wszystkie nagrzewnice N1-N4 pracują
+    KONIEC JEŻELI
+  
+  KROK 4: Aktualizuj liczniki czasu pracy i postoju
+    // Oblicz rzeczywisty czas który upłynął od ostatniej aktualizacji
+    // (uwzględnia przyspieszenie czasu w symulacji i ewentualne opóźnienia w PLC)
+    delta_time = czas_systemowy - last_update_time
+    
+    JEŻELI delta_time > 0 WTEDY
+      DLA KAŻDEJ nagrzewnicy w ciągu:
+        JEŻELI nagrzewnica_aktywna(N) WTEDY
+          czas_pracy[N] += delta_time
+        W PRZECIWNYM RAZIE:
+          czas_postoju[N] += delta_time
         KONIEC JEŻELI
-      KONIEC JEŻELI
+      KONIEC DLA
       
-      // Sprawdź odstęp 15 min od ostatniej rotacji (w dowolnym ciągu)
-      czas_od_ostatniej_rotacji_globalnej = czas_systemowy - czas_ostatniej_rotacji_globalny
-      JEŻELI czas_od_ostatniej_rotacji_globalnej < 900 WTEDY  // 15 minut
-        POMIŃ ciąg  // za krótki odstęp od ostatniej rotacji
-      KONIEC JEŻELI
-      
-      aktualny_scenariusz = Pobierz_Scenariusz()
-      ilość_pracujących = Liczba_Aktywnych_Nagrzewnic(ciąg)
-      ilość_sprawnych = Liczba_Sprawnych_Nagrzewnic(ciąg)
-      
-      JEŻELI ilość_sprawnych ≤ ilość_pracujących WTEDY
-        // Brak nagrzewnic rezerwowych - rotacja niemożliwa
-        POMIŃ ciąg
-      KONIEC JEŻELI
-      
-      czas_od_ostatniej_rotacji = czas_systemowy - czas_ostatniej_rotacji[ciąg]
-      okres = OKRES_ROTACJI_NAGRZEWNIC[aktualny_scenariusz]
-      
-      JEŻELI czas_od_ostatniej_rotacji < okres WTEDY
-        // Nie upłynął jeszcze okres rotacji
-        POMIŃ ciąg
-      KONIEC JEŻELI
-      
-      JEŻELI NIE Warunki_Stabilności_Spełnione(ciąg) WTEDY
-        // System niestabilny - nie wykonuj rotacji
-        POMIŃ ciąg
-      KONIEC JEŻELI
+      last_update_time = czas_systemowy
+    KONIEC JEŻELI
+  
+  KROK 5: Sprawdź warunki rotacji
     
-    KROK 7: Wybierz nagrzewnicę do wyłączenia i załączenia
-      // Znajdź nagrzewnicę najdłużej pracującą (aktywną)
-      nagrzewnica_do_wyłączenia = NULL
-      max_czas_pracy = 0
-      earliest_timestamp = nieskonczonosc
-      
-      DLA KAŻDEJ N w nagrzewnice_aktywne[ciąg]:
-        JEŻELI czas_pracy[N] > max_czas_pracy WTEDY
-          max_czas_pracy = czas_pracy[N]
+    // Koordynacja z Algorytmem RC - sprawdź czy RC nie wykonuje zmiany układu
+    JEŻELI zmiana_układu_w_toku = PRAWDA WTEDY
+      POMIŃ ciąg  // odrocz rotację - trwa zmiana układu
+    KONIEC JEŻELI
+    
+    // Sprawdź czy upłynęła 1h od ostatniej zmiany układu (RC)
+    // (dotyczy tylko S1-S4, bo tylko tam działa Algorytm RC)
+    JEŻELI aktualny_scenariusz ∈ {S1, S2, S3, S4} WTEDY
+      czas_od_zmiany_układu = czas_systemowy - czas_ostatniej_zmiany_układu
+      JEŻELI czas_od_zmiany_układu < 3600 WTEDY  // 1 godzina
+        POMIŃ ciąg  // za wcześnie po zmianie układu
+      KONIEC JEŻELI
+    KONIEC JEŻELI
+    
+    // Sprawdź odstęp 15 min od ostatniej rotacji (w dowolnym ciągu)
+    czas_od_ostatniej_rotacji_globalnej = czas_systemowy - czas_ostatniej_rotacji_globalny
+    JEŻELI czas_od_ostatniej_rotacji_globalnej < 900 WTEDY  // 15 minut
+      POMIŃ ciąg  // za krótki odstęp od ostatniej rotacji
+    KONIEC JEŻELI
+    
+    aktualny_scenariusz = Pobierz_Scenariusz()
+    ilość_pracujących = Liczba_Aktywnych_Nagrzewnic(ciąg)
+    ilość_sprawnych = Liczba_Sprawnych_Nagrzewnic(ciąg)
+    
+    JEŻELI ilość_sprawnych ≤ ilość_pracujących WTEDY
+      // Brak nagrzewnic rezerwowych - rotacja niemożliwa
+      POMIŃ ciąg
+    KONIEC JEŻELI
+    
+    czas_od_ostatniej_rotacji = czas_systemowy - czas_ostatniej_rotacji[ciąg]
+    okres = OKRES_ROTACJI_NAGRZEWNIC[aktualny_scenariusz]
+    
+    JEŻELI czas_od_ostatniej_rotacji < okres WTEDY
+      // Nie upłynął jeszcze okres rotacji
+      POMIŃ ciąg
+    KONIEC JEŻELI
+    
+    JEŻELI NIE Warunki_Stabilności_Spełnione(ciąg) WTEDY
+      // System niestabilny - nie wykonuj rotacji
+      POMIŃ ciąg
+    KONIEC JEŻELI
+  
+  KROK 6: Wybierz nagrzewnicę do wyłączenia i załączenia
+    // Znajdź nagrzewnicę najdłużej pracującą (aktywną)
+    nagrzewnica_do_wyłączenia = NULL
+    max_czas_pracy = 0
+    earliest_timestamp = nieskonczonosc
+    
+    DLA KAŻDEJ N w nagrzewnice_aktywne[ciąg]:
+      JEŻELI czas_pracy[N] > max_czas_pracy WTEDY
+        max_czas_pracy = czas_pracy[N]
+        nagrzewnica_do_wyłączenia = N
+        earliest_timestamp = timestamp_zalaczenia[N]
+      W PRZECIWNYM RAZIE JEŻELI czas_pracy[N] = max_czas_pracy WTEDY
+        // Przy identycznych czasach pracy wybierz tę załączoną wcześniej
+        JEŻELI timestamp_zalaczenia[N] < earliest_timestamp WTEDY
           nagrzewnica_do_wyłączenia = N
           earliest_timestamp = timestamp_zalaczenia[N]
-        W PRZECIWNYM RAZIE JEŻELI czas_pracy[N] = max_czas_pracy WTEDY
-          // Przy identycznych czasach pracy wybierz tę załączoną wcześniej
-          JEŻELI timestamp_zalaczenia[N] < earliest_timestamp WTEDY
-            nagrzewnica_do_wyłączenia = N
-            earliest_timestamp = timestamp_zalaczenia[N]
-          KONIEC JEŻELI
         KONIEC JEŻELI
-      KONIEC DLA
-      
-      // Znajdź nagrzewnicę z najkrótszym czasem pracy (nieaktywną, sprawną)
-      // UWAGA: Porównujemy czasy PRACY, nie postoju!
-      nagrzewnica_do_załączenia = NULL
-      min_czas_pracy = nieskonczonosc
-      
-      DLA KAŻDEJ N w [nagrzewnice ciągu]:
-        JEŻELI N NIE w nagrzewnice_aktywne[ciąg] ORAZ
-               N_sprawna(N) ORAZ
-               czas_pracy[N] < min_czas_pracy WTEDY
-          min_czas_pracy = czas_pracy[N]
-          nagrzewnica_do_załączenia = N
-        KONIEC JEŻELI
-      KONIEC DLA
-      
-      // Sprawdź czy warto wykonać rotację
-      // Porównujemy różnicę w czasach PRACY (nie pracy vs postoju)
-      delta_czasu = max_czas_pracy - min_czas_pracy
-      JEŻELI delta_czasu < MIN_DELTA_CZASU WTEDY
-        // Różnica czasu zbyt mała - nie ma sensu rotować
-        POMIŃ ciąg
       KONIEC JEŻELI
+    KONIEC DLA
     
-    KROK 8: Wykonaj rotację
+    // Znajdź nagrzewnicę z najkrótszym czasem pracy (nieaktywną, sprawną)
+    // UWAGA: Porównujemy czasy PRACY, nie postoju!
+    nagrzewnica_do_załączenia = NULL
+    min_czas_pracy = nieskonczonosc
+    
+    DLA KAŻDEJ N w [nagrzewnice ciągu]:
+      JEŻELI N NIE w nagrzewnice_aktywne[ciąg] ORAZ
+             N_sprawna(N) ORAZ
+             czas_pracy[N] < min_czas_pracy WTEDY
+        min_czas_pracy = czas_pracy[N]
+        nagrzewnica_do_załączenia = N
+      KONIEC JEŻELI
+    KONIEC DLA
+    
+    // Sprawdź czy warto wykonać rotację
+    // Porównujemy różnicę w czasach PRACY (nie pracy vs postoju)
+    delta_czasu = max_czas_pracy - min_czas_pracy
+    JEŻELI delta_czasu < MIN_DELTA_CZASU WTEDY
+      // Różnica czasu zbyt mała - nie ma sensu rotować
+      POMIŃ ciąg
+    KONIEC JEŻELI
+  
+  KROK 7: Wykonaj rotację
       JEŻELI nagrzewnica_do_wyłączenia ≠ NULL ORAZ 
              nagrzewnica_do_załączenia ≠ NULL WTEDY
         
@@ -1594,6 +1602,7 @@ KONIEC FUNKCJI
 **Koniec dokumentu pseudokodu**
 
 **Historia zmian:**
+- **v1.7** (27 Listopad 2025): **STRUKTURA:** Dodano KROK 0 w Algorytmie RN - sprawdzenie trybu pracy (AUTO/MANUAL) na początku każdego cyklu. W trybie MANUAL algorytm RN jest nieaktywny. Renumeracja kroków RN: KROK 1-8 → KROK 1-7 (spójność z WS i RC, zgodność z flowchart v2)
 - **v1.6** (27 Listopad 2025): **STRUKTURA:** Dodano KROK 0 w Algorytmie RC - aktualizacja liczników czasu pracy układu na początku każdego cyklu (dla spójności z WS i zgodności z flowchart). Przeniesiono logikę z KROKU 7 do KROKU 0. Pełna synchronizacja pseudokodu RC z flowchart v2.0 (uproszczone sekwencje zmian układu)
 - **v1.5** (27 Listopad 2025): **KRYTYCZNE:** Dodano KROK 0 w Algorytmie WS - aktualizacja statystyk czasu w scenariuszu na początku każdego cyklu (przed decyzjami algorytmu). Zapewnia spójne śledzenie czasu niezależnie od ścieżki wykonania (zgodność z implementacją i schematem blokowym)
 - **v1.4.1** (26 Listopad 2025): Usunięto nieużywane parametry z sekcji Equipment Timing (oczyszczenie dokumentacji)
@@ -1605,5 +1614,5 @@ KONIEC FUNKCJI
 - **v1.0** (24 Listopad 2025): Wersja początkowa
 
 **Ostatnia aktualizacja:** 27 Listopad 2025  
-**Wersja:** 1.6
+**Wersja:** 1.7
 
