@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 3420" width="1400px" height="3420px">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1850" width="900px" height="1850px">
   <defs>
     <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
       <polygon points="0 0, 10 3, 0 6" fill="#333"/>
     </marker>
-    <marker id="arrowhead-yes" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
-      <polygon points="0 0, 10 3, 0 6" fill="#28a745"/>
-    </marker>
     <marker id="arrowhead-no" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
       <polygon points="0 0, 10 3, 0 6" fill="#dc3545"/>
     </marker>
+    <marker id="arrowhead-yes" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#28a745"/>
+    </marker>
     <style>
-  .title { font-family: Arial, sans-serif; font-size: 28px; font-weight: bold; fill: #1a1a1a; }
-  .subtitle { font-family: Arial, sans-serif; font-size: 18px; fill: #555; }
+  .title { font-family: Arial, sans-serif; font-size: 24px; font-weight: bold; fill: #1a1a1a; }
+  .subtitle { font-family: Arial, sans-serif; font-size: 16px; fill: #555; }
   .box-text { font-family: Arial, sans-serif; font-size: 15px; fill: #1a1a1a; text-anchor: middle; }
   .box-text-small { font-family: Arial, sans-serif; font-size: 13px; fill: #1a1a1a; text-anchor: middle; }
   .box-label { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #1a1a1a; }
@@ -21,7 +21,6 @@
   .start-end { fill: #cce5ff; stroke: #0066cc; stroke-width: 3; rx: 25; }
   .action { fill: #f8d7da; stroke: #dc3545; stroke-width: 2; }
   .data { fill: #e7f3ff; stroke: #007bff; stroke-width: 2; }
-  .warning { fill: #fff3cd; stroke: #ff8800; stroke-width: 2; }
   .arrow { stroke: #333; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
   .arrow-yes { stroke: #28a745; stroke-width: 2.5; fill: none; marker-end: url(#arrowhead-yes); }
   .arrow-no { stroke: #dc3545; stroke-width: 2.5; fill: none; marker-end: url(#arrowhead-no); }
@@ -30,178 +29,85 @@
   .note { font-family: Arial, sans-serif; font-size: 12px; fill: #666; font-style: italic; }
     </style>
   </defs>
-  <rect x="0" y="0" width="1400" height="3420" fill="white"/>
-  <text x="700" y="40" class="title" text-anchor="middle" style="white-space: pre;">Algorytm WS: Automatyczny Wybór Scenariusza Pracy</text>
-  <text x="700" y="70" class="subtitle" text-anchor="middle" style="white-space: pre;">System BOGDANKA Szyb 2 - Dobór S0-S8 na podstawie T_zewn</text>
-  <rect x="550" y="100" width="300" height="60" class="start-end"/>
-  <text x="700" y="125" class="box-text" style="white-space: pre;">START</text>
-  <text x="700" y="145" class="box-text-small" style="white-space: pre;">Ciągły monitoring temperatury</text>
-  <path d="M 700 160 L 700 200" class="arrow"/>
-  <rect x="550" y="200" width="300" height="80" class="data"/>
-  <text x="700" y="225" class="box-text" style="white-space: pre;">KROK 1:</text>
-  <text x="700" y="245" class="box-text" style="white-space: pre;">Odczytaj czujnik T_zewn</text>
-  <text x="700" y="265" class="box-text-small" style="white-space: pre;">+ filtr uśredniania (3 próbki)</text>
-  <path d="M 700 280 L 700 320" class="arrow"/>
-  <path d="M 700 320 L 900 380 L 700 440 L 500 380 Z" class="decision"/>
-  <text x="700" y="375" class="box-text" style="white-space: pre;">Odczyt</text>
-  <text x="700" y="395" class="box-text" style="white-space: pre;">prawidłowy?</text>
-  <text x="700" y="415" class="box-text-small" style="white-space: pre;">(-40°C &lt; t &lt; 50°C)</text>
-  <path d="M 900 380 L 1050 380" class="arrow-yes"/>
-  <text x="960" y="370" class="label" style="white-space: pre;">TAK</text>
-  <rect x="1050" y="350" width="250" height="60" class="process"/>
-  <text x="1175" y="375" class="box-text-small" style="white-space: pre;">T_zewn = średnia z bufora</text>
-  <text x="1175" y="395" class="box-text-small" style="white-space: pre;">timestamp_odczytu = teraz</text>
-  <path d="M 1175 410 L 1175 480 L 700 480 L 700 520" class="arrow"/>
-  <path d="M 500 380 L 350 380" class="arrow-no"/>
-  <text x="460" y="370" class="label-no" style="white-space: pre;">NIE</text>
-  <rect x="100" y="350" width="250" height="80" class="warning"/>
-  <text x="225" y="375" class="box-text-small" style="white-space: pre;">Alarm: Awaria czujnika</text>
-  <text x="225" y="395" class="box-text" style="white-space: pre;">Czas bez odczytu</text>
-  <text x="225" y="415" class="box-text" style="white-space: pre;">&lt; 300s?</text>
-  <path d="M 225 430 L 225 546.061 L 551.903 546.061" class="arrow-yes" style=""/>
-  <text x="239.319" y="495.595" class="label" style="white-space: pre; font-size: 14px;">TAK</text>
-  <text x="302.918" y="535.944" class="note" style="white-space: pre; font-size: 12px;">Użyj ostatni_poprawny_odczyt</text>
-  <path d="M 100 390 L 50 390 L 50 600 L 200 600" class="arrow-no"/>
-  <text x="60" y="380" class="label-no" style="white-space: pre;">NIE</text>
-  <rect x="200" y="570" width="250" height="60" class="action"/>
-  <text x="325" y="595" class="box-text" style="white-space: pre;">Tryb MANUAL</text>
-  <text x="325" y="615" class="box-text-small" style="white-space: pre;">Alarm krytyczny</text>
-  <path d="M 211.894 627.897 L 211.894 3370.33 L 557.311 3370.33" class="arrow" style=""/>
-  <rect x="550" y="520" width="300" height="60" class="data"/>
-  <text x="700" y="545" class="box-text" style="white-space: pre;">KROK 2:</text>
-  <text x="700" y="565" class="box-text" style="white-space: pre;">Określ wymagany scenariusz</text>
-  <path d="M 700 580 L 700 620" class="arrow"/>
-  <path d="M 700 620 L 850 680 L 700 740 L 550 680 Z" class="decision"/>
-  <text x="700" y="685" class="box-text" style="white-space: pre;">T_zewn ≥ 3°C?</text>
-  <path d="M 850 680 L 1000 680" class="arrow-yes"/>
-  <text x="910" y="670" class="label" style="white-space: pre;">TAK</text>
-  <rect x="1000" y="650" width="120" height="60" class="process"/>
-  <text x="1060" y="675" class="box-text" style="white-space: pre;">Wymagany:</text>
-  <text x="1060" y="695" class="box-text" style="white-space: pre;">S0</text>
-  <path d="M 1060 710 L 1060 2898.8 L 849.444 2898.8" class="arrow" style=""/>
-  <path d="M 700 740 L 700 800" class="arrow-no"/>
-  <text x="720" y="770" class="label-no" style="white-space: pre;">NIE</text>
-  <path d="M 700 800 L 850 860 L 700 920 L 550 860 Z" class="decision"/>
-  <text x="700" y="865" class="box-text" style="white-space: pre;">-1°C &lt; t ≤ 2°C?</text>
-  <path d="M 850 860 L 1000 860" class="arrow-yes"/>
-  <text x="910" y="850" class="label" style="white-space: pre;">TAK</text>
-  <rect x="1000" y="830" width="120" height="60" class="process"/>
-  <text x="1060" y="855" class="box-text" style="white-space: pre;">Wymagany:</text>
-  <text x="1060" y="875" class="box-text" style="white-space: pre;">S1</text>
-  <path d="M 1060 890 L 1060 2883.16 L 848.345 2883.16" class="arrow" style=""/>
-  <path d="M 700 920 L 700 980" class="arrow-no"/>
-  <text x="720" y="950" class="label-no" style="white-space: pre;">NIE</text>
-  <path d="M 700 980 L 850 1040 L 700 1100 L 550 1040 Z" class="decision"/>
-  <text x="700" y="1045" class="box-text" style="white-space: pre;">-4°C &lt; t ≤ -1°C?</text>
-  <path d="M 850 1040 L 1000 1040" class="arrow-yes"/>
-  <text x="910" y="1030" class="label" style="white-space: pre;">TAK</text>
-  <rect x="1000" y="1010" width="120" height="60" class="process"/>
-  <text x="1060" y="1035" class="box-text" style="white-space: pre;">Wymagany:</text>
-  <text x="1060" y="1055" class="box-text" style="white-space: pre;">S2</text>
-  <path d="M 1060 1070 L 1060 2864.65 L 847.725 2864.65" class="arrow" style=""/>
-  <path d="M 700 1100 L 700 1160" class="arrow-no"/>
-  <text x="720" y="1130" class="label-no" style="white-space: pre;">NIE</text>
-  <path d="M 700 1160 L 850 1220 L 700 1280 L 550 1220 Z" class="decision"/>
-  <text x="700" y="1225" class="box-text" style="white-space: pre;">-8°C &lt; t ≤ -4°C?</text>
-  <path d="M 850 1220 L 1000 1220" class="arrow-yes"/>
-  <text x="910" y="1210" class="label" style="white-space: pre;">TAK</text>
-  <rect x="1000" y="1190" width="120" height="60" class="process"/>
-  <text x="1060" y="1215" class="box-text" style="white-space: pre;">Wymagany:</text>
-  <text x="1060" y="1235" class="box-text" style="white-space: pre;">S3</text>
-  <path d="M 1059.65 1256.69 L 1059.65 2913.59 L 850.08 2913.59" class="arrow" style=""/>
-  <path d="M 700 1280 L 700 1340" class="arrow-no"/>
-  <text x="720" y="1310" class="label-no" style="white-space: pre;">NIE</text>
-  <path d="M 700 1340 L 850 1400 L 700 1460 L 550 1400 Z" class="decision"/>
-  <text x="700" y="1405" class="box-text" style="white-space: pre;">-11°C &lt; t ≤ -8°C?</text>
-  <path d="M 850 1400 L 1000 1400" class="arrow-yes"/>
-  <text x="910" y="1390" class="label" style="white-space: pre;">TAK</text>
-  <rect x="1000" y="1370" width="120" height="60" class="process"/>
-  <text x="1060" y="1395" class="box-text" style="white-space: pre;">Wymagany:</text>
-  <text x="1060" y="1415" class="box-text" style="white-space: pre;">S4</text>
-  <path d="M 1060 1430 L 1060 2926.2 L 849.333 2926.2" class="arrow" style=""/>
-  <path d="M 700 1460 L 700 1520" class="arrow-no"/>
-  <text x="720" y="1490" class="label-no" style="white-space: pre;">NIE</text>
-  <path d="M 700 1520 L 850 1580 L 700 1640 L 550 1580 Z" class="decision"/>
-  <text x="700" y="1585" class="box-text" style="white-space: pre;">-15°C &lt; t ≤ -11°C?</text>
-  <path d="M 850 1580 L 1000 1580" class="arrow-yes"/>
-  <text x="910" y="1570" class="label" style="white-space: pre;">TAK</text>
-  <rect x="1000" y="1550" width="120" height="60" class="process"/>
-  <text x="1060" y="1575" class="box-text" style="white-space: pre;">Wymagany:</text>
-  <text x="1060" y="1595" class="box-text" style="white-space: pre;">S5</text>
-  <path d="M 1060 1610 L 1060 2938.87 L 849.43 2938.87" class="arrow" style=""/>
-  <path d="M 700 1640 L 700 1700" class="arrow-no"/>
-  <text x="720" y="1670" class="label-no" style="white-space: pre;">NIE</text>
-  <path d="M 700 1700 L 850 1760 L 700 1820 L 550 1760 Z" class="decision"/>
-  <text x="700" y="1765" class="box-text" style="white-space: pre;">-18°C &lt; t ≤ -15°C?</text>
-  <path d="M 850 1760 L 1000 1760" class="arrow-yes"/>
-  <text x="910" y="1750" class="label" style="white-space: pre;">TAK</text>
-  <rect x="1000" y="1730" width="120" height="60" class="process"/>
-  <text x="1060" y="1755" class="box-text" style="white-space: pre;">Wymagany:</text>
-  <text x="1060" y="1775" class="box-text" style="white-space: pre;">S6</text>
-  <path d="M 1060 1790 L 1060 2951.5 L 848.136 2951.5" class="arrow" style=""/>
-  <path d="M 700 1820 L 700 1880" class="arrow-no"/>
-  <text x="720" y="1850" class="label-no" style="white-space: pre;">NIE</text>
-  <path d="M 700 1880 L 850 1940 L 700 2000 L 550 1940 Z" class="decision"/>
-  <text x="700" y="1945" class="box-text" style="white-space: pre;">-21°C &lt; t ≤ -18°C?</text>
-  <path d="M 850 1940 L 1000 1940" class="arrow-yes"/>
-  <text x="910" y="1930" class="label" style="white-space: pre;">TAK</text>
-  <rect x="1000" y="1910" width="120" height="60" class="process"/>
-  <text x="1060" y="1935" class="box-text" style="white-space: pre;">Wymagany:</text>
-  <text x="1060" y="1955" class="box-text" style="white-space: pre;">S7</text>
-  <path d="M 1060 1970 L 1060 2964.08 L 848.745 2964.08" class="arrow" style=""/>
-  <path d="M 700 2000 L 700 2060" class="arrow-no"/>
-  <text x="720" y="2030" class="label-no" style="white-space: pre;">NIE</text>
-  <path d="M 700 2060 L 850 2120 L 700 2180 L 550 2120 Z" class="decision"/>
-  <text x="700" y="2125" class="box-text" style="white-space: pre;">t ≤ -21°C?</text>
-  <path d="M 850 2120 L 1000 2120" class="arrow-yes"/>
-  <text x="910" y="2110" class="label" style="white-space: pre;">TAK</text>
-  <rect x="1000" y="2090" width="120" height="60" class="process"/>
-  <text x="1060" y="2115" class="box-text" style="white-space: pre;">Wymagany:</text>
-  <text x="1060" y="2135" class="box-text" style="white-space: pre;">S8</text>
-  <path d="M 1060.25 2150.25 L 1060.25 2976.92 L 851.179 2976.92" class="arrow" style=""/>
-  <path d="M 550 2120 L 476.755 2120" class="arrow-no" style=""/>
-  <text x="510" y="2110" class="label-no" style="white-space: pre;">NIE</text>
-  <rect x="273.056" y="2089.95" width="200" height="60" class="warning"/>
-  <text x="370.282" y="2123.76" class="box-text-small" style="white-space: pre; font-size: 13px;">Utrzymaj aktualny</text>
-  <path d="M 300 2150 L 300 2938.55 L 555.478 2938.55" class="arrow" style=""/>
-  <rect x="550" y="2850.22" width="300" height="129.784" class="data" style=""/>
-  <text x="703.335" y="2902.22" class="box-text" style="white-space: pre; font-size: 15px;">KROK 3:</text>
-  <text x="703.335" y="2922.22" class="box-text" style="white-space: pre; font-size: 15px;">Wymagany = Aktualny?</text>
-  <text x="703.335" y="2942.22" class="box-text-small" style="white-space: pre; font-size: 13px;">+ sprawdź stabilizację 60s</text>
-  <path d="M 700 2980 L 700 3020" class="arrow"/>
-  <path d="M 700 3020 L 850 3080 L 700 3140 L 550 3080 Z" class="decision"/>
-  <text x="700" y="3075" class="box-text" style="white-space: pre;">Zmiana</text>
-  <text x="700" y="3095" class="box-text" style="white-space: pre;">wymagana?</text>
-  <text x="700" y="3115" class="box-text-small" style="white-space: pre;">(+ tryb AUTO)</text>
-  <path d="M 850 3080 L 1000 3080" class="arrow-yes"/>
-  <text x="910" y="3070" class="label" style="white-space: pre;">TAK</text>
-  <rect x="1000" y="3050" width="250" height="60" class="action"/>
-  <text x="1125" y="3075" class="box-text" style="white-space: pre;">KROK 4:</text>
-  <text x="1125" y="3095" class="box-text" style="white-space: pre;">Wykonaj zmianę scenariusza</text>
-  <path d="M 1125 3110 L 1125 3200 L 759.019 3200 L 759.019 3240" class="arrow" style=""/>
-  <path d="M 700 3140 L 700 3239.88" class="arrow-no" style=""/>
-  <text x="720" y="3170" class="label-no" style="white-space: pre;">NIE</text>
-  <text x="499.183" y="3184.47" class="note" style="white-space: pre; font-size: 12px;">Kontynuuj w aktualnym scenariuszu</text>
-  <rect x="550" y="3240" width="300" height="60" class="process"/>
-  <text x="700" y="3265" class="box-text" style="white-space: pre;">KROK 5: Aktualizuj statystyki</text>
-  <text x="700" y="3285" class="box-text-small" style="white-space: pre;">Czas w scenariuszu, liczniki, trendy</text>
-  <path d="M 700 3300 L 700 3340" class="arrow"/>
-  <rect x="550" y="3340" width="300" height="50" class="start-end"/>
-  <text x="700" y="3373" class="box-text" style="white-space: pre;">KONIEC CYKLU</text>
-  <rect x="981.396" y="3251.37" width="400" height="150" fill="none" stroke="#999" stroke-width="1" stroke-dasharray="5,5"/>
-  <text x="991.396" y="3276.37" class="box-label" style="white-space: pre; font-size: 14px;">LEGENDA:</text>
-  <rect x="991.396" y="3286.37" width="159.72" height="30" class="decision" style=""/>
-  <text x="1074.04" y="3303.69" class="box-text-small" text-anchor="start" style="white-space: pre; font-size: 13px;">Decyzja (histereza)</text>
-  <rect x="991.396" y="3326.37" width="160.401" height="30" class="process" style=""/>
-  <text x="1074.04" y="3343.69" class="box-text-small" text-anchor="start" style="white-space: pre; font-size: 13px;">Proces (obliczenia)</text>
-  <rect x="991.396" y="3366.37" width="160.814" height="30" class="action" style=""/>
-  <text x="1074.04" y="3383.69" class="box-text-small" text-anchor="start" style="white-space: pre; font-size: 13px;">Akcja (zmiana stanu)</text>
-  <rect x="50" y="100" width="400" height="195" fill="#f9f9f9" stroke="#999" stroke-width="1"/>
-  <text x="60" y="125" class="box-label" style="white-space: pre;">PARAMETRY:</text>
-  <text x="162.095" y="147.897" class="box-text-small" text-anchor="start" style="white-space: pre; font-size: 13px;">• FILTR_UŚREDNIANIA = 3 próbki</text>
-  <text x="146.599" y="171.009" class="box-text-small" text-anchor="start" style="white-space: pre; font-size: 13px;">• CZAS_STABILIZACJI = 60s</text>
-  <text x="196.219" y="190.507" class="box-text-small" text-anchor="start" style="white-space: pre; font-size: 13px;">• CZAS_UTRZYMANIA_PRZY_AWARII = 300s</text>
-  <text x="178.64" y="210.507" class="box-text-small" text-anchor="start" style="white-space: pre; font-size: 13px;">• CZAS_MIĘDZY_ZAŁĄCZENIAMI = 30s</text>
-  <text x="196.219" y="230.507" class="box-text-small" text-anchor="start" style="white-space: pre; font-size: 13px;">• TIMEOUT_ZMIANY_SCENARIUSZA = 600s</text>
-  <text x="60" y="260" class="note" style="white-space: pre;">Histereza: Temp. wyłączania &gt; Temp. włączania</text>
+  <rect width="900" height="1850" fill="white"/>
+  <text x="450" y="40" class="title" text-anchor="middle" style="white-space: pre;">Algorytm WS - Struktura Uproszczona</text>
+  <text x="450" y="65" class="subtitle" text-anchor="middle" style="white-space: pre;">System BOGDANKA Szyb 2 - Wybór Scenariusza S0-S8 (v1.6)</text>
+  <rect x="300" y="100" width="300" height="60" class="start-end"/>
+  <text x="450" y="125" class="box-text" style="white-space: pre;">START - Główna pętla</text>
+  <text x="450" y="145" class="box-text-small" style="white-space: pre;">(co CYKL_MONITORINGU_TEMP)</text>
+  <path d="M 450 160 L 450 200" class="arrow"/>
+  <rect x="300" y="200" width="300" height="80" class="process"/>
+  <text x="450" y="225" class="box-text" style="white-space: pre;">KROK 0:</text>
+  <text x="450" y="245" class="box-text" style="white-space: pre;">Aktualizuj statystyki</text>
+  <text x="450" y="265" class="box-text-small" style="white-space: pre;">(czas w scenariuszu, liczniki)</text>
+  <path d="M 450 280 L 450 330" class="arrow"/>
+  <path d="M 450 330 L 580 390 L 450 450 L 320 390 Z" class="decision"/>
+  <text x="450" y="380" class="box-text" style="white-space: pre;">KROK 1:</text>
+  <text x="450" y="400" class="box-text-small" style="white-space: pre;">Tryb AUTO?</text>
+  <path d="M 321.996 390 L 33.366 390 L 33.366 1664.75 L 285.918 1664.75" class="arrow-no" style=""/>
+  <text x="240" y="380" class="label-no" style="white-space: pre;">NIE</text>
+  <text x="165" y="420" class="note" style="white-space: pre;">Tryb MANUAL</text>
+  <path d="M 450 450 L 450 500" class="arrow-yes"/>
+  <text x="470" y="470" class="label" style="white-space: pre;">TAK</text>
+  <rect x="300" y="500" width="300" height="80" class="data"/>
+  <text x="450" y="525" class="box-text" style="white-space: pre;">KROK 2:</text>
+  <text x="450" y="545" class="box-text" style="white-space: pre;">Odczytaj czujnik T_zewn</text>
+  <text x="450" y="565" class="box-text-small" style="white-space: pre;">+ filtr uśredniania (3 próbki)</text>
+  <path d="M 450 580 L 450 640" class="arrow"/>
+  <rect x="300" y="640" width="300" height="80" class="data"/>
+  <text x="450" y="665" class="box-text" style="white-space: pre;">KROK 3:</text>
+  <text x="450" y="685" class="box-text" style="white-space: pre;">Określ wymagany scenariusz</text>
+  <text x="450" y="705" class="box-text-small" style="white-space: pre;">(Progi S0-S8 z histerezą)</text>
+  <path d="M 450 720 L 450 780" class="arrow"/>
+  <path d="M 450 780 L 580 840 L 450 900 L 320 840 Z" class="decision"/>
+  <text x="450" y="830" class="box-text" style="white-space: pre;">KROK 4:</text>
+  <text x="450" y="850" class="box-text-small" style="white-space: pre;">Wymagany = Aktualny?</text>
+  <text x="450" y="870" class="box-text-small" style="white-space: pre;">+ stabilizacja 60s</text>
+  <path d="M 320 840 L 220.022 840 L 220.022 980" class="arrow-no" style=""/>
+  <text x="250" y="830" class="label-no" style="white-space: pre;">NIE</text>
+  <text x="228.476" y="862.177" class="note" style="white-space: pre; font-size: 12px;">Zmiana wymagana</text>
+  <path d="M 580 840 L 820 840 L 820 1645 L 620 1645" class="arrow-yes"/>
+  <text x="640" y="830" class="label" style="white-space: pre;">TAK</text>
+  <text x="608" y="857" class="note" style="white-space: pre;">Kontynuuj w aktualnym</text>
+  <g transform="matrix(1, 0, 0, 1, 32.02680969238281, 0.5132499933242798)">
+    <path d="M 188 980 L 318 1040 L 188 1100 L 58 1040 Z" class="decision"/>
+    <text x="192.007" y="1020.3" class="box-text" style="font-size: 15px; white-space: pre;">KROK 5:</text>
+    <text x="192.007" y="1043.53" class="box-text-small" style="white-space: pre; font-size: 13px;">Brak blokady RC/RN?</text>
+    <text x="194.142" y="1061.38" class="box-text-small" style="white-space: pre; font-size: 13px;">(zmiana/rotacja możliwa)</text>
+  </g>
+  <path d="M 95.348 1040 L 54.506 1040 L 54.506 1629.35 L 289.15 1629.35" class="arrow-no" style=""/>
+  <text x="40" y="1030" class="label-no" style="white-space: pre;">NIE</text>
+  <text x="61.547" y="1227.38" class="note" style="white-space: pre; font-size: 12px;">Blokada aktywna</text>
+  <path d="M 352.387 1039.36 L 562.127 1039.36 L 562.127 1178.34" class="arrow-yes" style=""/>
+  <text x="380" y="1030" class="label" style="white-space: pre;">TAK</text>
+  <rect x="410" y="1180" width="300" height="80" class="action"/>
+  <text x="560" y="1205" class="box-text" style="white-space: pre;">KROK 6:</text>
+  <text x="560" y="1225" class="box-text" style="white-space: pre;">Wykonaj zmianę scenariusza</text>
+  <text x="560" y="1245" class="box-text-small" style="white-space: pre;">(aktywuj/dezaktywuj nagrzewnice)</text>
+  <path d="M 560 1260 L 560 1615" class="arrow"/>
+  <rect x="288.833" y="1615" width="327.167" height="60" class="process" style=""/>
+  <text x="457" y="1650" class="box-text" style="white-space: pre;">Czekaj CYKL_MONITORINGU_TEMP</text>
+  <path d="M 450 1675 L 450 1710 L 850 1710 L 850 130 L 600 130" class="arrow"/>
+  <rect x="50" y="1730" width="800" height="100" fill="none" stroke="#999" stroke-width="1" stroke-dasharray="5,5"/>
+  <text x="60" y="1755" class="box-label" style="white-space: pre;">LEGENDA:</text>
+  <rect x="70" y="1770" width="140" height="40" class="start-end"/>
+  <text x="140" y="1795" class="box-text-small" style="white-space: pre;">START / KONIEC</text>
+  <rect x="230" y="1770" width="140" height="40" class="data"/>
+  <text x="300" y="1795" class="box-text-small" style="white-space: pre;">Odczyt / Dane</text>
+  <path d="M 450 1770 L 510 1790 L 450 1810 L 390 1790 Z" class="decision"/>
+  <text x="450" y="1795" class="box-text-small" style="white-space: pre;">Decyzja</text>
+  <rect x="540" y="1770" width="120" height="40" class="action"/>
+  <text x="600" y="1795" class="box-text-small" style="white-space: pre;">Akcja</text>
+  <rect x="680" y="1770" width="140" height="40" class="process"/>
+  <text x="750" y="1795" class="box-text-small" style="white-space: pre;">Proces</text>
+  <rect x="8" y="101" width="280" height="198" fill="#f9f9f9" stroke="#999" stroke-width="1"/>
+  <text x="18" y="126" class="box-label" style="white-space: pre;">PARAMETRY:</text>
+  <text x="109" y="144" class="box-text-small" text-anchor="start" style="font-size: 13px; white-space: pre;">• CYKL_MONITORINGU_TEMP</text>
+  <text x="116" y="164" class="box-text-small" text-anchor="start" style="font-size: 13px; white-space: pre;">• FILTR_UŚREDNIANIA (3 próbki)</text>
+  <text x="133" y="184" class="box-text-small" text-anchor="start" style="font-size: 13px; white-space: pre;">• CZAS_STABILIZACJI_SCENARIUSZA</text>
+  <text x="130" y="203" class="box-text-small" text-anchor="start" style="font-size: 13px; white-space: pre;">• CZAS_UTRZYMANIA_PRZY_AWARII</text>
+  <text x="138" y="224" class="box-text-small" text-anchor="start" style="font-size: 13px; white-space: pre;">• ODSTĘP_ZAŁĄCZENIA_NAGRZEWNIC</text>
+  <text x="141" y="243" class="box-text-small" text-anchor="start" style="font-size: 13px; white-space: pre;">• ODSTĘP_WYŁĄCZENIA_NAGRZEWNIC</text>
+  <text x="127" y="262" class="box-text-small" text-anchor="start" style="font-size: 13px; white-space: pre;">• TIMEOUT_ZMIANY_SCENARIUSZA</text>
+  <text x="18" y="282" class="note" style="font-size: 12px; white-space: pre;">Histereza: Temp. wyłączania &gt; Temp. włączania</text>
 </svg>

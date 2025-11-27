@@ -4,6 +4,7 @@
 # Simulation Configuration
 simulation:
   acceleration: 1000       # time acceleration: 1s simulation = 1000s real time (common for both services)
+  duration_days: 30        # default simulated period (can be overridden) - PROFIL TESTOWY
 
 # Telemetry Configuration
 telemetry:
@@ -29,6 +30,10 @@ telemetry:
   
   # Log level: DEBUG, INFO, WARNING, ERROR
   log_level: "INFO"
+  
+  # Log output: "console", "file", or "both"
+  log_output: "file"  # When display is enabled, logs go to file only
+  log_file: "logs/algo_service.log"  # Log file path (relative to project root)
 
 # Service Configuration
 services:
@@ -38,6 +43,11 @@ services:
     metrics_prefix: "bogdanka.algo"
     weather_endpoint: "http://localhost:8080/temperature"
     otlp_timeout_ms: 1000
+    
+    # Console Display Configuration
+    display:
+      enabled: true           # Enable/disable status header in console
+      refresh_rate_s: 1.0     # How often to refresh the header (real time seconds)
     
     # Algorithm Configuration (parameters for WS, RC, RN)
     algorithms:
@@ -49,16 +59,24 @@ services:
       
       # Algorithm RC - Configuration Rotation (Primary ↔ Limited)
       rc:
-        rotation_period_hours: 168           # [h] rotation period (7 days = 168h)
+        rotation_period_hours: 48           # [h] rotation period (7 days = 168h)
         algorithm_loop_cycle_s: 60           # [s] RC check frequency
         min_operating_time_s: 3600           # [s] minimum time before rotation allowed
       
       # Algorithm RN - Heater Rotation
       rn:
-        rotation_period_hours: 168           # [h] rotation period (7 days = 168h)
-        min_time_delta_s: 3600               # [s] minimum difference for rotation eligibility
-        gap_after_rc_s: 3600                 # [s] 1h gap after RC rotation
-        global_gap_between_rotations_s: 900  # [s] 15 min gap between RN rotations
+        # Rotation periods per scenario (in seconds)
+        # Default: 24h (86400s) for all scenarios
+        rotation_period_s1_s: 86400          # [s] S1: 24 hours
+        rotation_period_s2_s: 86400          # [s] S2: 24 hours
+        rotation_period_s3_s: 86400          # [s] S3: 24 hours
+        rotation_period_s4_s: 86400          # [s] S4: 24 hours
+        rotation_period_s5_s: 86400          # [s] S5: 24 hours
+        rotation_period_s6_s: 86400          # [s] S6: 24 hours
+        rotation_period_s7_s: 86400          # [s] S7: 24 hours
+        rotation_period_s8_s: 86400          # [s] S8: 24 hours
+        min_delta_time_s: 3600               # [s] minimum time difference for rotation eligibility
+        algorithm_loop_cycle_s: 60           # [s] RN check frequency
   
   # Weather Service provides temperature to the algo service 
   weather:
@@ -66,12 +84,17 @@ services:
     port: 8080
     service_name: "bogdanka-weather"
     metrics_prefix: "bogdanka.weather"
-    # Realistic winter temperature profile that tests ALL scenarios S0-S8
+    
+    # Temperature Profile Selection
+    # Choose which profile to use: "winter" or "constant"
+    profile_type: "constant"  # Options: "winter", "constant"
+    
+    # Profile: WINTER - Realistic winter temperature profile that tests ALL scenarios S0-S8
     winter_profile:
       # Profile simulates realistic winter with gradual cooling and warming cycles
       # Temperature range: +5°C (autumn) → -25°C (harsh winter) → +3°C (spring)
       # This ensures testing of all scenarios: S0, S1, S2, S3, S4, S5, S6, S7, S8
-      simulation_days: 30             # total simulation period
+      # Note: Profile duration is set by top-level simulation.duration_days
       initial_temp_c: 5.0             # start temperature (autumn, scenario S0)
       min_temp_c: -25.0               # coldest temperature (harsh winter, scenario S8)
       final_temp_c: 3.0               # end temperature (early spring, scenario S0)
@@ -79,4 +102,19 @@ services:
       warming_days: 15                # days to warm back up
       daily_variation_c: 3.0          # daily temperature swing (day/night)
       noise_sigma_c: 0.5              # random variation for realism
+    
+    # Profile: CONSTANT - Fixed temperature for testing algorithms in controlled conditions
+    # Use this to verify that rotation algorithms work correctly without temperature changes
+    constant_profile:
+      temperature_c: -5.0             # Constant temperature (e.g., -5°C = scenario S3)
+                                      # Suggested values:
+                                      #   +4°C = S0 (no heating)
+                                      #    0°C = S1 (1 heater)
+                                      #   -3°C = S2 (2 heaters)
+                                      #   -5°C = S3 (3 heaters)
+                                      #   -9°C = S4 (4 heaters)
+                                      #  -12°C = S5 (5 heaters, dual line)
+                                      #  -16°C = S6 (6 heaters, dual line)
+                                      #  -19°C = S7 (7 heaters, dual line)
+                                      #  -22°C = S8 (8 heaters, dual line)
       

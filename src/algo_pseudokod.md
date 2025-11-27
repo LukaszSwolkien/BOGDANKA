@@ -6,9 +6,9 @@ Ten dokument zawiera **jedyne obowiązujące źródło pseudokodu** dla algorytm
 
 ---
 
-## 📌 Zasady Użycia Tego Dokumentu
+## Zasady Użycia Tego Dokumentu
 
-**⚠️ KLUCZOWE ZASADY:**
+**KLUCZOWE ZASADY:**
 
 1. **Źródło Prawdy:** Ten plik jest **jedynym źródłem prawdy** dla pseudokodu algorytmów
 2. **Implementacja 1:1:** Każda implementacja (symulacja, PLC) musi **dokładnie** odzwierciedlać ten pseudokod
@@ -24,7 +24,7 @@ Ten dokument zawiera **jedyne obowiązujące źródło pseudokodu** dla algorytm
 
 ---
 
-## 📑 Zawartość
+## Zawartość
 
 1. [Globalne Parametry Rotacyjne (RC/RN)](#globalne-parametry-rotacyjne-rcn)
 2. [Algorytm WS: Automatyczny Wybór Scenariusza](#algorytm-ws-automatyczny-wybór-scenariusza)
@@ -47,7 +47,67 @@ Parametry te są współdzielone przez algorytmy RC i RN:
 
 ---
 
-# Algorytm WS: Automatyczny Wybór Scenariusza
+## Parametry Czasowe Sprzętu
+
+**WAŻNE:** Wartości podane poniżej są **SZACUNKOWE** dla przemysłowych wentylatorów i nagrzewnic w szybie kopalnianym. Muszą być **zweryfikowane i dostosowane podczas rozruchu** na podstawie rzeczywistych pomiarów czasu operacji sprzętu.
+
+### Nagrzewnice
+
+Wodne wymienniki ciepła o dużej mocy (~500kW-1MW każda) z dużą bezwładnością termiczną.
+
+| Parametr | Wartość domyślna | Opis |
+|----------|-----------------|------|
+| **CZAS_USTAWIENIA_ZAWORU** | 10s | Czas ustawienia zaworu na pozycję startową (20%) - zawory regulacyjne wody grzewczej |
+| **CZAS_OTWARCIA_PRZEPUSTNICY_NAGRZEWNICY** | 30s | Czas otwarcia **przepustnicy dolotowej powietrza przy nagrzewnicy** (N1-N8) |
+| **CZAS_KROKU_ZAWORU** | 5s | Czas na jeden krok zmiany pozycji zaworu (10%) - powolne otwieranie |
+| **CZAS_AKTYWACJI_PID** | 60s | Czas aktywacji regulatora PID po uruchomieniu - czekamy aż system się ustabilizuje |
+| **CZAS_STABILIZACJI_NAGRZEWNICY** | 300s | Czas stabilizacji termicznej (5 minut) - wymiennik potrzebuje czasu na osiągnięcie temp. roboczej |
+| **CZAS_ZAMKNIĘCIA_ZAWORU** | 30s | Czas zamknięcia zaworu do pozycji 20% - powolne zamykanie |
+| **CZAS_ZAMKNIĘCIA_PRZEPUSTNICY_NAGRZEWNICY** | 20s | Czas zamknięcia **przepustnicy dolotowej przy nagrzewnicy** |
+| **CZAS_CHŁODZENIA_NAGRZEWNICY** | 180s | Czas chłodzenia po wyłączeniu (3 minuty) - wymiennik oddaje ciepło |
+
+### Wentylatory
+
+
+| Parametr | Wartość domyślna | Opis |
+|----------|-----------------|------|
+| **CZAS_ROZRUCHU_WENTYLATORA** | 120s | Czas rozruchu wentylatora (soft-start, 2 minuty) |
+| **CZAS_ZATRZYMANIA_WENTYLATORA** | 300s | Czas bezpiecznego zatrzymania wentylatora (5 minut) |
+
+### Przepustnice Główne Systemu
+
+Duże klapy wentylacyjne w głównej instalacji wentylacyjnej (kolektory, wyrzutnie, spinka ciągów).  
+**Uwaga:** To są inne przepustnice niż przepustnice dolotowe przy nagrzewnicach (patrz sekcja Nagrzewnice).
+
+| Parametr | Wartość domyślna | Opis |
+|----------|-----------------|------|
+| **CZAS_OPERACJI_PRZEPUSTNICY** | 30s | Czas operacji **przepustnic głównych** (kolektory C1/C2, wyrzutnie -4,30m/-7,90m) |
+| **CZAS_OPERACJI_SPINKA** | 45s | Czas operacji **przepustnicy na spince ciągów** (największa, najbardziej krytyczna) |
+
+### Sekwencje Zmian
+
+Parametry czasowe dla sekwencji zmian scenariuszy i układów.
+
+| Parametr | Wartość domyślna | Opis |
+|----------|-----------------|------|
+| **ODSTĘP_ZAŁĄCZENIA_NAGRZEWNIC** | 300s | Odstęp między załączaniem kolejnych nagrzewnic (5 minut) |
+| **ODSTĘP_WYŁĄCZENIA_NAGRZEWNIC** | 180s | Odstęp między wyłączaniem kolejnych nagrzewnic (3 minuty) |
+| **CZAS_WERYFIKACJI_SCENARIUSZA** | 300s | Czas weryfikacji stanu końcowego po zmianie (5 minut) |
+| **TIMEOUT_ZMIANY_SCENARIUSZA** | 3600s | Maksymalny czas na zmianę scenariusza (1 godzina) |
+| **CZAS_STABILIZACJI_PRZEPŁYWU** | 300s | Czas stabilizacji przepływu powietrza (5 minut) |
+
+### Bezpieczeństwo i Monitoring
+
+| Parametr | Wartość domyślna | Opis |
+|----------|-----------------|------|
+| **CZAS_WERYFIKACJI_TEMPERATURY** | 180s | Czas weryfikacji temperatury nagrzewnicy (3 minuty) |
+
+**Uwagi implementacyjne:**
+- **Podczas rozruchu**: zmierzyć rzeczywiste czasy operacji i zaktualizować parametry
+
+---
+
+ Algorytm WS: Automatyczny Wybór Scenariusza
 
 ## Pseudokod
 
@@ -59,19 +119,50 @@ ZMIENNE GLOBALNE:
   - timestamp_ostatniej_zmiany = 0              // Timestamp ostatniej zmiany scenariusza
   - timestamp_ostatniego_odczytu = 0            // Dla wykrywania awarii czujnika
   - alarm_czujnik_temp = FAŁSZ                  // Flaga awarii czujnika
+  - czas_w_scenariuszu = {}                     // Mapa: scenariusz → czas_pracy [sekundy]
+  - ostatni_czas_aktualizacji = 0               // Timestamp ostatniej aktualizacji statystyk
 
 PARAMETRY:
   - CYKL_MONITORINGU_TEMP = 10                  // [sekundy]
   - CZAS_UTRZYMANIA_PRZY_AWARII = 300           // [sekundy]
   - FILTR_UŚREDNIANIA = 3                       // [próbki]
   - CZAS_STABILIZACJI_SCENARIUSZA = 60          // [sekundy]
-  - CZAS_MIĘDZY_ZAŁĄCZENIAMI = 30               // [sekundy]
-  - CZAS_MIĘDZY_WYŁĄCZENIAMI = 30               // [sekundy]
-  - TIMEOUT_ZMIANY_SCENARIUSZA = 600            // [sekundy]
+  
+  // Parametry z equipment_timing (szczegółowa lista w sekcji Equipment Timing powyżej)
+  - ODSTĘP_ZAŁĄCZENIA_NAGRZEWNIC = 300          // [sekundy] (5 minut)
+  - ODSTĘP_WYŁĄCZENIA_NAGRZEWNIC = 180          // [sekundy] (3 minuty)
+  - TIMEOUT_ZMIANY_SCENARIUSZA = 3600           // [sekundy] (1 godzina)
 
 GŁÓWNA PĘTLA (co CYKL_MONITORINGU_TEMP sekund):
   
-  KROK 1: Odczyt i walidacja temperatury zewnętrznej
+  KROK 0: Aktualizuj statystyki bieżącego scenariusza
+    // Ten krok wykonywany jest ZAWSZE na początku każdego cyklu,
+    // niezależnie od późniejszych decyzji algorytmu
+    
+    JEŻELI ostatni_czas_aktualizacji > 0 WTEDY
+      // Oblicz czas od ostatniej aktualizacji
+      delta_czasu = czas_systemowy - ostatni_czas_aktualizacji
+      
+      // Dodaj do czasu obecnego scenariusza
+      JEŻELI czas_w_scenariuszu[aktualny_scenariusz] = NULL WTEDY
+        czas_w_scenariuszu[aktualny_scenariusz] = 0
+      KONIEC JEŻELI
+      
+      czas_w_scenariuszu[aktualny_scenariusz] += delta_czasu
+    KONIEC JEŻELI
+    
+    // Zaktualizuj timestamp dla następnego cyklu
+    ostatni_czas_aktualizacji = czas_systemowy
+  
+  KROK 1: Sprawdź tryb pracy
+    // W trybie MANUAL algorytm nie wykonuje żadnych automatycznych zmian.
+    // Operator kontroluje system ręcznie.
+    JEŻELI tryb_pracy ≠ AUTO WTEDY
+      Rejestruj_Zdarzenie("WS: Tryb MANUAL - algorytm nieaktywny")
+      PRZEJDŹ DO KOŃCA PĘTLI  // Czekamy na zmianę trybu na AUTO
+    KONIEC JEŻELI
+  
+  KROK 2: Odczyt i walidacja temperatury zewnętrznej
     T_zewn_raw = Odczytaj_Czujnik_Temperatury_Zewnętrznej()
     
     // Walidacja odczytu
@@ -109,10 +200,10 @@ GŁÓWNA PĘTLA (co CYKL_MONITORINGU_TEMP sekund):
     
     KONIEC JEŻELI
   
-  KROK 2: Określ wymagany scenariusz na podstawie temperatury
+  KROK 3: Określ wymagany scenariusz na podstawie temperatury
     wymagany_scenariusz = Określ_Scenariusz_Dla_Temperatury(T_zewn, aktualny_scenariusz)
   
-  KROK 3: Sprawdź czy wymagana zmiana scenariusza
+  KROK 4: Sprawdź czy wymagana zmiana scenariusza
     JEŻELI wymagany_scenariusz = aktualny_scenariusz WTEDY
       // Brak zmiany - kontynuuj w aktualnym scenariuszu
       PRZEJDŹ DO KOŃCA PĘTLI
@@ -127,21 +218,13 @@ GŁÓWNA PĘTLA (co CYKL_MONITORINGU_TEMP sekund):
       PRZEJDŹ DO KOŃCA PĘTLI
     KONIEC JEŻELI
   
-  KROK 4: Sprawdź tryb pracy
-    JEŻELI tryb_pracy ≠ AUTO WTEDY
-      // W trybie MANUAL operator kontroluje system
-      Rejestruj_Zdarzenie("Scenariusz " + wymagany_scenariusz + 
-                         " wymagany, ale tryb=MANUAL")
-      PRZEJDŹ DO KOŃCA PĘTLI
-    KONIEC JEŻELI
-  
-  KROK 4A: Sprawdź blokady RC/RN
+  KROK 5: Sprawdź blokady RC/RN
     JEŻELI zmiana_układu_w_toku = PRAWDA LUB rotacja_nagrzewnic_w_toku = PRAWDA WTEDY
       Rejestruj_Zdarzenie("Zmiana scenariusza odroczona (koordynacja RC/RN)")
       PRZEJDŹ DO KOŃCA PĘTLI
     KONIEC JEŻELI
   
-  KROK 5: Wykonaj zmianę scenariusza
+  KROK 6: Wykonaj zmianę scenariusza
     Rejestruj_Zdarzenie("Zmiana scenariusza: " + aktualny_scenariusz + 
                        " → " + wymagany_scenariusz + " (t=" + T_zewn + "°C)")
     
@@ -317,7 +400,7 @@ FUNKCJA Wykonaj_Zmianę_Scenariusza(scenariusz_stary, scenariusz_nowy):
       ZWRÓĆ BŁĄD
     KONIEC JEŻELI
     
-    Czekaj(10 sekund)  // Stabilizacja wentylatorów
+    Czekaj(CZAS_ROZRUCHU_WENTYLATORA sekund)  // Stabilizacja wentylatorów
     
     // KROK 3: Skonfiguruj przepustnice (układ podstawowy/ograniczony)
     wynik_przepustnice = Konfiguruj_Przepustnice(config_nowa.układ_pracy)
@@ -327,7 +410,7 @@ FUNKCJA Wykonaj_Zmianę_Scenariusza(scenariusz_stary, scenariusz_nowy):
       ZWRÓĆ BŁĄD
     KONIEC JEŻELI
     
-    Czekaj(5 sekund)
+    Czekaj(CZAS_OPERACJI_PRZEPUSTNICY sekund)
     
     // KROK 4: Uruchom dodatkowe nagrzewnice (jeśli przechodzimy na wyższy scenariusz)
     JEŻELI config_nowa.ilość_nagrzewnic > config_stara.ilość_nagrzewnic WTEDY
@@ -352,8 +435,7 @@ FUNKCJA Wykonaj_Zmianę_Scenariusza(scenariusz_stary, scenariusz_nowy):
     KONIEC JEŻELI
     
     // KROK 5: Weryfikacja stanu końcowego
-    czas_weryfikacji = 30  // sekundy
-    Czekaj(czas_weryfikacji sekund)
+    Czekaj(CZAS_WERYFIKACJI_SCENARIUSZA sekund)
     
     JEŻELI Weryfikuj_Scenariusz(scenariusz_nowy) = PRAWDA WTEDY
       ZWRÓĆ SUKCES
@@ -570,18 +652,23 @@ FUNKCJA Załącz_Nagrzewnicę(N):
   
   // 1. Ustaw zawór na pozycję minimalną (20%)
   Ustaw_Zawór(N, 20%)
-  Czekaj(3 sekundy)
+  Czekaj(CZAS_USTAWIENIA_ZAWORU sekund)
   
   // 2. Otwórz przepustnicę dolotową
   Ustaw_Przepustnicę_Dolot(N, OTWARTA)
-  Czekaj(5 sekund)
+  Czekaj(CZAS_OTWARCIA_PRZEPUSTNICY_NAGRZEWNICY sekund)
   
   // 3. Aktywuj regulator PID
   Ustaw_Regulator_PID(N, tryb=AUTO, setpoint=50°C)
-  Czekaj(10 sekund)
+  Czekaj(CZAS_AKTYWACJI_PID sekund)
   
-  // 4. Weryfikacja
+  // 4. Czekaj na stabilizację termiczną
+  Czekaj(CZAS_STABILIZACJI_NAGRZEWNICY sekund)
+  
+  // 5. Weryfikacja
   temp = Odczytaj_Temperaturę(N)
+  Czekaj(CZAS_WERYFIKACJI_TEMPERATURY sekund)
+  
   JEŻELI temp > 30°C WTEDY  // Nagrzewnica zaczyna działać
     Rejestruj_Zdarzenie("Nagrzewnica " + N + " załączona (T=" + temp + "°C)")
     ZWRÓĆ SUKCES
@@ -601,11 +688,14 @@ FUNKCJA Wyłącz_Nagrzewnicę(N):
   // 1. Zatrzymaj regulator PID, ustaw zawór na 20%
   Ustaw_Regulator_PID(N, tryb=MANUAL)
   Ustaw_Zawór(N, 20%)
-  Czekaj(10 sekund)
+  Czekaj(CZAS_ZAMKNIĘCIA_ZAWORU sekund)
   
   // 2. Zamknij przepustnicę dolotową
   Ustaw_Przepustnicę_Dolot(N, ZAMKNIĘTA)
-  Czekaj(3 sekundy)
+  Czekaj(CZAS_ZAMKNIĘCIA_PRZEPUSTNICY_NAGRZEWNICY sekund)
+  
+  // 3. Czekaj na chłodzenie wymiennika
+  Czekaj(CZAS_CHŁODZENIA_NAGRZEWNICY sekund)
   
   Rejestruj_Zdarzenie("Nagrzewnica " + N + " wyłączona")
   ZWRÓĆ SUKCES
@@ -678,7 +768,8 @@ ZMIENNE LOKALNE (tylko dla RC):
   - czas_pracy_układu_podstawowego = 0          // [sekundy]
   - czas_pracy_układu_ograniczonego = 0         // [sekundy]
   - czas_ostatniej_zmiany = czas_systemowy      // timestamp ostatniej rotacji układu
-  - scenariusz = S0..S8                         // aktualny scenariusz
+  - last_update_time = NULL                     // timestamp ostatniej aktualizacji liczników
+  - poprzedni_scenariusz = NULL                 // dla wykrywania przejścia z S0
 
 PARAMETRY:
   - OKRES_ROTACJI_UKŁADÓW                       // definiowany przez technologa [s]
@@ -687,8 +778,72 @@ PARAMETRY:
 
 GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
   
-  KROK 1: Sprawdź warunki rotacji
-    JEŻELI scenariusz ∈ {S1, S2, S3, S4} ORAZ
+  KROK 0: Aktualizuj liczniki czasu pracy
+    // Ten krok wykonywany jest ZAWSZE na początku każdego cyklu,
+    // niezależnie od późniejszych decyzji algorytmu
+    
+    JEŻELI last_update_time ≠ NULL WTEDY
+      // Oblicz rzeczywisty czas który upłynął od ostatniej aktualizacji
+      // (uwzględnia przyspieszenie czasu w symulacji i ewentualne opóźnienia w PLC)
+      delta_time = czas_systemowy - last_update_time
+      
+      JEŻELI delta_time > 0 WTEDY
+        JEŻELI aktualny_układ = "Podstawowy" WTEDY
+          czas_pracy_układu_podstawowego += delta_time
+        W PRZECIWNYM RAZIE:
+          czas_pracy_układu_ograniczonego += delta_time
+        KONIEC JEŻELI
+        
+        last_update_time = czas_systemowy
+      KONIEC JEŻELI
+    KONIEC JEŻELI
+    
+    // UWAGA WAŻNA: Czas w S5-S8 liczy się jako czas układu "Podstawowy"
+    // 
+    // W scenariuszach S5-S8 oba ciągi pracują równolegle (układ "Podstawowy"),
+    // więc czas ten jest liczony jako czas_pracy_układu_podstawowego.
+    // 
+    // KONSEKWENCJA dla rotacji RC:
+    // Jeśli system pracuje np. 2 dni w S3 (Podstawowy), potem przechodzi na kilka
+    // godzin do S5, a następnie wraca do S3 (Podstawowy), to licznik 
+    // czas_ostatniej_zmiany NIE jest resetowany. Rotacja ciągów nastąpi zgodnie
+    // z harmonogramem (np. po 5 dniach), niezależnie od przejścia przez S5.
+    // 
+    // Jest to zamierzone zachowanie: ciąg C1 faktycznie pracuje w S5, więc jego
+    // czas pracy jest prawidłowo liczony, a równowaga między ciągami nie jest zaburzona.
+  
+  KROK 1: Sprawdź tryb pracy
+    // W trybie MANUAL algorytm nie wykonuje żadnych automatycznych zmian.
+    // Operator kontroluje system ręcznie.
+    JEŻELI tryb = MANUAL WTEDY
+      Rejestruj_Zdarzenie("RC: Tryb MANUAL - algorytm nieaktywny")
+      PRZEJDŹ DO KOŃCA PĘTLI  // Czekamy na zmianę trybu na AUTO
+    KONIEC JEŻELI
+  
+  KROK 2: Inicjalizacja przy pierwszym uruchomieniu
+    JEŻELI last_update_time = NULL WTEDY
+      last_update_time = czas_systemowy
+      poprzedni_scenariusz = Pobierz_Scenariusz()
+      PRZEJDŹ DO KOŃCA PĘTLI  // Pomiń rotację przy pierwszym uruchomieniu
+    KONIEC JEŻELI
+  
+  KROK 3: Wykryj przejście z S0 do S1-S4 (rozruch systemu)
+    aktualny_scenariusz = Pobierz_Scenariusz()
+    
+    // Po przejściu z S0 (system wyłączony) do S1-S4 (ruch jednoliniowy):
+    // Resetujemy timestamp, aby nie wykonywać rotacji natychmiast po rozruchu
+    JEŻELI poprzedni_scenariusz = S0 ORAZ 
+           aktualny_scenariusz ∈ {S1, S2, S3, S4} WTEDY
+      Rejestruj_Zdarzenie("RC: Wykryto rozruch " + poprzedni_scenariusz + 
+                         " → " + aktualny_scenariusz + " - reset timestamp")
+      czas_ostatniej_zmiany = czas_systemowy
+    KONIEC JEŻELI
+    
+    // Zapamiętaj scenariusz dla następnej iteracji
+    poprzedni_scenariusz = aktualny_scenariusz
+  
+  KROK 4: Sprawdź warunki rotacji
+    JEŻELI aktualny_scenariusz ∈ {S1, S2, S3, S4} ORAZ
            wszystkie_nagrzewnice_C2_sprawne ORAZ
            wentylator_W2_sprawny ORAZ
            tryb = AUTO ORAZ
@@ -699,39 +854,51 @@ GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
     W PRZECIWNYM RAZIE:
       rotacja_możliwa = FAŁSZ
       // Poza S1-S4 utrzymujemy definicyjnie układ podstawowy (oba ciągi pracują równolegle)
-      JEŻELI scenariusz ∈ {S1, S2, S3, S4} ORAZ aktualny_układ = "Ograniczony" WTEDY
-        Wykonaj_Zmianę_Układu("Podstawowy")
+      
+      JEŻELI aktualny_scenariusz ∈ {S1, S2, S3, S4} ORAZ aktualny_układ = "Ograniczony" WTEDY
+        // Awaryjne wykrycie problemu z C2 podczas pracy w układzie ograniczonym
+        // (np. awaria nagrzewnicy, wentylatora, alarm krytyczny)
+        // 
+        // REAKCJA: Przejście na tryb MANUAL - operator musi podjąć decyzję
+        // NIE wykonujemy automatycznego przełączenia C2→C1, ponieważ:
+        // - Operator musi być świadomy awarii C2
+        // - Automatyczne przełączenie może maskować poważny problem
+        // - C1 może już pracować z pełnym obciążeniem
+        Rejestruj_Alarm("KRYTYCZNE: Awaria C2 w układzie ograniczonym - przejście na tryb MANUAL")
+        Przełącz_Na_Tryb_Manual()
+        PRZEJDŹ DO KOŃCA PĘTLI
       W PRZECIWNYM RAZIE:
-        aktualny_układ = "Podstawowy"   // aktualizacja stanu logicznego bez ingerencji sprzętowej
+        // S5-S8, S0, lub już Podstawowy - utrzymaj aktualny układ logiczny
+        aktualny_układ = "Podstawowy"
+        PRZEJDŹ DO KOŃCA PĘTLI
       KONIEC JEŻELI
-      PRZEJDŹ DO KROKU 5
     
     KONIEC JEŻELI
   
-  KROK 2: Sprawdź czy upłynął okres rotacji
+  KROK 5: Sprawdź czy upłynął okres rotacji
     czas_od_ostatniej_zmiany = czas_systemowy - czas_ostatniej_zmiany
     
     JEŻELI czas_od_ostatniej_zmiany ≥ (OKRES_ROTACJI_UKŁADÓW - HISTEREZA_CZASOWA) WTEDY
       rotacja_wymagana = PRAWDA
     W PRZECIWNYM RAZIE:
       rotacja_wymagana = FAŁSZ
-      PRZEJDŹ DO KROKU 5
+      PRZEJDŹ DO KOŃCA PĘTLI
     KONIEC JEŻELI
   
-  KROK 3: Określ nowy układ
+  KROK 6: Określ nowy układ
     JEŻELI aktualny_układ = "Podstawowy" WTEDY
       nowy_układ = "Ograniczony"
     W PRZECIWNYM RAZIE:
       nowy_układ = "Podstawowy"
     KONIEC JEŻELI
   
-  KROK 4: Wykonaj zmianę układu
+  KROK 7: Wykonaj zmianę układu
     JEŻELI rotacja_możliwa = PRAWDA ORAZ rotacja_wymagana = PRAWDA WTEDY
       
       // Sprawdź czy Algorytm RN nie wykonuje rotacji nagrzewnic
       JEŻELI rotacja_nagrzewnic_w_toku = PRAWDA WTEDY
         Rejestruj_Zdarzenie("Zmiana układu odroczona - trwa rotacja nagrzewnic")
-        PRZEJDŹ DO KROKU 5
+        PRZEJDŹ DO KOŃCA PĘTLI
       KONIEC JEŻELI
       
       // Ustaw blokadę dla Algorytmu RC
@@ -754,13 +921,6 @@ GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
     
     KONIEC JEŻELI
   
-  KROK 5: Aktualizuj liczniki czasu pracy
-    JEŻELI aktualny_układ = "Podstawowy" WTEDY
-      czas_pracy_układu_podstawowego += CYKL_PĘTLI_ALGORYTMÓW
-    W PRZECIWNYM RAZIE:
-      czas_pracy_układu_ograniczonego += CYKL_PĘTLI_ALGORYTMÓW
-    KONIEC JEŻELI
-
 KONIEC PĘTLI
 
 FUNKCJA Wykonaj_Zmianę_Układu(docelowy_układ):
@@ -774,33 +934,37 @@ FUNKCJA Wykonaj_Zmianę_Układu(docelowy_układ):
       
       Dla KAŻDEJ N w aktywne_C1:
         Wyłącz_Nagrzewnicę(N)
-        Czekaj(30 sekund)       // stabilizacja
+        Czekaj(ODSTĘP_WYŁĄCZENIA_NAGRZEWNIC sekund)  // stabilizacja
       KONIEC DLA
+      
       Zatrzymaj_Wentylator(W1)
+      Czekaj(CZAS_ZATRZYMANIA_WENTYLATORA sekund)
     
     KROK 2: Otwórz przepustnicę na spince ciągów
       Ustaw_Przepustnicę_Spinka(OTWARTA)
-      Czekaj(10 sekund)
+      Czekaj(CZAS_OPERACJI_SPINKA sekund)
     
     KROK 3: Zamknij przepustnice ciągu 1
       Ustaw_Przepustnicę_Kolektor_C1(ZAMKNIĘTA)
       Ustaw_Przepustnicę_Wyrzutnia_790(ZAMKNIĘTA)
+      Czekaj(CZAS_OPERACJI_PRZEPUSTNICY sekund)
     
     KROK 4: Uruchom ciąg 2 (stopniowo)
       Uruchom_Wentylator(W2, częstotliwość = 25Hz)
-      Czekaj(10 sekund)
+      Czekaj(CZAS_ROZRUCHU_WENTYLATORA sekund)
       
       // Deleguj wybór nagrzewnic do Algorytmu RC
       nagrzewnice_do_załączenia = Algorytm_RN_Pobierz_Nagrzewnice_Do_Pracy(CIĄG2, wymagana_ilość_nagrzewnic)
       
       Dla KAŻDEJ N w nagrzewnice_do_załączenia:
         Załącz_Nagrzewnicę(N)
-        Czekaj(30 sekund)            // stabilizacja
+        Czekaj(ODSTĘP_ZAŁĄCZENIA_NAGRZEWNIC sekund)  // stabilizacja
       KONIEC DLA
     
     KROK 5: Aktywuj regulację PID dla W2
       Ustaw_Wentylator_W2_Tryb(PID)
       Ustaw_Setpoint_W2(Ts = 2°C)
+      Czekaj(CZAS_STABILIZACJI_PRZEPŁYWU sekund)
   
   W PRZECIWNYM RAZIE:  // docelowy_układ = "Podstawowy"
     // Przejście: Ograniczony → Podstawowy
@@ -811,33 +975,37 @@ FUNKCJA Wykonaj_Zmianę_Układu(docelowy_układ):
       
       Dla KAŻDEJ N w aktywne_C2:
         Wyłącz_Nagrzewnicę(N)
-        Czekaj(30 sekund)
+        Czekaj(ODSTĘP_WYŁĄCZENIA_NAGRZEWNIC sekund)
       KONIEC DLA
+      
       Zatrzymaj_Wentylator(W2)
+      Czekaj(CZAS_ZATRZYMANIA_WENTYLATORA sekund)
     
     KROK 2: Zamknij przepustnicę na spince ciągów
       Ustaw_Przepustnicę_Spinka(ZAMKNIĘTA)
-      Czekaj(10 sekund)
+      Czekaj(CZAS_OPERACJI_SPINKA sekund)
     
     KROK 3: Otwórz przepustnice ciągu 1
       Ustaw_Przepustnicę_Kolektor_C1(OTWARTA)
       Ustaw_Przepustnicę_Ciąg_C1(OTWARTA)
+      Czekaj(CZAS_OPERACJI_PRZEPUSTNICY sekund)
     
     KROK 4: Uruchom ciąg 1 (stopniowo)
       Uruchom_Wentylator(W1, częstotliwość = 25Hz)
-      Czekaj(10 sekund)
+      Czekaj(CZAS_ROZRUCHU_WENTYLATORA sekund)
       
       // Deleguj wybór nagrzewnic do Algorytmu RC
       nagrzewnice_do_załączenia = Algorytm_RN_Pobierz_Nagrzewnice_Do_Pracy(CIĄG1, wymagana_ilość_nagrzewnic)
       
       Dla KAŻDEJ N w nagrzewnice_do_załączenia:
         Załącz_Nagrzewnicę(N)
-        Czekaj(30 sekund)
+        Czekaj(ODSTĘP_ZAŁĄCZENIA_NAGRZEWNIC sekund)
       KONIEC DLA
     
     KROK 5: Aktywuj regulację PID dla W1
       Ustaw_Wentylator_W1_Tryb(PID)
       Ustaw_Setpoint_W1(Ts = 2°C)
+      Czekaj(CZAS_STABILIZACJI_PRZEPŁYWU sekund)
   
   KONIEC JEŻELI
   
@@ -864,19 +1032,111 @@ ZMIENNE LOKALNE (dla każdego ciągu osobno):
   - timestamp_zalaczenia[N1..N8] = [0, 0, 0, 0, 0, 0, 0, 0] // [timestamp pierwszego załączenia]
   - czas_ostatniej_rotacji[CIĄG1, CIĄG2] = [0, 0]       // [timestamp]
   - nagrzewnice_aktywne[CIĄG] = []                       // lista aktywnych
+  - last_update_time = NULL                              // timestamp ostatniej aktualizacji liczników
+  - poprzedni_scenariusz = NULL                          // dla wykrywania zmiany scenariusza
+  - poprzedni_układ = NULL                               // dla wykrywania zmiany układu (C1↔C2)
 
 PARAMETRY:
   - OKRES_ROTACJI_NAGRZEWNIC[S1..S8]  // definiowany przez technologa [s]
   - MIN_DELTA_CZASU                   // definiowany przez technologa [s] (domyślnie 3600)
-  - CZAS_STABILIZACJI = 30            // czas na stabilizację po zmianie [s]
   - CYKL_PĘTLI_ALGORYTMÓW = 60        // częstość sprawdzania [s] (współdzielony z RC)
+  
+  // Parametry czasowe sprzętu (szczegółowa lista w sekcji Equipment Timing powyżej)
+  // używane w procedurach rotacji nagrzewnic
 
 GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
   
+  KROK 1: Inicjalizacja przy pierwszym uruchomieniu
+    JEŻELI last_update_time = NULL WTEDY
+      last_update_time = czas_systemowy
+      poprzedni_scenariusz = Pobierz_Scenariusz()
+      poprzedni_układ = Pobierz_Układ()
+      // Zaktualizuj stany nagrzewnic na podstawie aktualnego scenariusza/układu
+      Aktualizuj_Stany_Nagrzewnic()
+      PRZEJDŹ DO KOŃCA PĘTLI  // Pomiń rotację przy pierwszym uruchomieniu
+    KONIEC JEŻELI
+  
+  KROK 2: Obsługa zmiany układu (RC rotation C1↔C2)
+    // WAŻNE: Ten krok musi być wykonany PRZED krokiem 3 (zmiana scenariusza)
+    // aby zapewnić poprawne stany nagrzewnic przy zmianie konfiguracji
+    
+    aktualny_układ = Pobierz_Układ()
+    
+    JEŻELI poprzedni_układ ≠ NULL ORAZ 
+           poprzedni_układ ≠ aktualny_układ WTEDY
+      
+      // Wykryto zmianę układu (Podstawowy↔Ograniczony)
+      Rejestruj_Zdarzenie("RN: Zmiana układu " + poprzedni_układ + 
+                         " → " + aktualny_układ + " - synchronizacja nagrzewnic")
+      
+      // Pełna synchronizacja stanów nagrzewnic dla nowego układu
+      Aktualizuj_Stany_Nagrzewnic()
+      
+      // Reset timestampów rotacji - okres stabilizacji w nowej konfiguracji
+      czas_ostatniej_rotacji[CIĄG1] = czas_systemowy
+      czas_ostatniej_rotacji[CIĄG2] = czas_systemowy
+      czas_ostatniej_rotacji_globalny = czas_systemowy
+    
+    KONIEC JEŻELI
+    
+    // Zapamiętaj układ dla następnej iteracji
+    poprzedni_układ = aktualny_układ
+  
+  KROK 3: Obsługa zmiany scenariusza (KRYTYCZNE dla stabilności)
+    // WAŻNE: Ten krok zapobiega utracie stanu rotacji podczas oscylacji temperatury
+    // Problem: Temperatura blisko progu (np. -18°C) powoduje częste przełączenia S6↔S7
+    // Rozwiązanie: Różnicuj zmiany STRUKTURALNE od zmian ILOŚCIOWYCH
+    
+    aktualny_scenariusz = Pobierz_Scenariusz()
+    
+    JEŻELI poprzedni_scenariusz ≠ NULL ORAZ 
+           poprzedni_scenariusz ≠ aktualny_scenariusz WTEDY
+      
+      // Wykryto zmianę scenariusza - określ typ zmiany
+      typ_zmiany = Określ_Typ_Zmiany_Scenariusza(poprzedni_scenariusz, aktualny_scenariusz)
+      
+      PRZYPADEK typ_zmiany:
+        
+        "STRUKTURALNA":
+          // Zmiany wymagające pełnej resynchronizacji stanów:
+          // - Przejścia z/do S0 (wyłączenie/włączenie systemu)
+          // - Przejścia S1-S4 ↔ S5-S8 (zmiana z jednego ciagu na dwa ciagi)
+          
+          Rejestruj_Zdarzenie("RN: Zmiana strukturalna " + poprzedni_scenariusz + 
+                             " → " + aktualny_scenariusz + " - pełna synchronizacja")
+          
+          Aktualizuj_Stany_Nagrzewnic()
+          
+          // Po przejściu z S0: resetuj timestampy rotacji (okres rozruchu)
+          JEŻELI poprzedni_scenariusz = S0 WTEDY
+            czas_ostatniej_rotacji[CIĄG1] = czas_systemowy
+            czas_ostatniej_rotacji[CIĄG2] = czas_systemowy
+            czas_ostatniej_rotacji_globalny = czas_systemowy
+          KONIEC JEŻELI
+        
+        "ILOŚCIOWA":
+          // Zmiany wymagające TYLKO dostosowania ilości nagrzewnic:
+          // - Przejścia w ramach S1-S4 (np. S2↔S3)
+          // - Przejścia w ramach S5-S8 (np. S6↔S7)
+          // 
+          // NIE RESETUJ stanów! Tylko dodaj/usuń nagrzewnice.
+          // Dzięki temu oscylacja S6↔S7 nie niszczy historii rotacji.
+          
+          Rejestruj_Zdarzenie("RN: Zmiana ilościowa " + poprzedni_scenariusz + 
+                             " → " + aktualny_scenariusz + " - dostosowanie liczby")
+          
+          Dostosuj_Ilość_Nagrzewnic()
+      
+      KONIEC PRZYPADEK
+    
+    KONIEC JEŻELI
+    
+    // Zapamiętaj scenariusz dla następnej iteracji
+    poprzedni_scenariusz = aktualny_scenariusz
+  
   DLA KAŻDEGO ciągu w [CIĄG1, CIĄG2]:
     
-    KROK 0: Sprawdź czy ciąg jest aktywny w aktualnym układzie/scenariuszu
-      aktualny_scenariusz = Pobierz_Scenariusz()
+    KROK 4: Sprawdź czy ciąg jest aktywny w aktualnym układzie/scenariuszu
       aktualny_układ = Pobierz_Układ()  // Podstawowy lub Ograniczony
       
       // W S1-S4: tylko JEDEN ciąg jest aktywny (w zależności od układu)
@@ -895,16 +1155,24 @@ GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
         POMIŃ ciąg  // C1 niemożliwa - wszystkie nagrzewnice N1-N4 pracują
       KONIEC JEŻELI
     
-    KROK 1: Aktualizuj liczniki czasu pracy i postoju
-      DLA KAŻDEJ nagrzewnicy w ciągu:
-        JEŻELI nagrzewnica_aktywna(N) WTEDY
-          czas_pracy[N] += CYKL_PĘTLI_ALGORYTMÓW
-        W PRZECIWNYM RAZIE:
-          czas_postoju[N] += CYKL_PĘTLI_ALGORYTMÓW
-        KONIEC JEŻELI
-      KONIEC DLA
+    KROK 5: Aktualizuj liczniki czasu pracy i postoju
+      // Oblicz rzeczywisty czas który upłynął od ostatniej aktualizacji
+      // (uwzględnia przyspieszenie czasu w symulacji i ewentualne opóźnienia w PLC)
+      delta_time = czas_systemowy - last_update_time
+      
+      JEŻELI delta_time > 0 WTEDY
+        DLA KAŻDEJ nagrzewnicy w ciągu:
+          JEŻELI nagrzewnica_aktywna(N) WTEDY
+            czas_pracy[N] += delta_time
+          W PRZECIWNYM RAZIE:
+            czas_postoju[N] += delta_time
+          KONIEC JEŻELI
+        KONIEC DLA
+        
+        last_update_time = czas_systemowy
+      KONIEC JEŻELI
     
-    KROK 2: Sprawdź warunki rotacji
+    KROK 6: Sprawdź warunki rotacji
       
       // Koordynacja z Algorytmem RC - sprawdź czy RC nie wykonuje zmiany układu
       JEŻELI zmiana_układu_w_toku = PRAWDA WTEDY
@@ -948,7 +1216,7 @@ GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
         POMIŃ ciąg
       KONIEC JEŻELI
     
-    KROK 3: Wybierz nagrzewnicę do wyłączenia i załączenia
+    KROK 7: Wybierz nagrzewnicę do wyłączenia i załączenia
       // Znajdź nagrzewnicę najdłużej pracującą (aktywną)
       nagrzewnica_do_wyłączenia = NULL
       max_czas_pracy = 0
@@ -968,27 +1236,29 @@ GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
         KONIEC JEŻELI
       KONIEC DLA
       
-      // Znajdź nagrzewnicę najdłużej postoju (nieaktywną, sprawną)
+      // Znajdź nagrzewnicę z najkrótszym czasem pracy (nieaktywną, sprawną)
+      // UWAGA: Porównujemy czasy PRACY, nie postoju!
       nagrzewnica_do_załączenia = NULL
-      max_czas_postoju = 0
+      min_czas_pracy = nieskonczonosc
       
       DLA KAŻDEJ N w [nagrzewnice ciągu]:
         JEŻELI N NIE w nagrzewnice_aktywne[ciąg] ORAZ
                N_sprawna(N) ORAZ
-               czas_postoju[N] > max_czas_postoju WTEDY
-          max_czas_postoju = czas_postoju[N]
+               czas_pracy[N] < min_czas_pracy WTEDY
+          min_czas_pracy = czas_pracy[N]
           nagrzewnica_do_załączenia = N
         KONIEC JEŻELI
       KONIEC DLA
       
       // Sprawdź czy warto wykonać rotację
-      delta_czasu = max_czas_pracy - max_czas_postoju
+      // Porównujemy różnicę w czasach PRACY (nie pracy vs postoju)
+      delta_czasu = max_czas_pracy - min_czas_pracy
       JEŻELI delta_czasu < MIN_DELTA_CZASU WTEDY
         // Różnica czasu zbyt mała - nie ma sensu rotować
         POMIŃ ciąg
       KONIEC JEŻELI
     
-    KROK 4: Wykonaj rotację
+    KROK 8: Wykonaj rotację
       JEŻELI nagrzewnica_do_wyłączenia ≠ NULL ORAZ 
              nagrzewnica_do_załączenia ≠ NULL WTEDY
         
@@ -1021,7 +1291,7 @@ KONIEC PĘTLI
 
 FUNKCJA Wykonaj_Rotację_Nagrzewnicy(ciąg, N_stara, N_nowa):
   
-  // ⚠️ WAŻNA ZASADA BEZPIECZEŃSTWA:
+  // WAŻNA ZASADA BEZPIECZEŃSTWA:
   // Najpierw ZAŁĄCZAMY nową nagrzewnicę, potem WYŁĄCZAMY starą
   // Oznacza to chwilowo WIĘCEJ nagrzewnic niż wymaga scenariusz (np. 4 zamiast 3)
   // 
@@ -1039,28 +1309,32 @@ FUNKCJA Wykonaj_Rotację_Nagrzewnicy(ciąg, N_stara, N_nowa):
     
     // Ustaw zawór N_nowa na pozycję startową (20%)
     Ustaw_Zawór(N_nowa, 20%)
-    Czekaj(5 sekund)
+    Czekaj(CZAS_USTAWIENIA_ZAWORU sekund)
   
   KROK 2: Załączenie nagrzewnicy nowej
-    // ⚠️ W tym momencie pracuje: N_stara + N_nowa = WIĘCEJ niż wymaga scenariusz
+    // W tym momencie pracuje: N_stara + N_nowa = WIĘCEJ niż wymaga scenariusz
     // Przykład dla S3: pracują 4 nagrzewnice zamiast 3
     // To jest ZAMIERZONE dla bezpieczeństwa!
     
     // Otwórz przepustnicę dolotową N_nowa
     Ustaw_Przepustnicę_Dolot(N_nowa, OTWARTA)
-    Czekaj(5 sekund)
+    Czekaj(CZAS_OTWARCIA_PRZEPUSTNICY_NAGRZEWNICY sekund)
     
     // Otwórz zawór N_nowa stopniowo do 100%
     Dla pozycja = 20 DO 100 KROK 10:
       Ustaw_Zawór(N_nowa, pozycja)
-      Czekaj(2 sekundy)
+      Czekaj(CZAS_KROKU_ZAWORU sekund)
     KONIEC DLA
     
     // Aktywuj regulator PID dla N_nowa
     Ustaw_Regulator_PID(N_nowa, tryb = AUTO, setpoint = 50°C)
-    Czekaj(CZAS_STABILIZACJI sekund)
+    Czekaj(CZAS_AKTYWACJI_PID sekund)
+    
+    // Czekaj na stabilizację termiczną
+    Czekaj(CZAS_STABILIZACJI_NAGRZEWNICY sekund)
   
   KROK 3: Sprawdź stabilność temperatury
+    Czekaj(CZAS_WERYFIKACJI_TEMPERATURY sekund)
     temp_N_nowa = Odczytaj_Temperaturę(N_nowa)
     
     JEŻELI |temp_N_nowa - 50°C| > 5°C WTEDY
@@ -1082,14 +1356,18 @@ FUNKCJA Wykonaj_Rotację_Nagrzewnicy(ciąg, N_stara, N_nowa):
     aktualna_pozycja = Odczytaj_Pozycję_Zaworu(N_stara)
     Dla pozycja = aktualna_pozycja DO 20 KROK -10:
       Ustaw_Zawór(N_stara, pozycja)
-      Czekaj(2 sekundy)
+      Czekaj(CZAS_KROKU_ZAWORU sekund)
     KONIEC DLA
     
-    // Poczekaj na stabilizację
-    Czekaj(CZAS_STABILIZACJI sekund)
+    // Zamknięcie zaworu
+    Czekaj(CZAS_ZAMKNIĘCIA_ZAWORU sekund)
     
     // Zamknij przepustnicę dolotową N_stara
     Ustaw_Przepustnicę_Dolot(N_stara, ZAMKNIĘTA)
+    Czekaj(CZAS_ZAMKNIĘCIA_PRZEPUSTNICY_NAGRZEWNICY sekund)
+    
+    // Czekaj na chłodzenie
+    Czekaj(CZAS_CHŁODZENIA_NAGRZEWNICY sekund)
   
   KROK 5: Aktualizacja listy aktywnych nagrzewnic
     Usuń(nagrzewnice_aktywne[ciąg], N_stara)
@@ -1131,6 +1409,129 @@ FUNKCJA Warunki_Stabilności_Spełnione(ciąg):
   KONIEC JEŻELI
   
   ZWRÓĆ PRAWDA
+
+KONIEC FUNKCJI
+
+FUNKCJA Określ_Typ_Zmiany_Scenariusza(stary, nowy):
+  // Określa czy zmiana scenariusza wymaga pełnej resynchronizacji
+  // czy tylko dostosowania ilości nagrzewnic
+  // 
+  // Przyklad:
+  // stary = S4
+  // stary_jednolinijny = PRAWDA (S4 ∈ {S1,S2,S3,S4})
+  //
+  // nowy = S5
+  // nowy_jednolinijny = FAŁSZ (S5 ∉ {S1,S2,S3,S4})
+  //
+  // stary_jednolinijny ≠ nowy_jednolinijny ?
+  // PRAWDA ≠ FAŁSZ = PRAWDA
+  // 
+  // ZWRÓĆ "STRUKTURALNA"
+
+
+
+  // Przejścia z/do S0 zawsze wymagają pełnej synchronizacji
+  JEŻELI stary = S0 LUB nowy = S0 WTEDY
+    ZWRÓĆ "STRUKTURALNA"
+  KONIEC JEŻELI
+  
+  // Sprawdź czy zmiana przekracza granicę S1-S4 ↔ S5-S8
+  jednolinijne = {S1, S2, S3, S4}
+  dwulinijne = {S5, S6, S7, S8}
+  
+  stary_jednolinijny = stary ∈ jednolinijne // = PRAWDA, jeśli stary scenariusz to S1, S2, S3 lub S4
+  nowy_jednolinijny = nowy ∈ jednolinijne   // = PRAWDA, jeśli nowy scenariusz to S1, S2, S3 lub S4
+  
+  // Jeśli jeden jest jednolinijny a drugi dwulinijny -> strukturalna
+  JEŻELI stary_jednolinijny ≠ nowy_jednolinijny WTEDY
+    ZWRÓĆ "STRUKTURALNA"  // Przechodzimy z pracy jednej linii (C1 LUB C2) na pracę dwóch linii (C1 I C2 jednocześnie)
+  KONIEC JEŻELI
+  
+  // W przeciwnym razie (S1↔S2, S6↔S7, etc.) -> tylko ilościowa
+  ZWRÓĆ "ILOŚCIOWA"
+
+KONIEC FUNKCJI
+
+FUNKCJA Aktualizuj_Stany_Nagrzewnic():
+  // Pełna resynchronizacja stanów nagrzewnic z aktualnym scenariuszem
+  // UWAGA: Ta funkcja RESETUJE stany - używaj TYLKO dla zmian strukturalnych!
+  
+  wymagane_nagrzewnice = Pobierz_Wymagane_Nagrzewnice_Dla_Scenariusza()
+  
+  DLA KAŻDEJ N w [N1..N8]:
+    JEŻELI N ∈ wymagane_nagrzewnice WTEDY
+      Ustaw_Stan(N, AKTYWNA)
+    W PRZECIWNYM RAZIE:
+      Ustaw_Stan(N, POSTÓJ)
+    KONIEC JEŻELI
+  KONIEC DLA
+
+KONIEC FUNKCJI
+
+FUNKCJA Dostosuj_Ilość_Nagrzewnic():
+  // Inteligentne dostosowanie ilości nagrzewnic bez resetowania rotacji
+  // Używane dla zmian ilościowych (S6↔S7, S2↔S3, etc.)
+  // 
+  // KLUCZOWA RÓŻNICA vs Aktualizuj_Stany_Nagrzewnic():
+  // - NIE resetuje stanów nagrzewnic które pozostają aktywne
+  // - Zachowuje liczniki czasu pracy/postoju
+  // - Dodaje/usuwa TYLKO różnicę
+  // 
+  // WAŻNE: Wybiera nagrzewnice według czasu pracy (sprawiedliwość rotacji)!
+  // Przykład: S3→S2→S3
+  //   S3: N1, N2, N3 aktywne
+  //   S3→S2: Wyłącz N3 (najwięcej czasu pracy)
+  //   S2→S3: Włącz N4 (najmniej czasu pracy), NIE N3!
+  
+  // Określ ile nagrzewnic potrzebujemy na każdym ciągu
+  wymagana_liczba = Pobierz_Liczbę_Nagrzewnic_Dla_Scenariusza()
+  
+  DLA KAŻDEGO ciągu w [CIĄG1, CIĄG2]:
+    nagrzewnice_ciągu = Pobierz_Nagrzewnice_Ciągu(ciąg)  // np. [N1, N2, N3, N4]
+    aktywne_ciągu = Pobierz_Aktywne_Nagrzewnice_Ciągu(ciąg)
+    sprawne_ciągu = Pobierz_Sprawne_Nagrzewnice_Ciągu(ciąg)
+    
+    aktualna_liczba = Liczba_Elementów(aktywne_ciągu)
+    wymagana_liczba_ciągu = Pobierz_Wymaganą_Liczbę_Dla_Ciągu(ciąg, wymagana_liczba)
+    delta = wymagana_liczba_ciągu - aktualna_liczba
+    
+    JEŻELI delta = 0 WTEDY
+      POMIŃ ciąg  // Bez zmian
+    KONIEC JEŻELI
+    
+    JEŻELI delta > 0 WTEDY
+      // Trzeba DODAĆ nagrzewnice - wybierz te z NAJMNIEJSZYM czasem pracy
+      nagrzewnice_postoju = sprawne_ciągu - aktywne_ciągu
+      
+      // Posortuj według czasu pracy (rosnąco)
+      posortowane = Sortuj_Według_Czasu_Pracy(nagrzewnice_postoju, ROSNĄCO)
+      
+      // Włącz `delta` nagrzewnic z najmniejszym czasem pracy
+      DLA i = 1 DO Min(delta, Liczba_Elementów(posortowane)):
+        N = posortowane[i]
+        Rejestruj_Zdarzenie("RN: Dodanie " + N + " dla " + aktualny_scenariusz + 
+                           " (czas_pracy=" + czas_pracy[N] + "s)")
+        Ustaw_Stan(N, AKTYWNA)
+        timestamp_zalaczenia[N] = czas_systemowy
+      KONIEC DLA
+    
+    W PRZECIWNYM RAZIE JEŻELI delta < 0 WTEDY
+      // Trzeba USUNĄĆ nagrzewnice - wybierz te z NAJWIĘKSZYM czasem pracy
+      liczba_do_usuniecia = Abs(delta)
+      
+      // Posortuj według czasu pracy (malejąco)
+      posortowane = Sortuj_Według_Czasu_Pracy(aktywne_ciągu, MALEJĄCO)
+      
+      // Wyłącz `liczba_do_usuniecia` nagrzewnic z największym czasem pracy
+      DLA i = 1 DO Min(liczba_do_usuniecia, Liczba_Elementów(posortowane)):
+        N = posortowane[i]
+        Rejestruj_Zdarzenie("RN: Usunięcie " + N + " dla " + aktualny_scenariusz + 
+                           " (czas_pracy=" + czas_pracy[N] + "s)")
+        Ustaw_Stan(N, POSTÓJ)
+      KONIEC DLA
+    
+    KONIEC JEŻELI
+  KONIEC DLA
 
 KONIEC FUNKCJI
 
@@ -1192,6 +1593,17 @@ KONIEC FUNKCJI
 
 **Koniec dokumentu pseudokodu**
 
-**Ostatnia aktualizacja:** 25 Listopad 2025  
-**Wersja:** 1.0
+**Historia zmian:**
+- **v1.6** (27 Listopad 2025): **STRUKTURA:** Dodano KROK 0 w Algorytmie RC - aktualizacja liczników czasu pracy układu na początku każdego cyklu (dla spójności z WS i zgodności z flowchart). Przeniesiono logikę z KROKU 7 do KROKU 0. Pełna synchronizacja pseudokodu RC z flowchart v2.0 (uproszczone sekwencje zmian układu)
+- **v1.5** (27 Listopad 2025): **KRYTYCZNE:** Dodano KROK 0 w Algorytmie WS - aktualizacja statystyk czasu w scenariuszu na początku każdego cyklu (przed decyzjami algorytmu). Zapewnia spójne śledzenie czasu niezależnie od ścieżki wykonania (zgodność z implementacją i schematem blokowym)
+- **v1.4.1** (26 Listopad 2025): Usunięto nieużywane parametry z sekcji Equipment Timing (oczyszczenie dokumentacji)
+- **v1.4** (26 Listopad 2025): **KRYTYCZNE:** Dodano obsługę zmiany układu (RC rotation C1↔C2) w Algorytmie RN - wykrywanie zmiany konfiguracji Primary↔Limited, synchronizacja stanów nagrzewnic i reset timestampów rotacji (naprawa błędu: nagrzewnice nie przełączały się przy zmianie C1→C2)
+- **v1.3** (25 Listopad 2025): Parametryzacja czasów operacji sprzętu - zamiana hardcoded wartości na nazwane parametry z Equipment Timing (dla zgodności z konfiguracją i dokumentacją)
+- **v1.2.1** (25 Listopad 2025): Dodano uwagę o liczeniu czasu w S5-S8 jako czas układu Podstawowego w Algorytmie RC (wyjaśnienie zachowania liczników podczas przejść przez scenariusze dwulinijne)
+- **v1.2** (25 Listopad 2025): **KRYTYCZNE:** Dodano obsługę zmiany scenariuszy w RN - rozróżnienie zmian strukturalnych vs ilościowych, zapobieganie utracie stanu rotacji podczas oscylacji temperatury (wynik testów symulacji)
+- **v1.1** (25 Listopad 2025): Dodano inicjalizację liczników czasu i obliczanie delta_time dla RC i RN (wynik testów w symulacji)
+- **v1.0** (24 Listopad 2025): Wersja początkowa
+
+**Ostatnia aktualizacja:** 27 Listopad 2025  
+**Wersja:** 1.6
 
