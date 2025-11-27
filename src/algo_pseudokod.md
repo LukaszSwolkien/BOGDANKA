@@ -62,21 +62,17 @@ Wodne wymienniki ciepła o dużej mocy (~500kW-1MW każda) z dużą bezwładnoś
 | **CZAS_KROKU_ZAWORU** | 5s | Czas na jeden krok zmiany pozycji zaworu (10%) - powolne otwieranie |
 | **CZAS_AKTYWACJI_PID** | 60s | Czas aktywacji regulatora PID po uruchomieniu - czekamy aż system się ustabilizuje |
 | **CZAS_STABILIZACJI_NAGRZEWNICY** | 300s | Czas stabilizacji termicznej (5 minut) - wymiennik potrzebuje czasu na osiągnięcie temp. roboczej |
-| **CZAS_OSIĄGNIĘCIA_PEŁNEJ_MOCY** | 600s | Czas osiągnięcia pełnej mocy grzewczej (10 minut) od zimnego startu |
 | **CZAS_ZAMKNIĘCIA_ZAWORU** | 30s | Czas zamknięcia zaworu do pozycji 20% - powolne zamykanie |
 | **CZAS_ZAMKNIĘCIA_PRZEPUSTNICY_NAGRZEWNICY** | 20s | Czas zamknięcia **przepustnicy dolotowej przy nagrzewnicy** |
 | **CZAS_CHŁODZENIA_NAGRZEWNICY** | 180s | Czas chłodzenia po wyłączeniu (3 minuty) - wymiennik oddaje ciepło |
 
 ### Wentylatory
 
-Duże maszyny przemysłowe o mocy 100-500kW z dużą bezwładnością wirnika.
 
 | Parametr | Wartość domyślna | Opis |
 |----------|-----------------|------|
 | **CZAS_ROZRUCHU_WENTYLATORA** | 120s | Czas rozruchu wentylatora (soft-start, 2 minuty) |
-| **CZAS_DO_OBROTÓW_NOMINALNYCH** | 180s | Czas przyspieszenia do obrotów nominalnych (3 minuty) |
 | **CZAS_ZATRZYMANIA_WENTYLATORA** | 300s | Czas bezpiecznego zatrzymania wentylatora (5 minut) |
-| **CZAS_ZMIANY_PRĘDKOŚCI** | 60s | Czas zmiany prędkości obrotowej (np. 25Hz → 50Hz) |
 
 ### Przepustnice Główne Systemu
 
@@ -87,7 +83,6 @@ Duże klapy wentylacyjne w głównej instalacji wentylacyjnej (kolektory, wyrzut
 |----------|-----------------|------|
 | **CZAS_OPERACJI_PRZEPUSTNICY** | 30s | Czas operacji **przepustnic głównych** (kolektory C1/C2, wyrzutnie -4,30m/-7,90m) |
 | **CZAS_OPERACJI_SPINKA** | 45s | Czas operacji **przepustnicy na spince ciągów** (największa, najbardziej krytyczna) |
-| **CZAS_WERYFIKACJI_PRZEPUSTNICY** | 15s | Czas weryfikacji pozycji końcowej po operacji |
 
 ### Sekwencje Zmian
 
@@ -105,9 +100,7 @@ Parametry czasowe dla sekwencji zmian scenariuszy i układów.
 
 | Parametr | Wartość domyślna | Opis |
 |----------|-----------------|------|
-| **TIMEOUT_AWARII_CZUJNIKA** | 300s | Czas utrzymania scenariusza przy awarii czujnika (5 minut) |
 | **CZAS_WERYFIKACJI_TEMPERATURY** | 180s | Czas weryfikacji temperatury nagrzewnicy (3 minuty) |
-| **CZAS_SPRAWDZENIA_STABILNOŚCI** | 600s | Czas sprawdzenia stabilności systemu (10 minut) |
 
 **Uwagi implementacyjne:**
 - **Podczas rozruchu**: zmierzyć rzeczywiste czasy operacji i zaktualizować parametry
@@ -1562,6 +1555,6 @@ KONIEC FUNKCJI
 - **v1.1** (25 Listopad 2025): Dodano inicjalizację liczników czasu i obliczanie delta_time dla RC i RN (wynik testów w symulacji)
 - **v1.0** (24 Listopad 2025): Wersja początkowa
 
-**Ostatnia aktualizacja:** 26 Listopad 2025  
-**Wersja:** 1.4
+**Ostatnia aktualizacja:** 27 Listopad 2025  
+**Wersja:** 1.4.1
 
