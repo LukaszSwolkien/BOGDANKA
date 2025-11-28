@@ -40,12 +40,14 @@ class AlgoState:
     # ═══════════════════════════════════════════════════════════════
     current_config: str = "Primary"  # "Primary" or "Limited"
     config_change_in_progress: bool = False  # Lock for RN coordination
+    config_rotation_end_time: float = 0.0  # When current RC rotation will finish
     timestamp_last_config_change: float = 0.0  # For RN coordination
     
     # ═══════════════════════════════════════════════════════════════
     # ALGORITHM RN STATE (Heater Rotation) - Placeholder for Phase 2
     # ═══════════════════════════════════════════════════════════════
     heater_rotation_in_progress: bool = False  # Lock for RC coordination
+    heater_rotation_end_time: float = 0.0  # When current RN rotation will finish
     
     def time_since_scenario_change(self) -> float:
         """Calculate time since last scenario change using weather's simulation_time."""

@@ -45,14 +45,6 @@ class AlgoService:
         # Initialize global state
         self.state = AlgoState()
         
-        # Initialize metrics
-        self.metrics = AlgoMetrics(
-            telemetry=self.telemetry,
-            metrics_prefix=self.config.services.algo.metrics_prefix,
-            default_dimensions=dict(self.config.telemetry.default_dimensions),
-            state=self.state,
-        )
-        
         # Initialize weather client
         self.weather_client = WeatherClient(
             endpoint_url=self.config.services.algo.weather_endpoint,
@@ -70,34 +62,35 @@ class AlgoService:
         # Initialize Algorithm RC
         rc_config = RCConfig(
             rotation_period_hours=self.config.services.algo.algorithms.rc.rotation_period_hours,
+            rotation_duration_s=self.config.services.algo.algorithms.rc.rotation_duration_s,
             algorithm_loop_cycle_s=self.config.services.algo.algorithms.rc.algorithm_loop_cycle_s,
             min_operating_time_s=self.config.services.algo.algorithms.rc.min_operating_time_s,
         )
         self.algorithm_rc = AlgorithmRC(config=rc_config, state=self.state)
         
         # Initialize Algorithm RN
-        rotation_periods = {
-            Scenario.S1: self.config.services.algo.algorithms.rn.rotation_period_s1_s,
-            Scenario.S2: self.config.services.algo.algorithms.rn.rotation_period_s2_s,
-            Scenario.S3: self.config.services.algo.algorithms.rn.rotation_period_s3_s,
-            Scenario.S4: self.config.services.algo.algorithms.rn.rotation_period_s4_s,
-            Scenario.S5: self.config.services.algo.algorithms.rn.rotation_period_s5_s,
-            Scenario.S6: self.config.services.algo.algorithms.rn.rotation_period_s6_s,
-            Scenario.S7: self.config.services.algo.algorithms.rn.rotation_period_s7_s,
-            Scenario.S8: self.config.services.algo.algorithms.rn.rotation_period_s8_s,
-        }
         rn_config = RNConfig(
-            rotation_period_s=rotation_periods,
+            rotation_period_hours=self.config.services.algo.algorithms.rn.rotation_period_hours,
+            rotation_duration_s=self.config.services.algo.algorithms.rn.rotation_duration_s,
             min_delta_time_s=self.config.services.algo.algorithms.rn.min_delta_time_s,
             algorithm_loop_cycle_s=self.config.services.algo.algorithms.rn.algorithm_loop_cycle_s,
         )
         self.algorithm_rn = AlgorithmRN(config=rn_config, state=self.state)
         
+        # Initialize metrics (AFTER algorithm_rn, as it needs reference to it)
+        self.metrics = AlgoMetrics(
+            telemetry=self.telemetry,
+            metrics_prefix=self.config.services.algo.metrics_prefix,
+            default_dimensions=dict(self.config.telemetry.default_dimensions),
+            state=self.state,
+            algorithm_rn=self.algorithm_rn,
+        )
+        
         # Initialize recent events buffers (for display) - separate for WS, RC, RN
         self._recent_ws_events: list[str] = []
         self._recent_rc_events: list[str] = []
         self._recent_rn_events: list[str] = []
-        self._max_recent_events = 4
+        self._max_recent_events = 8  # Show 8 events (4 rows x 2 columns)
         
         # Initialize status display
         self.display = StatusDisplay(

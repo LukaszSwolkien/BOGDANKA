@@ -18,8 +18,6 @@ test_profiles:
       primary_limited_balance: {min: 0.9, max: 1.1, target: 1.0}
       heater_balance_ratio: {max: 1.5}
       heater_usage_percent: {min: 10.0, max: 15.0, target: 12.5}
-      dominant_scenario: S3
-      dominant_scenario_percent_min: 95.0
 
   # Profile 2: Dual-line mode with asymmetry
   - id: profile_2_s6_dual_line
@@ -38,8 +36,6 @@ test_profiles:
       n1_n4_operating_hours: {min: 340, max: 370}  # N1-N4: 360h każda (100% uptime)
       n5_n6_operating_hours: {min: 170, max: 190}  # N5-N6: ~180h każda (rotują)
       heater_balance_ratio_c2: {max: 1.3}
-      dominant_scenario: S6
-      dominant_scenario_percent_min: 95.0
 
   # Profile 3: Minimal configuration (1 heater)
   - id: profile_3_s1_minimal
@@ -56,8 +52,6 @@ test_profiles:
       rn_rotations: {min: 13, max: 15, target: 14}  # S1: 1/4 aktywne (3 rezerwy!) → ~14 rotacji
       n1_operating_hours: {min: 40, max: 50}  # N1: ~45h (rotuje z N2-N4)
       n5_operating_hours: {min: 40, max: 50}  # N5: ~45h (rotuje z N6-N8)
-      dominant_scenario: S1
-      dominant_scenario_percent_min: 95.0
 
   # Profile 4: Maximal single-line configuration (4 heaters)
   - id: profile_4_s4_maximal
@@ -74,8 +68,6 @@ test_profiles:
       rn_rotations: {min: 0, max: 0, target: 0}  # S4: 4/4 nagrzewnic (brak rezerwy)
       heater_usage_percent: {min: 10.0, max: 15.0, target: 12.5}  # N1-N4 lub N5-N8: po ~12.5%
       heater_balance_ratio: {max: 1.3}
-      dominant_scenario: S4
-      dominant_scenario_percent_min: 95.0
 
   # Profile 5: Scenario transitions and synchronization
   - id: profile_5_transitions

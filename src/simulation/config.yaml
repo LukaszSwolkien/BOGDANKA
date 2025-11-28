@@ -60,21 +60,14 @@ services:
       # Algorithm RC - Configuration Rotation (Primary ↔ Limited)
       rc:
         rotation_period_hours: 48           # [h] rotation period (7 days = 168h)
+        rotation_duration_s: 300            # [s] time for configuration change to complete (5 minutes)
         algorithm_loop_cycle_s: 60           # [s] RC check frequency (simulation time)
         min_operating_time_s: 3600           # [s] minimum time before rotation allowed
       
       # Algorithm RN - Heater Rotation
       rn:
-        # Rotation periods per scenario (in seconds)
-        # Default: 24h (86400s) for all scenarios
-        rotation_period_s1_s: 86400          # [s] S1: 24 hours
-        rotation_period_s2_s: 86400          # [s] S2: 24 hours
-        rotation_period_s3_s: 86400          # [s] S3: 24 hours
-        rotation_period_s4_s: 86400          # [s] S4: 24 hours
-        rotation_period_s5_s: 86400          # [s] S5: 24 hours
-        rotation_period_s6_s: 86400          # [s] S6: 24 hours
-        rotation_period_s7_s: 86400          # [s] S7: 24 hours
-        rotation_period_s8_s: 86400          # [s] S8: 24 hours
+        rotation_period_hours: 12            # [h] rotation period (same for all scenarios)
+        rotation_duration_s: 180             # [s] time for heater rotation to complete (3 minutes)
         min_delta_time_s: 3600               # [s] minimum time difference for rotation eligibility
         algorithm_loop_cycle_s: 60           # [s] RN check frequency (simulation time)
   

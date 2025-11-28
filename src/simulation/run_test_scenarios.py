@@ -825,20 +825,6 @@ class TestRunner:
             heaters = data.get("heater_operating_times", {})
             return heaters.get(heater_name, {}).get("operating_h", 0)
 
-        # Dominant scenario
-        if key == "dominant_scenario":
-            scenarios = data.get("scenario_distribution", {})
-            if scenarios:
-                return max(scenarios.items(), key=lambda x: x[1]["percentage"])[0]
-            return None
-
-        if key == "dominant_scenario_percent_min":
-            scenarios = data.get("scenario_distribution", {})
-            if scenarios:
-                max_scenario = max(scenarios.items(), key=lambda x: x[1]["percentage"])
-                return max_scenario[1]["percentage"]
-            return 0.0
-
         # Scenario changes
         if key == "scenario_changes":
             return data.get("scenario_changes", 0)

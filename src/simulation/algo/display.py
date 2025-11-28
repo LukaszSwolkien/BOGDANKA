@@ -27,7 +27,7 @@ class StatusDisplay:
     """
 
     # Display box dimensions
-    CONTENT_WIDTH = 55  # Width of content area (excluding padding and borders)
+    CONTENT_WIDTH = 59  # Width of content area (excluding padding and borders)
     PADDING = 2  # Padding on each side
     # Total box width = 1 (│) + PADDING + CONTENT_WIDTH + PADDING + 1 (│)
     TOTAL_WIDTH = 1 + PADDING + CONTENT_WIDTH + PADDING + 1  # = 61 chars
@@ -183,6 +183,16 @@ class StatusDisplay:
         # Tryb line (no ANSI codes)
         content = f"Tryb: {self.state.mode:6s}"
         lines.append(f"│  {content:{self.CONTENT_WIDTH}s}  │\x1b[K")
+        
+        # RC rotation period (in hours)
+        rc_period_h = self.algorithm_rc.config.rotation_period_hours
+        content = f"Rotacja RC (ciągi): {rc_period_h}h"
+        lines.append(f"│  {content:{self.CONTENT_WIDTH}s}  │\x1b[K")
+        
+        # RN rotation period (in hours, same for all scenarios)
+        rn_period_h = self.algorithm_rn.config.rotation_period_hours
+        content = f"Rotacja RN (nagrzewnice): {rn_period_h}h"
+        lines.append(f"│  {content:{self.CONTENT_WIDTH}s}  │\x1b[K")
 
         # Simulation time (moved from Line Status)
         sim_hours = self.state.simulation_time / 3600
@@ -197,8 +207,31 @@ class StatusDisplay:
             content = f"Czas sym: {sim_hours:7.1f}h ({sim_days:5.1f} dni)"
             lines.append(f"│  {content:{self.CONTENT_WIDTH}s}  │\x1b[K")
 
-        # Acceleration
-        content = f"Akceleracja: {self.acceleration:.0f}x"
+        # Acceleration with real-time duration for 1h, 24h, and total simulation
+        real_time_for_1h = 3600 / self.acceleration  # seconds in real time
+        real_time_for_24h = 86400 / self.acceleration  # seconds in real time for 1 day
+        
+        def format_duration(seconds: float) -> str:
+            """Format duration in seconds to human-readable string."""
+            if seconds < 60:
+                return f"{seconds:.1f}s"
+            elif seconds < 3600:
+                return f"{seconds/60:.1f}m"
+            else:
+                return f"{seconds/3600:.1f}h"
+        
+        time_1h_str = format_duration(real_time_for_1h)
+        time_24h_str = format_duration(real_time_for_24h)
+        
+        # If total duration is known, show total real time
+        if self.duration_seconds > 0:
+            sim_days = self.duration_seconds / 86400
+            real_time_total_s = self.duration_seconds / self.acceleration
+            total_time_str = format_duration(real_time_total_s)
+            content = f"Akceleracja: {self.acceleration:.0f}x  (1h={time_1h_str}, 24h={time_24h_str}, {sim_days:.0f}d={total_time_str})"
+        else:
+            content = f"Akceleracja: {self.acceleration:.0f}x  (1h={time_1h_str}, 24h={time_24h_str})"
+        
         lines.append(f"│  {content:{self.CONTENT_WIDTH}s}  │\x1b[K")
 
         # ETA (if duration is known)
@@ -221,7 +254,7 @@ class StatusDisplay:
                 completion_time = datetime.datetime.now() + datetime.timedelta(seconds=remaining_real_s)
                 completion_str = completion_time.strftime("%H:%M")
                 
-                content = f"ETA: {eta_str:>8s}  Postęp: {progress_pct:5.1f}%  Koniec ~{completion_str}"
+                content = f"ETA: {eta_str:>8s}  Postęp: {progress_pct:5.1f}%  Koniec: ~{completion_str}"
                 lines.append(f"│  {content:{self.CONTENT_WIDTH}s}  │\x1b[K")
             else:
                 content = "ETA: Zakończono"
@@ -231,6 +264,9 @@ class StatusDisplay:
         scenario_lines = self._format_scenario_distribution()
         for line in scenario_lines:
             lines.append(f"│  {line:{self.CONTENT_WIDTH}s}  │\x1b[K")
+        
+        # Empty line at end of section
+        lines.append(f"│  {'':{self.CONTENT_WIDTH}s}  │\x1b[K")
 
         # ═══════════════════════════════════════════════════════════
         # SECTION: Status Ciągów
@@ -253,6 +289,9 @@ class StatusDisplay:
         
         lines.append(f"│  {c1_status:{self.CONTENT_WIDTH}s}  │\x1b[K")
         lines.append(f"│  {c2_status:{self.CONTENT_WIDTH}s}  │\x1b[K")
+        
+        # Empty line at end of section
+        lines.append(f"│  {'':{self.CONTENT_WIDTH}s}  │\x1b[K")
 
         # ═══════════════════════════════════════════════════════════
         # SECTION: Nagrzewnice
@@ -276,6 +315,9 @@ class StatusDisplay:
         visible_content = ansi_escape.sub('', content)
         padding_needed = self.CONTENT_WIDTH - len(visible_content)
         lines.append(f"│  {content}{' ' * padding_needed}  │\x1b[K")
+        
+        # Empty line at end of section
+        lines.append(f"│  {'':{self.CONTENT_WIDTH}s}  │\x1b[K")
 
         # ═══════════════════════════════════════════════════════════
         # SECTION: Statystyki Nagrzewnic (moved here, right after Heaters)
@@ -286,6 +328,9 @@ class StatusDisplay:
         heater_lines = self._format_heater_statistics()
         for line in heater_lines:
             lines.append(f"│  {line:{self.CONTENT_WIDTH}s}  │\x1b[K")
+        
+        # Empty line at end of section
+        lines.append(f"│  {'':{self.CONTENT_WIDTH}s}  │\x1b[K")
 
         # ═══════════════════════════════════════════════════════════
         # SECTION: Ostatnie Zdarzenia WS (scenario changes)
@@ -308,50 +353,89 @@ class StatusDisplay:
                 event_text = event_text[:self.CONTENT_WIDTH - 3] + "..."
 
             lines.append(f"│  {event_text:{self.CONTENT_WIDTH}s}  │\x1b[K")
+        
+        # Empty line at end of section
+        lines.append(f"│  {'':{self.CONTENT_WIDTH}s}  │\x1b[K")
 
         # ═══════════════════════════════════════════════════════════
         # SECTION: Ostatnie Zdarzenia RC (configuration changes)
         # ═══════════════════════════════════════════════════════════
         lines.append(self._make_header("Ostatnie Zdarzenia RC"))
 
-        # Always show last 4 RC events (or empty lines if fewer)
+        # Show last 8 RC events in 2 columns (4 rows × 2 columns)
         num_rc_events = len(self.recent_rc_events)
-        start_idx_rc = max(0, num_rc_events - 4)
+        start_idx_rc = max(0, num_rc_events - 8)
+        
+        # Column width: (59 - 1 separator) / 2 = 29 chars per column
+        col_width = 29
 
-        for i in range(4):
-            event_idx = start_idx_rc + i
-            if event_idx < num_rc_events:
-                event_text = self.recent_rc_events[event_idx]
+        for row in range(4):
+            # Left column: events 0-3 (oldest to newer)
+            left_idx = start_idx_rc + row
+            if left_idx < num_rc_events:
+                left_text = self.recent_rc_events[left_idx]
+                # Truncate if too long
+                if len(left_text) > col_width:
+                    left_text = left_text[:col_width - 3] + "..."
             else:
-                event_text = ""
-
-            # Truncate if too long (max CONTENT_WIDTH chars to fit in box)
-            if len(event_text) > self.CONTENT_WIDTH:
-                event_text = event_text[:self.CONTENT_WIDTH - 3] + "..."
-
-            lines.append(f"│  {event_text:{self.CONTENT_WIDTH}s}  │\x1b[K")
+                left_text = ""
+            
+            # Right column: events 4-7 (newer to newest)
+            right_idx = start_idx_rc + row + 4
+            if right_idx < num_rc_events:
+                right_text = self.recent_rc_events[right_idx]
+                # Truncate if too long
+                if len(right_text) > col_width:
+                    right_text = right_text[:col_width - 3] + "..."
+            else:
+                right_text = ""
+            
+            # Format: "LEFT_TEXT | RIGHT_TEXT" with proper padding
+            line_content = f"{left_text:<{col_width}s} {right_text:<{col_width}s}"
+            lines.append(f"│  {line_content}  │\x1b[K")
+        
+        # Empty line at end of section
+        lines.append(f"│  {'':{self.CONTENT_WIDTH}s}  │\x1b[K")
 
         # ═══════════════════════════════════════════════════════════
         # SECTION: Ostatnie Zdarzenia RN (heater rotations)
         # ═══════════════════════════════════════════════════════════
         lines.append(self._make_header("Ostatnie Zdarzenia RN"))
 
-        # Always show last 4 RN events (or empty lines if fewer)
+        # Show last 8 RN events in 2 columns (4 rows × 2 columns)
         num_rn_events = len(self.recent_rn_events)
-        start_idx_rn = max(0, num_rn_events - 4)
+        start_idx_rn = max(0, num_rn_events - 8)
+        
+        # Column width: (59 - 1 separator) / 2 = 29 chars per column
+        col_width = 29
 
-        for i in range(4):
-            event_idx = start_idx_rn + i
-            if event_idx < num_rn_events:
-                event_text = self.recent_rn_events[event_idx]
+        for row in range(4):
+            # Left column: events 0-3 (oldest to newer)
+            left_idx = start_idx_rn + row
+            if left_idx < num_rn_events:
+                left_text = self.recent_rn_events[left_idx]
+                # Truncate if too long
+                if len(left_text) > col_width:
+                    left_text = left_text[:col_width - 3] + "..."
             else:
-                event_text = ""
-
-            # Truncate if too long (max CONTENT_WIDTH chars to fit in box)
-            if len(event_text) > self.CONTENT_WIDTH:
-                event_text = event_text[:self.CONTENT_WIDTH - 3] + "..."
-
-            lines.append(f"│  {event_text:{self.CONTENT_WIDTH}s}  │\x1b[K")
+                left_text = ""
+            
+            # Right column: events 4-7 (newer to newest)
+            right_idx = start_idx_rn + row + 4
+            if right_idx < num_rn_events:
+                right_text = self.recent_rn_events[right_idx]
+                # Truncate if too long
+                if len(right_text) > col_width:
+                    right_text = right_text[:col_width - 3] + "..."
+            else:
+                right_text = ""
+            
+            # Format: "LEFT_TEXT | RIGHT_TEXT" with proper padding
+            line_content = f"{left_text:<{col_width}s} {right_text:<{col_width}s}"
+            lines.append(f"│  {line_content}  │\x1b[K")
+        
+        # Empty line at end of section
+        lines.append(f"│  {'':{self.CONTENT_WIDTH}s}  │\x1b[K")
 
         # ═══════════════════════════════════════════════════════════
         # SECTION: Następne rotacje i blokady
@@ -362,6 +446,9 @@ class StatusDisplay:
         lock_lines = self._format_lock_statistics()
         for line in lock_lines:
             lines.append(f"│  {line:{self.CONTENT_WIDTH}s}  │\x1b[K")
+        
+        # Empty line at end of section
+        lines.append(f"│  {'':{self.CONTENT_WIDTH}s}  │\x1b[K")
 
         lines.append(self._make_header("", bottom=True))
 
@@ -587,12 +674,29 @@ class StatusDisplay:
         rn_c1_timer = format_time(rn_time_remaining[Line.C1])
         rn_c2_timer = format_time(rn_time_remaining[Line.C2])
 
+        # Get collision statistics (only inter-algorithm blocking)
+        rc_blocked_by_reason = self.algorithm_rc.get_blocked_by_reason()
+        rn_blocked_by_reason = self.algorithm_rn.get_blocked_by_reason()
+        
+        # Collisions: Direct mutual blocking during rotation
+        rc_collisions = rc_blocked_by_reason.get("rn_rotation_in_progress", 0)  # RC blocked by RN
+        rn_collisions = rn_blocked_by_reason.get("rc_rotation_in_progress", 0)  # RN blocked by RC
+        total_collisions = rc_collisions + rn_collisions
+        
+        # Coordination blocks: Post-rotation waiting period
+        rn_too_soon = rn_blocked_by_reason.get("too_soon_after_rc", 0)  # RN waiting after RC
+        
+        # Other blocks (not inter-algorithm)
+        rc_other_blocks = self.algorithm_rc.get_blocked_count() - rc_collisions
+        rn_other_blocks = self.algorithm_rn.get_blocked_count() - rn_collisions - rn_too_soon
+
         lines = [
-            f"Kolizja rotacji: {active_locks_str}",
             f"Następna rotacja ciągów (RC): {rc_timer}",
             f"Następna rotacja nagrzewnic (RN):",
             f"  C1:{rn_c1_timer:12s}",
             f"  C2:{rn_c2_timer:12s}",
+            f"Wszystkie kolizje RC↔RN: {total_collisions}",
+            f"RN czekal 1h po RC: {rn_too_soon}",
         ]
 
         return lines

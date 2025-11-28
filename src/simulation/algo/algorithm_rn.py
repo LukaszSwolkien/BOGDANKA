@@ -23,13 +23,13 @@ class HeaterState(Enum):
 @dataclass
 class RNConfig:
     """Configuration for Algorithm RN."""
-    # Rotation period for each scenario (seconds)
-    rotation_period_s: dict[Scenario, int]
-    min_delta_time_s: int = 3600  # 1 hour minimum time difference
-    stabilization_time_s: int = 30
-    algorithm_loop_cycle_s: int = 60
-    min_time_since_config_change_s: int = 3600  # 1 hour after RC change
-    min_time_between_rotations_s: int = 900  # 15 minutes
+    rotation_period_hours: int              # [h] rotation period (same for all scenarios)
+    rotation_duration_s: int = 180          # [s] time for heater rotation to complete (3 minutes)
+    min_delta_time_s: int = 3600            # [s] minimum time difference for rotation
+    stabilization_time_s: int = 30          # [s] stabilization time after scenario change
+    algorithm_loop_cycle_s: int = 60        # [s] RN check frequency
+    min_time_since_config_change_s: int = 3600  # [s] 1 hour after RC change
+    min_time_between_rotations_s: int = 900     # [s] 15 minutes between rotations
 
 
 @dataclass
@@ -96,7 +96,7 @@ class AlgorithmRN:
         self._previous_config: str = state.current_config
         
         LOGGER.info(
-            f"Algorithm RN initialized: rotation_periods={config.rotation_period_s}, "
+            f"Algorithm RN initialized: rotation_period={config.rotation_period_hours}h, "
             f"min_delta_time={config.min_delta_time_s}s"
         )
     
@@ -111,6 +111,17 @@ class AlgorithmRN:
         """
         # Update time counters (ALWAYS)
         self._update_time_counters()
+        
+        # Check if ongoing rotation has finished
+        if self.state.heater_rotation_in_progress:
+            if self.state.simulation_time >= self.state.heater_rotation_end_time:
+                # Rotation complete!
+                self.state.heater_rotation_in_progress = False
+                LOGGER.info(f"✅ RN: Heater rotation complete (duration={self.config.rotation_duration_s}s)")
+            else:
+                # Still rotating
+                remaining = self.state.heater_rotation_end_time - self.state.simulation_time
+                return False, f"RN rotation in progress ({remaining:.0f}s remaining)"
         
         # Check if configuration changed (RC rotation C1↔C2)
         # This must be handled BEFORE scenario transitions to ensure correct heater states
@@ -176,30 +187,49 @@ class AlgorithmRN:
                     )
             
             if not is_active:
-                # Track as blocked (line not active in this scenario)
-                self._blocked_count += 1
-                self._blocked_by_reason["line_not_active"] = self._blocked_by_reason.get("line_not_active", 0) + 1
+                # Line not active - don't count this (not a rotation attempt)
                 continue
             
-            # STEP 2: Check rotation conditions
-            can_rotate, reason_text, reason_key = self._can_rotate(line)
-            if not can_rotate:
-                # Count this as a blocked rotation attempt
-                self._blocked_count += 1
-                if reason_key:
-                    self._blocked_by_reason[reason_key] = self._blocked_by_reason.get(reason_key, 0) + 1
-                
-                # Log blocking reasons at INFO level for visibility
-                # Log coordination blocks always
-                if "RC configuration change" in reason_text or "Too soon after config change" in reason_text:
-                    LOGGER.info(f"⏸️  RN: {line.name} rotation BLOCKED - {reason_text}")
-                # Log other blocks periodically (every hour of sim time)
-                elif int(self.state.simulation_time % 3600) < 60:
-                    LOGGER.info(f"⏸️  RN: {line.name} rotation not ready - {reason_text}")
-                # Also log for C2 in S5-S8 to diagnose the issue
-                elif line == Line.C2 and self.state.current_scenario in [Scenario.S5, Scenario.S6, Scenario.S7]:
-                    LOGGER.debug(f"RN: {line.name} cannot rotate in {self.state.current_scenario.name} - {reason_text}")
+            # STEP 2: Check rotation conditions (excluding RC coordination)
+            # First check if rotation would be ready WITHOUT RC blocking
+            can_rotate_without_rc, reason_text, reason_key = self._can_rotate_ignoring_rc(line)
+            
+            if not can_rotate_without_rc:
+                # Rotation not ready yet (period not elapsed, no heaters, etc.)
+                # Don't count this - it's not a collision, just not ready
+                if int(self.state.simulation_time % 3600) < 60:  # Log periodically
+                    LOGGER.debug(f"RN: {line.name} rotation not ready - {reason_text}")
                 continue
+            
+            # Rotation IS ready! Now check RC coordination
+            # This is the ONLY place we count collisions
+            if self.state.config_change_in_progress:
+                if self.state.simulation_time < self.state.config_rotation_end_time:
+                    # COLLISION: RN ready to rotate but RC is rotating
+                    self._blocked_by_reason["rc_rotation_in_progress"] += 1
+                    self._blocked_count += 1
+                    remaining = self.state.config_rotation_end_time - self.state.simulation_time
+                    LOGGER.info(
+                        f"⚠️  RN: {line.name} rotation COLLISION - RC rotation in progress "
+                        f"(remaining={remaining:.0f}s, sim_time={self.state.simulation_time:.1f}s)"
+                    )
+                    continue
+                else:
+                    # Rotation finished but flag not cleared yet
+                    self.state.config_change_in_progress = False
+            
+            # Check post-RC coordination (1h stabilization)
+            if self.state.current_scenario in [Scenario.S1, Scenario.S2, Scenario.S3, Scenario.S4]:
+                time_since_config_change = self.state.simulation_time - self.state.timestamp_last_config_change
+                if time_since_config_change < self.config.min_time_since_config_change_s:
+                    # COORDINATION: RN waiting for stabilization after RC
+                    self._blocked_by_reason["too_soon_after_rc"] += 1
+                    self._blocked_count += 1
+                    LOGGER.info(
+                        f"⏸️  RN: {line.name} rotation COORDINATION - waiting 1h after RC "
+                        f"({time_since_config_change:.0f}s / 3600s)"
+                    )
+                    continue
             
             # STEP 3: Select heaters to swap
             heater_off, heater_on, delta_time = self._select_heaters_for_rotation(line)
@@ -570,6 +600,52 @@ class AlgorithmRN:
         
         return False
     
+    def _can_rotate_ignoring_rc(self, line: Line) -> tuple[bool, str, Optional[str]]:
+        """
+        Check if rotation would be possible ignoring RC coordination.
+        
+        This checks:
+        - Global 15-minute spacing
+        - Reserve heaters availability
+        - Rotation period elapsed
+        
+        But IGNORES:
+        - RC rotation in progress
+        - Post-RC stabilization period
+        
+        Used to determine if RN is "ready to rotate" before checking RC coordination.
+        
+        Returns:
+            (can_rotate, reason_text, reason_key)
+        """
+        # Check global 15-minute spacing
+        time_since_last_global = self.state.simulation_time - self._last_rotation_global
+        if time_since_last_global < self.config.min_time_between_rotations_s:
+            return False, f"Too soon since last rotation ({time_since_last_global:.0f}s < 15min)", "global_spacing_not_met"
+        
+        # Check if enough heaters available (need reserve)
+        all_active_heaters = self._get_active_heaters()
+        line_c1_heaters = {Heater.N1, Heater.N2, Heater.N3, Heater.N4}
+        
+        if line == Line.C1:
+            required_active_count = len([h for h in all_active_heaters if h in line_c1_heaters])
+        else:
+            required_active_count = len([h for h in all_active_heaters if h not in line_c1_heaters])
+        
+        healthy_heaters_in_line = self._get_healthy_heaters_for_line(line)
+        
+        if len(healthy_heaters_in_line) <= required_active_count:
+            return False, "No reserve heaters available", "no_suitable_heaters"
+        
+        # Check rotation period for this line
+        time_since_last_rotation = self.state.simulation_time - self._last_rotation_per_line[line]
+        rotation_period_s = self.config.rotation_period_hours * 3600
+        
+        if time_since_last_rotation < rotation_period_s:
+            return False, f"Rotation period not elapsed ({time_since_last_rotation:.0f}s / {rotation_period_s}s)", "period_not_elapsed"
+        
+        return True, "Can rotate", None
+    
     def _can_rotate(self, line: Line) -> tuple[bool, str, Optional[str]]:
         """
         Check if rotation is possible for given line.
@@ -579,7 +655,13 @@ class AlgorithmRN:
         """
         # Check coordination with RC
         if self.state.config_change_in_progress:
-            return False, "RC configuration change in progress", "rc_rotation_in_progress"
+            # Check if rotation is still in progress (simulation_time < end_time)
+            if self.state.simulation_time < self.state.config_rotation_end_time:
+                remaining = self.state.config_rotation_end_time - self.state.simulation_time
+                return False, f"RC configuration change in progress ({remaining:.0f}s remaining)", "rc_rotation_in_progress"
+            else:
+                # Rotation finished but flag not cleared yet
+                self.state.config_change_in_progress = False
         
         # In S1-S4, check if enough time passed since RC config change
         if self.state.current_scenario in [Scenario.S1, Scenario.S2, Scenario.S3, Scenario.S4]:
@@ -610,10 +692,10 @@ class AlgorithmRN:
         
         # Check rotation period for this line
         time_since_last_rotation = self.state.simulation_time - self._last_rotation_per_line[line]
-        rotation_period = self.config.rotation_period_s.get(self.state.current_scenario, float('inf'))
+        rotation_period_s = self.config.rotation_period_hours * 3600  # Convert hours to seconds
         
-        if time_since_last_rotation < rotation_period:
-            return False, f"Rotation period not elapsed ({time_since_last_rotation:.0f}s / {rotation_period}s)", "period_not_elapsed"
+        if time_since_last_rotation < rotation_period_s:
+            return False, f"Rotation period not elapsed ({time_since_last_rotation:.0f}s / {rotation_period_s}s)", "period_not_elapsed"
         
         # In simulation, we don't check stability conditions (temperature, flow, etc.)
         # In real system, would check if system is stable
@@ -724,8 +806,12 @@ class AlgorithmRN:
         
         # Set lock to prevent RC from changing config
         self.state.heater_rotation_in_progress = True
+        self.state.heater_rotation_end_time = self.state.simulation_time + self.config.rotation_duration_s
         
         # Simulate rotation (in real system this would take time)
+        # We don't change simulation_time - weather service controls that
+        # We just track when rotation will end
+        
         # Update heater states
         self._heater_tracking[heater_off].state = HeaterState.IDLE
         self._heater_tracking[heater_on].state = HeaterState.ACTIVE
@@ -738,13 +824,13 @@ class AlgorithmRN:
         # Increment rotation counter
         self._rotation_count += 1
         
-        # Release lock
-        self.state.heater_rotation_in_progress = False
-        
         LOGGER.info(
-            f"✅ RN: Heater rotation complete in {line.name}: {heater_off.name} → {heater_on.name} "
-            f"({heater_off.name} now IDLE, {heater_on.name} now ACTIVE)"
+            f"🔄 RN: Heater rotation in progress in {line.name}: {heater_off.name} → {heater_on.name} "
+            f"(duration={self.config.rotation_duration_s}s, will complete at t={self.state.heater_rotation_end_time:.1f}s)"
         )
+        
+        # Note: Lock will be released when simulation_time >= heater_rotation_end_time
+        # This happens in next process() call
         
         return True, f"Heater rotated in {line.name}: {heater_off.name} → {heater_on.name}"
     
@@ -788,11 +874,8 @@ class AlgorithmRN:
                 result[line] = -1.0
                 continue
             
-            # Get rotation period for current scenario
-            rotation_period_s = self.config.rotation_period_s.get(
-                self.state.current_scenario,
-                86400  # Default 24h
-            )
+            # Get rotation period (convert hours to seconds)
+            rotation_period_s = self.config.rotation_period_hours * 3600
             
             # Time since last rotation for this line
             time_since_last = self.state.simulation_time - self._last_rotation_per_line[line]

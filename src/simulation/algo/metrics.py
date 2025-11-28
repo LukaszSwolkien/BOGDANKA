@@ -4,12 +4,16 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 from opentelemetry.metrics import CallbackOptions, Observation
 
 from common.domain import Scenario
 from common.telemetry import TelemetryManager
 from .state import AlgoState
+
+if TYPE_CHECKING:
+    from .algorithm_rn import AlgorithmRN
 
 LOGGER = logging.getLogger("algo-service.metrics")
 
@@ -26,6 +30,7 @@ class AlgoMetrics:
     metrics_prefix: str
     default_dimensions: dict[str, str]
     state: AlgoState
+    algorithm_rn: AlgorithmRN
     
     def __post_init__(self) -> None:
         meter = self.telemetry.meter("bogdanka.algo")
@@ -110,6 +115,21 @@ class AlgoMetrics:
             unit="s",
         )
         
+        # Heater operating time (observable gauge per heater)
+        self._heater_operating_time_gauge = meter.create_observable_gauge(
+            f"{self.metrics_prefix}.rn.heater_operating_time_s",
+            callbacks=[self._observe_heater_operating_time],
+            description="Heater operating time in seconds",
+            unit="s",
+        )
+        
+        # Heater state (observable gauge per heater: 0=idle, 1=active, 2=faulty)
+        self._heater_state_gauge = meter.create_observable_gauge(
+            f"{self.metrics_prefix}.rn.heater_state",
+            callbacks=[self._observe_heater_state],
+            description="Heater state (0=idle, 1=active, 2=faulty)",
+        )
+        
         # Track last update time for incrementing counters
         self._last_update_time = 0.0
         self._last_update_scenario = Scenario.S0
@@ -135,6 +155,36 @@ class AlgoMetrics:
         # 0 = Primary, 1 = Limited
         value = 0 if self.state.current_config == "Primary" else 1
         yield Observation(value, {**self.default_dimensions})
+    
+    def _observe_heater_operating_time(self, options: CallbackOptions):
+        """Callback for heater operating time gauge."""
+        from common.domain import Heater
+        for heater in Heater:
+            op_time = self.algorithm_rn.get_heater_operating_time(heater)
+            yield Observation(
+                op_time,
+                {
+                    **self.default_dimensions,
+                    "heater": heater.name,
+                    "line": "C1" if heater.value < 5 else "C2",
+                }
+            )
+    
+    def _observe_heater_state(self, options: CallbackOptions):
+        """Callback for heater state gauge."""
+        from common.domain import Heater
+        for heater in Heater:
+            state = self.algorithm_rn.get_heater_state(heater)
+            # Map HeaterState enum to numeric: IDLE=0, ACTIVE=1, FAULTY=2
+            state_value = 0 if state.value == "idle" else (1 if state.value == "active" else 2)
+            yield Observation(
+                state_value,
+                {
+                    **self.default_dimensions,
+                    "heater": heater.name,
+                    "line": "C1" if heater.value < 5 else "C2",
+                }
+            )
     
     def update(self) -> None:
         """
