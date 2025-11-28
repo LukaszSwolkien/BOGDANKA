@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1850" width="900px" height="1850px">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 950 1850" width="950px" height="1850px">
   <defs>
     <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
       <polygon points="0 0, 10 3, 0 6" fill="#333"/>
@@ -29,10 +29,10 @@
   .note { font-family: Arial, sans-serif; font-size: 12px; fill: #666; font-style: italic; }
     </style>
   </defs>
-  <rect width="900" height="1850" fill="white"/>
+  <rect width="950" height="1850" fill="white"/>
   <text x="450" y="40" class="title" text-anchor="middle" style="white-space: pre;">Algorytm WS - Struktura Uproszczona</text>
-  <text x="450" y="65" class="subtitle" text-anchor="middle" style="white-space: pre;">System BOGDANKA Szyb 2 - Wybór Scenariusza S0-S8 (v1.6)</text>
-  <rect x="300" y="100" width="300" height="60" class="start-end"/>
+  <text x="450" y="65" class="subtitle" text-anchor="middle" style="white-space: pre;">System BOGDANKA Szyb 2 - Wybór Scenariusza S0-S8 (v2.0)</text>
+  <rect x="279.97" y="100" width="341.622" height="60" class="start-end" style=""/>
   <text x="450" y="125" class="box-text" style="white-space: pre;">START - Główna pętla</text>
   <text x="450" y="145" class="box-text-small" style="white-space: pre;">(co CYKL_MONITORINGU_TEMP)</text>
   <path d="M 450 160 L 450 200" class="arrow"/>
@@ -44,7 +44,7 @@
   <path d="M 450 330 L 580 390 L 450 450 L 320 390 Z" class="decision"/>
   <text x="450" y="380" class="box-text" style="white-space: pre;">KROK 1:</text>
   <text x="450" y="400" class="box-text-small" style="white-space: pre;">Tryb AUTO?</text>
-  <path d="M 321.996 390 L 33.366 390 L 33.366 1664.75 L 285.918 1664.75" class="arrow-no" style=""/>
+  <path d="M 322 390 L 33 390 L 33 1665 L 286 1665" class="arrow-no"/>
   <text x="240" y="380" class="label-no" style="white-space: pre;">NIE</text>
   <text x="165" y="420" class="note" style="white-space: pre;">Tryb MANUAL</text>
   <path d="M 450 450 L 450 500" class="arrow-yes"/>
@@ -63,31 +63,54 @@
   <text x="450" y="830" class="box-text" style="white-space: pre;">KROK 4:</text>
   <text x="450" y="850" class="box-text-small" style="white-space: pre;">Wymagany = Aktualny?</text>
   <text x="450" y="870" class="box-text-small" style="white-space: pre;">+ stabilizacja 60s</text>
-  <path d="M 320 840 L 220.022 840 L 220.022 980" class="arrow-no" style=""/>
+  <path d="M 320 840 L 230.286 840 L 230.286 980" class="arrow-no" style=""/>
   <text x="250" y="830" class="label-no" style="white-space: pre;">NIE</text>
-  <text x="228.476" y="862.177" class="note" style="white-space: pre; font-size: 12px;">Zmiana wymagana</text>
+  <text x="237.307" y="864.349" class="note" style="white-space: pre; font-size: 12px;">Zmiana wymagana</text>
   <path d="M 580 840 L 820 840 L 820 1645 L 620 1645" class="arrow-yes"/>
   <text x="640" y="830" class="label" style="white-space: pre;">TAK</text>
   <text x="608" y="857" class="note" style="white-space: pre;">Kontynuuj w aktualnym</text>
-  <g transform="matrix(1, 0, 0, 1, 32.02680969238281, 0.5132499933242798)">
-    <path d="M 188 980 L 318 1040 L 188 1100 L 58 1040 Z" class="decision"/>
-    <text x="192.007" y="1020.3" class="box-text" style="font-size: 15px; white-space: pre;">KROK 5:</text>
-    <text x="192.007" y="1043.53" class="box-text-small" style="white-space: pre; font-size: 13px;">Brak blokady RC/RN?</text>
-    <text x="194.142" y="1061.38" class="box-text-small" style="white-space: pre; font-size: 13px;">(zmiana/rotacja możliwa)</text>
-  </g>
-  <path d="M 95.348 1040 L 54.506 1040 L 54.506 1629.35 L 289.15 1629.35" class="arrow-no" style=""/>
-  <text x="40" y="1030" class="label-no" style="white-space: pre;">NIE</text>
-  <text x="61.547" y="1227.38" class="note" style="white-space: pre; font-size: 12px;">Blokada aktywna</text>
-  <path d="M 352.387 1039.36 L 562.127 1039.36 L 562.127 1178.34" class="arrow-yes" style=""/>
-  <text x="380" y="1030" class="label" style="white-space: pre;">TAK</text>
+  <path d="M 230.886 980 L 367.773 1071.27 L 230.886 1162.53 L 94 1071.27 L 230.886 980 Z" class="decision" style=""/>
+  <text x="231" y="1020" class="box-text" style="font-size: 15px; white-space: pre;">KROK 5:</text>
+  <text x="231" y="1044" class="box-text-small" style="font-size: 13px; white-space: pre;">Brak blokady RC/RN?</text>
+  <text x="231" y="1061" class="box-text-small" style="font-size: 12px; white-space: pre;">(zmiana_układu_w_toku = FAŁSZ</text>
+  <text x="231" y="1076" class="box-text-small" style="font-size: 12px; white-space: pre;">ORAZ rotacja_nagrzewnic_w_toku = FAŁSZ)</text>
+  <path d="M 94.734 1071.57 L 55 1071.57 L 55 1629 L 287.442 1629" class="arrow-no" style=""/>
+  <text x="66.453" y="1057.39" class="label-no" style="white-space: pre; font-size: 14px;">NIE</text>
+  <text x="62" y="1227" class="note" style="font-size: 12px; white-space: pre;">Blokada aktywna</text>
+  <text x="62" y="1244" class="note" style="font-size: 11px; white-space: pre;">(odrocz zmianę)</text>
+  <path d="M 365.362 1070.7 L 562 1070.7 L 562 1178" class="arrow-yes" style=""/>
+  <text x="376.256" y="1055.75" class="label" style="white-space: pre; font-size: 14px;">TAK</text>
   <rect x="410" y="1180" width="300" height="80" class="action"/>
   <text x="560" y="1205" class="box-text" style="white-space: pre;">KROK 6:</text>
   <text x="560" y="1225" class="box-text" style="white-space: pre;">Wykonaj zmianę scenariusza</text>
   <text x="560" y="1245" class="box-text-small" style="white-space: pre;">(aktywuj/dezaktywuj nagrzewnice)</text>
   <path d="M 560 1260 L 560 1615" class="arrow"/>
-  <rect x="288.833" y="1615" width="327.167" height="60" class="process" style=""/>
+  <rect x="289" y="1615" width="327" height="60" class="process"/>
   <text x="457" y="1650" class="box-text" style="white-space: pre;">Czekaj CYKL_MONITORINGU_TEMP</text>
-  <path d="M 450 1675 L 450 1710 L 850 1710 L 850 130 L 600 130" class="arrow"/>
+  <path d="M 450 1675 L 450 1710 L 922.856 1710 L 922.856 130 L 627.321 130" class="arrow" style=""/>
+  <g transform="matrix(1, 0, 0, 1, 614.3580322265625, 75.32431030273438)">
+    <rect x="8" y="101" width="280" height="420" fill="#f9f9f9" stroke="#999" stroke-width="1"/>
+    <text x="18" y="126" class="box-label" style="white-space: pre;">PARAMETRY:</text>
+    <text x="109" y="144" class="box-text-small" text-anchor="start" style="font-size: 13px; white-space: pre;">• CYKL_MONITORINGU_TEMP</text>
+    <text x="116" y="164" class="box-text-small" text-anchor="start" style="font-size: 13px; white-space: pre;">• FILTR_UŚREDNIANIA (3 próbki)</text>
+    <text x="133" y="184" class="box-text-small" text-anchor="start" style="font-size: 13px; white-space: pre;">• CZAS_STABILIZACJI_SCENARIUSZA</text>
+    <text x="130" y="203" class="box-text-small" text-anchor="start" style="font-size: 13px; white-space: pre;">• CZAS_UTRZYMANIA_PRZY_AWARII</text>
+    <text x="138" y="224" class="box-text-small" text-anchor="start" style="font-size: 13px; white-space: pre;">• ODSTĘP_ZAŁĄCZENIA_NAGRZEWNIC</text>
+    <text x="141" y="243" class="box-text-small" text-anchor="start" style="font-size: 13px; white-space: pre;">• ODSTĘP_WYŁĄCZENIA_NAGRZEWNIC</text>
+    <text x="127" y="262" class="box-text-small" text-anchor="start" style="font-size: 13px; white-space: pre;">• TIMEOUT_ZMIANY_SCENARIUSZA</text>
+    <text x="18" y="295" class="box-label" style="white-space: pre;">ZMIENNE GLOBALNE:</text>
+    <text x="23" y="313" class="note" text-anchor="start" style="font-size: 11px; white-space: pre;">(współdzielone z RC/RN, ODCZYT)</text>
+    <text x="85.567" y="330.466" class="box-text-small" text-anchor="start" style="font-size: 12px; white-space: pre;">• zmiana_układu_w_toku</text>
+    <text x="96.769" y="346.737" class="box-text-small" text-anchor="start" style="font-size: 12px; white-space: pre;">• rotacja_nagrzewnic_w_toku</text>
+    <text x="18" y="380" class="box-label" style="white-space: pre;">🔒 KOORDYNACJA Z RC/RN:</text>
+    <text x="28" y="400" class="note" text-anchor="start" style="font-size: 11px; white-space: pre;">• WS sprawdza obie blokady</text>
+    <text x="28" y="415" class="note" text-anchor="start" style="font-size: 11px; white-space: pre;">• WS NIE ustawia blokad</text>
+    <text x="38" y="430" class="note" text-anchor="start" style="font-size: 11px; white-space: pre;">(konsument, nie producent)</text>
+    <text x="28" y="450" class="note" text-anchor="start" style="font-size: 11px; white-space: pre;">• RC ustawia: zmiana_układu_w_toku</text>
+    <text x="28" y="465" class="note" text-anchor="start" style="font-size: 11px; white-space: pre;">• RN ustawia: rotacja_nagrzewnic_w_toku</text>
+    <text x="28" y="485" class="note" text-anchor="start" style="font-size: 11px; white-space: pre;">• Jeśli blokada aktywna → WS czeka</text>
+    <text x="38" y="500" class="note" text-anchor="start" style="font-size: 11px; white-space: pre;">i odracza zmianę scenariusza</text>
+  </g>
   <rect x="50" y="1730" width="800" height="100" fill="none" stroke="#999" stroke-width="1" stroke-dasharray="5,5"/>
   <text x="60" y="1755" class="box-label" style="white-space: pre;">LEGENDA:</text>
   <rect x="70" y="1770" width="140" height="40" class="start-end"/>
@@ -100,14 +123,6 @@
   <text x="600" y="1795" class="box-text-small" style="white-space: pre;">Akcja</text>
   <rect x="680" y="1770" width="140" height="40" class="process"/>
   <text x="750" y="1795" class="box-text-small" style="white-space: pre;">Proces</text>
-  <rect x="8" y="101" width="280" height="198" fill="#f9f9f9" stroke="#999" stroke-width="1"/>
-  <text x="18" y="126" class="box-label" style="white-space: pre;">PARAMETRY:</text>
-  <text x="109" y="144" class="box-text-small" text-anchor="start" style="font-size: 13px; white-space: pre;">• CYKL_MONITORINGU_TEMP</text>
-  <text x="116" y="164" class="box-text-small" text-anchor="start" style="font-size: 13px; white-space: pre;">• FILTR_UŚREDNIANIA (3 próbki)</text>
-  <text x="133" y="184" class="box-text-small" text-anchor="start" style="font-size: 13px; white-space: pre;">• CZAS_STABILIZACJI_SCENARIUSZA</text>
-  <text x="130" y="203" class="box-text-small" text-anchor="start" style="font-size: 13px; white-space: pre;">• CZAS_UTRZYMANIA_PRZY_AWARII</text>
-  <text x="138" y="224" class="box-text-small" text-anchor="start" style="font-size: 13px; white-space: pre;">• ODSTĘP_ZAŁĄCZENIA_NAGRZEWNIC</text>
-  <text x="141" y="243" class="box-text-small" text-anchor="start" style="font-size: 13px; white-space: pre;">• ODSTĘP_WYŁĄCZENIA_NAGRZEWNIC</text>
-  <text x="127" y="262" class="box-text-small" text-anchor="start" style="font-size: 13px; white-space: pre;">• TIMEOUT_ZMIANY_SCENARIUSZA</text>
-  <text x="18" y="282" class="note" style="font-size: 12px; white-space: pre;">Histereza: Temp. wyłączania &gt; Temp. włączania</text>
+  <text x="60" y="1825" class="note" style="font-size: 11px; white-space: pre;">ZMIANY v2.0: Dodano box PARAMETERS ze zmiennymi globalnymi + sekcja KOORDYNACJA + rozbudowano KROK 5</text>
+  <text x="60" y="1840" class="note" style="font-size: 11px; white-space: pre;">Zgodność z pseudokodem v1.7 (src/algo_pseudokod.md, KROK 0-6, linia 222: sprawdzanie blokad)</text>
 </svg>
