@@ -138,6 +138,17 @@ class AlgoMetrics:
             description="Heater state (0=idle, 1=active, 2=faulty)",
         )
         
+        # Line operating time (observable gauge per line: C1, C2)
+        self._line_operating_time_gauge = meter.create_observable_gauge(
+            f"{self.metrics_prefix}.rn.line_operating_time_s",
+            callbacks=[self._observe_line_operating_time],
+            description="Total operating time for each ventilation line",
+            unit="s",
+        )
+        
+        # Track line operating time (internal)
+        self._line_operating_time: dict[str, float] = {"C1": 0.0, "C2": 0.0}
+        
         # Track last update time for incrementing counters
         self._last_update_time = 0.0
         self._last_update_scenario = Scenario.S0
@@ -205,6 +216,17 @@ class AlgoMetrics:
                 }
             )
     
+    def _observe_line_operating_time(self, options: CallbackOptions):
+        """Callback for line operating time gauge."""
+        for line_name in ["C1", "C2"]:
+            yield Observation(
+                self._line_operating_time[line_name],
+                {
+                    **self.default_dimensions,
+                    "line": line_name,
+                }
+            )
+    
     def update(self) -> None:
         """
         Update counters based on current state.
@@ -237,6 +259,13 @@ class AlgoMetrics:
                     "config": self.state.current_config,
                 }
             )
+            
+            # Increment line operating time (internal tracking for gauge)
+            from common.domain import Line
+            for line in [Line.C1, Line.C2]:
+                if self.algorithm_rn.is_line_operating(line):
+                    line_name = line.name
+                    self._line_operating_time[line_name] += time_delta
             
             self._last_update_time = self.state.simulation_time
             self._last_update_config = self.state.current_config

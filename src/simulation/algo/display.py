@@ -27,7 +27,7 @@ class StatusDisplay:
     """
 
     # Display box dimensions
-    CONTENT_WIDTH = 59  # Width of content area (excluding padding and borders)
+    CONTENT_WIDTH = 61  # Width of content area (excluding padding and borders)
     PADDING = 2  # Padding on each side
     # Total box width = 1 (│) + PADDING + CONTENT_WIDTH + PADDING + 1 (│)
     TOTAL_WIDTH = 1 + PADDING + CONTENT_WIDTH + PADDING + 1  # = 61 chars
@@ -207,7 +207,8 @@ class StatusDisplay:
             content = f"Czas sym: {sim_hours:7.1f}h ({sim_days:5.1f} dni)"
             lines.append(f"│  {content:{self.CONTENT_WIDTH}s}  │\x1b[K")
 
-        # Acceleration with real-time duration for 1h, 24h, and total simulation
+        # Acceleration with real-time duration for 1m, 1h, 24h, and total simulation
+        real_time_for_1m = 60 / self.acceleration  # seconds in real time for 1 minute
         real_time_for_1h = 3600 / self.acceleration  # seconds in real time
         real_time_for_24h = 86400 / self.acceleration  # seconds in real time for 1 day
         
@@ -220,6 +221,7 @@ class StatusDisplay:
             else:
                 return f"{seconds/3600:.1f}h"
         
+        time_1m_str = format_duration(real_time_for_1m)
         time_1h_str = format_duration(real_time_for_1h)
         time_24h_str = format_duration(real_time_for_24h)
         
@@ -228,9 +230,9 @@ class StatusDisplay:
             sim_days = self.duration_seconds / 86400
             real_time_total_s = self.duration_seconds / self.acceleration
             total_time_str = format_duration(real_time_total_s)
-            content = f"Akceleracja: {self.acceleration:.0f}x  (1h={time_1h_str}, 24h={time_24h_str}, {sim_days:.0f}d={total_time_str})"
+            content = f"Akceleracja: {self.acceleration:.0f}x  (1m={time_1m_str}, 1h={time_1h_str}, 24h={time_24h_str}, {sim_days:.0f}d={total_time_str})"
         else:
-            content = f"Akceleracja: {self.acceleration:.0f}x  (1h={time_1h_str}, 24h={time_24h_str})"
+            content = f"Akceleracja: {self.acceleration:.0f}x  (1m={time_1m_str}, 1h={time_1h_str}, 24h={time_24h_str})"
         
         lines.append(f"│  {content:{self.CONTENT_WIDTH}s}  │\x1b[K")
 
@@ -366,8 +368,8 @@ class StatusDisplay:
         num_rc_events = len(self.recent_rc_events)
         start_idx_rc = max(0, num_rc_events - 8)
         
-        # Column width: (59 - 1 separator) / 2 = 29 chars per column
-        col_width = 29
+        # Column width: (61 - 1 separator) / 2 = 30 chars per column
+        col_width = 30
 
         for row in range(4):
             # Left column: events 0-3 (oldest to newer)
@@ -406,8 +408,8 @@ class StatusDisplay:
         num_rn_events = len(self.recent_rn_events)
         start_idx_rn = max(0, num_rn_events - 8)
         
-        # Column width: (59 - 1 separator) / 2 = 29 chars per column
-        col_width = 29
+        # Column width: (61 - 1 separator) / 2 = 30 chars per column
+        col_width = 30
 
         for row in range(4):
             # Left column: events 0-3 (oldest to newer)
@@ -595,10 +597,8 @@ class StatusDisplay:
         rc_rotation_count = self.algorithm_rc.get_rotation_count()
         rn_rotation_count = self.algorithm_rn.get_rotation_count()
 
-        # Calculate total operating time across all heaters
-        total_op_time = sum(
-            self.algorithm_rn.get_heater_operating_time(h) for h in Heater
-        )
+        # Use simulation time for percentage calculation (not total operating time)
+        sim_time_s = self.state.simulation_time
 
         # First line: rotation counts (both RC and RN)
         lines = [f"Rotacje RC: {rc_rotation_count}  RN: {rn_rotation_count}"]
@@ -609,7 +609,8 @@ class StatusDisplay:
         for heater in c1_heaters:
             op_time_s = self.algorithm_rn.get_heater_operating_time(heater)
             op_time_h = op_time_s / 3600
-            percentage = (op_time_s / total_op_time * 100) if total_op_time > 0 else 0
+            # Percentage = (heater operating time / simulation time) * 100
+            percentage = (op_time_s / sim_time_s * 100) if sim_time_s > 0 else 0
             # Format: "N1:12.3h(25%)" - compact, ~13 chars
             entry = f"{heater.name}:{op_time_h:4.1f}h({percentage:2.0f}%)"
             c1_entries.append(entry)
@@ -624,7 +625,8 @@ class StatusDisplay:
         for heater in c2_heaters:
             op_time_s = self.algorithm_rn.get_heater_operating_time(heater)
             op_time_h = op_time_s / 3600
-            percentage = (op_time_s / total_op_time * 100) if total_op_time > 0 else 0
+            # Percentage = (heater operating time / simulation time) * 100
+            percentage = (op_time_s / sim_time_s * 100) if sim_time_s > 0 else 0
             # Format: "N5:12.3h(25%)" - compact, ~13 chars
             entry = f"{heater.name}:{op_time_h:4.1f}h({percentage:2.0f}%)"
             c2_entries.append(entry)
