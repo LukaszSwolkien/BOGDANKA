@@ -25,75 +25,51 @@
       .arrow-coord { stroke: #6c757d; stroke-width: 2; fill: none; marker-end: url(#arrowhead-gray); stroke-dasharray: 5,3; }
     </style>
   </defs>
-  
-  <rect width="800" height="600" fill="#ffffff"/>
-  
-  <!-- Tytuł -->
-  <text class="title" x="400" y="35" text-anchor="middle">Hierarchia i Koordynacja Algorytmów</text>
-  
-  <!-- WS Box (Góra) -->
-  <rect class="box-ws" x="200" y="70" width="400" height="140" rx="5"/>
-  <rect class="box-ws-header" x="200" y="70" width="400" height="35" rx="5"/>
-  <rect class="box-ws-header" x="200" y="88" width="400" height="17"/>
-  <text class="box-title" x="400" y="93" text-anchor="middle">Algorytm WS</text>
-  
-  <text class="box-text" x="220" y="130" font-weight="bold">Wybór Scenariusza (S0-S8)</text>
-  <text class="box-text" x="240" y="150" font-size="11">• Monitoruje temperaturę zewnętrzną</text>
-  <text class="box-text" x="240" y="167" font-size="11">• Decyduje: ILE nagrzewnic potrzeba</text>
-  <text class="box-text" x="240" y="184" font-size="11">• Decyduje: KTÓRY układ (Podstawowy/Ograniczony)</text>
-  <text class="box-text" x="240" y="201" font-size="11">• Zarządza przejściami między scenariuszami</text>
-  
-  <!-- Strzałka w dół z WS -->
-  <path class="arrow-main" d="M 400 210 L 400 260"/>
-  <text class="label" x="415" y="240" font-weight="bold">hierarchia</text>
-  
-  <!-- Linia podziału -->
-  <line x1="400" y1="260" x2="280" y2="300" stroke="#0066cc" stroke-width="3"/>
-  <line x1="400" y1="260" x2="520" y2="300" stroke="#0066cc" stroke-width="3"/>
-  
-  <!-- RC Box (Lewy Dół) -->
-  <rect class="box-rc" x="80" y="300" width="300" height="180" rx="5"/>
-  <rect class="box-rc-header" x="80" y="300" width="300" height="35" rx="5"/>
-  <rect class="box-rc-header" x="80" y="318" width="300" height="17"/>
-  <text class="box-title" x="230" y="323" text-anchor="middle">Algorytm RC</text>
-  
-  <text class="box-text" x="100" y="360" font-weight="bold">Rotacja Układów (C1 ↔ C2)</text>
-  <text class="box-text" x="120" y="380" font-size="11">• Okres: dni/tygodnie/miesiące</text>
-  <text class="box-text" x="120" y="397" font-size="11">• Decyduje: KTÓRY CIĄG pracuje</text>
-  <text class="box-text" x="120" y="414" font-size="11">• Układ Podstawowy: C1 (W1)</text>
-  <text class="box-text" x="120" y="431" font-size="11">• Układ Ograniczony: C2 (W2)</text>
-  <text class="box-text" x="120" y="448" font-size="11">• Dotyczy: S1-S4</text>
-  <text class="box-text" x="120" y="465" font-size="11">• Wyrównanie eksploatacji ciągów</text>
-  
-  <!-- RN Box (Prawy Dół) -->
-  <rect class="box-rn" x="420" y="300" width="300" height="180" rx="5"/>
-  <rect class="box-rn-header" x="420" y="300" width="300" height="35" rx="5"/>
-  <rect class="box-rn-header" x="420" y="318" width="300" height="17"/>
-  <text class="box-title" x="570" y="323" text-anchor="middle">Algorytm RN</text>
-  
-  <text class="box-text" x="440" y="360" font-weight="bold">Rotacja Nagrzewnic (N1-N8)</text>
-  <text class="box-text" x="460" y="380" font-size="11">• Okres: godziny/dni/tygodnie</text>
-  <text class="box-text" x="460" y="397" font-size="11">• Decyduje: KTÓRE nagrzewnice w ciągu</text>
-  <text class="box-text" x="460" y="414" font-size="11">• Wymiana: pracująca ↔ rezerwowa</text>
-  <text class="box-text" x="460" y="431" font-size="11">• W obrębie jednego ciągu</text>
-  <text class="box-text" x="460" y="448" font-size="11">• Dotyczy: S1-S8</text>
-  <text class="box-text" x="460" y="465" font-size="11">• Wyrównanie eksploatacji nagrzewnic</text>
-  
-  <!-- Strzałka koordynacji RC → RN -->
-  <path class="arrow-coord" d="M 380 390 L 420 390"/>
-  <text class="label" x="387" y="407" text-anchor="middle">koordynacja</text>
-  
-  <!-- Strzałka koordynacji RN → RC -->
-  <path class="arrow-coord" d="M 420 430 L 380 430"/>
-  
-  <!-- Legenda -->
-  <rect x="50" y="510" width="700" height="70" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1" rx="3"/>
-  <text class="box-text" x="70" y="530" font-weight="bold">Współpraca algorytmów:</text>
-  
-  <text class="box-text" x="90" y="550" font-size="11">• <tspan font-weight="bold">WS</tspan> określa scenariusz → <tspan font-weight="bold">RC</tspan> wybiera ciąg → <tspan font-weight="bold">RN</tspan> wybiera nagrzewnice</text>
-  <text class="box-text" x="90" y="567" font-size="11">• <tspan font-weight="bold">Blokady:</tspan> RC i RN nie działają jednocześnie (zmienne: zmiana_układu_w_toku, rotacja_nagrzewnic_w_toku)</text>
-  
-  <!-- Stopka -->
-  <text class="label" x="400" y="595" text-anchor="middle">Wszystkie algorytmy działają w trybie AUTO | Szczegóły: src/algo_pseudokod.md v1.7</text>
+  <rect width="800" height="600" fill="#ffffff" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)"/>
+  <text class="title" x="400" y="35" text-anchor="middle" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)">Hierarchia i Koordynacja Algorytmów</text>
+  <rect class="box-ws" x="200" y="70" width="400" height="140" rx="5" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)"/>
+  <rect class="box-ws-header" x="200" y="70" width="400" height="35" rx="5" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)"/>
+  <rect class="box-ws-header" x="200" y="88" width="400" height="17" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)"/>
+  <text class="box-title" x="400" y="93" text-anchor="middle" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)">Algorytm WS</text>
+  <text class="box-text" x="220" y="130" font-weight="bold" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)">Wybór Scenariusza (S0-S8)</text>
+  <text class="box-text" x="240" y="150" font-size="11" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)">• Monitoruje temperaturę zewnętrzną</text>
+  <text class="box-text" x="240" y="167" font-size="11" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)">• Decyduje: ILE nagrzewnic potrzeba</text>
+  <text class="box-text" x="240.934" y="183.289" font-size="11" style="white-space: pre; font-size: 12px;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)">• Zarządza przejściami między scenariuszami</text>
+  <path class="arrow-main" d="M 400 210 L 400 260" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)"/>
+  <text class="label" x="415" y="240" font-weight="bold" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)">hierarchia</text>
+  <line x1="400" y1="260" x2="280" y2="300" stroke="#0066cc" stroke-width="3" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)"/>
+  <line x1="400" y1="260" x2="520" y2="300" stroke="#0066cc" stroke-width="3" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)"/>
+  <rect class="box-rc-header" x="66" y="318" width="300" height="17" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)"/>
+  <g transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -15, -7.105427357601002e-15)">
+    <rect class="box-rc" x="80" y="300" width="300" height="180" rx="5"/>
+    <rect class="box-rc-header" x="80" y="300" width="300" height="35" rx="5"/>
+    <text class="box-title" x="230" y="323" text-anchor="middle" style="white-space: pre;">Algorytm RC</text>
+    <text class="box-text" x="100" y="360" font-weight="bold" style="white-space: pre;">Rotacja Układów (C1 ↔ C2)</text>
+    <text class="box-text" x="120" y="380" font-size="11" style="white-space: pre;">• Okres: dni/tygodnie/miesiące</text>
+    <text class="box-text" x="120" y="397" font-size="11" style="white-space: pre;">• Decyduje: KTÓRY CIĄG pracuje</text>
+    <text class="box-text" x="120" y="414" font-size="11" style="white-space: pre;">• Układ Podstawowy: C1 (W1)</text>
+    <text class="box-text" x="120" y="431" font-size="11" style="white-space: pre;">• Układ Ograniczony: C2 (W2)</text>
+    <text class="box-text" x="120" y="448" font-size="11" style="white-space: pre;">• Dotyczy: S1-S4</text>
+    <text class="box-text" x="120" y="465" font-size="11" style="white-space: pre;">• Wyrównanie eksploatacji ciągów</text>
+  </g>
+  <rect class="box-rn" x="435" y="300" width="300" height="180" rx="5" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)"/>
+  <rect class="box-rn-header" x="435" y="300" width="300" height="35" rx="5" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)"/>
+  <rect class="box-rn-header" x="435" y="318" width="300" height="17" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)"/>
+  <text class="box-title" x="585" y="323" text-anchor="middle" style="white-space: pre; font-size: 16px;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)">Algorytm RN</text>
+  <text class="box-text" x="455" y="360" font-weight="bold" style="white-space: pre; font-size: 12px;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)">Rotacja Nagrzewnic (N1-N8)</text>
+  <text class="box-text" x="475" y="380" font-size="11" style="white-space: pre; font-size: 12px;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)">• Okres: godziny/dni/tygodnie</text>
+  <text class="box-text" x="475" y="397" font-size="11" style="white-space: pre; font-size: 12px;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)">• Decyduje: KTÓRE nagrzewnice w ciągu</text>
+  <text class="box-text" x="475" y="414" font-size="11" style="white-space: pre; font-size: 12px;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)">• Wymiana: pracująca ↔ rezerwowa</text>
+  <text class="box-text" x="475" y="431" font-size="11" style="white-space: pre; font-size: 12px;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)">• W obrębie jednego ciągu</text>
+  <text class="box-text" x="475" y="448" font-size="11" style="white-space: pre; font-size: 12px;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)">• Dotyczy: S1-S8</text>
+  <text class="box-text" x="475" y="465" font-size="11" style="white-space: pre; font-size: 12px;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)">• Wyrównanie eksploatacji nagrzewnic</text>
+  <path class="arrow-coord" d="M 366.251 390 L 431.935 390" style="" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)"/>
+  <text class="label" x="400.877" y="414.088" text-anchor="middle" style="white-space: pre; font-size: 11px;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)">koordynacja</text>
+  <path class="arrow-coord" d="M 431.061 430 L 366.669 430" style="" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)"/>
+  <rect x="50" y="510" width="700" height="70" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1" rx="3" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)"/>
+  <text class="box-text" x="70" y="530" font-weight="bold" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)">Współpraca algorytmów:</text>
+  <text class="box-text" x="90" y="550" font-size="11" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)">• <tspan font-weight="bold">WS</tspan> określa scenariusz → <tspan font-weight="bold">RC</tspan> wybiera ciąg → <tspan font-weight="bold">RN</tspan> wybiera nagrzewnice</text>
+  <text class="box-text" x="90" y="567" font-size="11" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)">• <tspan font-weight="bold">Blokady:</tspan> RC i RN nie działają jednocześnie (zmienne: zmiana_układu_w_toku, rotacja_nagrzewnic_w_toku)</text>
+  <text class="label" x="400" y="595" text-anchor="middle" style="white-space: pre;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)">Wszystkie algorytmy działają w trybie AUTO</text>
+  <text class="box-text" x="241.14" y="200.773" font-size="11" style="white-space: pre; font-size: 12px; stroke-width: 1;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 0, -7.105427357601002e-15)">• Zmiana scenariusza jak RN lub RC nie są w trakcie zmiany</text>
 </svg>
-
