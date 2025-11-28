@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="2.164 -1 1700 2500" width="1700px" height="2500px">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1630 2400" width="1630px" height="2400px">
   <defs>
     <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
       <polygon points="0 0, 10 3, 0 6" fill="#333"/>
     </marker>
-    <marker id="arrowhead-yes" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
-      <polygon points="0 0, 10 3, 0 6" fill="#28a745"/>
-    </marker>
     <marker id="arrowhead-no" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
       <polygon points="0 0, 10 3, 0 6" fill="#dc3545"/>
+    </marker>
+    <marker id="arrowhead-yes" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#28a745"/>
     </marker>
     <style>
   .title { font-family: Arial, sans-serif; font-size: 28px; font-weight: bold; fill: #1a1a1a; }
@@ -30,162 +30,168 @@
   .note { font-family: Arial, sans-serif; font-size: 12px; fill: #666; font-style: italic; }
 </style>
   </defs>
-  <rect width="1700" height="2500" fill="#ffffff" y="-1" x="2.164"/>
+  <rect width="1630" height="2400" fill="#ffffff" style=""/>
   <text class="title" x="800" y="40" text-anchor="middle" style="white-space: pre;">Algorytm RC: Rotacja Układów Pracy Ciągów</text>
-  <text class="subtitle" x="800" y="65" text-anchor="middle" style="white-space: pre;">Podstawowy ↔ Ograniczony (C1 ↔ C2) - zgodnie z pseudokodem v1.6</text>
+  <text class="subtitle" x="800" y="65" text-anchor="middle" style="white-space: pre;">Podstawowy ↔ Ograniczony (C1 ↔ C2)</text>
   <rect class="start-end" x="650" y="90" width="300" height="60"/>
-  <text class="box-text" x="800" y="125" style="white-space: pre;">START - Główna pętla</text>
-  <text class="box-text-small" x="800" y="142" style="white-space: pre;">(co CYKL_PĘTLI_ALGORYTMÓW)</text>
-  <line class="arrow" x1="800" y1="150" x2="800" y2="190"/>
-  <rect class="warning" x="550" y="190" width="500" height="120"/>
-  <text class="box-text-small" x="800" y="210" style="white-space: pre;">Zmienne (koordynacja z RN):</text>
-  <text class="box-text-small" x="800" y="227" style="white-space: pre;">Globalne: aktualny_układ, zmiana_układu_w_toku,</text>
-  <text class="box-text-small" x="800" y="244" style="white-space: pre;">czas_ostatniej_zmiany_układu, rotacja_nagrzewnic_w_toku</text>
-  <text class="box-text-small" x="800" y="261" style="white-space: pre;">Lokalne: czas_pracy_układu_podstawowego/ograniczonego,</text>
-  <text class="box-text-small" x="800" y="278" style="white-space: pre;">czas_ostatniej_zmiany, last_update_time,</text>
-  <text class="box-text-small" x="800" y="295" style="white-space: pre;">poprzedni_scenariusz</text>
-  <line class="arrow" x1="800" y1="310" x2="800" y2="350"/>
-  <rect class="process" x="600" y="350" width="400" height="70"/>
-  <text class="box-text" x="800" y="375" style="white-space: pre;">KROK 0: Aktualizuj liczniki</text>
-  <text class="box-text-small" x="800" y="395" style="white-space: pre;">delta_time = czas_systemowy - last_update_time</text>
-  <text class="box-text-small" x="800" y="412" style="white-space: pre;">czas_pracy_[aktualny_układ] += delta_time</text>
-  <line class="arrow" x1="800" y1="420" x2="800" y2="465"/>
-  <polygon class="decision" points="800,465 1050,515 800,565 550,515"/>
-  <text class="box-text" x="800" y="505" style="white-space: pre;">KROK 1: Tryb AUTO?</text>
-  <line class="arrow-no" x1="1050" y1="515" x2="1260.21" y2="515" style=""/>
-  <text class="label-no" x="1100" y="505" style="white-space: pre;">NIE</text>
-  <g transform="matrix(1, 0, 0, 1, -52.49139404296875, -0.6343879103660583)">
-    <rect class="data" x="1314.54" y="485" width="235.461" height="60" style=""/>
-    <text class="box-text-small" x="1429.36" y="500.864" style="white-space: pre; font-size: 13px;" transform="matrix(1, 0, 0, 1, 0.714462, 12.175124)">Rejestruj zdarzenie: <tspan x="1429.3599853515625" dy="1em">​</tspan>"Tryb MANUAL - operator kontroluje"</text>
+  <text class="box-text" x="800" y="115" style="white-space: pre;">START - Główna pętla</text>
+  <text class="box-text-small" x="800" y="135" style="white-space: pre;">(co CYKL_PĘTLI_ALGORYTMÓW)</text>
+  <line class="arrow" x1="800" y1="150" x2="800" y2="200"/>
+  <rect class="process" x="600" y="200" width="400" height="70"/>
+  <text class="box-text" x="800" y="225" style="white-space: pre;">KROK 0: Aktualizuj liczniki</text>
+  <text class="box-text-small" x="800" y="245" style="white-space: pre;">delta_time = czas_systemowy - last_update_time</text>
+  <text class="box-text-small" x="800" y="262" style="white-space: pre;">czas_pracy_[aktualny_układ] += delta_time</text>
+  <line class="arrow" x1="800" y1="270" x2="800" y2="315"/>
+  <polygon class="decision" points="800,315 1050,365 800,415 550,365"/>
+  <text class="box-text" x="800" y="355" style="white-space: pre;">KROK 1: Tryb AUTO?</text>
+  <line class="arrow-no" x1="1050" y1="365" x2="1260" y2="365"/>
+  <text class="label-no" x="1100" y="355" style="white-space: pre;">NIE</text>
+  <rect class="data" x="1260" y="335" width="240" height="60"/>
+  <text class="box-text-small" x="1380" y="355" style="white-space: pre;">Rejestruj zdarzenie:</text>
+  <text class="box-text-small" x="1380" y="375" style="white-space: pre;">"Tryb MANUAL - operator kontroluje"</text>
+  <text class="box-text-small" x="1380" y="395" style="white-space: pre;">Czekaj na AUTO</text>
+  <path class="arrow" d="M 1500 365 L 1587 365 L 1587 2140 L 950 2140"/>
+  <line class="arrow-yes" x1="800" y1="415" x2="800" y2="475"/>
+  <text class="label" x="820" y="445" style="white-space: pre;">TAK</text>
+  <polygon class="decision" points="800,475 1050,525 800,575 550,525"/>
+  <text class="box-text" x="800" y="515" style="white-space: pre;">KROK 2: Pierwsze uruchomienie?</text>
+  <text class="box-text-small" x="800" y="532" style="white-space: pre;">(last_update_time = NULL)</text>
+  <line class="arrow-yes" x1="1050" y1="525" x2="1265" y2="525"/>
+  <text class="label" x="1100" y="515" style="white-space: pre;">TAK</text>
+  <rect class="process" x="1265" y="495" width="280" height="60"/>
+  <text class="box-text-small" x="1405" y="515" style="white-space: pre;">Inicjalizuj zmienne:</text>
+  <text class="box-text-small" x="1405" y="532" style="white-space: pre;">last_update_time = teraz</text>
+  <text class="box-text-small" x="1405" y="549" style="white-space: pre;">poprzedni_scenariusz = S</text>
+  <path class="arrow" d="M 1507 555 L 1507 2122 L 950 2122"/>
+  <line class="arrow-no" x1="800" y1="575" x2="800" y2="635"/>
+  <text class="label-no" x="820" y="605" style="white-space: pre;">NIE</text>
+  <polygon class="decision" points="800,635 1100,695 800,755 500,695"/>
+  <text class="box-text" x="800" y="680" style="white-space: pre;">KROK 3: Przejście z S0?</text>
+  <text class="box-text-small" x="800" y="700" style="white-space: pre;">(poprzedni_scenariusz = S0 ORAZ</text>
+  <text class="box-text-small" x="800" y="717" style="white-space: pre;">aktualny ∈ {S1,S2,S3,S4})</text>
+  <line class="arrow-yes" x1="1100" y1="695" x2="1267" y2="695"/>
+  <text class="label" x="1135" y="685" style="white-space: pre;">TAK</text>
+  <rect class="process" x="1267" y="665" width="180" height="60"/>
+  <text class="box-text-small" x="1357" y="685" style="white-space: pre;">Reset timestampu:</text>
+  <text class="box-text-small" x="1357" y="702" style="white-space: pre;">czas_ostatniej_zmiany</text>
+  <text class="box-text-small" x="1357" y="719" style="white-space: pre;">= czas_systemowy</text>
+  <path class="arrow" d="M 1359 725 L 1359 864 L 1050 864"/>
+  <line class="arrow-no" x1="800" y1="755" x2="800" y2="815"/>
+  <text class="label-no" x="820" y="785" style="white-space: pre;">NIE</text>
+  <text class="box-text-small" x="950" y="785" style="white-space: pre;">poprzedni_scenariusz = aktualny</text>
+  <polygon class="decision" points="800,815 1050,865 800,915 550,865"/>
+  <text class="box-text" x="800" y="855" style="white-space: pre;">KROK 4: Warunki rotacji?</text>
+  <text class="box-text-small" x="800" y="872" style="white-space: pre;">(S1-S4, C2 sprawny, AUTO)</text>
+  <line class="arrow-no" x1="550" y1="865" x2="462" y2="865"/>
+  <text class="label-no" x="499" y="853" style="white-space: pre;">NIE</text>
+  <polygon class="decision" points="317,815 462,865 317,915 172,865"/>
+  <text class="box-text-small" x="317" y="855" style="white-space: pre;">S1-S4 AND</text>
+  <text class="box-text-small" x="317" y="872" style="white-space: pre;">Ograniczony?</text>
+  <line class="arrow-yes" x1="317" y1="915" x2="317" y2="981"/>
+  <text class="label" x="272" y="954" style="white-space: pre;">TAK</text>
+  <rect class="action" x="200" y="981" width="235" height="90"/>
+  <text class="box-text-small" style="font-size: 14px; white-space: pre;" x="317.5" y="1002">🚨 AWARIA C2</text>
+  <text class="box-text-small" x="317.5" y="1019" style="white-space: pre;">Alarm krytyczny:</text>
+  <text class="box-text-small" x="317.5" y="1034" style="white-space: pre;">"Awaria C2 w układzie</text>
+  <text class="box-text-small" x="317.5" y="1049" style="white-space: pre;">ograniczonym"</text>
+  <text class="box-text-small" x="317.5" y="1064" style="white-space: pre;">Przełącz na tryb MANUAL</text>
+  <path class="arrow" d="M 317.5 1071 L 317.5 2080 L 647 2080"/>
+  <path class="arrow-no" d="M 172 865 L 71 865 L 71 2098 L 650 2098"/>
+  <text class="label-no" x="115" y="845" style="white-space: pre;">NIE</text>
+  <text class="box-text-small" style="font-size: 14px; white-space: pre;" x="130" y="883">S0/S5-S8</text>
+  <line class="arrow-yes" x1="800" y1="915" x2="800" y2="975"/>
+  <text class="label" x="820" y="945" style="white-space: pre;">TAK</text>
+  <polygon class="decision" points="800,975 1040,1025 800,1075 560,1025"/>
+  <text class="box-text" x="800" y="1015" style="white-space: pre;">KROK 5: Upłynął okres?</text>
+  <text class="box-text-small" x="800" y="1032" style="white-space: pre;">(czas ≥ OKRES - HISTEREZA)</text>
+  <path class="arrow-no" d="M 1023 1025 L 1442 1025 L 1442 2107 L 950 2107"/>
+  <text class="label-no" x="1200" y="1015" style="white-space: pre;">NIE</text>
+  <line class="arrow-yes" x1="800" y1="1075" x2="800" y2="1135"/>
+  <text class="label" x="820" y="1105" style="white-space: pre;">TAK</text>
+  <rect class="process" x="650" y="1135" width="300" height="70"/>
+  <text class="box-text" x="800" y="1160" style="white-space: pre;">KROK 6: Określ nowy układ</text>
+  <text class="box-text-small" x="800" y="1180" style="white-space: pre;">Podstawowy ↔ Ograniczony</text>
+  <line class="arrow" x1="800" y1="1205" x2="800" y2="1260"/>
+  <polygon class="decision" points="800,1260 1100,1320 800,1380 500,1320"/>
+  <text class="box-text" x="800" y="1310" style="white-space: pre;">KROK 7: RN wykonuje rotację?</text>
+  <text class="box-text-small" x="800" y="1327" style="white-space: pre;">(rotacja_nagrzewnic_w_toku)</text>
+  <line class="arrow-yes" x1="1100" y1="1320" x2="1220" y2="1320"/>
+  <text class="label" x="1143" y="1306" style="white-space: pre;">TAK</text>
+  <rect class="warning" x="1220" y="1290" width="180" height="60"/>
+  <text class="box-text-small" x="1310" y="1315" style="white-space: pre;">Odrocz zmianę</text>
+  <text class="box-text-small" x="1310" y="1332" style="white-space: pre;">(czekaj na RN)</text>
+  <path class="arrow" d="M 1324 1350 L 1324 2089 L 950 2089"/>
+  <line class="arrow-no" x1="800" y1="1380" x2="800" y2="1440"/>
+  <text class="label-no" x="820" y="1410" style="white-space: pre;">NIE</text>
+  <rect class="warning" x="650" y="1440" width="300" height="50"/>
+  <text class="box-text-small" x="800" y="1460" style="white-space: pre;">🔒 Ustaw blokadę:</text>
+  <text class="box-text-small" x="800" y="1477" style="white-space: pre;">zmiana_układu_w_toku = PRAWDA</text>
+  <line class="arrow" x1="800" y1="1490" x2="800" y2="1530"/>
+  <rect class="data" x="650" y="1530" width="300" height="50"/>
+  <text class="box-text-small" x="800" y="1550" style="white-space: pre;">Rejestruj zdarzenie:</text>
+  <text class="box-text-small" x="800" y="1567" style="white-space: pre;">"Rozpoczęcie zmiany układu"</text>
+  <line class="arrow" x1="800" y1="1580" x2="800" y2="1620"/>
+  <rect class="action" x="600" y="1620" width="400" height="60"/>
+  <text class="box-text" x="800" y="1645" style="white-space: pre;">Wykonaj_Zmianę_Układu()</text>
+  <text class="box-text-small" x="800" y="1665" style="white-space: pre;">Sekwencja zmiany układu Podstawowy ↔ Ograniczony</text>
+  <line class="arrow" x1="800" y1="1680" x2="800" y2="1730"/>
+  <rect class="data" x="600" y="1730" width="400" height="90"/>
+  <text class="box-text-small" x="800" y="1755" style="white-space: pre;">Aktualizuj zmienne:</text>
+  <text class="box-text-small" x="800" y="1772" style="white-space: pre;">aktualny_układ = nowy_układ</text>
+  <text class="box-text-small" x="800" y="1789" style="white-space: pre;">czas_ostatniej_zmiany = teraz</text>
+  <text class="box-text-small" x="800" y="1806" style="white-space: pre;">czas_ostatniej_zmiany_układu = teraz (dla RN)</text>
+  <line class="arrow" x1="800" y1="1820" x2="800" y2="1870"/>
+  <rect class="data" x="650" y="1870" width="300" height="50"/>
+  <text class="box-text-small" x="800" y="1890" style="white-space: pre;">Rejestruj zdarzenie:</text>
+  <text class="box-text-small" x="800" y="1907" style="white-space: pre;">"Zakończono zmianę układu"</text>
+  <line class="arrow" x1="800" y1="1920" x2="800" y2="1970"/>
+  <rect class="warning" x="650" y="1970" width="300" height="50"/>
+  <text class="box-text-small" x="800" y="1990" style="white-space: pre;">🔓 Zwolnij blokadę:</text>
+  <text class="box-text-small" x="800" y="2007" style="white-space: pre;">zmiana_układu_w_toku = FAŁSZ</text>
+  <line class="arrow" x1="800" y1="2020" x2="800" y2="2070"/>
+  <rect class="process" x="650" y="2070" width="300" height="80"/>
+  <text class="box-text" x="800" y="2105" style="white-space: pre;">Czekaj CYKL_PĘTLI_ALGORYTMÓW</text>
+  <path class="arrow" d="M 650 2111 L 47 2111 L 47 120 L 650 120"/>
+  <g transform="matrix(1, 0, 0, 1, -72.0156478881836, -49.25664901733399)">
+    <g>
+      <rect x="146.809" y="198.135" width="382.708" height="464.157" fill="#f9f9f9" stroke="#999" stroke-width="1" style="stroke-width: 1;"/>
+      <text class="box-label" style="font-size: 17px; white-space: pre;" x="160.029" y="226.682">PARAMETRY:</text>
+      <text class="box-text-small" style="font-size: 16px; white-space: pre;" x="273.82" y="282.931">• CYKL_PĘTLI_ALGORYTMÓW</text>
+      <text class="box-label" style="font-size: 17px; white-space: pre;" x="157.323" y="318.92">ZMIENNE GLOBALNE:</text>
+      <text class="note" style="font-size: 14px; white-space: pre;" x="346.21" y="317.26">(współdzielone z RN)</text>
+      <text class="box-text-small" style="font-size: 15px; white-space: pre;" x="213.256" y="340.309">• aktualny_układ</text>
+      <text class="box-text-small" style="font-size: 15px; white-space: pre;" x="241.599" y="358.438">• zmiana_układu_w_toku</text>
+      <text class="box-text-small" style="font-size: 15px; white-space: pre;" x="266.083" y="374.888">• czas_ostatniej_zmiany_układu</text>
+      <text class="box-text-small" style="font-size: 15px; white-space: pre;" x="256.459" y="392.415">• rotacja_nagrzewnic_w_toku</text>
+      <text class="box-label" style="font-size: 17px; white-space: pre;" x="156.759" y="425.678">ZMIENNE LOKALNE:</text>
+      <text class="note" style="font-size: 14px; white-space: pre;" x="335.064" y="421.424">(tylko dla RC)</text>
+      <text class="box-text-small" style="font-size: 15px; white-space: pre;" x="281.172" y="445.067">• czas_pracy_układu_podstawowego</text>
+      <text class="box-text-small" style="font-size: 15px; white-space: pre;" x="281.596" y="462.726">• czas_pracy_układu_ograniczonego</text>
+      <text class="box-text-small" style="font-size: 15px; white-space: pre;" x="239.555" y="482.295">• czas_ostatniej_zmiany</text>
+      <text class="box-text-small" style="font-size: 15px; white-space: pre;" x="220.51" y="503.465">• last_update_time</text>
+      <text class="box-text-small" style="font-size: 15px; white-space: pre;" x="235.999" y="524.479">• poprzedni_scenariusz</text>
+      <text class="box-label" style="font-size: 17px; white-space: pre;" x="153.257" y="567.067">🔒 KOORDYNACJA Z RN:</text>
+      <text class="note" style="font-size: 14px; white-space: pre;" x="160.961" y="590.041">• Blokady zapobiegają jednoczesnej</text>
+      <text class="note" style="font-size: 14px; white-space: pre;" x="171.756" y="608.111">rotacji układów (RC) i nagrzewnic (RN)</text>
+      <text class="note" style="font-size: 14px; white-space: pre;" x="161.206" y="624.909">• RC sprawdza</text>
+      <text class="note" style="font-size: 14px; white-space: pre;" x="174.646" y="642.648">rotacja_nagrzewnic_w_toku</text>
+    </g>
+    <text class="box-text-small" style="font-size: 16px; white-space: pre;" x="273.933" y="244.561">• OKRES_ROTACJI_UKŁADÓW</text>
+    <text class="box-text-small" style="font-size: 16px; white-space: pre;" x="253.336" y="263.538">• HISTEREZA_CZASOWA</text>
   </g>
-  <text class="box-text-small" x="1640.92" y="610.831" style="white-space: pre; font-size: 13px;">Czekaj na AUTO</text>
-  <path class="arrow" d="M 1497.47 515 L 1587.05 515 L 1587.05 2290 L 950 2290" style=""/>
-  <line class="arrow-yes" x1="800" y1="565" x2="800" y2="625"/>
-  <text class="label" x="820" y="595" style="white-space: pre;">TAK</text>
-  <polygon class="decision" points="800,625 1050,675 800,725 550,675"/>
-  <text class="box-text" x="800" y="665" style="white-space: pre;">KROK 2: Pierwsze uruchomienie?</text>
-  <text class="box-text-small" x="800" y="682" style="white-space: pre;">(last_update_time = NULL)</text>
-  <line class="arrow-yes" x1="1050" y1="675" x2="1264.78" y2="675" style=""/>
-  <text class="label" x="1100" y="665" style="white-space: pre;">TAK</text>
-  <g transform="matrix(1, 0, 0, 1, -10.569873809814453, -0.6336000561714172)">
-    <rect class="process" x="1277.09" y="645.58" width="280" height="60"/>
-    <text class="box-text-small" x="1421.39" y="664.366" style="white-space: pre; font-size: 13px;">Inicjalizuj zmienne:</text>
-    <text class="box-text-small" x="1421.39" y="681.366" style="white-space: pre; font-size: 13px;">last_update_time = teraz</text>
-    <text class="box-text-small" x="1421.39" y="698.366" style="white-space: pre; font-size: 13px;">poprzedni_scenariusz = S</text>
-  </g>
-  <path class="arrow" d="M 1506.84 705 L 1506.84 2272.21 L 950 2272.21" style=""/>
-  <line class="arrow-no" x1="800" y1="725" x2="800" y2="785"/>
-  <text class="label-no" x="820" y="755" style="white-space: pre;">NIE</text>
-  <polygon class="decision" points="800,785 1100,845 800,905 500,845"/>
-  <text class="box-text" x="800" y="830" style="white-space: pre;">KROK 3: Przejście z S0?</text>
-  <text class="box-text-small" x="800" y="850" style="white-space: pre;">(poprzedni_scenariusz = S0 ORAZ</text>
-  <text class="box-text-small" x="800" y="867" style="white-space: pre;">aktualny ∈ {S1,S2,S3,S4})</text>
-  <line class="arrow-yes" x1="1100" y1="845" x2="1267.46" y2="845" style=""/>
-  <text class="label" x="1135.77" y="833.814" style="white-space: pre; font-size: 14px;">TAK</text>
-  <g transform="matrix(1, 0, 0, 1, -25.999755859375, -1.3666250705718994)">
-    <rect class="process" x="1293.4" y="815" width="179.241" height="60" style=""/>
-    <text class="box-text-small" x="1385" y="835" style="white-space: pre;">Reset timestampu:</text>
-    <text class="box-text-small" x="1385" y="852" style="white-space: pre;">czas_ostatniej_zmiany</text>
-    <text class="box-text-small" x="1385" y="869" style="white-space: pre;">= czas_systemowy</text>
-  </g>
-  <path class="arrow" d="M 1359.47 875 L 1359.47 1014.01 L 1050 1014.01" style=""/>
-  <line class="arrow-no" x1="800" y1="905" x2="800" y2="965"/>
-  <text class="label-no" x="820" y="935" style="white-space: pre;">NIE</text>
-  <text class="box-text-small" x="950" y="935" style="white-space: pre;">poprzedni_scenariusz = aktualny</text>
-  <polygon class="decision" points="800,965 1050,1015 800,1065 550,1015"/>
-  <text class="box-text" x="800" y="1005" style="white-space: pre;">KROK 4: Warunki rotacji?</text>
-  <text class="box-text-small" x="800" y="1022" style="white-space: pre;">(S1-S4, C2 sprawny, AUTO)</text>
-  <line class="arrow-no" x1="550" y1="1015" x2="462.391" y2="1015" style=""/>
-  <text class="label-no" x="498.998" y="1002.77" style="white-space: pre; font-size: 14px;">NIE</text>
-  <g transform="matrix(1, 0, 0, 1, 59.849124908447266, -0.7837469577789307)">
-    <polygon class="decision" points="257.333 965.416 402.333 1015.42 257.333 1065.42 112.333 1015.42"/>
-    <text class="box-text-small" x="257.333" y="1005.42" style="white-space: pre; font-size: 13px;">S1-S4 AND</text>
-    <text class="box-text-small" x="257.333" y="1022.42" style="white-space: pre; font-size: 13px;">Ograniczony?</text>
-  </g>
-  <line class="arrow-yes" x1="316.468" y1="1065.43" x2="316.468" y2="1131.74" style=""/>
-  <text class="label" x="272.403" y="1104.22" style="white-space: pre; font-size: 14px;">TAK</text>
-  <rect class="action" x="200" y="1135.15" width="235" height="90" style=""/>
-  <text class="box-text-small" style="font-size: 14px; white-space: pre;" x="317.5" y="1156.64">🚨 AWARIA C2</text>
-  <text class="box-text-small" style="font-size: 13px; white-space: pre;" x="317.5" y="1173.64">Alarm krytyczny:</text>
-  <text class="box-text-small" style="font-size: 13px; white-space: pre;" x="317.5" y="1188.64">"Awaria C2 w układzie</text>
-  <text class="box-text-small" style="font-size: 13px; white-space: pre;" x="317.5" y="1203.64">ograniczonym"</text>
-  <text class="box-text-small" style="font-size: 13px; white-space: pre;" x="317.5" y="1218.64">Przełącz na tryb MANUAL</text>
-  <path class="arrow" d="M 317.5 1225.15 L 317.5 2230.26 L 647.581 2230.26" style=""/>
-  <path class="arrow-no" d="M 177.522 1015.42 L 71.125 1015.42 L 71.125 2248.38 L 650.481 2248.38" style=""/>
-  <text class="label-no" x="115.637" y="995.722" style="white-space: pre; font-size: 14px;">NIE</text>
-  <text class="box-text-small" style="font-size: 14px; white-space: pre;" x="129.692" y="1033.65">S0/S5-S8</text>
-  <line class="arrow-yes" x1="800" y1="1065" x2="800" y2="1125"/>
-  <text class="label" x="820" y="1095" style="white-space: pre;">TAK</text>
-  <polygon class="decision" points="800,1125 1040,1175 800,1225 560,1175"/>
-  <text class="box-text" x="800" y="1165" style="white-space: pre;">KROK 5: Upłynął okres?</text>
-  <text class="box-text-small" x="800" y="1182" style="white-space: pre;">(czas ≥ OKRES - HISTEREZA)</text>
-  <path class="arrow-no" d="M 1022.79 1175 L 1441.74 1175 L 1441.74 2257.56 L 950 2257.56" style=""/>
-  <text class="label-no" x="1200" y="1165" style="white-space: pre;">NIE</text>
-  <line class="arrow-yes" x1="800" y1="1225" x2="800" y2="1285"/>
-  <text class="label" x="820" y="1255" style="white-space: pre;">TAK</text>
-  <rect class="process" x="650" y="1285" width="300" height="70"/>
-  <text class="box-text" x="800" y="1310" style="white-space: pre;">KROK 6: Określ nowy układ</text>
-  <text class="box-text-small" x="800" y="1330" style="white-space: pre;">Podstawowy ↔ Ograniczony</text>
-  <line class="arrow" x1="800" y1="1355" x2="800" y2="1410"/>
-  <polygon class="decision" points="800,1410 1100,1470 800,1530 500,1470"/>
-  <text class="box-text" x="800" y="1460" style="white-space: pre;">KROK 7: RN wykonuje rotację?</text>
-  <text class="box-text-small" x="800" y="1477" style="white-space: pre;">(rotacja_nagrzewnic_w_toku)</text>
-  <line class="arrow-yes" x1="1100" y1="1470" x2="1220.75" y2="1470" style=""/>
-  <text class="label" x="1142.69" y="1455.65" style="white-space: pre; font-size: 14px;">TAK</text>
-  <g transform="matrix(1, 0, 0, 1, -13.67866039276123, -0.6454430222511292)">
-    <rect class="warning" x="1240.06" y="1439.96" width="180" height="60"/>
-    <text class="box-text-small" x="1332.9" y="1465.57" style="white-space: pre; font-size: 13px;">Odrocz zmianę</text>
-    <text class="box-text-small" x="1332.9" y="1482.57" style="white-space: pre; font-size: 13px;">(czekaj na RN)</text>
-  </g>
-  <path class="arrow" d="M 1323.82 1500 L 1323.82 2239.64 L 950 2239.64" style=""/>
-  <line class="arrow-no" x1="800" y1="1530" x2="800" y2="1590"/>
-  <text class="label-no" x="820" y="1560" style="white-space: pre;">NIE</text>
-  <rect class="warning" x="650" y="1590" width="300" height="50"/>
-  <text class="box-text-small" x="800" y="1610" style="white-space: pre;">🔒 Ustaw blokadę:</text>
-  <text class="box-text-small" x="800" y="1627" style="white-space: pre;">zmiana_układu_w_toku = PRAWDA</text>
-  <line class="arrow" x1="800" y1="1640" x2="800" y2="1680"/>
-  <rect class="data" x="650" y="1680" width="300" height="50"/>
-  <text class="box-text-small" x="800" y="1700" style="white-space: pre;">Rejestruj zdarzenie:</text>
-  <text class="box-text-small" x="800" y="1717" style="white-space: pre;">"Rozpoczęcie zmiany układu"</text>
-  <line class="arrow" x1="800" y1="1730" x2="800" y2="1770"/>
-  <rect class="action" x="600" y="1770" width="400" height="60"/>
-  <text class="box-text" x="800" y="1795" style="white-space: pre;">Wykonaj_Zmianę_Układu()</text>
-  <text class="box-text-small" x="800" y="1815" style="white-space: pre;">Sekwencja zmiany układu Podstawowy ↔ Ograniczony</text>
-  <line class="arrow" x1="800" y1="1830" x2="800" y2="1880"/>
-  <rect class="data" x="600" y="1880" width="400" height="90"/>
-  <text class="box-text-small" x="800" y="1905" style="white-space: pre;">Aktualizuj zmienne:</text>
-  <text class="box-text-small" x="800" y="1922" style="white-space: pre;">aktualny_układ = nowy_układ</text>
-  <text class="box-text-small" x="800" y="1939" style="white-space: pre;">czas_ostatniej_zmiany = teraz</text>
-  <text class="box-text-small" x="800" y="1956" style="white-space: pre;">czas_ostatniej_zmiany_układu = teraz (dla RN)</text>
-  <line class="arrow" x1="800" y1="1970" x2="800" y2="2020"/>
-  <rect class="data" x="650" y="2020" width="300" height="50"/>
-  <text class="box-text-small" x="800" y="2040" style="white-space: pre;">Rejestruj zdarzenie:</text>
-  <text class="box-text-small" x="800" y="2057" style="white-space: pre;">"Zakończono zmianę układu"</text>
-  <line class="arrow" x1="800" y1="2070" x2="800" y2="2120"/>
-  <rect class="warning" x="650" y="2120" width="300" height="50"/>
-  <text class="box-text-small" x="800" y="2140" style="white-space: pre;">🔓 Zwolnij blokadę:</text>
-  <text class="box-text-small" x="800" y="2157" style="white-space: pre;">zmiana_układu_w_toku = FAŁSZ</text>
-  <line class="arrow" x1="800" y1="2170" x2="800" y2="2220"/>
-  <rect class="process" x="650" y="2220" width="300" height="79.429" style=""/>
-  <text class="box-text" x="804.671" y="2265.59" style="white-space: pre; font-size: 15px;">Czekaj CYKL_PĘTLI_ALGORYTMÓW</text>
-  <path class="arrow" d="M 650 2261.62 L 47.095 2261.62 L 47.095 120 L 650 120" style=""/>
-  <rect x="50" y="2350" width="1500" height="140" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1"/>
-  <text class="note" x="70" y="2370" style="white-space: pre;">Legenda:</text>
-  <rect class="decision" x="170" y="2355" width="60" height="30"/>
-  <text class="note" x="240" y="2373" style="white-space: pre;">Decyzja</text>
-  <rect class="process" x="320" y="2355" width="60" height="30"/>
-  <text class="note" x="390" y="2373" style="white-space: pre;">Proces</text>
-  <rect class="action" x="470" y="2355" width="60" height="30"/>
-  <text class="note" x="540" y="2373" style="white-space: pre;">Akcja zmiany</text>
-  <rect class="data" x="630" y="2355" width="60" height="30"/>
-  <text class="note" x="700" y="2373" style="white-space: pre;">Dane/Log</text>
-  <rect class="warning" x="780" y="2355" width="60" height="30"/>
-  <text class="note" x="850" y="2373" style="white-space: pre;">Blokada/Sync</text>
-  <text class="note" x="70" y="2400" style="white-space: pre;">Parametry:</text>
-  <text class="note" x="70" y="2415" style="white-space: pre;">OKRES_ROTACJI_UKŁADÓW = parametr technologa (np. 168h = 7 dni)</text>
-  <text class="note" x="70" y="2430" style="white-space: pre;">HISTEREZA_CZASOWA = 300s (5 minut) - bufor przed uznaniem upływu okresu</text>
-  <text class="note" x="70" y="2445" style="white-space: pre;">CYKL_PĘTLI_ALGORYTMÓW = 60s (domyślnie 1 min, zakres: 10s-600s)</text>
-  <text class="note" x="70" y="2470" style="white-space: pre;">🔒 Koordynacja z RN: blokady zapobiegają jednoczesnej rotacji układów i nagrzewnic</text>
-  <text class="note" x="70" y="2485" style="white-space: pre;">Zgodność z pseudokodem v1.6 (src/algo_pseudokod.md, linia 756-988)</text>
-  <text style="white-space: pre; fill: rgb(17, 17, 17); font-family: Arial, sans-serif; font-size: 14px; font-weight: 700;" x="1478.94" y="511.076"><tspan x="1478.93994140625" dy="1em">​</tspan></text>
+  <rect x="50" y="2200" width="1500" height="140" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1"/>
+  <text class="note" x="70" y="2220" style="white-space: pre;">Legenda:</text>
+  <rect class="decision" x="170" y="2205" width="60" height="30"/>
+  <text class="note" x="240" y="2223" style="white-space: pre;">Decyzja</text>
+  <rect class="process" x="320" y="2205" width="60" height="30"/>
+  <text class="note" x="390" y="2223" style="white-space: pre;">Proces</text>
+  <rect class="action" x="470" y="2205" width="60" height="30"/>
+  <text class="note" x="540" y="2223" style="white-space: pre;">Akcja zmiany</text>
+  <rect class="data" x="630" y="2205" width="60" height="30"/>
+  <text class="note" x="700" y="2223" style="white-space: pre;">Dane/Log</text>
+  <rect class="warning" x="780" y="2205" width="60" height="30"/>
+  <text class="note" x="850" y="2223" style="white-space: pre;">Blokada/Sync</text>
+  <text class="note" x="70" y="2265" style="white-space: pre;">🔒 Koordynacja z RN: blokady zapobiegają jednoczesnej rotacji układów i nagrzewnic</text>
+  <text class="note" x="70" y="2285" style="white-space: pre;">ZMIANY v2.0: Zmienne przeniesione do bocznego boxa PARAMETERS (spójność z WS, RN)</text>
+  <text class="note" x="70" y="2305" style="white-space: pre;">Zgodność z pseudokodem v1.7 (src/algo_pseudokod.md, linia 756-988)</text>
 </svg>
