@@ -14,11 +14,11 @@ telemetry:
   # OTLP endpoints for Splunk Observability Cloud
   # Replace 'us1' with your Splunk realm (us0, us1, eu0, jp0, au0)
   endpoints:
-    metrics: "https://ingest.signalfx.com/v2/datapoint/otlp"
+    metrics: "https://ingest.rc0.signalfx.com/v2/datapoint/otlp"
   
   # Headers for Splunk Observability authentication
   headers:
-    X-SF-Token: "<YOUR_SF_TOKEN>" 
+    X-SF-Token: "" 
     Content-Type: "application/x-protobuf"
   
   # Resource attributes & default dimensions applied to every metric/log/span
@@ -68,7 +68,7 @@ services:
       rn:
         rotation_period_hours: 12            # [h] rotation period (same for all scenarios)
         rotation_duration_s: 180             # [s] time for heater rotation to complete (3 minutes)
-        min_delta_time_s: 3600               # [s] minimum time difference for rotation eligibility
+        min_delta_time_s: 60                 # [s] minimum time difference for rotation eligibility (1 min)
         algorithm_loop_cycle_s: 60           # [s] RN check frequency (simulation time)
   
   # Weather Service provides temperature to the algo service 

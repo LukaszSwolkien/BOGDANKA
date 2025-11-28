@@ -213,3 +213,4 @@ __marimo__/
 
 src/simulation/scenarios/test_results/
 src/simulation/scenarios/logs/
+src/simulation/config.yaml

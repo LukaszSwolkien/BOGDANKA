@@ -49,7 +49,7 @@ test_profiles:
     expected_scenario: S1
     expected_results:
       rc_rotations: {min: 7, max: 8, target: 7}  # 15 dni / 2 dni = 7-8 rotacji
-      rn_rotations: {min: 13, max: 15, target: 14}  # S1: 1/4 aktywne (3 rezerwy!) → ~14 rotacji
+      rn_rotations: {min: 28, max: 32, target: 30}  # S1: 1/4 aktywne (3 rezerwy!) → ~28 rotacji
       n1_operating_hours: {min: 40, max: 50}  # N1: ~45h (rotuje z N2-N4)
       n5_operating_hours: {min: 40, max: 50}  # N5: ~45h (rotuje z N6-N8)
 

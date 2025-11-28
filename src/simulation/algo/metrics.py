@@ -54,6 +54,14 @@ class AlgoMetrics:
             unit="Cel",
         )
         
+        # Simulation time (gauge, seconds since start)
+        self._simulation_time_gauge = meter.create_observable_gauge(
+            f"{self.metrics_prefix}.simulation_time_s",
+            callbacks=[self._observe_simulation_time],
+            description="Current simulation time in seconds",
+            unit="s",
+        )
+        
         # Time spent in each scenario (counter by scenario dimension)
         self._scenario_time_counter = meter.create_counter(
             f"{self.metrics_prefix}.ws.scenario_time_s",
@@ -150,6 +158,13 @@ class AlgoMetrics:
         temp = self.state.last_valid_reading if self.state.last_valid_reading else 0.0
         yield Observation(temp, {**self.default_dimensions})
     
+    def _observe_simulation_time(self, options: CallbackOptions):
+        """Callback for simulation time gauge."""
+        yield Observation(
+            self.state.simulation_time,
+            {**self.default_dimensions}
+        )
+    
     def _observe_current_config(self, options: CallbackOptions):
         """Callback for current configuration gauge."""
         # 0 = Primary, 1 = Limited
@@ -161,12 +176,14 @@ class AlgoMetrics:
         from common.domain import Heater
         for heater in Heater:
             op_time = self.algorithm_rn.get_heater_operating_time(heater)
+            # Determine line based on heater name (N1-N4 = C1, N5-N8 = C2)
+            line = "C1" if heater.name in ["N1", "N2", "N3", "N4"] else "C2"
             yield Observation(
                 op_time,
                 {
                     **self.default_dimensions,
                     "heater": heater.name,
-                    "line": "C1" if heater.value < 5 else "C2",
+                    "line": line,
                 }
             )
     
@@ -177,12 +194,14 @@ class AlgoMetrics:
             state = self.algorithm_rn.get_heater_state(heater)
             # Map HeaterState enum to numeric: IDLE=0, ACTIVE=1, FAULTY=2
             state_value = 0 if state.value == "idle" else (1 if state.value == "active" else 2)
+            # Determine line based on heater name (N1-N4 = C1, N5-N8 = C2)
+            line = "C1" if heater.name in ["N1", "N2", "N3", "N4"] else "C2"
             yield Observation(
                 state_value,
                 {
                     **self.default_dimensions,
                     "heater": heater.name,
-                    "line": "C1" if heater.value < 5 else "C2",
+                    "line": line,
                 }
             )
     
