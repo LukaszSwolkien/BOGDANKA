@@ -542,6 +542,34 @@ class AlgorithmRN:
         
         return True
     
+    def is_line_operating(self, line: Line) -> bool:
+        """
+        Check if given line is currently operating (has active heaters).
+        
+        Public method for external use (e.g., display).
+        
+        Returns:
+            True if line is operating (has power, heaters active)
+        """
+        scenario = self.state.current_scenario
+        config = self.state.current_config
+        
+        if scenario == Scenario.S0:
+            return False  # System off
+        
+        # S1-S4: Only ONE line operating at a time
+        if scenario in [Scenario.S1, Scenario.S2, Scenario.S3, Scenario.S4]:
+            if config == "Primary":
+                return line == Line.C1  # C1 operating, C2 off
+            else:  # Limited
+                return line == Line.C2  # C2 operating, C1 off
+        
+        # S5-S8: BOTH lines operating (dual-line mode)
+        if scenario in [Scenario.S5, Scenario.S6, Scenario.S7, Scenario.S8]:
+            return True  # Both C1 and C2 operating
+        
+        return False
+    
     def _can_rotate(self, line: Line) -> tuple[bool, str, Optional[str]]:
         """
         Check if rotation is possible for given line.

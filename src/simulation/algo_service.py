@@ -34,7 +34,7 @@ class AlgoService:
     Key Design: Uses simulation_time from weather service - NO independent clock!
     """
     
-    def __init__(self, config_path: Path):
+    def __init__(self, config_path: Path, display_output_stream=None, test_profile_description=None):
         # Load configuration
         self.config = load_config(config_path)
         self._configure_logging()
@@ -109,6 +109,10 @@ class AlgoService:
             recent_rc_events=self._recent_rc_events,
             recent_rn_events=self._recent_rn_events,
             enabled=self.config.services.algo.display.enabled,
+            output_stream=display_output_stream,  # Inject output stream for test runner
+            test_profile_description=test_profile_description,  # Inject test profile description for test runner
+            acceleration=self.config.simulation.acceleration,  # Pass acceleration factor
+            duration_seconds=self.config.simulation.duration_days * 24 * 3600,  # Convert days to seconds
         )
         
         # Control flags
