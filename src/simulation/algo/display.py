@@ -89,6 +89,9 @@ class StatusDisplay:
 
         # Track if we've rendered at least once (for smooth scrolling)
         self._first_render = True
+        
+        # Track start time in real time (for elapsed time display)
+        self._start_time_real: float | None = None
 
     def _make_header(self, title: str, top: bool = False, bottom: bool = False) -> str:
         """
@@ -140,6 +143,11 @@ class StatusDisplay:
         """
         if not self.enabled:
             return
+        
+        # Track start time on first render
+        if self._start_time_real is None:
+            import time
+            self._start_time_real = time.time()
 
         # Build entire header as string buffer (reduces flicker)
         lines = []
@@ -251,15 +259,39 @@ class StatusDisplay:
                     self.state.simulation_time / self.duration_seconds
                 ) * 100
                 
+                # Calculate elapsed time in real time
+                import time
+                elapsed_real_s = time.time() - self._start_time_real if self._start_time_real else 0
+                
+                # Format elapsed time based on duration
+                if elapsed_real_s < 60:
+                    elapsed_str = f"{elapsed_real_s:.0f}s"
+                elif elapsed_real_s < 3600:
+                    elapsed_str = f"{elapsed_real_s/60:.1f}min"
+                else:
+                    elapsed_str = f"{elapsed_real_s/3600:.1f}h"
+                
                 # Calculate completion time (current time + remaining real seconds)
                 import datetime
                 completion_time = datetime.datetime.now() + datetime.timedelta(seconds=remaining_real_s)
                 completion_str = completion_time.strftime("%H:%M")
                 
-                content = f"ETA: {eta_str:>8s}  Postęp: {progress_pct:5.1f}%  Koniec: ~{completion_str}"
+                content = f"ETA: {eta_str:>8s}  Postęp: {progress_pct:5.1f}% ({elapsed_str})  Koniec: ~{completion_str}"
                 lines.append(f"│  {content:{self.CONTENT_WIDTH}s}  │\x1b[K")
             else:
-                content = "ETA: Zakończono"
+                # Show total elapsed time when complete
+                import time
+                elapsed_real_s = time.time() - self._start_time_real if self._start_time_real else 0
+                
+                # Format elapsed time based on duration
+                if elapsed_real_s < 60:
+                    elapsed_str = f"{elapsed_real_s:.0f}s"
+                elif elapsed_real_s < 3600:
+                    elapsed_str = f"{elapsed_real_s/60:.1f}min"
+                else:
+                    elapsed_str = f"{elapsed_real_s/3600:.1f}h"
+                
+                content = f"ETA: Zakończono  Całkowity czas: {elapsed_str}"
                 lines.append(f"│  {content:{self.CONTENT_WIDTH}s}  │\x1b[K")
 
         # Scenario distribution (moved from separate section)
