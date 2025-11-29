@@ -34,7 +34,7 @@ class AlgoService:
     Key Design: Uses simulation_time from weather service - NO independent clock!
     """
     
-    def __init__(self, config_path: Path):
+    def __init__(self, config_path: Path, display_output_stream=None, test_profile_description=None):
         # Load configuration
         self.config = load_config(config_path)
         self._configure_logging()
@@ -44,14 +44,6 @@ class AlgoService:
         
         # Initialize global state
         self.state = AlgoState()
-        
-        # Initialize metrics
-        self.metrics = AlgoMetrics(
-            telemetry=self.telemetry,
-            metrics_prefix=self.config.services.algo.metrics_prefix,
-            default_dimensions=dict(self.config.telemetry.default_dimensions),
-            state=self.state,
-        )
         
         # Initialize weather client
         self.weather_client = WeatherClient(
@@ -70,34 +62,35 @@ class AlgoService:
         # Initialize Algorithm RC
         rc_config = RCConfig(
             rotation_period_hours=self.config.services.algo.algorithms.rc.rotation_period_hours,
+            rotation_duration_s=self.config.services.algo.algorithms.rc.rotation_duration_s,
             algorithm_loop_cycle_s=self.config.services.algo.algorithms.rc.algorithm_loop_cycle_s,
             min_operating_time_s=self.config.services.algo.algorithms.rc.min_operating_time_s,
         )
         self.algorithm_rc = AlgorithmRC(config=rc_config, state=self.state)
         
         # Initialize Algorithm RN
-        rotation_periods = {
-            Scenario.S1: self.config.services.algo.algorithms.rn.rotation_period_s1_s,
-            Scenario.S2: self.config.services.algo.algorithms.rn.rotation_period_s2_s,
-            Scenario.S3: self.config.services.algo.algorithms.rn.rotation_period_s3_s,
-            Scenario.S4: self.config.services.algo.algorithms.rn.rotation_period_s4_s,
-            Scenario.S5: self.config.services.algo.algorithms.rn.rotation_period_s5_s,
-            Scenario.S6: self.config.services.algo.algorithms.rn.rotation_period_s6_s,
-            Scenario.S7: self.config.services.algo.algorithms.rn.rotation_period_s7_s,
-            Scenario.S8: self.config.services.algo.algorithms.rn.rotation_period_s8_s,
-        }
         rn_config = RNConfig(
-            rotation_period_s=rotation_periods,
+            rotation_period_hours=self.config.services.algo.algorithms.rn.rotation_period_hours,
+            rotation_duration_s=self.config.services.algo.algorithms.rn.rotation_duration_s,
             min_delta_time_s=self.config.services.algo.algorithms.rn.min_delta_time_s,
             algorithm_loop_cycle_s=self.config.services.algo.algorithms.rn.algorithm_loop_cycle_s,
         )
         self.algorithm_rn = AlgorithmRN(config=rn_config, state=self.state)
         
+        # Initialize metrics (AFTER algorithm_rn, as it needs reference to it)
+        self.metrics = AlgoMetrics(
+            telemetry=self.telemetry,
+            metrics_prefix=self.config.services.algo.metrics_prefix,
+            default_dimensions=dict(self.config.telemetry.default_dimensions),
+            state=self.state,
+            algorithm_rn=self.algorithm_rn,
+        )
+        
         # Initialize recent events buffers (for display) - separate for WS, RC, RN
         self._recent_ws_events: list[str] = []
         self._recent_rc_events: list[str] = []
         self._recent_rn_events: list[str] = []
-        self._max_recent_events = 4
+        self._max_recent_events = 8  # Show 8 events (4 rows x 2 columns)
         
         # Initialize status display
         self.display = StatusDisplay(
@@ -109,6 +102,10 @@ class AlgoService:
             recent_rc_events=self._recent_rc_events,
             recent_rn_events=self._recent_rn_events,
             enabled=self.config.services.algo.display.enabled,
+            output_stream=display_output_stream,  # Inject output stream for test runner
+            test_profile_description=test_profile_description,  # Inject test profile description for test runner
+            acceleration=self.config.simulation.acceleration,  # Pass acceleration factor
+            duration_seconds=self.config.simulation.duration_days * 24 * 3600,  # Convert days to seconds
         )
         
         # Control flags
@@ -430,14 +427,15 @@ class AlgoService:
         rn_rotation_count = self.algorithm_rn.get_rotation_count()
         LOGGER.info(f"  Heater rotations (RN): {rn_rotation_count}")
         LOGGER.info("  Heater operating times:")
-        total_op_time = sum(self.algorithm_rn.get_heater_operating_time(h) for h in Heater)
+        sim_time_s = self.state.simulation_time
         for heater in Heater:
             op_time_s = self.algorithm_rn.get_heater_operating_time(heater)
             op_time_h = op_time_s / 3600
             idle_time_s = self.algorithm_rn.get_heater_idle_time(heater)
             idle_time_h = idle_time_s / 3600
             state = self.algorithm_rn.get_heater_state(heater)
-            percentage = (op_time_s / total_op_time * 100) if total_op_time > 0 else 0
+            # Percentage = (heater operating time / simulation time) * 100
+            percentage = (op_time_s / sim_time_s * 100) if sim_time_s > 0 else 0
             LOGGER.info(
                 f"    {heater.name}: {op_time_h:.1f}h operating ({percentage:.1f}%), "
                 f"{idle_time_h:.1f}h idle, state={state.value}"

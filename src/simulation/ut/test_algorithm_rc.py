@@ -18,6 +18,7 @@ def rc_config():
     """Create RC configuration with shorter periods for testing."""
     return RCConfig(
         rotation_period_hours=1,  # 1 hour for faster testing
+        rotation_duration_s=10,  # 10 seconds for testing
         algorithm_loop_cycle_s=60,
         min_operating_time_s=600,  # 10 minutes
     )
@@ -112,14 +113,17 @@ def test_rotation_alternates_configs(algorithm_rc, state):
     state.simulation_time = 4000.0
     state.timestamp_last_config_change = 0.0
     
-    # First rotation: Primary → Limited
+    # First rotation: Primary → Limited (starts rotation, sets end_time)
     rotated, _ = algorithm_rc.process()
     assert rotated
     assert state.current_config == "Limited"
     
-    # Advance time for second rotation
-    state.simulation_time = 8000.0
-    state.timestamp_last_config_change = 4000.0
+    # Wait for rotation to complete (rotation_duration_s = 10)
+    state.simulation_time = 4010.0  # +10s
+    rotated, _ = algorithm_rc.process()  # Complete rotation
+    
+    # Advance time for second rotation (need 1 hour = 3600s)
+    state.simulation_time = 4010.0 + 3600.0  # 7610.0
     
     # Second rotation: Limited → Primary
     rotated, _ = algorithm_rc.process()
@@ -134,6 +138,7 @@ def test_rotation_blocked_by_rn(algorithm_rc, state):
     state.simulation_time = 4000.0
     state.timestamp_last_config_change = 0.0
     state.heater_rotation_in_progress = True  # RN is rotating
+    state.heater_rotation_end_time = 4050.0  # Rotation will end in 50s
     
     rotated, message = algorithm_rc.process()
     assert not rotated

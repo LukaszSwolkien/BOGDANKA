@@ -4,12 +4,16 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 from opentelemetry.metrics import CallbackOptions, Observation
 
 from common.domain import Scenario
 from common.telemetry import TelemetryManager
 from .state import AlgoState
+
+if TYPE_CHECKING:
+    from .algorithm_rn import AlgorithmRN
 
 LOGGER = logging.getLogger("algo-service.metrics")
 
@@ -26,6 +30,7 @@ class AlgoMetrics:
     metrics_prefix: str
     default_dimensions: dict[str, str]
     state: AlgoState
+    algorithm_rn: AlgorithmRN
     
     def __post_init__(self) -> None:
         meter = self.telemetry.meter("bogdanka.algo")
@@ -47,6 +52,14 @@ class AlgoMetrics:
             callbacks=[self._observe_external_temp],
             description="External temperature in °C",
             unit="Cel",
+        )
+        
+        # Simulation time (gauge, seconds since start)
+        self._simulation_time_gauge = meter.create_observable_gauge(
+            f"{self.metrics_prefix}.simulation_time_s",
+            callbacks=[self._observe_simulation_time],
+            description="Current simulation time in seconds",
+            unit="s",
         )
         
         # Time spent in each scenario (counter by scenario dimension)
@@ -110,6 +123,39 @@ class AlgoMetrics:
             unit="s",
         )
         
+        # Heater operating time (observable gauge per heater)
+        self._heater_operating_time_gauge = meter.create_observable_gauge(
+            f"{self.metrics_prefix}.rn.heater_operating_time_s",
+            callbacks=[self._observe_heater_operating_time],
+            description="Heater operating time in seconds",
+            unit="s",
+        )
+        
+        # Heater state (observable gauge per heater: 0=idle, 1=active, 2=faulty)
+        self._heater_state_gauge = meter.create_observable_gauge(
+            f"{self.metrics_prefix}.rn.heater_state",
+            callbacks=[self._observe_heater_state],
+            description="Heater state (0=idle, 1=active, 2=faulty)",
+        )
+        
+        # Active heaters count (observable gauge - total number of active heaters)
+        self._active_heaters_count_gauge = meter.create_observable_gauge(
+            f"{self.metrics_prefix}.rn.active_heaters_count",
+            callbacks=[self._observe_active_heaters_count],
+            description="Total number of active heaters",
+        )
+        
+        # Line operating time (observable gauge per line: C1, C2)
+        self._line_operating_time_gauge = meter.create_observable_gauge(
+            f"{self.metrics_prefix}.rn.line_operating_time_s",
+            callbacks=[self._observe_line_operating_time],
+            description="Total operating time for each ventilation line",
+            unit="s",
+        )
+        
+        # Track line operating time (internal)
+        self._line_operating_time: dict[str, float] = {"C1": 0.0, "C2": 0.0}
+        
         # Track last update time for incrementing counters
         self._last_update_time = 0.0
         self._last_update_scenario = Scenario.S0
@@ -130,11 +176,89 @@ class AlgoMetrics:
         temp = self.state.last_valid_reading if self.state.last_valid_reading else 0.0
         yield Observation(temp, {**self.default_dimensions})
     
+    def _observe_simulation_time(self, options: CallbackOptions):
+        """Callback for simulation time gauge."""
+        yield Observation(
+            self.state.simulation_time,
+            {**self.default_dimensions}
+        )
+    
     def _observe_current_config(self, options: CallbackOptions):
         """Callback for current configuration gauge."""
         # 0 = Primary, 1 = Limited
         value = 0 if self.state.current_config == "Primary" else 1
         yield Observation(value, {**self.default_dimensions})
+    
+    def _observe_heater_operating_time(self, options: CallbackOptions):
+        """Callback for heater operating time gauge."""
+        from common.domain import Heater
+        for heater in Heater:
+            op_time = self.algorithm_rn.get_heater_operating_time(heater)
+            # Determine line based on heater name (N1-N4 = C1, N5-N8 = C2)
+            line = "C1" if heater.name in ["N1", "N2", "N3", "N4"] else "C2"
+            yield Observation(
+                op_time,
+                {
+                    **self.default_dimensions,
+                    "heater": heater.name,
+                    "line": line,
+                }
+            )
+    
+    def _observe_heater_state(self, options: CallbackOptions):
+        """Callback for heater state gauge."""
+        from common.domain import Heater
+        for heater in Heater:
+            state = self.algorithm_rn.get_heater_state(heater)
+            # Map HeaterState enum to numeric: IDLE=0, ACTIVE=1, FAULTY=2
+            state_value = 0 if state.value == "idle" else (1 if state.value == "active" else 2)
+            # Determine line based on heater name (N1-N4 = C1, N5-N8 = C2)
+            line = "C1" if heater.name in ["N1", "N2", "N3", "N4"] else "C2"
+            yield Observation(
+                state_value,
+                {
+                    **self.default_dimensions,
+                    "heater": heater.name,
+                    "line": line,
+                }
+            )
+    
+    def _observe_active_heaters_count(self, options: CallbackOptions):
+        """Callback for active heaters count gauge."""
+        from common.domain import Heater
+        
+        # Count total active heaters
+        active_count = sum(
+            1 for heater in Heater 
+            if self.algorithm_rn.get_heater_state(heater).value == "active"
+        )
+        yield Observation(active_count, {**self.default_dimensions})
+        
+        # Also provide per-line counts
+        c1_active = sum(
+            1 for heater in Heater 
+            if heater.name in ["N1", "N2", "N3", "N4"] 
+            and self.algorithm_rn.get_heater_state(heater).value == "active"
+        )
+        yield Observation(c1_active, {**self.default_dimensions, "line": "C1"})
+        
+        c2_active = sum(
+            1 for heater in Heater 
+            if heater.name in ["N5", "N6", "N7", "N8"] 
+            and self.algorithm_rn.get_heater_state(heater).value == "active"
+        )
+        yield Observation(c2_active, {**self.default_dimensions, "line": "C2"})
+    
+    def _observe_line_operating_time(self, options: CallbackOptions):
+        """Callback for line operating time gauge."""
+        for line_name in ["C1", "C2"]:
+            yield Observation(
+                self._line_operating_time[line_name],
+                {
+                    **self.default_dimensions,
+                    "line": line_name,
+                }
+            )
     
     def update(self) -> None:
         """
@@ -168,6 +292,13 @@ class AlgoMetrics:
                     "config": self.state.current_config,
                 }
             )
+            
+            # Increment line operating time (internal tracking for gauge)
+            from common.domain import Line
+            for line in [Line.C1, Line.C2]:
+                if self.algorithm_rn.is_line_operating(line):
+                    line_name = line.name
+                    self._line_operating_time[line_name] += time_delta
             
             self._last_update_time = self.state.simulation_time
             self._last_update_config = self.state.current_config

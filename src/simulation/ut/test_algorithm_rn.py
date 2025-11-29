@@ -17,16 +17,8 @@ def state():
 def rn_config():
     """Create RN configuration with shorter periods for testing."""
     return RNConfig(
-        rotation_period_s={
-            Scenario.S1: 3600,   # 1 hour
-            Scenario.S2: 3600,
-            Scenario.S3: 1800,   # 30 minutes for faster testing
-            Scenario.S4: 3600,
-            Scenario.S5: 3600,
-            Scenario.S6: 3600,
-            Scenario.S7: 3600,
-            Scenario.S8: 3600,
-        },
+        rotation_period_hours=1,  # 1 hour for testing
+        rotation_duration_s=10,  # 10 seconds for testing
         min_delta_time_s=600,  # 10 minutes
         algorithm_loop_cycle_s=60,
     )
@@ -138,6 +130,7 @@ def test_rotation_blocked_by_rc(algorithm_rn, state):
     state.current_scenario = Scenario.S3
     state.current_config = "Primary"
     state.config_change_in_progress = True
+    state.config_rotation_end_time = 300.0  # RC rotation will complete at t=300s
     
     can_rotate, reason, reason_key = algorithm_rn._can_rotate(Line.C1)
     assert not can_rotate

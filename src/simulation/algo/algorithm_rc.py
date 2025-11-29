@@ -16,6 +16,7 @@ LOGGER = logging.getLogger("algo-service.rc")
 class RCConfig:
     """Configuration for Algorithm RC."""
     rotation_period_hours: int = 168  # 7 days
+    rotation_duration_s: int = 300  # 5 minutes for rotation to complete
     algorithm_loop_cycle_s: int = 60
     min_operating_time_s: int = 3600  # 1 hour minimum before rotation
 
@@ -66,6 +67,24 @@ class AlgorithmRC:
         """
         # Update time counters (ALWAYS, even if rotation not possible)
         self._update_time_counters()
+        
+        # Check if ongoing rotation has finished
+        if self.state.config_change_in_progress:
+            if self.state.simulation_time >= self.state.config_rotation_end_time:
+                # Rotation complete!
+                self.state.config_change_in_progress = False
+                # Set timestamp for RN coordination (1h wait period)
+                self.state.timestamp_last_config_change = self.state.simulation_time
+                balance = self.get_balance_ratio()
+                balance_str = f"{balance:.2f}" if balance != float('inf') else "∞"
+                LOGGER.info(
+                    f"✅ RC: Configuration rotation complete: now in {self.state.current_config} "
+                    f"(balance P/L={balance_str}, duration={self.config.rotation_duration_s}s)"
+                )
+            else:
+                # Still rotating
+                remaining = self.state.config_rotation_end_time - self.state.simulation_time
+                return False, f"RC rotation in progress ({remaining:.0f}s remaining)"
         
         # Check if we're transitioning from S0 to S1-S4
         # Reset the config change timestamp to prevent immediate rotation
@@ -126,15 +145,21 @@ class AlgorithmRC:
             f"(sim_time={self.state.simulation_time:.1f}s, {self.state.simulation_time/3600:.1f}h)"
         )
         
-        # Step 4: Check coordination with RN
+        # Check coordination with RN
         if self.state.heater_rotation_in_progress:
-            self._blocked_by_reason["rn_rotation_in_progress"] += 1
-            self._blocked_count += 1
-            LOGGER.info(
-                f"⏸️  RC: Configuration rotation BLOCKED - RN heater rotation in progress "
-                f"(current={self.state.current_config}, sim_time={self.state.simulation_time:.1f}s)"
-            )
-            return False, "RC rotation deferred - RN heater rotation in progress"
+            # Check if rotation is still in progress (simulation_time < end_time)
+            if self.state.simulation_time < self.state.heater_rotation_end_time:
+                self._blocked_by_reason["rn_rotation_in_progress"] += 1
+                self._blocked_count += 1
+                remaining = self.state.heater_rotation_end_time - self.state.simulation_time
+                LOGGER.info(
+                    f"⏸️  RC: Configuration rotation BLOCKED - RN heater rotation in progress "
+                    f"(remaining={remaining:.0f}s, sim_time={self.state.simulation_time:.1f}s)"
+                )
+                return False, "RC rotation deferred - RN heater rotation in progress"
+            else:
+                # Rotation finished but flag not cleared yet
+                self.state.heater_rotation_in_progress = False
         
         # Step 5: Execute rotation
         return self._execute_configuration_change(new_config)
@@ -241,28 +266,28 @@ class AlgorithmRC:
         
         # Set lock to prevent RN from rotating during this change
         self.state.config_change_in_progress = True
+        self.state.config_rotation_end_time = self.state.simulation_time + self.config.rotation_duration_s
         
         # Simulate configuration change (in real system this would take time)
-        # For simulation, we just update state
+        # We don't change simulation_time - weather service controls that
+        # We just track when rotation will end
         
         # Update state
         self.state.current_config = target_config
-        self.state.timestamp_last_config_change = self.state.simulation_time
+        # Note: timestamp_last_config_change will be set when rotation completes (in process())
         
         # Increment rotation counter
         self._rotation_count += 1
         
-        # Release lock
-        self.state.config_change_in_progress = False
-        
-        balance = self.get_balance_ratio()
-        balance_str = f"{balance:.2f}" if balance != float('inf') else "∞"
         LOGGER.info(
-            f"✅ RC: Configuration rotation complete: now in {target_config} "
-            f"(balance P/L={balance_str})"
+            f"🔄 RC: Configuration rotation in progress: {old_config} → {target_config} "
+            f"(duration={self.config.rotation_duration_s}s, will complete at t={self.state.config_rotation_end_time:.1f}s)"
         )
         
-        return True, f"Configuration changed: {old_config} → {target_config}"
+        # Note: Lock will be released when simulation_time >= config_rotation_end_time
+        # This happens in next process() call
+        
+        return True, f"Configuration change started: {old_config} → {target_config}"
     
     def get_time_in_primary(self) -> float:
         """Get total time spent in Primary configuration."""

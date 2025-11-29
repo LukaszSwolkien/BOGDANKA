@@ -45,24 +45,18 @@ class WSConfig:
 @dataclass
 class RCConfig:
     rotation_period_hours: int
+    rotation_duration_s: int
     algorithm_loop_cycle_s: int
     min_operating_time_s: int
 
 
 @dataclass
 class RNConfig:
-    # Per-scenario rotation periods (seconds)
-    rotation_period_s1_s: int
-    rotation_period_s2_s: int
-    rotation_period_s3_s: int
-    rotation_period_s4_s: int
-    rotation_period_s5_s: int
-    rotation_period_s6_s: int
-    rotation_period_s7_s: int
-    rotation_period_s8_s: int
-    # Other parameters
-    min_delta_time_s: int
-    algorithm_loop_cycle_s: int
+    """RN algorithm configuration."""
+    rotation_period_hours: int      # [h] rotation period (same for all scenarios)
+    rotation_duration_s: int        # [s] time for heater rotation to complete
+    min_delta_time_s: int          # [s] minimum time difference for rotation
+    algorithm_loop_cycle_s: int    # [s] RN check frequency
 
 
 @dataclass
@@ -194,18 +188,13 @@ def _load_algo_service(data: Mapping[str, Any]) -> AlgoServiceConfig:
             ),
             rc=RCConfig(
                 rotation_period_hours=int(rc.get("rotation_period_hours", 168)),
+                rotation_duration_s=int(rc.get("rotation_duration_s", 300)),
                 algorithm_loop_cycle_s=int(rc.get("algorithm_loop_cycle_s", 60)),
                 min_operating_time_s=int(rc.get("min_operating_time_s", 3600)),
             ),
             rn=RNConfig(
-                rotation_period_s1_s=int(rn.get("rotation_period_s1_s", 86400)),
-                rotation_period_s2_s=int(rn.get("rotation_period_s2_s", 86400)),
-                rotation_period_s3_s=int(rn.get("rotation_period_s3_s", 86400)),
-                rotation_period_s4_s=int(rn.get("rotation_period_s4_s", 86400)),
-                rotation_period_s5_s=int(rn.get("rotation_period_s5_s", 86400)),
-                rotation_period_s6_s=int(rn.get("rotation_period_s6_s", 86400)),
-                rotation_period_s7_s=int(rn.get("rotation_period_s7_s", 86400)),
-                rotation_period_s8_s=int(rn.get("rotation_period_s8_s", 86400)),
+                rotation_period_hours=int(rn.get("rotation_period_hours", 24)),
+                rotation_duration_s=int(rn.get("rotation_duration_s", 180)),
                 min_delta_time_s=int(rn.get("min_delta_time_s", 3600)),
                 algorithm_loop_cycle_s=int(rn.get("algorithm_loop_cycle_s", 60)),
             ),

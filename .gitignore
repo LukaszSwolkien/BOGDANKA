@@ -210,3 +210,7 @@ __marimo__/
 
 # macOS
 .DS_Store
+
+src/simulation/scenarios/test_results/
+src/simulation/scenarios/logs/
+src/simulation/config.yaml
