@@ -729,8 +729,8 @@ class StatusDisplay:
             f"Następna rotacja nagrzewnic (RN):",
             f"  C1:{rn_c1_timer:12s}",
             f"  C2:{rn_c2_timer:12s}",
-            f"Wszystkie kolizje RC↔RN: {total_collisions}",
-            f"RN czekal 1h po RC: {rn_too_soon}",
+            #f"Wszystkie kolizje RC↔RN: {total_collisions}",
+            #f"RN czekal 1h po RC: {rn_too_soon}",
         ]
 
         return lines

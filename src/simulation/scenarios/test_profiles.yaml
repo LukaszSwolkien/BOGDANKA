@@ -9,8 +9,9 @@ test_profiles:
     steps:
       - {day_start: 0, day_end: 1, temperature_c: 5.0}  
       - {day_start: 1, day_end: 2, temperature_c: 5.0}  
-
-
+    expected_results:
+      heater_balance_c1: {max: 1.5}
+      heater_balance_c2: {max: 1.5}
 
   - id: profile_s0
     name: TEST_S0_WARMUP

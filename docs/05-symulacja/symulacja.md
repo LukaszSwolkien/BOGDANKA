@@ -11,6 +11,8 @@ _Plik ten jest częścią dokumentacji systemu sterowania nagrzewnicami BOGDANKA
 **Data wykonania testów:** 29 Listopad 2025  
 **Status:** Testy zakończone pomyślnie
 
+Nagranie z symulacji: [demo](https://drive.google.com/file/d/1bWcLUXPNtjgQYMiPeucmX759RQFLLyi5/view?usp=sharing)
+
 ---
 
 ## Spis Treści
