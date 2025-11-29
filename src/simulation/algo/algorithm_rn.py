@@ -28,7 +28,7 @@ class RNConfig:
     min_delta_time_s: int = 3600            # [s] minimum time difference for rotation
     stabilization_time_s: int = 30          # [s] stabilization time after scenario change
     algorithm_loop_cycle_s: int = 60        # [s] RN check frequency
-    min_time_since_config_change_s: int = 3600  # [s] 1 hour after RC change
+    min_time_since_config_change_s: int = 3000  # [s] 50 minutes after RC change
     min_time_between_rotations_s: int = 900     # [s] 15 minutes between rotations
 
 
@@ -226,8 +226,8 @@ class AlgorithmRN:
                     self._blocked_by_reason["too_soon_after_rc"] += 1
                     self._blocked_count += 1
                     LOGGER.info(
-                        f"⏸️  RN: {line.name} rotation COORDINATION - waiting 1h after RC "
-                        f"({time_since_config_change:.0f}s / 3600s)"
+                        f"⏸️  RN: {line.name} rotation COORDINATION - waiting {self.config.min_time_since_config_change_s/60:.0f}min after RC "
+                        f"({time_since_config_change:.0f}s / {self.config.min_time_since_config_change_s}s)"
                     )
                     continue
             
@@ -444,6 +444,9 @@ class AlgorithmRN:
         WARNING: This forcibly sets heater states based on scenario, overriding rotation history.
         Only call during initialization or when explicitly needed (e.g., after major scenario change).
         For normal operation, heater states are managed by rotation logic.
+        
+        IMPORTANT: This method updates _last_update_time to prevent incorrect time accumulation
+        for heaters that are being activated/deactivated during sync.
         """
         # Get active heaters for current scenario/config
         active_heaters = self._get_active_heaters()
@@ -463,6 +466,10 @@ class AlgorithmRN:
                 tracking.state = HeaterState.ACTIVE
             else:
                 tracking.state = HeaterState.IDLE
+        
+        # CRITICAL: Update _last_update_time to current simulation time
+        # This prevents newly activated heaters from accumulating time from before they were active
+        self._last_update_time = self.state.simulation_time
     
     def _get_active_heaters(self) -> list[Heater]:
         """
@@ -667,7 +674,7 @@ class AlgorithmRN:
         if self.state.current_scenario in [Scenario.S1, Scenario.S2, Scenario.S3, Scenario.S4]:
             time_since_config_change = self.state.simulation_time - self.state.timestamp_last_config_change
             if time_since_config_change < self.config.min_time_since_config_change_s:
-                return False, f"Too soon after config change ({time_since_config_change:.0f}s < 1h)", "too_soon_after_rc"
+                return False, f"Too soon after config change ({time_since_config_change:.0f}s < {self.config.min_time_since_config_change_s/60:.0f}min)", "too_soon_after_rc"
         
         # Check global 15-minute spacing
         time_since_last_global = self.state.simulation_time - self._last_rotation_global

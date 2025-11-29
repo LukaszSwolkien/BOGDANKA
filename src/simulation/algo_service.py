@@ -427,14 +427,15 @@ class AlgoService:
         rn_rotation_count = self.algorithm_rn.get_rotation_count()
         LOGGER.info(f"  Heater rotations (RN): {rn_rotation_count}")
         LOGGER.info("  Heater operating times:")
-        total_op_time = sum(self.algorithm_rn.get_heater_operating_time(h) for h in Heater)
+        sim_time_s = self.state.simulation_time
         for heater in Heater:
             op_time_s = self.algorithm_rn.get_heater_operating_time(heater)
             op_time_h = op_time_s / 3600
             idle_time_s = self.algorithm_rn.get_heater_idle_time(heater)
             idle_time_h = idle_time_s / 3600
             state = self.algorithm_rn.get_heater_state(heater)
-            percentage = (op_time_s / total_op_time * 100) if total_op_time > 0 else 0
+            # Percentage = (heater operating time / simulation time) * 100
+            percentage = (op_time_s / sim_time_s * 100) if sim_time_s > 0 else 0
             LOGGER.info(
                 f"    {heater.name}: {op_time_h:.1f}h operating ({percentage:.1f}%), "
                 f"{idle_time_h:.1f}h idle, state={state.value}"

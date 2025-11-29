@@ -158,7 +158,7 @@ class StatusDisplay:
         lines.append("\x1b[H")
 
         # ═══════════════════════════════════════════════════════════
-        # HEADER: Scenariusz & Tryb
+        # HEADER: Symulacja
         # ═══════════════════════════════════════════════════════════
         lines.append(self._make_header("Symulacja", top=True))
 

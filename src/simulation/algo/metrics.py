@@ -138,6 +138,13 @@ class AlgoMetrics:
             description="Heater state (0=idle, 1=active, 2=faulty)",
         )
         
+        # Active heaters count (observable gauge - total number of active heaters)
+        self._active_heaters_count_gauge = meter.create_observable_gauge(
+            f"{self.metrics_prefix}.rn.active_heaters_count",
+            callbacks=[self._observe_active_heaters_count],
+            description="Total number of active heaters",
+        )
+        
         # Line operating time (observable gauge per line: C1, C2)
         self._line_operating_time_gauge = meter.create_observable_gauge(
             f"{self.metrics_prefix}.rn.line_operating_time_s",
@@ -215,6 +222,32 @@ class AlgoMetrics:
                     "line": line,
                 }
             )
+    
+    def _observe_active_heaters_count(self, options: CallbackOptions):
+        """Callback for active heaters count gauge."""
+        from common.domain import Heater
+        
+        # Count total active heaters
+        active_count = sum(
+            1 for heater in Heater 
+            if self.algorithm_rn.get_heater_state(heater).value == "active"
+        )
+        yield Observation(active_count, {**self.default_dimensions})
+        
+        # Also provide per-line counts
+        c1_active = sum(
+            1 for heater in Heater 
+            if heater.name in ["N1", "N2", "N3", "N4"] 
+            and self.algorithm_rn.get_heater_state(heater).value == "active"
+        )
+        yield Observation(c1_active, {**self.default_dimensions, "line": "C1"})
+        
+        c2_active = sum(
+            1 for heater in Heater 
+            if heater.name in ["N5", "N6", "N7", "N8"] 
+            and self.algorithm_rn.get_heater_state(heater).value == "active"
+        )
+        yield Observation(c2_active, {**self.default_dimensions, "line": "C2"})
     
     def _observe_line_operating_time(self, options: CallbackOptions):
         """Callback for line operating time gauge."""

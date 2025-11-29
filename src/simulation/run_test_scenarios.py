@@ -695,9 +695,7 @@ class TestRunner:
         rn_rotation_count = algo_app.algorithm_rn.get_rotation_count()
 
         # Collect heater operating times
-        total_op_time = sum(
-            algo_app.algorithm_rn.get_heater_operating_time(h) for h in Heater
-        )
+        sim_time_s = algo_app.state.simulation_time
         heater_operating_times = {}
         for heater in Heater:
             op_time_s = algo_app.algorithm_rn.get_heater_operating_time(heater)
@@ -705,7 +703,8 @@ class TestRunner:
             idle_time_s = algo_app.algorithm_rn.get_heater_idle_time(heater)
             idle_time_h = idle_time_s / 3600
             state = algo_app.algorithm_rn.get_heater_state(heater)
-            percentage = (op_time_s / total_op_time * 100) if total_op_time > 0 else 0
+            # Percentage = (heater operating time / simulation time) * 100
+            percentage = (op_time_s / sim_time_s * 100) if sim_time_s > 0 else 0
             heater_operating_times[heater.name] = {
                 "operating_h": op_time_h,
                 "operating_percentage": percentage,
@@ -800,8 +799,38 @@ class TestRunner:
                 return primary_h / limited_h
             return float("inf") if primary_h > 0 else 0.0
 
-        # Heater balance ratio
-        if key == "heater_balance_ratio" or key == "heater_balance_ratio_c2":
+        # Heater balance ratio - C1 (N1-N4)
+        if key == "heater_balance_c1":
+            heaters = data.get("heater_operating_times", {})
+            if not heaters:
+                return 0.0
+            
+            c1_heaters = ["N1", "N2", "N3", "N4"]
+            operating_times = [
+                heaters[h]["operating_h"] for h in c1_heaters 
+                if h in heaters and heaters[h]["operating_h"] > 0
+            ]
+            if len(operating_times) >= 2:
+                return max(operating_times) / min(operating_times)
+            return 1.0
+        
+        # Heater balance ratio - C2 (N5-N8)
+        if key == "heater_balance_c2":
+            heaters = data.get("heater_operating_times", {})
+            if not heaters:
+                return 0.0
+            
+            c2_heaters = ["N5", "N6", "N7", "N8"]
+            operating_times = [
+                heaters[h]["operating_h"] for h in c2_heaters 
+                if h in heaters and heaters[h]["operating_h"] > 0
+            ]
+            if len(operating_times) >= 2:
+                return max(operating_times) / min(operating_times)
+            return 1.0
+        
+        # Legacy: heater_balance_ratio (all heaters combined - deprecated)
+        if key == "heater_balance_ratio":
             heaters = data.get("heater_operating_times", {})
             if not heaters:
                 return 0.0
@@ -931,9 +960,9 @@ def generate_summary_report(results: list[TestResult]) -> str:
     errors = sum(1 for r in results if r.status == "ERROR")
 
     lines.append(f"\nTotal Tests: {len(results)}")
-    lines.append(f"✅ Passed: {passed}")
-    lines.append(f"❌ Failed: {failed}")
-    lines.append(f"⚠️  Errors: {errors}")
+    lines.append(f"Passed: {passed}")
+    lines.append(f"Failed: {failed}")
+    lines.append(f"Errors: {errors}")
     lines.append(f"Success Rate: {passed/len(results)*100:.1f}%")
 
     lines.append("\n" + "-" * 80)

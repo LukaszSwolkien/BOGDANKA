@@ -53,20 +53,20 @@ services:
     algorithms:
       # Algorithm WS - Scenario Selection
       ws:
-        temp_monitoring_cycle_s: 10          # [s] T_extern reading frequency (simulation time)
+        temp_monitoring_cycle_s: 3           # [s] T_extern reading frequency (simulation time)
         scenario_stabilization_time_s: 60    # [s] minimum time in scenario before change
         hysteresis_delta_c: 1.0              # [°C] hysteresis for scenario transitions
       
       # Algorithm RC - Configuration Rotation (Primary ↔ Limited)
       rc:
-        rotation_period_hours: 48           # [h] rotation period (7 days = 168h)
-        rotation_duration_s: 300            # [s] time for configuration change to complete (5 minutes)
+        rotation_period_hours: 4             # [h] rotation period (7 days = 168h)
+        rotation_duration_s: 300             # [s] time for configuration change to complete (5 minutes)
         algorithm_loop_cycle_s: 60           # [s] RC check frequency (simulation time)
         min_operating_time_s: 3600           # [s] minimum time before rotation allowed
       
       # Algorithm RN - Heater Rotation
       rn:
-        rotation_period_hours: 12            # [h] rotation period (same for all scenarios)
+        rotation_period_hours: 1             # [h] rotation period (same for all scenarios)
         rotation_duration_s: 180             # [s] time for heater rotation to complete (3 minutes)
         min_delta_time_s: 60                 # [s] minimum time difference for rotation eligibility (1 min)
         algorithm_loop_cycle_s: 60           # [s] RN check frequency (simulation time)
