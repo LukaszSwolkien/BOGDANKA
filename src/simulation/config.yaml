@@ -4,7 +4,7 @@
 # Simulation Configuration
 simulation:
   acceleration: 1000       # time acceleration: 1s simulation = 1000s real time (common for both services)
-  duration_days: 30        # default simulated period (can be overridden) - PROFIL TESTOWY
+  duration_days: 2         # default simulated period (can be overridden) - PROFIL TESTOWY
 
 # Telemetry Configuration
 telemetry:
