@@ -16,6 +16,18 @@ System automatycznej regulacji (SAR) temperatury szybu BOGDANKA Szyb 2 zapewnia:
 - **Równomierne zużycie urządzeń** - algorytmy rotacji nagrzewnic i ciągów wentylacyjnych
 - **Optymalizację energetyczną** - tylko tyle mocy grzewczej ile potrzeba (9 scenariuszy pracy)
 
+### Status Projektu
+
+**🟢 System zweryfikowany i gotowy do testów rozruchowych**
+
+✅ **Testy symulacyjne zakończone** (29.11.2025)
+- Wszystkie algorytmy (WS, RC, RN) zweryfikowane
+- Balans nagrzewnic: 1.000-1.036 (doskonały wynik)
+
+**[Szczegółowe wyniki symulacji →](../05-symulacja/symulacja.md)**
+
+---
+
 **Dokumentacja wejściowa:** [Projekt instalacji (PDF)](./dokumentacja-wejsciowa/Projekt%20instalacji%20ogrzewania%20szybu.pdf) | [Projekt instalacji (MD)](./dokumentacja-wejsciowa/Projekt%20instalacji%20ogrzewania%20szybu.md)
 
 
@@ -220,6 +232,7 @@ System sterowania realizowany na sterowniku PLC z interfejsem operatorskim SCADA
 - **[Projekt instalacji](../02-projekt-instalacji/projekt-instalacji.md)** - schematy instalacji, UAR, scenariusze z diagramami
 - **[Algorytmy WS, RC, RN](../03-algorytmy/algorytmy.md)** - szczegółowe pseudokody, flowcharty, przykłady
 - **[System SCADA/HMI](../04-scada-hmi/scada-hmi.md)** - interfejs operatorski, wizualizacja, alarmy, trendy
+- **[Wyniki symulacji](../05-symulacja/symulacja.md)** - ✅ **testy zakończone pomyślnie** - 5/5 testów PASSED, system zweryfikowany i gotowy do rozruchu
 - **[Dokumentacja wejściowa](./dokumentacja-wejsciowa/Projekt%20instalacji%20ogrzewania%20szybu.md)** - pliki otrzymane od zleceniodawcy
 
 ---

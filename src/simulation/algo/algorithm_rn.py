@@ -28,7 +28,7 @@ class RNConfig:
     min_delta_time_s: int = 3600            # [s] minimum time difference for rotation
     stabilization_time_s: int = 30          # [s] stabilization time after scenario change
     algorithm_loop_cycle_s: int = 60        # [s] RN check frequency
-    min_time_since_config_change_s: int = 3000  # [s] 50 minutes after RC change
+    min_time_since_config_change_s: int = 3000  # [s] 50 minutes gap BEFORE and AFTER RC rotation
     min_time_between_rotations_s: int = 900     # [s] 15 minutes between rotations
 
 
@@ -51,9 +51,10 @@ class AlgorithmRN:
     Follows pseudocode from algo_pseudokod.md exactly.
     """
     
-    def __init__(self, config: RNConfig, state: AlgoState):
+    def __init__(self, config: RNConfig, state: AlgoState, algorithm_rc=None):
         self.config = config
         self.state = state
+        self.algorithm_rc = algorithm_rc  # Reference to RC for coordination
         
         # Track time for each heater (8 heaters total: N1-N4 in Line 1, N5-N8 in Line 2)
         self._heater_tracking: dict[Heater, HeaterTracking] = {
@@ -82,6 +83,7 @@ class AlgorithmRN:
         self._blocked_by_reason: dict[str, int] = {
             "rc_rotation_in_progress": 0,     # RC config change blocking RN
             "too_soon_after_rc": 0,           # Gap after RC not elapsed
+            "too_close_before_rc": 0,         # Too close to next RC rotation
             "period_not_elapsed": 0,          # Rotation period for line not elapsed
             "global_spacing_not_met": 0,      # 15min global spacing between any rotations
             "no_suitable_heaters": 0,         # No heaters available for rotation
@@ -218,18 +220,31 @@ class AlgorithmRN:
                     # Rotation finished but flag not cleared yet
                     self.state.config_change_in_progress = False
             
-            # Check post-RC coordination (1h stabilization)
+            # Check post-RC coordination (50min stabilization AFTER and BEFORE RC rotation)
             if self.state.current_scenario in [Scenario.S1, Scenario.S2, Scenario.S3, Scenario.S4]:
                 time_since_config_change = self.state.simulation_time - self.state.timestamp_last_config_change
                 if time_since_config_change < self.config.min_time_since_config_change_s:
-                    # COORDINATION: RN waiting for stabilization after RC
+                    # COORDINATION: RN waiting for stabilization AFTER RC
                     self._blocked_by_reason["too_soon_after_rc"] += 1
                     self._blocked_count += 1
                     LOGGER.info(
-                        f"⏸️  RN: {line.name} rotation COORDINATION - waiting {self.config.min_time_since_config_change_s/60:.0f}min after RC "
+                        f"⏸️  RN: {line.name} rotation COORDINATION - waiting {self.config.min_time_since_config_change_s/60:.0f}min AFTER RC "
                         f"({time_since_config_change:.0f}s / {self.config.min_time_since_config_change_s}s)"
                     )
                     continue
+                
+                # Check time UNTIL next RC rotation (if algorithm_rc available)
+                if self.algorithm_rc is not None:
+                    time_until_next_rc = self.algorithm_rc.get_time_until_next_rotation()
+                    if time_until_next_rc < self.config.min_time_since_config_change_s:
+                        # COORDINATION: RN avoiding rotation too close BEFORE RC
+                        self._blocked_by_reason["too_close_before_rc"] += 1
+                        self._blocked_count += 1
+                        LOGGER.info(
+                            f"⏸️  RN: {line.name} rotation COORDINATION - next RC rotation in {time_until_next_rc/60:.0f}min, "
+                            f"need {self.config.min_time_since_config_change_s/60:.0f}min gap BEFORE RC"
+                        )
+                        continue
             
             # STEP 3: Select heaters to swap
             heater_off, heater_on, delta_time = self._select_heaters_for_rotation(line)
@@ -675,6 +690,12 @@ class AlgorithmRN:
             time_since_config_change = self.state.simulation_time - self.state.timestamp_last_config_change
             if time_since_config_change < self.config.min_time_since_config_change_s:
                 return False, f"Too soon after config change ({time_since_config_change:.0f}s < {self.config.min_time_since_config_change_s/60:.0f}min)", "too_soon_after_rc"
+            
+            # Check time UNTIL next RC rotation (if algorithm_rc available)
+            if self.algorithm_rc is not None:
+                time_until_next_rc = self.algorithm_rc.get_time_until_next_rotation()
+                if time_until_next_rc < self.config.min_time_since_config_change_s:
+                    return False, f"Too close to next RC rotation ({time_until_next_rc/60:.0f}min < {self.config.min_time_since_config_change_s/60:.0f}min)", "too_close_before_rc"
         
         # Check global 15-minute spacing
         time_since_last_global = self.state.simulation_time - self._last_rotation_global

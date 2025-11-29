@@ -311,7 +311,7 @@ Po udanych testach:
 - `scenarios/test_profiles.yaml` - definicje profili testowych (7 scenariuszy)
 - `run_test_scenarios.py` - główny runner testów z opcją `--smoke` (w głównym katalogu simulation)
 - `scenarios/generate_report.py` - generator raportów markdown
-- `../algo_pseudokod.md` - pseudokod algorytmów (SOURCE OF TRUTH dla PLC)
+- `../../../docs/03-algorytmy/algo_pseudokod.md` - pseudokod algorytmów (SOURCE OF TRUTH dla PLC)
 
 ## Pomoc
 

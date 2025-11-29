@@ -151,6 +151,41 @@ def test_rotation_blocked_too_soon_after_rc_change(algorithm_rn, state):
     assert reason_key == "too_soon_after_rc"
 
 
+def test_rotation_blocked_too_close_before_rc_change(rn_config, state):
+    """Test that rotation is blocked when too close to next RC rotation."""
+    from algo.algorithm_rc import AlgorithmRC, RCConfig
+    
+    # Create RC algorithm with 1 hour rotation period
+    rc_config = RCConfig(
+        rotation_period_hours=1,  # 1 hour = 3600s
+        rotation_duration_s=10,
+        algorithm_loop_cycle_s=60,
+    )
+    algorithm_rc = AlgorithmRC(config=rc_config, state=state)
+    
+    # Create RN algorithm with reference to RC
+    algorithm_rn = AlgorithmRN(config=rn_config, state=state, algorithm_rc=algorithm_rc)
+    
+    state.current_scenario = Scenario.S3
+    state.current_config = "Primary"
+    
+    # RC rotation period with hysteresis: 3600 - 300 = 3300s
+    # Set simulation_time such that:
+    # 1. Time SINCE last RC rotation >= 3000s (to pass first check)
+    # 2. Time UNTIL next RC rotation < 3000s (to fail second check)
+    # 
+    # If simulation_time = 3100s:
+    # - Time since last RC: 3100 - 0 = 3100s >= 3000s ✓
+    # - Time until next RC: 3300 - 3100 = 200s < 3000s ✓
+    state.timestamp_last_config_change = 0.0
+    state.simulation_time = 3100.0
+    
+    can_rotate, reason, reason_key = algorithm_rn._can_rotate(Line.C1)
+    assert not can_rotate
+    assert "next rc" in reason.lower() or "close" in reason.lower()
+    assert reason_key == "too_close_before_rc"
+
+
 def test_rotation_requires_reserve_heater(algorithm_rn, state):
     """Test that rotation requires a reserve heater."""
     state.current_scenario = Scenario.S4

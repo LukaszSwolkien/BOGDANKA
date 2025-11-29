@@ -4,7 +4,7 @@
 
 ---
 
-## 📁 Struktura Dokumentacji
+## Struktura Dokumentacji
 
 ### [01-system/system.md](./01-system/system.md) - Przegląd Systemu
 - Komponenty (8 nagrzewnic, 2 wentylatory, 2 wyrzutnie)
@@ -34,8 +34,14 @@
 - System alarmów i diagnostyka
 - Wymagania techniczne platformy SCADA
 
+### [05-symulacja/symulacja.md](./05-symulacja/symulacja.md) - Wyniki Symulacji
+- Wyniki testów symulacyjnych algorytmów sterowania
+- Metodologia testowania (platforma, parametry, metryki)
+- Analiza równomierności zużycia nagrzewnic i ciągów
+- Wnioski i potwierdzenie poprawności algorytmów
+
 ---
 
-**Ostatnia aktualizacja:** 24 Listopad 2025  
-**Wersja dokumentu:** 1.0
+**Ostatnia aktualizacja:** 29 Listopad 2025  
+**Wersja dokumentu:** 1.1
 
