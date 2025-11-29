@@ -1,0 +1,108 @@
+timestamp: '2025-11-29T12:58:36.361634'
+total_tests: 1
+passed: 1
+failed: 0
+errors: 0
+results:
+- profile_id: profile_reset
+  profile_name: TEST_RESET
+  priority: MEDIUM
+  description: reset metryk
+  status: PASSED
+  duration_s: 9.452090978622437
+  actual_metrics:
+    simulation_time_s: 86400.0
+    simulation_time_h: 24.0
+    scenario_distribution:
+      S0:
+        time_h: 23.978466944444445
+        percentage: 99.91027893518518
+      S1:
+        time_h: 0.0
+        percentage: 0.0
+      S2:
+        time_h: 0.0
+        percentage: 0.0
+      S3:
+        time_h: 0.0
+        percentage: 0.0
+      S4:
+        time_h: 0.0
+        percentage: 0.0
+      S5:
+        time_h: 0.0
+        percentage: 0.0
+      S6:
+        time_h: 0.0
+        percentage: 0.0
+      S7:
+        time_h: 0.0
+        percentage: 0.0
+      S8:
+        time_h: 0.0
+        percentage: 0.0
+    scenario_changes: 0
+    structural_changes: 0
+    time_in_primary_h: 23.9290225
+    time_in_limited_h: 0.0
+    rc_line_changes: 0
+    rc_balance_ratio: .inf
+    rn_heater_rotations: 0
+    heater_operating_times:
+      N1:
+        operating_h: 0.0
+        operating_percentage: 0.0
+        idle_h: 23.9290225
+        state: idle
+      N2:
+        operating_h: 0.0
+        operating_percentage: 0.0
+        idle_h: 23.9290225
+        state: idle
+      N3:
+        operating_h: 0.0
+        operating_percentage: 0.0
+        idle_h: 23.9290225
+        state: idle
+      N4:
+        operating_h: 0.0
+        operating_percentage: 0.0
+        idle_h: 23.9290225
+        state: idle
+      N5:
+        operating_h: 0.0
+        operating_percentage: 0.0
+        idle_h: 23.9290225
+        state: idle
+      N6:
+        operating_h: 0.0
+        operating_percentage: 0.0
+        idle_h: 23.9290225
+        state: idle
+      N7:
+        operating_h: 0.0
+        operating_percentage: 0.0
+        idle_h: 23.9290225
+        state: idle
+      N8:
+        operating_h: 0.0
+        operating_percentage: 0.0
+        idle_h: 23.9290225
+        state: idle
+  expected_results:
+    heater_balance_c1: &id001
+      max: 1.5
+    heater_balance_c2: &id002
+      max: 1.5
+  validation_results:
+  - metric: heater_balance_c1
+    expected: *id001
+    actual: 1.0
+    passed: true
+    message: In range
+  - metric: heater_balance_c2
+    expected: *id002
+    actual: 1.0
+    passed: true
+    message: In range
+  error_message: null
