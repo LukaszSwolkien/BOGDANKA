@@ -239,6 +239,36 @@ class AlgorithmRC:
         
         return time_since_change >= required_time
     
+    def get_time_until_next_rotation(self) -> float:
+        """
+        Calculate time remaining until next RC rotation could occur.
+        
+        Returns:
+            Time in seconds until next rotation (0.0 if rotation could happen now).
+            Returns large value if rotation not applicable (e.g., in S0, S5-S8).
+        """
+        # If not in S1-S4, rotation not applicable
+        if self.state.current_scenario not in [Scenario.S1, Scenario.S2, Scenario.S3, Scenario.S4]:
+            return float('inf')
+        
+        # Calculate rotation period in seconds
+        rotation_period_s = self.config.rotation_period_hours * 3600
+        
+        # Add hysteresis (5 minutes = 300s per pseudocode global params)
+        hysteresis_s = 300
+        
+        # Time since last configuration change
+        time_since_change = self.state.simulation_time - self.state.timestamp_last_config_change
+        
+        # Required time before rotation
+        required_time = rotation_period_s - hysteresis_s
+        
+        # Calculate remaining time
+        time_remaining = required_time - time_since_change
+        
+        # Return 0.0 if rotation could happen now, otherwise remaining time
+        return max(0.0, time_remaining)
+    
     def _execute_configuration_change(self, target_config: str) -> tuple[bool, str]:
         """
         Execute configuration change.

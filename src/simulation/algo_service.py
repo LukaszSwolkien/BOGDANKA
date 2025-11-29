@@ -68,14 +68,14 @@ class AlgoService:
         )
         self.algorithm_rc = AlgorithmRC(config=rc_config, state=self.state)
         
-        # Initialize Algorithm RN
+        # Initialize Algorithm RN (pass algorithm_rc for coordination)
         rn_config = RNConfig(
             rotation_period_hours=self.config.services.algo.algorithms.rn.rotation_period_hours,
             rotation_duration_s=self.config.services.algo.algorithms.rn.rotation_duration_s,
             min_delta_time_s=self.config.services.algo.algorithms.rn.min_delta_time_s,
             algorithm_loop_cycle_s=self.config.services.algo.algorithms.rn.algorithm_loop_cycle_s,
         )
-        self.algorithm_rn = AlgorithmRN(config=rn_config, state=self.state)
+        self.algorithm_rn = AlgorithmRN(config=rn_config, state=self.state, algorithm_rc=self.algorithm_rc)
         
         # Initialize metrics (AFTER algorithm_rn, as it needs reference to it)
         self.metrics = AlgoMetrics(

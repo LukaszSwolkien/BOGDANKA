@@ -1,0 +1,516 @@
+timestamp: '2025-11-29T12:26:02.356930'
+total_tests: 5
+passed: 5
+failed: 0
+errors: 0
+results:
+- profile_id: profile_s1
+  profile_name: TEST_S1
+  priority: MEDIUM
+  description: S1 - minimalne ogrzewanie, maksymalna rotacja
+  status: PASSED
+  duration_s: 86.83833885192871
+  actual_metrics:
+    simulation_time_s: 86400.0
+    simulation_time_h: 24.0
+    scenario_distribution:
+      S0:
+        time_h: 0.016781944444444443
+        percentage: 0.06992476851851852
+      S1:
+        time_h: 23.983172222222223
+        percentage: 99.92988425925927
+      S2:
+        time_h: 0.0
+        percentage: 0.0
+      S3:
+        time_h: 0.0
+        percentage: 0.0
+      S4:
+        time_h: 0.0
+        percentage: 0.0
+      S5:
+        time_h: 0.0
+        percentage: 0.0
+      S6:
+        time_h: 0.0
+        percentage: 0.0
+      S7:
+        time_h: 0.0
+        percentage: 0.0
+      S8:
+        time_h: 0.0
+        percentage: 0.0
+    scenario_changes: 1
+    structural_changes: 0
+    time_in_primary_h: 11.934545277777776
+    time_in_limited_h: 12.046467222222223
+    rc_line_changes: 6
+    rc_balance_ratio: 0.9907091479701216
+    rn_heater_rotations: 18
+    heater_operating_times:
+      N1:
+        operating_h: 3.015969166666665
+        operating_percentage: 12.566538194444437
+        idle_h: 20.965043333333334
+        state: idle
+      N2:
+        operating_h: 2.9874711111111094
+        operating_percentage: 12.44779629629629
+        idle_h: 20.99354138888889
+        state: idle
+      N3:
+        operating_h: 3.0185113888888906
+        operating_percentage: 12.577130787037044
+        idle_h: 20.962501111111106
+        state: idle
+      N4:
+        operating_h: 2.9125936111111104
+        operating_percentage: 12.13580671296296
+        idle_h: 21.06841888888889
+        state: active
+      N5:
+        operating_h: 3.0321513888888934
+        operating_percentage: 12.63396412037039
+        idle_h: 20.948861111111107
+        state: idle
+      N6:
+        operating_h: 2.9991936111111106
+        operating_percentage: 12.496640046296294
+        idle_h: 20.98181888888889
+        state: idle
+      N7:
+        operating_h: 3.034290833333331
+        operating_percentage: 12.642878472222213
+        idle_h: 20.94672166666667
+        state: idle
+      N8:
+        operating_h: 2.9808313888888875
+        operating_percentage: 12.420130787037031
+        idle_h: 21.00018111111111
+        state: idle
+  expected_results:
+    heater_balance_c1: &id001
+      max: 1.3
+    heater_balance_c2: &id002
+      max: 1.3
+  validation_results:
+  - metric: heater_balance_c1
+    expected: *id001
+    actual: 1.0363654501519606
+    passed: true
+    message: In range
+  - metric: heater_balance_c2
+    expected: *id002
+    actual: 1.0179344073749743
+    passed: true
+    message: In range
+  error_message: null
+- profile_id: profile_s3
+  profile_name: TEST_S3
+  priority: HIGH
+  description: "Stale warunki S3 - rotacja RN w jednym ci\u0105gu"
+  status: PASSED
+  duration_s: 173.35609793663025
+  actual_metrics:
+    simulation_time_s: 172800.0
+    simulation_time_h: 48.0
+    scenario_distribution:
+      S0:
+        time_h: 0.016795833333333333
+        percentage: 0.034991319444444446
+      S1:
+        time_h: 0.0
+        percentage: 0.0
+      S2:
+        time_h: 0.0
+        percentage: 0.0
+      S3:
+        time_h: 47.98301361111112
+        percentage: 99.96461168981482
+      S4:
+        time_h: 0.0
+        percentage: 0.0
+      S5:
+        time_h: 0.0
+        percentage: 0.0
+      S6:
+        time_h: 0.0
+        percentage: 0.0
+      S7:
+        time_h: 0.0
+        percentage: 0.0
+      S8:
+        time_h: 0.0
+        percentage: 0.0
+    scenario_changes: 1
+    structural_changes: 0
+    time_in_primary_h: 23.955559444444443
+    time_in_limited_h: 24.023109166666675
+    rc_line_changes: 11
+    rc_balance_ratio: 0.9971881357340723
+    rn_heater_rotations: 36
+    heater_operating_times:
+      N1:
+        operating_h: 17.99377611111111
+        operating_percentage: 37.487033564814816
+        idle_h: 29.984892500000004
+        state: idle
+      N2:
+        operating_h: 17.960931666666664
+        operating_percentage: 37.41860763888888
+        idle_h: 30.01773694444445
+        state: idle
+      N3:
+        operating_h: 17.949679444444435
+        operating_percentage: 37.395165509259236
+        idle_h: 30.02898916666668
+        state: idle
+      N4:
+        operating_h: 17.962291111111117
+        operating_percentage: 37.421439814814825
+        idle_h: 30.016377499999997
+        state: idle
+      N5:
+        operating_h: 18.061302222222228
+        operating_percentage: 37.62771296296298
+        idle_h: 29.917366388888883
+        state: idle
+      N6:
+        operating_h: 17.98644583333335
+        operating_percentage: 37.47176215277781
+        idle_h: 29.992222777777762
+        state: active
+      N7:
+        operating_h: 18.02701194444444
+        operating_percentage: 37.55627488425925
+        idle_h: 29.951656666666672
+        state: active
+      N8:
+        operating_h: 17.9945675
+        operating_percentage: 37.48868229166666
+        idle_h: 29.984101111111112
+        state: active
+  expected_results:
+    heater_balance_c1: &id003
+      max: 1.5
+    heater_balance_c2: &id004
+      max: 1.5
+  validation_results:
+  - metric: heater_balance_c1
+    expected: *id003
+    actual: 1.002456682683563
+    passed: true
+    message: In range
+  - metric: heater_balance_c2
+    expected: *id004
+    actual: 1.004161822162228
+    passed: true
+    message: In range
+  error_message: null
+- profile_id: profile_s4
+  profile_name: TEST_S4
+  priority: MEDIUM
+  description: "S4 - pe\u0142na moc jednego ci\u0105gu, brak rotacji"
+  status: PASSED
+  duration_s: 173.4330599308014
+  actual_metrics:
+    simulation_time_s: 172800.0
+    simulation_time_h: 48.0
+    scenario_distribution:
+      S0:
+        time_h: 0.01728111111111111
+        percentage: 0.03600231481481481
+      S1:
+        time_h: 0.0
+        percentage: 0.0
+      S2:
+        time_h: 0.0
+        percentage: 0.0
+      S3:
+        time_h: 0.0
+        percentage: 0.0
+      S4:
+        time_h: 47.98242833333333
+        percentage: 99.96339236111112
+      S5:
+        time_h: 0.0
+        percentage: 0.0
+      S6:
+        time_h: 0.0
+        percentage: 0.0
+      S7:
+        time_h: 0.0
+        percentage: 0.0
+      S8:
+        time_h: 0.0
+        percentage: 0.0
+    scenario_changes: 1
+    structural_changes: 0
+    time_in_primary_h: 23.985627777777776
+    time_in_limited_h: 23.991266666666665
+    rc_line_changes: 11
+    rc_balance_ratio: 0.9997649607681314
+    rn_heater_rotations: 0
+    heater_operating_times:
+      N1:
+        operating_h: 23.985627777777776
+        operating_percentage: 49.97005787037037
+        idle_h: 23.991266666666665
+        state: idle
+      N2:
+        operating_h: 23.985627777777776
+        operating_percentage: 49.97005787037037
+        idle_h: 23.991266666666665
+        state: idle
+      N3:
+        operating_h: 23.985627777777776
+        operating_percentage: 49.97005787037037
+        idle_h: 23.991266666666665
+        state: idle
+      N4:
+        operating_h: 23.985627777777776
+        operating_percentage: 49.97005787037037
+        idle_h: 23.991266666666665
+        state: idle
+      N5:
+        operating_h: 23.991266666666665
+        operating_percentage: 49.98180555555555
+        idle_h: 23.985627777777776
+        state: active
+      N6:
+        operating_h: 23.991266666666665
+        operating_percentage: 49.98180555555555
+        idle_h: 23.985627777777776
+        state: active
+      N7:
+        operating_h: 23.991266666666665
+        operating_percentage: 49.98180555555555
+        idle_h: 23.985627777777776
+        state: active
+      N8:
+        operating_h: 23.991266666666665
+        operating_percentage: 49.98180555555555
+        idle_h: 23.985627777777776
+        state: active
+  expected_results:
+    heater_balance_c1: &id005
+      max: 1.1
+    heater_balance_c2: &id006
+      max: 1.1
+  validation_results:
+  - metric: heater_balance_c1
+    expected: *id005
+    actual: 1.0
+    passed: true
+    message: In range
+  - metric: heater_balance_c2
+    expected: *id006
+    actual: 1.0
+    passed: true
+    message: In range
+  error_message: null
+- profile_id: profile_s6
+  profile_name: TEST_S6
+  priority: HIGH
+  description: "S6 - oba ci\u0105gi aktywne, asymetria obci\u0105\u017Cenia"
+  status: PASSED
+  duration_s: 173.41589903831482
+  actual_metrics:
+    simulation_time_s: 172800.0
+    simulation_time_h: 48.0
+    scenario_distribution:
+      S0:
+        time_h: 0.017413611111111112
+        percentage: 0.03627835648148148
+      S1:
+        time_h: 0.0
+        percentage: 0.0
+      S2:
+        time_h: 0.0
+        percentage: 0.0
+      S3:
+        time_h: 0.0
+        percentage: 0.0
+      S4:
+        time_h: 0.0
+        percentage: 0.0
+      S5:
+        time_h: 0.0
+        percentage: 0.0
+      S6:
+        time_h: 47.982280833333334
+        percentage: 99.96308506944445
+      S7:
+        time_h: 0.0
+        percentage: 0.0
+      S8:
+        time_h: 0.0
+        percentage: 0.0
+    scenario_changes: 1
+    structural_changes: 0
+    time_in_primary_h: 47.97568444444444
+    time_in_limited_h: 0.0
+    rc_line_changes: 0
+    rc_balance_ratio: .inf
+    rn_heater_rotations: 47
+    heater_operating_times:
+      N1:
+        operating_h: 47.97568444444444
+        operating_percentage: 99.94934259259259
+        idle_h: 0.0
+        state: active
+      N2:
+        operating_h: 47.97568444444444
+        operating_percentage: 99.94934259259259
+        idle_h: 0.0
+        state: active
+      N3:
+        operating_h: 47.97568444444444
+        operating_percentage: 99.94934259259259
+        idle_h: 0.0
+        state: active
+      N4:
+        operating_h: 47.97568444444444
+        operating_percentage: 99.94934259259259
+        idle_h: 0.0
+        state: active
+      N5:
+        operating_h: 23.74548694444445
+        operating_percentage: 49.46976446759261
+        idle_h: 24.230197499999992
+        state: active
+      N6:
+        operating_h: 24.230223333333328
+        operating_percentage: 50.47963194444443
+        idle_h: 23.74546111111112
+        state: idle
+      N7:
+        operating_h: 24.230197499999992
+        operating_percentage: 50.47957812499998
+        idle_h: 23.74548694444445
+        state: idle
+      N8:
+        operating_h: 23.74546111111112
+        operating_percentage: 49.469710648148165
+        idle_h: 24.230223333333328
+        state: active
+  expected_results:
+    heater_balance_c1: &id007
+      max: 1.1
+    heater_balance_c2: &id008
+      max: 1.3
+  validation_results:
+  - metric: heater_balance_c1
+    expected: *id007
+    actual: 1.0
+    passed: true
+    message: In range
+  - metric: heater_balance_c2
+    expected: *id008
+    actual: 1.0204149424580085
+    passed: true
+    message: In range
+  error_message: null
+- profile_id: profile_s1363
+  profile_name: TEST_SCENARIO_TRANSITIONS
+  priority: HIGH
+  description: "Przej\u015Bcia S1\u2192S3\u2192S6\u2192S3"
+  status: PASSED
+  duration_s: 345.9358561038971
+  actual_metrics:
+    simulation_time_s: 345600.0
+    simulation_time_h: 96.0
+    scenario_distribution:
+      S0:
+        time_h: 0.0
+        percentage: 0.0
+      S1:
+        time_h: 23.994723055555557
+        percentage: 24.99450318287037
+      S2:
+        time_h: 0.08629472222222022
+        percentage: 0.08989033564814607
+      S3:
+        time_h: 47.8805075
+        percentage: 49.87552864583333
+      S4:
+        time_h: 0.017498333333335014
+        percentage: 0.018227430555557308
+      S5:
+        time_h: 0.017295555555554325
+        percentage: 0.018016203703702424
+      S6:
+        time_h: 23.985981388888888
+        percentage: 24.98539728009259
+      S7:
+        time_h: 0.0
+        percentage: 0.0
+      S8:
+        time_h: 0.0
+        percentage: 0.0
+    scenario_changes: 7
+    structural_changes: 1
+    time_in_primary_h: 59.891909444444465
+    time_in_limited_h: 36.061409999999995
+    rc_line_changes: 18
+    rc_balance_ratio: 1.6608310502679866
+    rn_heater_rotations: 77
+    heater_operating_times:
+      N1:
+        operating_h: 44.972601388888904
+        operating_percentage: 46.84645978009261
+        idle_h: 50.98071805555554
+        state: idle
+      N2:
+        operating_h: 44.965435555555565
+        operating_percentage: 46.83899537037038
+        idle_h: 50.98788388888888
+        state: active
+      N3:
+        operating_h: 44.91660916666668
+        operating_percentage: 46.78813454861113
+        idle_h: 51.03671027777777
+        state: active
+      N4:
+        operating_h: 44.85341027777778
+        operating_percentage: 46.72230237268519
+        idle_h: 51.09990916666667
+        state: active
+      N5:
+        operating_h: 32.936035277777755
+        operating_percentage: 34.30837008101849
+        idle_h: 63.0172841666667
+        state: idle
+      N6:
+        operating_h: 33.14139916666666
+        operating_percentage: 34.5222907986111
+        idle_h: 62.811920277777794
+        state: idle
+      N7:
+        operating_h: 33.078900277777784
+        operating_percentage: 34.457187789351856
+        idle_h: 62.87441916666666
+        state: idle
+      N8:
+        operating_h: 32.946825555555556
+        operating_percentage: 34.319609953703704
+        idle_h: 63.0064938888889
+        state: idle
+  expected_results:
+    heater_balance_c1: &id009
+      max: 1.5
+    heater_balance_c2: &id010
+      max: 1.5
+  validation_results:
+  - metric: heater_balance_c1
+    expected: *id009
+    actual: 1.0026573477997096
+    passed: true
+    message: In range
+  - metric: heater_balance_c2
+    expected: *id010
+    actual: 1.0062352340576786
+    passed: true
+    message: In range
+  error_message: null

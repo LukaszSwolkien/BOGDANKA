@@ -6,24 +6,6 @@ Ten dokument zawiera **jedyne obowiązujące źródło pseudokodu** dla algorytm
 
 ---
 
-## Zasady Użycia Tego Dokumentu
-
-**KLUCZOWE ZASADY:**
-
-1. **Źródło Prawdy:** Ten plik jest **jedynym źródłem prawdy** dla pseudokodu algorytmów
-2. **Implementacja 1:1:** Każda implementacja (symulacja, PLC) musi **dokładnie** odzwierciedlać ten pseudokod
-3. **Aktualizacje:** Wszelkie zmiany w logice algorytmów **NAJPIERW** wprowadzamy tutaj, potem w kodzie
-4. **Weryfikacja:** Po testach/symulacji, jeśli wykryjemy błąd w logice → aktualizujemy TEN plik
-
-**Proces zmian:**
-1. Problem wykryty w testach/symulacji
-2. Analiza logiki w pseudokodzie
-3. **Aktualizacja pseudokodu** w tym pliku
-4. Re-implementacja w kodzie zgodnie z nowym pseudokodem
-5. Weryfikacja poprawności
-
----
-
 ## Zawartość
 
 1. [Globalne Parametry Rotacyjne (RC/RN)](#globalne-parametry-rotacyjne-rcn)
@@ -42,7 +24,7 @@ Parametry te są współdzielone przez algorytmy RC i RN:
 | **CYKL_PĘTLI_ALGORYTMÓW** | 60 | sekundy | 10‑600 | Częstość wywołania głównej pętli RC i RN (aktualizacja liczników, warunków) |
 | **HISTEREZA_CZASOWA** | 300 | sekundy | 60‑900 | Bufor czasowy przed uznaniem, że upłynął okres rotacji układów (RC) |
 | **MIN_DELTA_CZASU** | 3600 | sekundy | 1800‑7200 | Minimalna różnica czasów pracy nagrzewnic, aby RN wykonał zamianę |
-| **ODSTĘP_PO_ZMIANIE_UKŁADU** | 3600 | sekundy | 1800‑7200 | Czas blokujący RN po zakończeniu RC (`czas_ostatniej_zmiany_układu`) |
+| **ODSTĘP_KOORDYNACJI_RC_RN** | 3000 | sekundy | 1800‑7200 | Minimalny odstęp PRZED i PO rotacji układów RC - blokuje RN w tym oknie czasowym |
 | **ODSTĘP_MIĘDZY_ROTACJAMI** | 900 | sekundy | 600‑1800 | Globalny odstęp pomiędzy rotacjami RN w różnych ciągach |
 
 ---
@@ -749,6 +731,34 @@ FUNKCJA Weryfikuj_Scenariusz(scenariusz):
   ZWRÓĆ PRAWDA
 
 KONIEC FUNKCJI
+
+FUNKCJA Oblicz_Czas_Do_Nastepnej_Rotacji_RC():
+  /*
+   * Oblicza czas pozostały do następnej możliwej rotacji układów RC.
+   * Wykorzystywane przez Algorytm RN do koordynacji rotacji.
+   * 
+   * ZWRACA: Czas w sekundach do następnej rotacji RC (0 jeśli rotacja może nastąpić teraz)
+   *         lub wartość nieskończoną jeśli rotacja nie jest możliwa (S0, S5-S8)
+   */
+  
+  // Jeśli nie w scenariuszach S1-S4, rotacja RC nie jest możliwa
+  JEŻELI aktualny_scenariusz ∉ {S1, S2, S3, S4} WTEDY
+    ZWRÓĆ ∞  // Nieskończoność - rotacja nie jest możliwa
+  KONIEC JEŻELI
+  
+  // Oblicz okres rotacji RC z uwzględnieniem histerezy
+  okres_rotacji_RC = RC_okres_rotacji - histereza_czasowa  // np. 168h - 5min
+  
+  // Oblicz czas od ostatniej zmiany układu
+  czas_od_zmiany = czas_systemowy - czas_ostatniej_zmiany_układu
+  
+  // Oblicz czas pozostały do następnej możliwej rotacji
+  czas_pozostały = okres_rotacji_RC - czas_od_zmiany
+  
+  // Zwróć maksimum z (0, czas_pozostały) - nie może być ujemny
+  ZWRÓĆ MAKS(0, czas_pozostały)
+
+KONIEC FUNKCJI
 ```
 
 ---
@@ -1040,6 +1050,8 @@ PARAMETRY:
   - OKRES_ROTACJI_NAGRZEWNIC[S1..S8]  // definiowany przez technologa [s]
   - MIN_DELTA_CZASU                   // definiowany przez technologa [s] (domyślnie 3600)
   - CYKL_PĘTLI_ALGORYTMÓW = 60        // częstość sprawdzania [s] (współdzielony z RC)
+  - ODSTĘP_KOORDYNACJI_RC_RN = 3000   // minimalny odstęp PRZED i PO rotacji RC [s] (współdzielony z RC)
+  - ODSTĘP_MIĘDZY_ROTACJAMI = 900     // minimalny odstęp między rotacjami RN w różnych ciągach [s]
   
   // Parametry czasowe sprzętu (szczegółowa lista w sekcji Equipment Timing powyżej)
   // używane w procedurach rotacji nagrzewnic
@@ -1187,12 +1199,18 @@ GŁÓWNA PĘTLA (co CYKL_PĘTLI_ALGORYTMÓW):
       POMIŃ ciąg  // odrocz rotację - trwa zmiana układu
     KONIEC JEŻELI
     
-    // Sprawdź czy upłynęła 1h od ostatniej zmiany układu (RC)
-    // (dotyczy tylko S1-S4, bo tylko tam działa Algorytm RC)
+    // Sprawdź koordynację z Algorytmem RC (dotyczy tylko S1-S4, bo tylko tam działa RC)
     JEŻELI aktualny_scenariusz ∈ {S1, S2, S3, S4} WTEDY
+      // 1. Sprawdź czy upłynął minimalny odstęp OD ostatniej zmiany układu (RC)
       czas_od_zmiany_układu = czas_systemowy - czas_ostatniej_zmiany_układu
-      JEŻELI czas_od_zmiany_układu < 3600 WTEDY  // 1 godzina
-        POMIŃ ciąg  // za wcześnie po zmianie układu
+      JEŻELI czas_od_zmiany_układu < ODSTĘP_KOORDYNACJI_RC_RN WTEDY
+        POMIŃ ciąg  // za wcześnie PO zmianie układu
+      KONIEC JEŻELI
+      
+      // 2. Sprawdź czy pozostał minimalny odstęp DO następnej zmiany układu (RC)
+      czas_do_nastepnej_zmiany_układu = Oblicz_Czas_Do_Nastepnej_Rotacji_RC()
+      JEŻELI czas_do_nastepnej_zmiany_układu < ODSTĘP_KOORDYNACJI_RC_RN WTEDY
+        POMIŃ ciąg  // zbyt blisko PRZED zmianą układu
       KONIEC JEŻELI
     KONIEC JEŻELI
     
@@ -1600,18 +1618,6 @@ KONIEC FUNKCJI
 ---
 
 **Koniec dokumentu pseudokodu**
-
-**Historia zmian:**
-- **v1.7** (27 Listopad 2025): **STRUKTURA:** Dodano KROK 0 w Algorytmie RN - sprawdzenie trybu pracy (AUTO/MANUAL) na początku każdego cyklu. W trybie MANUAL algorytm RN jest nieaktywny. Renumeracja kroków RN: KROK 1-8 → KROK 1-7 (spójność z WS i RC, zgodność z flowchart v2)
-- **v1.6** (27 Listopad 2025): **STRUKTURA:** Dodano KROK 0 w Algorytmie RC - aktualizacja liczników czasu pracy układu na początku każdego cyklu (dla spójności z WS i zgodności z flowchart). Przeniesiono logikę z KROKU 7 do KROKU 0. Pełna synchronizacja pseudokodu RC z flowchart v2.0 (uproszczone sekwencje zmian układu)
-- **v1.5** (27 Listopad 2025): **KRYTYCZNE:** Dodano KROK 0 w Algorytmie WS - aktualizacja statystyk czasu w scenariuszu na początku każdego cyklu (przed decyzjami algorytmu). Zapewnia spójne śledzenie czasu niezależnie od ścieżki wykonania (zgodność z implementacją i schematem blokowym)
-- **v1.4.1** (26 Listopad 2025): Usunięto nieużywane parametry z sekcji Equipment Timing (oczyszczenie dokumentacji)
-- **v1.4** (26 Listopad 2025): **KRYTYCZNE:** Dodano obsługę zmiany układu (RC rotation C1↔C2) w Algorytmie RN - wykrywanie zmiany konfiguracji Primary↔Limited, synchronizacja stanów nagrzewnic i reset timestampów rotacji (naprawa błędu: nagrzewnice nie przełączały się przy zmianie C1→C2)
-- **v1.3** (25 Listopad 2025): Parametryzacja czasów operacji sprzętu - zamiana hardcoded wartości na nazwane parametry z Equipment Timing (dla zgodności z konfiguracją i dokumentacją)
-- **v1.2.1** (25 Listopad 2025): Dodano uwagę o liczeniu czasu w S5-S8 jako czas układu Podstawowego w Algorytmie RC (wyjaśnienie zachowania liczników podczas przejść przez scenariusze dwulinijne)
-- **v1.2** (25 Listopad 2025): **KRYTYCZNE:** Dodano obsługę zmiany scenariuszy w RN - rozróżnienie zmian strukturalnych vs ilościowych, zapobieganie utracie stanu rotacji podczas oscylacji temperatury (wynik testów symulacji)
-- **v1.1** (25 Listopad 2025): Dodano inicjalizację liczników czasu i obliczanie delta_time dla RC i RN (wynik testów w symulacji)
-- **v1.0** (24 Listopad 2025): Wersja początkowa
 
 **Ostatnia aktualizacja:** 27 Listopad 2025  
 **Wersja:** 1.7

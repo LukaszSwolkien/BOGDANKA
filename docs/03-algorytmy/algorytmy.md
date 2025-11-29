@@ -227,7 +227,7 @@ Duże klapy wentylacyjne w głównej instalacji wentylacyjnej (kolektory, wyrzut
 ![Algorytm WS - Wybór Scenariusza](./schematy/algorytm-WS-wybor-scenariusza-flowchart.svg)
 
 **Pełny pseudokod algorytmu WS:**  
-**[→ src/algo_pseudokod.md - Algorytm WS](../../src/algo_pseudokod.md)**
+**[→ algo_pseudokod.md - Algorytm WS](algo_pseudokod.md)**
 
 Pseudokod zawiera:
 - Zmienne globalne i parametry (CYKL_MONITORINGU_TEMP, FILTR_UŚREDNIANIA, timeouty)
@@ -506,7 +506,7 @@ Każdy typ przejścia korzysta z tych samych procedur, różni się tylko kolejn
 | **CYKL_PĘTLI_ALGORYTMÓW** | 60 | sekundy | 10‑600 | Częstość wywołania głównej pętli RC i RN (aktualizacja liczników, warunków) |
 | **HISTEREZA_CZASOWA** | 300 | sekundy | 60‑900 | Bufor czasowy przed uznaniem, że upłynął okres rotacji układów (RC) |
 | **MIN_DELTA_CZASU** | 3600 | sekundy | 1800‑7200 | Minimalna różnica czasów pracy nagrzewnic, aby RN wykonał zamianę |
-| **ODSTĘP_PO_ZMIANIE_UKŁADU** | 3600 | sekundy | 1800‑7200 | Czas blokujący RN po zakończeniu RC (`czas_ostatniej_zmiany_układu`) |
+| **ODSTĘP_KOORDYNACJI_RC_RN** | 3000 | sekundy | 1800‑7200 | Minimalny odstęp PRZED i PO rotacji układów RC - blokuje RN w tym oknie czasowym |
 | **ODSTĘP_MIĘDZY_ROTACJAMI** | 900 | sekundy | 600‑1800 | Globalny odstęp pomiędzy rotacjami RN w różnych ciągach |
 
 Parametry te są deklarowane w jednym miejscu konfiguracji systemu i wykorzystywane przez obydwa algorytmy rotacyjne. Szczegółowe wartości (np. `OKRES_ROTACJI_UKŁADÓW`, `OKRES_ROTACJI_NAGRZEWNIC`) pozostają w sekcjach konkretnych algorytmów.
@@ -609,7 +609,7 @@ Dzień 5 (120h od ostatniej rotacji):
 ![Algorytm RC - Diagram przepływu](./schematy/algorytm-RC-rotacja-ciagow-flowchart.svg)
 
 **Pełny pseudokod algorytmu RC:**  
-**[→ src/algo_pseudokod.md - Algorytm RC](../../src/algo_pseudokod.md)**
+**[→ algo_pseudokod.md - Algorytm RC](algo_pseudokod.md)**
 
 Pseudokod zawiera:
 - Zmienne globalne (współdzielone z RN) i lokalne dla RC
@@ -762,7 +762,7 @@ Algorytm RN pełni **podwójną funkcję**:
 ![Algorytm RN Flowchart](./schematy/algorytm-RN-rotacja-nagrzewnic-flowchart.svg)
 
 **Pełny pseudokod algorytmu RN:**  
-**[→ src/algo_pseudokod.md - Algorytm RN](../../src/algo_pseudokod.md)**
+**[→ algo_pseudokod.md - Algorytm RN](algo_pseudokod.md)**
 
 Pseudokod zawiera:
 - Zmienne globalne (współdzielone z RC) i lokalne (dla każdego ciągu osobno)
@@ -967,8 +967,9 @@ Dzień 6-7: S3 (N1, N2, N3) - 48h → N3 wraca do pracy
 
 **Zasady koordynacji:**
 - Nie wykonuj rotacji nagrzewnic w ciągu, który jest w trakcie zmiany układu
-- Po zmianie układu (RC) poczekaj min. 1h przed rotacją nagrzewnic (RN)
-- Jeśli zbiegły się oba okresy rotacji → najpierw rotacja układów (RC), potem nagrzewnic (RN) z odstępem min. 1h
+- Po zmianie układu (RC) poczekaj min. 50 minut (parametr konfigurowalny) przed rotacją nagrzewnic (RN)
+- **WAŻNE:** Nie rozpoczynaj rotacji nagrzewnic (RN) jeśli do następnej rotacji układów (RC) pozostało mniej niż 50 minut (parametr konfigurowalny)
+- Jeśli zbiegły się oba okresy rotacji → najpierw rotacja układów (RC), potem nagrzewnic (RN) z odstępem min. 50 minut
 
 **WAŻNE - Przesunięcie faz rotacji:**
 
@@ -1013,16 +1014,16 @@ Diagram timeline pokazuje praktyczny przykład koordynacji między algorytmami w
    - T=168h+2min: Algorytm RC próbuje zmienić układ → **BLOKADA** (RN rotuje)
    - T=168h+5min: RN kończy, RC wykonuje zmianę układu
    - T=169h: Układ Ograniczony, C2 aktywny
-   - T=169h+15min: RN próbuje rotować w C2 → **ODROCZONE** (odstęp 1h)
-   - T=170h: RN może rotować w C2 (upłynęła 1h od zmiany układu)
+   - T=169h+15min: RN próbuje rotować w C2 → **ODROCZONE** (odstęp 50min po RC)
+   - T=169h+50min: RN może rotować w C2 (upłynęło 50min od zmiany układu)
 
 2. **Blokady (Mutex)**:
    - `zmiana_układu_w_toku`: chroni przed rotacją nagrzewnic podczas zmiany układu
    - `rotacja_nagrzewnic_w_toku`: chroni przed zmianą układu podczas rotacji nagrzewnic
 
 3. **Odstępy czasowe**:
-   - **1 godzina**: po zmianie układu (RC) przed rotacją nagrzewnic (RN)
-   - **15 minut**: między rotacjami w różnych ciągach
+   - **50 minut** (`ODSTĘP_KOORDYNACJI_RC_RN`): PRZED i PO zmianie układu (RC) - blokuje rotacje nagrzewnic (RN)
+   - **15 minut** (`ODSTĘP_MIĘDZY_ROTACJAMI`): między rotacjami nagrzewnic w różnych ciągach
 
 **Wnioski z diagramu:**
 - System **NIGDY** nie wykonuje dwóch operacji jednocześnie

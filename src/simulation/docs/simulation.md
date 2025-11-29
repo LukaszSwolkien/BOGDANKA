@@ -3,7 +3,7 @@
 **Goal:** Create microservices for simulating BOGDANKA Shaft 2 heating control algorithms with Splunk Observability
 
 Algorithm logic is documented separately: [../../docs/03-algorytmy/algorytmy.md](../../docs/03-algorytmy/algorytmy.md)
-**MUST** use for implementation pseudo-code is documented here [../algo_pseudokod.md](../algo_pseudokod.md)
+**MUST** use for implementation pseudo-code is documented here [../../../docs/03-algorytmy/algo_pseudokod.md](../../../docs/03-algorytmy/algo_pseudokod.md)
 
 ---
 
@@ -180,12 +180,12 @@ Before diving into each service, keep these shared simulation rules in mind:
 
 **Algorithm Implementation:**
 
-**⚠️ CRITICAL: Implement algorithms EXACTLY as pseudocode in [../algo_pseudokod.md](../algo_pseudokod.md)**
+**⚠️ CRITICAL: Implement algorithms EXACTLY as pseudocode in [../../../docs/03-algorytmy/algo_pseudokod.md](../../../docs/03-algorytmy/algo_pseudokod.md)**
 
-- **Pseudocode = Single Source of Truth:** [../algo_pseudokod.md](../algo_pseudokod.md)
+- **Pseudocode = Single Source of Truth:** [../../../docs/03-algorytmy/algo_pseudokod.md](../../../docs/03-algorytmy/algo_pseudokod.md)
 - Every line of pseudocode must have corresponding implementation
 - **DO NOT** modify algorithm logic without updating pseudocode first
-- If you find issues during testing → update pseudocode in `algo_pseudokod.md`, then re-implement
+- If you find issues during testing → update pseudocode in `docs/03-algorytmy/algo_pseudokod.md`, then re-implement
 - Use all coordination mechanisms (locks, time gaps, hierarchies) exactly as specified
 - **PID regulation scope:** The simulation **does not numerically model** the internal PID loops (nagrzewnice valves or fan speed controllers). We only assert/log that a given regulator operates in the requested mode (PID/MAX/OFF) per pseudocode so we can focus on execution of WS/RC/RN without solving continuous control equations.
 
@@ -483,7 +483,7 @@ After running simulation for 30 days, verify in Splunk Observability:
 **⚠️ IMPORTANT:** This file contains ONLY simulation specifications.
 
 **For algorithm implementation (PSEUDOCODE = SOURCE OF TRUTH):**
-- **📄 Pseudocode (implementation):** [../algo_pseudokod.md](../algo_pseudokod.md) ← **SINGLE SOURCE OF TRUTH**
+- **📄 Pseudocode (implementation):** [../../../docs/03-algorytmy/algo_pseudokod.md](../../../docs/03-algorytmy/algo_pseudokod.md) ← **SINGLE SOURCE OF TRUTH**
   - Algorithm WS: Complete pseudocode
   - Algorithm RC: Complete pseudocode
   - Algorithm RN: Complete pseudocode
@@ -502,11 +502,11 @@ After running simulation for 30 days, verify in Splunk Observability:
 
 **⚠️ CRITICAL IMPLEMENTATION RULE:**
 
-All algorithms (WS, RC, RN) in simulation must be implemented **EXACTLY** according to the pseudocode contained in **[../algo_pseudokod.md](../algo_pseudokod.md)**.
+All algorithms (WS, RC, RN) in simulation must be implemented **EXACTLY** according to the pseudocode contained in **[../../../docs/03-algorytmy/algo_pseudokod.md](../../../docs/03-algorytmy/algo_pseudokod.md)**.
 
 **Pseudocode = Single Source of Truth**
 
-- **Single source of pseudocode:** [algo_pseudokod.md](../algo_pseudokod.md)
+- **Single source of pseudocode:** [algo_pseudokod.md](../../../docs/03-algorytmy/algo_pseudokod.md)
 - Every line of pseudocode must have corresponding implementation
 - Changes in implementation require updating the pseudocode
 
@@ -514,7 +514,7 @@ All algorithms (WS, RC, RN) in simulation must be implemented **EXACTLY** accord
 
 1. **During tests/simulation** - if problem detected:
    - Analysis: is the error in implementation or in pseudocode logic?
-   - If in pseudocode → update [algo_pseudokod.md](../algo_pseudokod.md)
+   - If in pseudocode → update [algo_pseudokod.md](../../../docs/03-algorytmy/algo_pseudokod.md)
    - If in implementation → fix code to match pseudocode
 
 **Rationale:**
@@ -526,7 +526,7 @@ All algorithms (WS, RC, RN) in simulation must be implemented **EXACTLY** accord
 
 **Documentation:**
 
-- **Pseudocode (implementation):** [algo_pseudokod.md](../algo_pseudokod.md) ← SOURCE OF TRUTH
+- **Pseudocode (implementation):** [algo_pseudokod.md](../../../docs/03-algorytmy/algo_pseudokod.md) ← SOURCE OF TRUTH
 - **Algorithm descriptions (theory):** [../../docs/03-algorytmy/algorytmy.md](../../docs/03-algorytmy/algorytmy.md) - detailed descriptions, examples, diagrams
 
 ---
