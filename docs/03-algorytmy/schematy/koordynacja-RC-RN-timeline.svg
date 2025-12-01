@@ -37,9 +37,9 @@
   <text class="subtitle" x="800" y="65" text-anchor="middle" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">Przykładowy Scenariusz: S3 - Diagram sekwencji z blokadami i odstępami czasowymi</text>
   <rect x="50" y="85" width="1500" height="90" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1" rx="3" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)"/>
   <text class="event-text" x="70" y="110" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)"><tspan font-weight="bold">Warunki początkowe:</tspan> S3 (temp: -8°C), Układ Podstawowy (C1 ON, C2 OFF), <tspan font-weight="bold">Tryb AUTO</tspan></text>
-  <text class="event-text-small" x="90" y="130" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">• OKRES_ROTACJI_UKŁADÓW (RC) = 240h (10 dni)</text>
-  <text class="event-text-small" x="90" y="145" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">• OKRES_ROTACJI_NAGRZEWNIC (RN) = 168h (7 dni)</text>
-  <text class="event-text-small" x="90" y="160" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">• Oba algorytmy: KROK 0 (liczniki) aktualizowane co CYKL_PĘTLI (60s), KROK 1: Tryb AUTO ✓</text>
+  <text class="event-text-small" x="90" y="130" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">• OKRES_ROTACJI_UKŁADÓW (RC)</text>
+  <text class="event-text-small" x="90" y="145" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">• OKRES_ROTACJI_NAGRZEWNIC (RN)</text>
+  <text class="event-text-small" x="90" y="160" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">• Oba algorytmy: KROK 0 (liczniki) aktualizowane co CYKL_PĘTLI, KROK 1: Tryb AUTO ✓</text>
   <rect x="50" y="200" width="150" height="50" fill="#6c757d" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)"/>
   <text class="lane-title" x="125" y="230" text-anchor="middle" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">Czas [h]</text>
   <rect class="lane-header-rc" x="200" y="200" width="650" height="50" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)"/>
@@ -75,16 +75,16 @@
   <text class="event-text" x="890" y="403" font-weight="bold" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">🔄 ROTACJA w C1 (KROK 6-7)</text>
   <text class="event-text-small" x="910" y="420" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">KROK 4: ✅ RC nie zmienia (zmiana_układu_w_toku = FAŁSZ)</text>
   <text class="event-text-small" x="910" y="438" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">KROK 5: ✅ delta_czasu OK, KROK 6A: 🔒 rotacja_nagrzewnic_w_toku = PRAWDA</text>
-  <text class="event-text-small" x="910" y="456" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">KROK 6C: Wymiana N1 OFF → N4 ON (trwa ~5 min)</text>
+  <text class="event-text-small" x="910" y="456" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">KROK 6C: Wymiana N1 OFF → N4 ON</text>
   <text class="event-text-small" x="910" y="474" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">KROK 7C: 🔓 rotacja_nagrzewnic_w_toku = FAŁSZ</text>
-  <text class="event-text-small" x="910" y="492" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">czas_ostatniej_rotacji_globalny = 168h</text>
+  <text class="event-text-small" x="910" y="492" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">czas_ostatniej_rotacji_globalny</text>
   <circle class="timeline-marker" cx="125" cy="575" r="6" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)"/>
   <text class="time-label" x="125" y="560" text-anchor="middle" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">T=168h</text>
   <text class="time-label" x="125" y="595" text-anchor="middle" font-size="11" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">+2min</text>
   <rect class="event-blocked" x="220" y="530" width="350" height="120" rx="4" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)"/>
   <text class="event-text" x="240" y="553" font-weight="bold" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">⛔ BLOKADA RC (KROK 7)</text>
   <text class="event-text-small" x="260" y="570" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">KROK 4: ✅ Warunki rotacji spełnione</text>
-  <text class="event-text-small" x="260" y="588" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">KROK 5: ✅ Upłynął okres (240h)</text>
+  <text class="event-text-small" x="260" y="588" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">KROK 5: ✅ Upłynął okres rotacji RC</text>
   <text class="event-text-small" x="260" y="606" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">KROK 7: ❌ rotacja_nagrzewnic_w_toku = PRAWDA</text>
   <text class="event-text-small" x="260" y="624" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">→ RC czeka! Zmiana odroczona</text>
   <text class="event-text-small" x="260" y="642" font-weight="bold" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">Mutex: RN blokuje RC</text>
@@ -98,9 +98,9 @@
   <text class="event-text-small" x="260" y="710" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">KROK 7: ✅ rotacja_nagrzewnic_w_toku = FAŁSZ (RN zakończył)</text>
   <text class="event-text-small" x="260" y="728" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">Ustaw blokadę: 🔒 zmiana_układu_w_toku = PRAWDA</text>
   <text class="event-text-small" x="260" y="746" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">Wykonaj_Zmianę_Układu(): Podstawowy → Ograniczony</text>
-  <text class="event-text-small" x="260" y="764" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">(C1 OFF, C2 ON, W2 PID, trwa ~5 min)</text>
+  <text class="event-text-small" x="260" y="764" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">(C1 OFF, C2 ON, W2 PID)</text>
   <text class="event-text-small" x="260" y="782" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">Zwolnij blokadę: 🔓 zmiana_układu_w_toku = FAŁSZ</text>
-  <text class="event-text-small" x="260" y="800" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">czas_ostatniej_zmiany_układu = 169h</text>
+  <text class="event-text-small" x="260" y="800" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">czas_ostatniej_zmiany_układu</text>
   <circle class="timeline-marker" cx="125" cy="875" r="6" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)"/>
   <text class="time-label" x="125" y="860" text-anchor="middle" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">T=169h</text>
   <rect class="event-rc" x="220" y="845" width="350" height="60" rx="4" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)"/>
@@ -118,9 +118,9 @@
   <text class="event-text" x="890" y="1003" font-weight="bold" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">⛔ BLOKADA RN C2 (KROK 5)</text>
   <text class="event-text-small" x="910" y="1020" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">KROK 3: ✅ C2 aktywny</text>
   <text class="event-text-small" x="910" y="1038" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">KROK 4: ✅ zmiana_układu_w_toku = FAŁSZ</text>
-  <text class="event-text-small" x="910" y="1056" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">KROK 5: ❌ czas_od_zmiany_układu = 15min &lt; 1h</text>
+  <text class="event-text-small" x="910" y="1056" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">KROK 5: ❌ czas_od_zmiany_układu</text>
   <text class="event-text-small" x="910" y="1074" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">→ RN czeka! Rotacja odroczona</text>
-  <text class="event-text-small" x="910" y="1092" font-weight="bold" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">Odstęp czasowy: po RC musi upłynąć 1h</text>
+  <text class="event-text-small" x="910" y="1092" font-weight="bold" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">Po rotacji RC musi upłynąć odstęp czasowy</text>
   <line class="arrow-h" x1="575" y1="1025" x2="870" y2="1025" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)"/>
   <text class="note" x="680" y="1015" text-anchor="middle" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">odstęp 1h</text>
   <circle class="timeline-marker" cx="125" cy="1175" r="6" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)"/>
@@ -129,8 +129,8 @@
   <rect class="event-ok" x="870" y="1120" width="660" height="140" rx="4" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)"/>
   <text class="event-text" x="890" y="1143" font-weight="bold" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">✅ ROTACJA w C2 DOZWOLONA (KROK 6-7)</text>
   <text class="event-text-small" x="910" y="1160" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">KROK 4: ✅ zmiana_układu_w_toku = FAŁSZ</text>
-  <text class="event-text-small" x="910" y="1178" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">KROK 5: ✅ czas_od_zmiany_układu = 1h (≥ 1h)</text>
-  <text class="event-text-small" x="910" y="1196" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">KROK 5: ✅ czas_od_ostatniej_rotacji = 2h (&gt; 15min)</text>
+  <text class="event-text-small" x="910" y="1178" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">KROK 5: ✅ czas_od_zmiany_układu</text>
+  <text class="event-text-small" x="910" y="1196" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">KROK 5: ✅ czas_od_ostatniej_rotacji</text>
   <text class="event-text-small" x="910" y="1214" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">KROK 6A: 🔒 rotacja_nagrzewnic_w_toku = PRAWDA</text>
   <text class="event-text-small" x="910" y="1232" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">KROK 6C: Wymiana N5 OFF → N8 ON</text>
   <text class="event-text-small" x="910" y="1250" style="white-space: pre;" transform="matrix(1, 0, 0, 1, 1.4210854715202004e-14, 0)">KROK 7C: 🔓 rotacja_nagrzewnic_w_toku = FAŁSZ</text>

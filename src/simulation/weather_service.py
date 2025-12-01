@@ -19,6 +19,7 @@ from common.time_utils import AcceleratedClock, Clock
 from weather.profile import (
     SECONDS_PER_DAY,
     ConstantProfileCalculator,
+    SmoothSteppedProfileCalculator,
     SteppedProfileCalculator,
     WinterProfileCalculator,
 )
@@ -100,7 +101,15 @@ class WeatherSimulator:
                 steps=config.stepped_profile.steps,
                 simulation_days=simulation.duration_days,
             )
-            LOGGER.info(f"Using STEPPED temperature profile: {len(config.stepped_profile.steps)} steps")
+            LOGGER.info(f"Using STEPPED temperature profile: {len(config.stepped_profile.steps)} steps (instant jumps)")
+        elif config.profile_type == "smooth_step":
+            if config.stepped_profile is None:
+                raise ValueError("Smooth stepped profile configuration is missing")
+            self._profile = SmoothSteppedProfileCalculator(
+                steps=config.stepped_profile.steps,
+                simulation_days=simulation.duration_days,
+            )
+            LOGGER.info(f"Using SMOOTH_STEPPED temperature profile: {len(config.stepped_profile.steps)} steps (linear transitions)")
         else:  # "winter" or default
             self._profile = WinterProfileCalculator(
                 config.winter_profile,
