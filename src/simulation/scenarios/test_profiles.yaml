@@ -96,7 +96,7 @@ test_profiles:
       heater_balance_c1: {max: 1.5}  # Rotacje podczas S1 i S3, stałe podczas S6
       heater_balance_c2: {max: 1.5}  # Rotacje podczas S1, S3, i częściowo S6
 
-  - id: profile_zima
+  - id: profile_niestabilna_zima
     name: UNSTABLE_WINTER
     priority: MEDIUM
     description: Niestabilna zima - ekstremalny test RN
@@ -123,4 +123,41 @@ test_profiles:
       # Mimo to balans powinien być zachowany (algorytm RN musi być odporny)
       heater_balance_c1: {max: 1.8}  # Wyższa tolerancja dla niestabilnych warunków
       heater_balance_c2: {max: 1.8}  # Wyższa tolerancja dla niestabilnych warunków
+
+  - id: profile_zima
+    name: WINTER_PROFILE
+    priority: HIGH
+    description: Pełny cykl zimowy 28 dni - profil demo prezentacji
+    duration_days: 28
+    acceleration: 2000  # 28 dni @ 2000x = ~20 minut
+    profile_type: smooth_step  # Płynne przejścia temperatur (realistyczne)
+    # SMOOTH_STEP: temperatura zmienia się LINIOWO między krokami
+    # - Krok 1: stała temperatura (brak interpolacji)
+    # - Kolejne kroki: rampa z poprzedniej temp. do docelowej
+    # Przykład: krok {2,5,-6.0} → temperatura liniowo -1°C → -6°C w dniach 2-5
+    steps:
+      # TYDZIEŃ 1: 0°C → -8°C (S1→S2→S3→S4, wzrost mocy)
+      - {day_start: 0, day_end: 2, temperature_c: 0.0}   # S1 (dni 0-2)
+      - {day_start: 2, day_end: 4, temperature_c: -2.0}   # S1/S2 (dni 2-4)
+      - {day_start: 4, day_end: 5, temperature_c: -5.0}   # S2/S3 (dni 4-5)
+      - {day_start: 5, day_end: 7, temperature_c: -9.0}   # S3/S4 (dni 5-7)
+      
+      # TYDZIEŃ 2: -10°C → -18°C (S4→S5→S6, uruchomienie C2!)
+      - {day_start: 7, day_end: 9, temperature_c: -10.0}  # S4 (dni 7-9)
+      - {day_start: 9, day_end: 11, temperature_c: -13.0} # S5 (dni 9-11) ← URUCHOMIENIE C2
+      - {day_start: 11, day_end: 14, temperature_c: -18.0} # S6 (dni 11-14)
+      
+      # TYDZIEŃ 3: -18°C → -25°C (S6→S7→S8, maksymalne obciążenie)
+      - {day_start: 14, day_end: 16, temperature_c: -19.0} # S7 (dni 14-16)
+      - {day_start: 16, day_end: 21, temperature_c: -22.0} # S8 (dni 16-21) ← MAKSYMALNE OBCIĄŻENIE
+      
+      # TYDZIEŃ 4: -25°C → -5°C (S8→...→S3, powrót)
+      - {day_start: 21, day_end: 23, temperature_c: -20.0} # S7 (dni 21-23)
+      - {day_start: 23, day_end: 25, temperature_c: -15.0} # S6/S5 (dni 23-25)
+      - {day_start: 25, day_end: 27, temperature_c: -9.0}  # S4 (dni 25-27)
+      - {day_start: 27, day_end: 28, temperature_c: -5.0}  # S3 (dzień 27-28)
+    expected_results:
+      # Pełny cykl zimowy - wszystkie scenariusze S0-S8
+      heater_balance_c1: {min: 1.0, max: 1.2}  # Doskonały balans C1 (N1-N4)
+      heater_balance_c2: {min: 1.0, max: 1.2}  # Doskonały balans C2 (N5-N8)
 

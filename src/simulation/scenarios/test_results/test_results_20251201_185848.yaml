@@ -1,0 +1,110 @@
+timestamp: '2025-12-01T18:58:48.699894'
+total_tests: 1
+passed: 1
+failed: 0
+errors: 0
+results:
+- profile_id: profile_zima
+  profile_name: WINTER_PROFILE
+  priority: HIGH
+  description: "Pe\u0142ny cykl zimowy 28 dni - profil demo prezentacji"
+  status: PASSED
+  duration_s: 1210.1185982227325
+  actual_metrics:
+    simulation_time_s: 2419200.0
+    simulation_time_h: 672.0
+    scenario_distribution:
+      S0:
+        time_h: 0.01677611111111111
+        percentage: 0.0024964451058201056
+      S1:
+        time_h: 71.97203
+        percentage: 10.710123511904762
+      S2:
+        time_h: 40.010997777777774
+        percentage: 5.954017526455026
+      S3:
+        time_h: 61.99511777777773
+        percentage: 9.225463955026447
+      S4:
+        time_h: 97.99021666666674
+        percentage: 14.581877480158742
+      S5:
+        time_h: 92.80995027777777
+        percentage: 13.811004505621693
+      S6:
+        time_h: 72.3537263888889
+        percentage: 10.766923569775134
+      S7:
+        time_h: 170.81369055555552
+        percentage: 25.418703951719568
+      S8:
+        time_h: 64.03730555555556
+        percentage: 9.529360945767197
+    scenario_changes: 13
+    structural_changes: 8
+    time_in_primary_h: 534.1551730555556
+    time_in_limited_h: 137.82507638888896
+    rc_line_changes: 66
+    rc_balance_ratio: 3.8756022274812794
+    rn_heater_rotations: 435
+    heater_operating_times:
+      N1:
+        operating_h: 490.0248997222223
+        operating_percentage: 72.92037198247355
+        idle_h: 181.95534972222222
+        state: active
+      N2:
+        operating_h: 489.531264722222
+        operating_percentage: 72.8469143931878
+        idle_h: 182.44898472222243
+        state: active
+      N3:
+        operating_h: 489.8321086111111
+        operating_percentage: 72.8916828290344
+        idle_h: 182.14814083333334
+        state: idle
+      N4:
+        operating_h: 489.5581427777779
+        operating_percentage: 72.85091410383599
+        idle_h: 182.42210666666654
+        state: active
+      N5:
+        operating_h: 343.91426111111133
+        operating_percentage: 51.177717427248716
+        idle_h: 328.0659883333331
+        state: idle
+      N6:
+        operating_h: 344.6206352777779
+        operating_percentage: 51.28283263062171
+        idle_h: 327.3596141666666
+        state: idle
+      N7:
+        operating_h: 344.67788138888886
+        operating_percentage: 51.291351397156085
+        idle_h: 327.3023680555556
+        state: idle
+      N8:
+        operating_h: 343.9046836111108
+        operating_percentage: 51.17629220403435
+        idle_h: 328.07556583333366
+        state: idle
+  expected_results:
+    heater_balance_c1: &id001
+      min: 1.0
+      max: 1.2
+    heater_balance_c2: &id002
+      min: 1.0
+      max: 1.2
+  validation_results:
+  - metric: heater_balance_c1
+    expected: *id001
+    actual: 1.0010083829891445
+    passed: true
+    message: In range
+  - metric: heater_balance_c2
+    expected: *id002
+    actual: 1.0022482909207844
+    passed: true
+    message: In range
+  error_message: null

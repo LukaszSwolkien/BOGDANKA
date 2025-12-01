@@ -451,7 +451,9 @@ class TestRunner:
             config_data["services"]["weather"]["constant_profile"] = {
                 "temperature_c": profile["temperature_c"]
             }
-        elif profile_type == "stepped":
+        elif profile_type == "stepped" or profile_type == "smooth_step":
+            # Both stepped and smooth_step use the same configuration structure
+            # The difference is only in the calculator algorithm (instant jump vs linear ramp)
             config_data["services"]["weather"]["stepped_profile"] = {
                 "steps": profile["steps"]
             }

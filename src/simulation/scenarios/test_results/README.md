@@ -149,3 +149,5 @@ W razie pytań dotyczących wyników testów:
 - Sprawdź pseudokod: `docs/03-algorytmy/algo_pseudokod.md`
 - Sprawdź konfigurację: `src/simulation/config.yaml`
 
+
+
