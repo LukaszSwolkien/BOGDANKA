@@ -415,7 +415,7 @@ Day 28.0 (672h): KONIEC
 # Trzy Warstwy Implementacji
 
 1. **DOKUMENTACJA** → [algorytmy.md](../03-algorytmy/algorytmy.md), [pseudokod](../03-algorytmy/algo_pseudokod.md), flowcharty
-2. **SYMULACJA** → Python (algorithm_ws.py, algorithm_rc.py, algorithm_rn.py)
+2. **SYMULACJA** → Python ([algorithm_ws.py](../../src/simulation/algo/algorithm_ws.py), [algorithm_rc.py](../../src/simulation/algo/algorithm_rc.py), [algorithm_rn.py](../../src/simulation/algo/algorithm_rn.py))
 3. **PLC** → Structured Text / Ladder Logic (do implementacji)
 
 
