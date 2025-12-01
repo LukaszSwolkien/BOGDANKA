@@ -1619,6 +1619,6 @@ KONIEC FUNKCJI
 
 **Koniec dokumentu pseudokodu**
 
-**Ostatnia aktualizacja:** 27 Listopad 2025  
+**Ostatnia aktualizacja:** 1 Grudzień 2025  
 **Wersja:** 1.7
 

@@ -237,5 +237,5 @@ System sterowania realizowany na sterowniku PLC z interfejsem operatorskim SCADA
 
 ---
 
-**Ostatnia aktualizacja:** 24 Listopad 2025  
+**Ostatnia aktualizacja:** 1 Grudzień 2025  
 **Wersja dokumentu:** 1.0

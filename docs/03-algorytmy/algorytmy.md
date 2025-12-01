@@ -8,7 +8,7 @@ _Plik ten jest częścią dokumentacji systemu sterowania nagrzewnicami BOGDANKA
 
 ---
 
-**Ostatnia aktualizacja:** 25 Listopad 2025  
+**Ostatnia aktualizacja:** 1 Grudzień 2025  
 **Status:** Algorytmy do implementacji w PLC  
 **Zatwierdzenie:** Wymaga akceptacji technologa
 
@@ -1042,5 +1042,4 @@ Diagram timeline pokazuje praktyczny przykład koordynacji między algorytmami w
 
 ---
 
-**Ostatnia aktualizacja:** 25 Listopad 2025  
-**Wersja dokumentu:** 2.1 - Dodano parametry czasowe sprzętu (Equipment Timing)
+**Ostatnia aktualizacja:** 1 Grudzień 2025  

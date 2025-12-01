@@ -398,5 +398,5 @@ Pracują: N4, N1, N2 | Postój: N3 | Zmiana: Wyłączono N3, załączono N2
 
 ---
 
-**Ostatnia aktualizacja:** 24 Listopad 2025  
+**Ostatnia aktualizacja:** 1 Grudzień 2025  
 **Wersja dokumentu:** 1.5  

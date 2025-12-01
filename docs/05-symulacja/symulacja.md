@@ -22,6 +22,8 @@ Nagranie z symulacji: ... (do zrobienia)
 3. [Wyniki Testów](#wyniki-testów)
 4. [Wnioski](#wnioski)
 
+**Zobacz także:** [Prezentacja wyników](prezentacja.md) - slajdy demo symulacji (format prezentacyjny)
+
 ---
 
 ## Wprowadzenie
@@ -397,9 +399,10 @@ ODSTĘP_MIĘDZY_ROTACJAMI: 900s (15min)
 
 ## Powiązane Dokumenty
 
+- **[Prezentacja wyników](prezentacja.md)** - slajdy demo symulacji (20 min)
 - **[Algorytmy sterowania](../03-algorytmy/algorytmy.md)** - szczegółowy opis algorytmów WS, RC, RN
 - **[Pseudokod algorytmów](../03-algorytmy/algo_pseudokod.md)** - implementacja algorytmów
 
 ---
 
-**Ostatnia aktualizacja:** 29 Listopad 2025  
+**Ostatnia aktualizacja:** 1 Grudzień 2025  
