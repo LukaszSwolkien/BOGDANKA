@@ -18,7 +18,7 @@ telemetry:
   
   # Headers for Splunk Observability authentication
   headers:
-    X-SF-Token: "bXbaWaXpIrEiYV0lmQwdTg" 
+    X-SF-Token: "" 
     Content-Type: "application/x-protobuf"
   
   # Resource attributes & default dimensions applied to every metric/log/span

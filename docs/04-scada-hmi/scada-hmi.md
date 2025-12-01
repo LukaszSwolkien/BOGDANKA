@@ -225,6 +225,6 @@ f_max = 50 Hz (maksymalna prędkość)
 
 ---
 
-**Ostatnia aktualizacja:** 24 Listopad 2025  
+**Ostatnia aktualizacja:** 1 Grudzień 2025  
 **Wersja dokumentu:** 1.0
 
