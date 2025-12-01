@@ -53,17 +53,17 @@
 
 # Cele Demo (20 minut)
 
-## 1️⃣ Symulacja w Akcji
+## 1 Symulacja w Akcji
 - **Profil zimowy:** 4 tygodnie (28 dni)
 - **Akceleracja:** 2000x → 20 minut rzeczywistych
 - **Monitoring:** status w czasie rzeczywistym
 
-## 2️⃣ Analiza Wyników
+## 2 Analiza Wyników
 - **Balans nagrzewnic:** stosunek max/min czasu pracy
 - **Balans ciągów:** równomierne wykorzystanie C1 vs C2
 - **Koordynacja:** zero kolizji RC ↔ RN
 
-## 3️⃣ Ścieżka do PLC
+## 3 Ścieżka do PLC
 - **Mapowanie:** Pseudokod → Python 
 - **Mapowanie:** Pseudokod → Structured Text
 
@@ -189,7 +189,7 @@ C2: wszystkie OFF     ← nieaktywny
 
 ---
 
-# Dni 10-14: Uruchomienie C2! (S4→S5→S6) 🚀
+# Dni 10-14: Uruchomienie C2! (S4→S5→S6)
 
 ## 🌡️ Temperatura: -16°C → -21°C (smooth ramp)
 
@@ -390,7 +390,7 @@ Day 28.0 (672h): KONIEC
 - Wyłączony w S5-S8 ✓
 
 ## Algorytm RN
-- 435 rotacji nagrzewnic! 🔥
+- 435 rotacji nagrzewnic!
 - Balans C1: **1.001** (PERFEKCYJNY!)
 - Balans C2: **1.002** (PERFEKCYJNY!)
 - Wyłączony w S4, S8 ✓
@@ -408,7 +408,7 @@ Day 28.0 (672h): KONIEC
 | Rotacje RN | aktywne | **435** |  |
 | Rotacje RC | aktywne | **66** |  |
 
-**PODSUMOWANIE: System działa PERFEKCYJNIE! 🎯**
+**PODSUMOWANIE: System działa PERFEKCYJNIE!**
 
 ---
 
@@ -529,19 +529,19 @@ END_METHOD
 
 # Algorytm WS - Flowchart
 
-![width:700px](docs/03-algorytmy/schematy/algorytm-WS-wybor-scenariusza-flowchart.svg)
+![width:700px](../03-algorytmy/schematy/algorytm-WS-wybor-scenariusza-flowchart.svg)
 
 ---
 
 # Algorytm RC - Flowchart
 
-![width:700px](docs/03-algorytmy/schematy/algorytm-RC-rotacja-ciagow-flowchart.svg)
+![width:700px](../03-algorytmy/schematy/algorytm-RC-rotacja-ciagow-flowchart.svg)
 
 ---
 
 # Algorytm RN - Flowchart
 
-![width:700px](docs/03-algorytmy/schematy/algorytm-RN-rotacja-nagrzewnic-flowchart.svg)
+![width:700px](../03-algorytmy/schematy/algorytm-RN-rotacja-nagrzewnic-flowchart.svg)
 
 ---
 
