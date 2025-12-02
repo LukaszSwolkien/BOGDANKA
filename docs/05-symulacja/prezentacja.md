@@ -3,7 +3,7 @@
 
 [← Powrót do dokumentacji głównej](../start.md)
 
-
+Nagranie z symulacji [DEMO](https://drive.google.com/file/d/1ckT8jsPTPuoauFRg9YCkC2GptaJposiJ/view?usp=sharing)
 
 ## Bez automatycznej rotacji:
 - **Nierównomierne zużycie** nagrzewnic N1-N8
